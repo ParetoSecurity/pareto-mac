@@ -6,27 +6,26 @@
 //
 import SwiftUI
 import AppKit
+import LaunchAtLogin
 
 struct GeneralSettingsView: View {
-    @AppStorage("atLogin") private var atLogin = false
-
+    @ObservedObject private var atLogin = LaunchAtLogin.observable
+    
     var body: some View {
         Form {
-                    Section(
-                            footer: Text("Automaticly opens the app when you start your Mac.")) {
-                        VStack(alignment: .leading) {
-                            Toggle("Start at Login", isOn: $atLogin)
-                        }
-                    }
+            Section(
+                footer: Text("Automaticly opens the app when you start your Mac.")) {
+                VStack(alignment: .leading) {
+                    Toggle("Start at Login", isOn: $atLogin.isEnabled)
                 }
-    
+            }
+        }
+        
         .frame(width: 350, height: 80).padding(5)
     }
 }
 
 struct AboutSettingsView: View {
-    @AppStorage("atLogin") private var atLogin = false
-
     var body: some View {
         HStack{
             Image("Icon").resizable()

@@ -23,8 +23,8 @@ struct ContentView: View {
             })
             {
                 Text("Quit App")
-                .font(.caption)
-                .fontWeight(.semibold)
+                    .font(.caption)
+                    .fontWeight(.semibold)
             }
             .padding(.trailing, 16.0)
             .frame(width: 360.0, alignment: .trailing)

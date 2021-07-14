@@ -9,12 +9,12 @@ import SwiftUI
 
 class AppDelegate: NSObject, NSApplicationDelegate {
     var statusBar: StatusBarController?
-
+    
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         statusBar = StatusBarController.init()
         NSWindow.allowsAutomaticWindowTabbing = false
     }
-
+    
 }
 
 @main
