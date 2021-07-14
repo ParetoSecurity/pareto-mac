@@ -7,13 +7,20 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4F103008269EE136008C1E86 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F103007269EE135008C1E86 /* SettingsView.swift */; };
+		4FAD1581269CDB3600074B19 /* EventMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FAD1580269CDB3600074B19 /* EventMonitor.swift */; };
+		4FAD1583269CDB9C00074B19 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FAD1582269CDB9C00074B19 /* MainViewController.swift */; };
 		4FEBA2F2269CD48F009B2469 /* ParetoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEBA2F1269CD48F009B2469 /* ParetoApp.swift */; };
 		4FEBA2F4269CD48F009B2469 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEBA2F3269CD48F009B2469 /* ContentView.swift */; };
 		4FEBA2F6269CD48F009B2469 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4FEBA2F5269CD48F009B2469 /* Assets.xcassets */; };
 		4FEBA2F9269CD48F009B2469 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4FEBA2F8269CD48F009B2469 /* Preview Assets.xcassets */; };
+		4FEBA304269CD4E0009B2469 /* StatusBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEBA303269CD4E0009B2469 /* StatusBarController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		4F103007269EE135008C1E86 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		4FAD1580269CDB3600074B19 /* EventMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventMonitor.swift; sourceTree = "<group>"; };
+		4FAD1582269CDB9C00074B19 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		4FEBA2EE269CD48F009B2469 /* Pareto.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Pareto.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4FEBA2F1269CD48F009B2469 /* ParetoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParetoApp.swift; sourceTree = "<group>"; };
 		4FEBA2F3269CD48F009B2469 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -21,6 +28,7 @@
 		4FEBA2F8269CD48F009B2469 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		4FEBA2FA269CD48F009B2469 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4FEBA2FB269CD48F009B2469 /* Pareto.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Pareto.entitlements; sourceTree = "<group>"; };
+		4FEBA303269CD4E0009B2469 /* StatusBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusBarController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -34,6 +42,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4F103006269EDB82008C1E86 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				4FEBA2F3269CD48F009B2469 /* ContentView.swift */,
+				4F103007269EE135008C1E86 /* SettingsView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
 		4FEBA2E5269CD48F009B2469 = {
 			isa = PBXGroup;
 			children = (
@@ -53,12 +70,15 @@
 		4FEBA2F0269CD48F009B2469 /* Pareto */ = {
 			isa = PBXGroup;
 			children = (
+				4F103006269EDB82008C1E86 /* Views */,
 				4FEBA2F1269CD48F009B2469 /* ParetoApp.swift */,
-				4FEBA2F3269CD48F009B2469 /* ContentView.swift */,
 				4FEBA2F5269CD48F009B2469 /* Assets.xcassets */,
 				4FEBA2FA269CD48F009B2469 /* Info.plist */,
 				4FEBA2FB269CD48F009B2469 /* Pareto.entitlements */,
 				4FEBA2F7269CD48F009B2469 /* Preview Content */,
+				4FEBA303269CD4E0009B2469 /* StatusBarController.swift */,
+				4FAD1580269CDB3600074B19 /* EventMonitor.swift */,
+				4FAD1582269CDB9C00074B19 /* MainViewController.swift */,
 			);
 			path = Pareto;
 			sourceTree = "<group>";
@@ -141,7 +161,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				4FEBA2F4269CD48F009B2469 /* ContentView.swift in Sources */,
+				4FEBA304269CD4E0009B2469 /* StatusBarController.swift in Sources */,
 				4FEBA2F2269CD48F009B2469 /* ParetoApp.swift in Sources */,
+				4F103008269EE136008C1E86 /* SettingsView.swift in Sources */,
+				4FAD1581269CDB3600074B19 /* EventMonitor.swift in Sources */,
+				4FAD1583269CDB9C00074B19 /* MainViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -7,11 +7,23 @@
 
 import SwiftUI
 
+class AppDelegate: NSObject, NSApplicationDelegate {
+    var statusBar: StatusBarController?
+
+    func applicationDidFinishLaunching(_ aNotification: Notification) {
+        statusBar = StatusBarController.init()
+        NSWindow.allowsAutomaticWindowTabbing = false
+    }
+
+}
+
 @main
-struct ParetoApp: App {
+struct Pareto: App {
+    @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+    
     var body: some Scene {
-        WindowGroup {
-            ContentView()
+        Settings {
+            SettingsView()
         }
     }
 }
