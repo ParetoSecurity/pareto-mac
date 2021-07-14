@@ -6,24 +6,24 @@
 //
 
 import AppKit
-import SwiftUI
 import MenuBuilder
+import SwiftUI
 
-class StatusBarController: NSMenu, NSMenuDelegate  {
+class StatusBarController: NSMenu, NSMenuDelegate {
     private var statusBar: NSStatusBar
     private var statusItem: NSStatusItem
-    
+
     required init(coder decoder: NSCoder) {
-        statusBar = NSStatusBar.init()
+        statusBar = NSStatusBar()
         statusItem = statusBar.statusItem(withLength: 28.0)
         super.init(coder: decoder)
     }
-    
-    init(){
-        statusBar = NSStatusBar.init()
+
+    init() {
+        statusBar = NSStatusBar()
         statusItem = statusBar.statusItem(withLength: 28.0)
         super.init(title: "Pareto")
-        self.delegate = self
+        delegate = self
         if let statusBarButton = statusItem.button {
             statusBarButton.image = #imageLiteral(resourceName: "StatusBarIcon")
             statusBarButton.image?.size = NSSize(width: 18.0, height: 18.0)
@@ -31,7 +31,7 @@ class StatusBarController: NSMenu, NSMenuDelegate  {
             statusBarButton.target = self
         }
         let menu = NSMenu {
-            MenuItem("Network firewall active"){
+            MenuItem("Network firewall active") {
                 MenuItem("More Information").onSelect {}
                 SeparatorItem()
                 MenuItem("Remaining: 17h 15min")
@@ -41,7 +41,7 @@ class StatusBarController: NSMenu, NSMenuDelegate  {
                 MenuItem("Snooze 1 week").onSelect {}
                 MenuItem("Disable").onSelect {}
             }
-            MenuItem("MacOS is up-to-date"){
+            MenuItem("MacOS is up-to-date") {
                 MenuItem("More Information").onSelect {}
                 SeparatorItem()
                 MenuItem("Remaining: 17h 15min")
@@ -51,7 +51,7 @@ class StatusBarController: NSMenu, NSMenuDelegate  {
                 MenuItem("Snooze 1 week").onSelect {}
                 MenuItem("Disable").onSelect {}
             }
-            MenuItem("Automatic login disabled"){
+            MenuItem("Automatic login disabled") {
                 MenuItem("More Information").onSelect {}
                 SeparatorItem()
                 MenuItem("Remaining: 17h 15min")
@@ -61,7 +61,7 @@ class StatusBarController: NSMenu, NSMenuDelegate  {
                 MenuItem("Snooze 1 week").onSelect {}
                 MenuItem("Disable").onSelect {}
             }
-            MenuItem("Gatekeeper active"){
+            MenuItem("Gatekeeper active") {
                 MenuItem("More Information").onSelect {}
                 SeparatorItem()
                 MenuItem("Remaining: 17h 15min")
@@ -79,10 +79,9 @@ class StatusBarController: NSMenu, NSMenuDelegate  {
                 .shortcut("q")
                 .onSelect {
                     NSApplication.shared.terminate(self)
-                    
                 }
         }
-        
+
         statusItem.menu = menu
     }
 }

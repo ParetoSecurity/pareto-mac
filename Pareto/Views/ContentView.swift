@@ -5,8 +5,8 @@
 //  Created by Janez Troha on 12/07/2021.
 //
 
-import SwiftUI
 import AppKit
+import SwiftUI
 
 struct ContentView: View {
     var body: some View {
@@ -20,8 +20,7 @@ struct ContentView: View {
                 .frame(width: 360.0, height: 320.0, alignment: .topLeading)
             Button(action: {
                 NSApplication.shared.terminate(self)
-            })
-            {
+            }) {
                 Text("Quit App")
                     .font(.caption)
                     .fontWeight(.semibold)
@@ -33,7 +32,6 @@ struct ContentView: View {
         .frame(width: 360.0, height: 360.0, alignment: .top)
     }
 }
-
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
