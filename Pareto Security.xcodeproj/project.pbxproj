@@ -11,6 +11,7 @@
 		4F10300F269F18FE008C1E86 /* MenuBuilder in Frameworks */ = {isa = PBXBuildFile; productRef = 4F10300E269F18FE008C1E86 /* MenuBuilder */; };
 		4F103012269F1C65008C1E86 /* LaunchAtLogin in Frameworks */ = {isa = PBXBuildFile; productRef = 4F103011269F1C65008C1E86 /* LaunchAtLogin */; };
 		4FAD1581269CDB3600074B19 /* EventMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FAD1580269CDB3600074B19 /* EventMonitor.swift */; };
+		4FD0A24126A024440070BED4 /* GateKeeper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FD0A24026A024440070BED4 /* GateKeeper.swift */; };
 		4FEBA2F2269CD48F009B2469 /* ParetoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEBA2F1269CD48F009B2469 /* ParetoApp.swift */; };
 		4FEBA2F4269CD48F009B2469 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEBA2F3269CD48F009B2469 /* ContentView.swift */; };
 		4FEBA2F6269CD48F009B2469 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4FEBA2F5269CD48F009B2469 /* Assets.xcassets */; };
@@ -21,7 +22,8 @@
 /* Begin PBXFileReference section */
 		4F103007269EE135008C1E86 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		4FAD1580269CDB3600074B19 /* EventMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventMonitor.swift; sourceTree = "<group>"; };
-		4FEBA2EE269CD48F009B2469 /* Pareto.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Pareto.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		4FD0A24026A024440070BED4 /* GateKeeper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GateKeeper.swift; sourceTree = "<group>"; };
+		4FEBA2EE269CD48F009B2469 /* Pareto Security.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Pareto Security.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4FEBA2F1269CD48F009B2469 /* ParetoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParetoApp.swift; sourceTree = "<group>"; };
 		4FEBA2F3269CD48F009B2469 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		4FEBA2F5269CD48F009B2469 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -65,6 +67,7 @@
 		4F10300A269F0568008C1E86 /* Checks */ = {
 			isa = PBXGroup;
 			children = (
+				4FD0A24026A024440070BED4 /* GateKeeper.swift */,
 			);
 			path = Checks;
 			sourceTree = "<group>";
@@ -80,7 +83,7 @@
 		4FEBA2EF269CD48F009B2469 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				4FEBA2EE269CD48F009B2469 /* Pareto.app */,
+				4FEBA2EE269CD48F009B2469 /* Pareto Security.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -111,9 +114,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		4FEBA2ED269CD48F009B2469 /* Pareto */ = {
+		4FEBA2ED269CD48F009B2469 /* Pareto Security */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 4FEBA2FE269CD48F009B2469 /* Build configuration list for PBXNativeTarget "Pareto" */;
+			buildConfigurationList = 4FEBA2FE269CD48F009B2469 /* Build configuration list for PBXNativeTarget "Pareto Security" */;
 			buildPhases = (
 				4FEBA2EA269CD48F009B2469 /* Sources */,
 				4FEBA2EB269CD48F009B2469 /* Frameworks */,
@@ -125,13 +128,13 @@
 			);
 			dependencies = (
 			);
-			name = Pareto;
+			name = "Pareto Security";
 			packageProductDependencies = (
 				4F10300E269F18FE008C1E86 /* MenuBuilder */,
 				4F103011269F1C65008C1E86 /* LaunchAtLogin */,
 			);
 			productName = Pareto;
-			productReference = 4FEBA2EE269CD48F009B2469 /* Pareto.app */;
+			productReference = 4FEBA2EE269CD48F009B2469 /* Pareto Security.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -148,7 +151,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 4FEBA2E9269CD48F009B2469 /* Build configuration list for PBXProject "Pareto" */;
+			buildConfigurationList = 4FEBA2E9269CD48F009B2469 /* Build configuration list for PBXProject "Pareto Security" */;
 			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -165,7 +168,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				4FEBA2ED269CD48F009B2469 /* Pareto */,
+				4FEBA2ED269CD48F009B2469 /* Pareto Security */,
 			);
 		};
 /* End PBXProject section */
@@ -230,6 +233,7 @@
 				4FEBA304269CD4E0009B2469 /* StatusBarController.swift in Sources */,
 				4FEBA2F2269CD48F009B2469 /* ParetoApp.swift in Sources */,
 				4F103008269EE136008C1E86 /* SettingsView.swift in Sources */,
+				4FD0A24126A024440070BED4 /* GateKeeper.swift in Sources */,
 				4FAD1581269CDB3600074B19 /* EventMonitor.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -405,7 +409,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		4FEBA2E9269CD48F009B2469 /* Build configuration list for PBXProject "Pareto" */ = {
+		4FEBA2E9269CD48F009B2469 /* Build configuration list for PBXProject "Pareto Security" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				4FEBA2FC269CD48F009B2469 /* Debug */,
@@ -414,7 +418,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		4FEBA2FE269CD48F009B2469 /* Build configuration list for PBXNativeTarget "Pareto" */ = {
+		4FEBA2FE269CD48F009B2469 /* Build configuration list for PBXNativeTarget "Pareto Security" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				4FEBA2FF269CD48F009B2469 /* Debug */,

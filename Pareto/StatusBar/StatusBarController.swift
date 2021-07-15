@@ -12,13 +12,13 @@ import SwiftUI
 class StatusBarController: NSMenu, NSMenuDelegate {
     private var statusBar: NSStatusBar
     private var statusItem: NSStatusItem
-
+    
     required init(coder decoder: NSCoder) {
         statusBar = NSStatusBar()
         statusItem = statusBar.statusItem(withLength: 28.0)
         super.init(coder: decoder)
     }
-
+    
     init() {
         statusBar = NSStatusBar()
         statusItem = statusBar.statusItem(withLength: 28.0)
@@ -30,8 +30,9 @@ class StatusBarController: NSMenu, NSMenuDelegate {
             statusBarButton.image?.isTemplate = true
             statusBarButton.target = self
         }
+        let status = isGateKeeperEnabled() ? "Network firewall active" : "Network firewall deacitvated"
         let menu = NSMenu {
-            MenuItem("Network firewall active") {
+            MenuItem(status) {
                 MenuItem("More Information").onSelect {}
                 SeparatorItem()
                 MenuItem("Remaining: 17h 15min")
@@ -81,7 +82,7 @@ class StatusBarController: NSMenu, NSMenuDelegate {
                     NSApplication.shared.terminate(self)
                 }
         }
-
+        
         statusItem.menu = menu
     }
 }
