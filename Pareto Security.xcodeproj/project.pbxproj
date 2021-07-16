@@ -8,8 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		4F103008269EE136008C1E86 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F103007269EE135008C1E86 /* SettingsView.swift */; };
-		4F10300F269F18FE008C1E86 /* MenuBuilder in Frameworks */ = {isa = PBXBuildFile; productRef = 4F10300E269F18FE008C1E86 /* MenuBuilder */; };
 		4F103012269F1C65008C1E86 /* LaunchAtLogin in Frameworks */ = {isa = PBXBuildFile; productRef = 4F103011269F1C65008C1E86 /* LaunchAtLogin */; };
+		4F5E888026A053A9005271FB /* MenuItemCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F5E887F26A053A9005271FB /* MenuItemCheck.swift */; };
 		4FAD1581269CDB3600074B19 /* EventMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FAD1580269CDB3600074B19 /* EventMonitor.swift */; };
 		4FD0A24126A024440070BED4 /* GateKeeper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FD0A24026A024440070BED4 /* GateKeeper.swift */; };
 		4FEBA2F2269CD48F009B2469 /* ParetoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEBA2F1269CD48F009B2469 /* ParetoApp.swift */; };
@@ -21,6 +21,7 @@
 
 /* Begin PBXFileReference section */
 		4F103007269EE135008C1E86 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		4F5E887F26A053A9005271FB /* MenuItemCheck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuItemCheck.swift; sourceTree = "<group>"; };
 		4FAD1580269CDB3600074B19 /* EventMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventMonitor.swift; sourceTree = "<group>"; };
 		4FD0A24026A024440070BED4 /* GateKeeper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GateKeeper.swift; sourceTree = "<group>"; };
 		4FEBA2EE269CD48F009B2469 /* Pareto Security.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Pareto Security.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -39,7 +40,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				4F103012269F1C65008C1E86 /* LaunchAtLogin in Frameworks */,
-				4F10300F269F18FE008C1E86 /* MenuBuilder in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -67,6 +67,7 @@
 		4F10300A269F0568008C1E86 /* Checks */ = {
 			isa = PBXGroup;
 			children = (
+				4F5E887F26A053A9005271FB /* MenuItemCheck.swift */,
 				4FD0A24026A024440070BED4 /* GateKeeper.swift */,
 			);
 			path = Checks;
@@ -130,7 +131,6 @@
 			);
 			name = "Pareto Security";
 			packageProductDependencies = (
-				4F10300E269F18FE008C1E86 /* MenuBuilder */,
 				4F103011269F1C65008C1E86 /* LaunchAtLogin */,
 			);
 			productName = Pareto;
@@ -161,7 +161,6 @@
 			);
 			mainGroup = 4FEBA2E5269CD48F009B2469;
 			packageReferences = (
-				4F10300D269F18FE008C1E86 /* XCRemoteSwiftPackageReference "MenuBuilder" */,
 				4F103010269F1C65008C1E86 /* XCRemoteSwiftPackageReference "LaunchAtLogin" */,
 			);
 			productRefGroup = 4FEBA2EF269CD48F009B2469 /* Products */;
@@ -229,6 +228,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4F5E888026A053A9005271FB /* MenuItemCheck.swift in Sources */,
 				4FEBA2F4269CD48F009B2469 /* ContentView.swift in Sources */,
 				4FEBA304269CD4E0009B2469 /* StatusBarController.swift in Sources */,
 				4FEBA2F2269CD48F009B2469 /* ParetoApp.swift in Sources */,
@@ -430,14 +430,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		4F10300D269F18FE008C1E86 /* XCRemoteSwiftPackageReference "MenuBuilder" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/j-f1/MenuBuilder";
-			requirement = {
-				branch = main;
-				kind = branch;
-			};
-		};
 		4F103010269F1C65008C1E86 /* XCRemoteSwiftPackageReference "LaunchAtLogin" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/sindresorhus/LaunchAtLogin";
@@ -449,11 +441,6 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		4F10300E269F18FE008C1E86 /* MenuBuilder */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 4F10300D269F18FE008C1E86 /* XCRemoteSwiftPackageReference "MenuBuilder" */;
-			productName = MenuBuilder;
-		};
 		4F103011269F1C65008C1E86 /* LaunchAtLogin */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 4F103010269F1C65008C1E86 /* XCRemoteSwiftPackageReference "LaunchAtLogin" */;

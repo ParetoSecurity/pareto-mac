@@ -5,22 +5,28 @@
 //  Created by Janez Troha on 15/07/2021.
 //
 
+import AppKit
+import Combine
 import Foundation
 import OSLog
+import SwiftUI
 
-let logger = Logger(subsystem: "checks", category: "GateKeeper")
+class GatekeeperCheck: ParetoCheck {
+    final var ID = "b59e172e-6a2d-4309-94ed-11e8722836b3"
+    final var TITLE = "Gatekeeper active"
 
-func isGateKeeperEnabled() -> Bool {
-    let path = "/var/db/SystemPolicy-prefs.plist"
-    guard let dictionary = NSDictionary(contentsOfFile: path) else {
-        logger.error("Unable to get dictionary from path \(path)")
+    required init(defaults: UserDefaults = .standard, id _: String! = "", title _: String! = "") {
+        super.init(defaults: defaults, id: ID, title: TITLE)
+    }
+
+    override func checkPasses() -> Bool {
+        let path = "/var/db/SystemPolicy-prefs.plist"
+        guard let dictionary = NSDictionary(contentsOfFile: path) else {
+            return false
+        }
+        if let enabled = dictionary.object(forKey: "enabled") as? String {
+            return enabled == "yes"
+        }
         return false
     }
-    if let enabled = dictionary.object(forKey: "enabled") as? String {
-        logger.info("enabled: \(enabled)")
-        return enabled == "yes"
-    }
-    logger.error("Unable to find value for key named enabled")
-    return false
 }
-

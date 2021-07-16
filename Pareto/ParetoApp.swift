@@ -14,6 +14,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         statusBar = StatusBarController()
         NSWindow.allowsAutomaticWindowTabbing = false
     }
+
+    @objc func showPrefs() {
+        NSApp.sendAction(Selector(("showPreferencesWindow:")), to: nil, from: nil)
+    }
+
+    @objc func quitApp() {
+        NSApplication.shared.terminate(self)
+    }
 }
 
 @main

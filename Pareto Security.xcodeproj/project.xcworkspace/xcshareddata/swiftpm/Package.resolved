@@ -9,15 +9,6 @@
           "revision": "afaacda2596e0f44cd1ca6f1db478ee9593f38b4",
           "version": null
         }
-      },
-      {
-        "package": "MenuBuilder",
-        "repositoryURL": "https://github.com/j-f1/MenuBuilder",
-        "state": {
-          "branch": "main",
-          "revision": "bd9d889e4418d417da45b7bc2297a553f3704ca6",
-          "version": null
-        }
       }
     ]
   },

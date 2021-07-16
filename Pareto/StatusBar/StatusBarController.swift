@@ -6,83 +6,57 @@
 //
 
 import AppKit
-import MenuBuilder
 import SwiftUI
 
 class StatusBarController: NSMenu, NSMenuDelegate {
-    private var statusBar: NSStatusBar
-    private var statusItem: NSStatusItem
-    
+    let statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
+    let checks = [
+        GatekeeperCheck(),
+    ]
+
     required init(coder decoder: NSCoder) {
-        statusBar = NSStatusBar()
-        statusItem = statusBar.statusItem(withLength: 28.0)
         super.init(coder: decoder)
     }
-    
+
     init() {
-        statusBar = NSStatusBar()
-        statusItem = statusBar.statusItem(withLength: 28.0)
-        super.init(title: "Pareto")
+        super.init(title: "")
         delegate = self
-        if let statusBarButton = statusItem.button {
-            statusBarButton.image = #imageLiteral(resourceName: "StatusBarIcon")
-            statusBarButton.image?.size = NSSize(width: 18.0, height: 18.0)
-            statusBarButton.image?.isTemplate = true
-            statusBarButton.target = self
+        statusItem.menu = self
+        statusItem.button?.image = #imageLiteral(resourceName: "StatusBarIcon")
+        statusItem.button?.image?.size = NSSize(width: 18.0, height: 18.0)
+        statusItem.button?.image?.isTemplate = true
+        statusItem.button?.target = self
+        updateMenu()
+    }
+
+    func updateMenu() {
+        removeAllItems()
+        addChecksMenuItems()
+        addApplicationItems()
+    }
+
+    func menuDidClose(_: NSMenu) {
+        updateMenu()
+    }
+
+    func menuWillOpen(_: NSMenu) {
+        updateMenu()
+    }
+
+    func addApplicationItems() {
+        addItem(NSMenuItem.separator())
+
+        let aboutItem = NSMenuItem(title: "Preferences", action: #selector(AppDelegate.showPrefs), keyEquivalent: "s")
+        aboutItem.target = NSApp.delegate
+        addItem(aboutItem)
+        let quitItem = NSMenuItem(title: "Quit Pareto App", action: #selector(AppDelegate.quitApp), keyEquivalent: "q")
+        quitItem.target = NSApp.delegate
+        addItem(quitItem)
+    }
+
+    func addChecksMenuItems() {
+        for check in checks {
+            addItem(check.menu())
         }
-        let status = isGateKeeperEnabled() ? "Network firewall active" : "Network firewall deacitvated"
-        let menu = NSMenu {
-            MenuItem(status) {
-                MenuItem("More Information").onSelect {}
-                SeparatorItem()
-                MenuItem("Remaining: 17h 15min")
-                SeparatorItem()
-                MenuItem("Snooze 1 hour").onSelect {}
-                MenuItem("Snooze 1 day").onSelect {}
-                MenuItem("Snooze 1 week").onSelect {}
-                MenuItem("Disable").onSelect {}
-            }
-            MenuItem("MacOS is up-to-date") {
-                MenuItem("More Information").onSelect {}
-                SeparatorItem()
-                MenuItem("Remaining: 17h 15min")
-                SeparatorItem()
-                MenuItem("Snooze 1 hour").onSelect {}
-                MenuItem("Snooze 1 day").onSelect {}
-                MenuItem("Snooze 1 week").onSelect {}
-                MenuItem("Disable").onSelect {}
-            }
-            MenuItem("Automatic login disabled") {
-                MenuItem("More Information").onSelect {}
-                SeparatorItem()
-                MenuItem("Remaining: 17h 15min")
-                SeparatorItem()
-                MenuItem("Snooze 1 hour").onSelect {}
-                MenuItem("Snooze 1 day").onSelect {}
-                MenuItem("Snooze 1 week").onSelect {}
-                MenuItem("Disable").onSelect {}
-            }
-            MenuItem("Gatekeeper active") {
-                MenuItem("More Information").onSelect {}
-                SeparatorItem()
-                MenuItem("Remaining: 17h 15min")
-                SeparatorItem()
-                MenuItem("Snooze 1 hour").onSelect {}
-                MenuItem("Snooze 1 day").onSelect {}
-                MenuItem("Snooze 1 week").onSelect {}
-                MenuItem("Disable").onSelect {}
-            }
-            SeparatorItem()
-            MenuItem("Preferences").shortcut("s").onSelect {
-                NSApp.sendAction(Selector(("showPreferencesWindow:")), to: nil, from: nil)
-            }
-            MenuItem("Quit Pareto App")
-                .shortcut("q")
-                .onSelect {
-                    NSApplication.shared.terminate(self)
-                }
-        }
-        
-        statusItem.menu = menu
     }
 }
