@@ -11,6 +11,22 @@ import Foundation
 import OSLog
 import SwiftUI
 
+extension Date {
+    func currentTimeMillis() -> Int64 {
+        return Int64(timeIntervalSince1970 * 1000)
+    }
+
+    func fromTimeStamp(timeStamp: Int) -> String {
+        let date = NSDate(timeIntervalSince1970: TimeInterval(timeStamp/1000))
+
+        let dayTimePeriodFormatter = DateFormatter()
+        dayTimePeriodFormatter.dateFormat = "dd MMM YY, hh:mm a"
+
+        let dateString = dayTimePeriodFormatter.string(from: date as Date)
+        return dateString
+    }
+}
+
 class ParetoCheck: ObservableObject {
     private enum Snooze {
         static let oneHour = 3600
@@ -33,6 +49,14 @@ class ParetoCheck: ObservableObject {
         UUID + "-Snooze"
     }
 
+    var PassesKey: String {
+        UUID + "-Passes"
+    }
+
+    var TimestampKey: String {
+        UUID + "-TS"
+    }
+
     required init(defaults: UserDefaults = .standard, id: String! = "", title: String! = "") {
         self.defaults = defaults
         UUID = id
@@ -41,6 +65,8 @@ class ParetoCheck: ObservableObject {
         defaults.register(defaults: [
             UUID + "-Enabled": true,
             UUID + "-Snooze": 0,
+            UUID + "-Passes": false,
+            UUID + "-TS": 0,
         ])
 
         cancellable = NotificationCenter.default
@@ -57,6 +83,16 @@ class ParetoCheck: ObservableObject {
     var snoozeTime: Int {
         set { defaults.set(newValue, forKey: SnoozeKey) }
         get { defaults.integer(forKey: SnoozeKey) }
+    }
+
+    var checkPassed: Bool {
+        set { defaults.set(newValue, forKey: PassesKey) }
+        get { defaults.bool(forKey: PassesKey) }
+    }
+
+    var checkTimestamp: Int {
+        set { defaults.set(newValue, forKey: TimestampKey) }
+        get { defaults.integer(forKey: TimestampKey) }
     }
 
     @objc func moreInfo() {
@@ -100,18 +136,21 @@ class ParetoCheck: ObservableObject {
     }
 
     func menu() -> NSMenuItem {
-        let status = snoozeTime == 0 ? checkPasses() ? "✅ " : "❌ " : "🕒 "
+        let status = isActive ? snoozeTime == 0 ? checkPassed ? "✅ " : "❌ " : "🕒 " : ""
         let item = NSMenuItem(title: status + title, action: nil, keyEquivalent: "")
         let submenu = NSMenu()
 
         submenu.addItem(addSubmenu(withTitle: "More Information", action: #selector(moreInfo)))
+        submenu.addItem(addSubmenu(withTitle: "Last check: \(Date().fromTimeStamp(timeStamp: checkTimestamp))", action: nil))
         submenu.addItem(NSMenuItem.separator())
         if snoozeTime == 0 {
             submenu.addItem(addSubmenu(withTitle: "Snooze for 1 hour", action: #selector(snoozeOneHour)))
             submenu.addItem(addSubmenu(withTitle: "Snooze for 1 day", action: #selector(snoozeOneDay)))
             submenu.addItem(addSubmenu(withTitle: "Snooze for 1 week", action: #selector(snoozeOneWeek)))
         } else {
-            submenu.addItem(addSubmenu(withTitle: "Resume", action: #selector(unsnooze)))
+            if isActive {
+                submenu.addItem(addSubmenu(withTitle: "Resume", action: #selector(unsnooze)))
+            }
         }
 
         submenu.addItem(NSMenuItem.separator())
@@ -123,5 +162,10 @@ class ParetoCheck: ObservableObject {
 
         item.submenu = submenu
         return item
+    }
+
+    func run() {
+        checkPassed = checkPasses()
+        checkTimestamp = Int(Date().currentTimeMillis())
     }
 }

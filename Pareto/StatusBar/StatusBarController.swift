@@ -10,6 +10,8 @@ import SwiftUI
 
 class StatusBarController: NSMenu, NSMenuDelegate {
     let statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
+    var workItem: DispatchWorkItem?
+
     let checks = [
         GatekeeperCheck(),
     ]
@@ -35,6 +37,34 @@ class StatusBarController: NSMenu, NSMenuDelegate {
         addApplicationItems()
     }
 
+    func runChecks() {
+        statusItem.button?.appearsDisabled = true
+        workItem = DispatchWorkItem {
+            for check in self.checks {
+                logger.info("Running check \(check.ID) - \(check.TITLE)")
+                check.run()
+            }
+        }
+
+        // update mensu after checks have ran
+        workItem?.notify(queue: .main) {
+            self.updateMenu()
+            self.statusItem.button?.appearsDisabled = false
+            logger.info("Checks finished running")
+        }
+
+        // guard to prevent long running tasks
+        DispatchQueue.global().asyncAfter(deadline: .now() + .seconds(60)) {
+            self.workItem?.cancel()
+            self.statusItem.button?.appearsDisabled = false
+            logger.warning("Checks took more than 60s to finish canceling")
+        }
+
+        // run tasks
+        DispatchQueue.main.async(execute: workItem!)
+        logger.info("Running check scheduler")
+    }
+
     func menuDidClose(_: NSMenu) {
         updateMenu()
     }
@@ -49,6 +79,9 @@ class StatusBarController: NSMenu, NSMenuDelegate {
         let aboutItem = NSMenuItem(title: "Preferences", action: #selector(AppDelegate.showPrefs), keyEquivalent: "s")
         aboutItem.target = NSApp.delegate
         addItem(aboutItem)
+        let runItem = NSMenuItem(title: "Check", action: #selector(AppDelegate.runChecks), keyEquivalent: "c")
+        runItem.target = NSApp.delegate
+        addItem(runItem)
         let quitItem = NSMenuItem(title: "Quit Pareto App", action: #selector(AppDelegate.quitApp), keyEquivalent: "q")
         quitItem.target = NSApp.delegate
         addItem(quitItem)

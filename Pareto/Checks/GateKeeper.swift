@@ -4,12 +4,7 @@
 //
 //  Created by Janez Troha on 15/07/2021.
 //
-
-import AppKit
-import Combine
 import Foundation
-import OSLog
-import SwiftUI
 
 class GatekeeperCheck: ParetoCheck {
     final var ID = "b59e172e-6a2d-4309-94ed-11e8722836b3"

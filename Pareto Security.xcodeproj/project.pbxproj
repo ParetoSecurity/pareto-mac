@@ -9,8 +9,7 @@
 /* Begin PBXBuildFile section */
 		4F103008269EE136008C1E86 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F103007269EE135008C1E86 /* SettingsView.swift */; };
 		4F103012269F1C65008C1E86 /* LaunchAtLogin in Frameworks */ = {isa = PBXBuildFile; productRef = 4F103011269F1C65008C1E86 /* LaunchAtLogin */; };
-		4F5E888026A053A9005271FB /* MenuItemCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F5E887F26A053A9005271FB /* MenuItemCheck.swift */; };
-		4FAD1581269CDB3600074B19 /* EventMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FAD1580269CDB3600074B19 /* EventMonitor.swift */; };
+		4F5E888026A053A9005271FB /* ParetoCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F5E887F26A053A9005271FB /* ParetoCheck.swift */; };
 		4FD0A24126A024440070BED4 /* GateKeeper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FD0A24026A024440070BED4 /* GateKeeper.swift */; };
 		4FEBA2F2269CD48F009B2469 /* ParetoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEBA2F1269CD48F009B2469 /* ParetoApp.swift */; };
 		4FEBA2F4269CD48F009B2469 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEBA2F3269CD48F009B2469 /* ContentView.swift */; };
@@ -21,8 +20,7 @@
 
 /* Begin PBXFileReference section */
 		4F103007269EE135008C1E86 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
-		4F5E887F26A053A9005271FB /* MenuItemCheck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuItemCheck.swift; sourceTree = "<group>"; };
-		4FAD1580269CDB3600074B19 /* EventMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventMonitor.swift; sourceTree = "<group>"; };
+		4F5E887F26A053A9005271FB /* ParetoCheck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParetoCheck.swift; sourceTree = "<group>"; };
 		4FD0A24026A024440070BED4 /* GateKeeper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GateKeeper.swift; sourceTree = "<group>"; };
 		4FEBA2EE269CD48F009B2469 /* Pareto Security.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Pareto Security.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4FEBA2F1269CD48F009B2469 /* ParetoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParetoApp.swift; sourceTree = "<group>"; };
@@ -59,7 +57,6 @@
 			isa = PBXGroup;
 			children = (
 				4FEBA303269CD4E0009B2469 /* StatusBarController.swift */,
-				4FAD1580269CDB3600074B19 /* EventMonitor.swift */,
 			);
 			path = StatusBar;
 			sourceTree = "<group>";
@@ -67,7 +64,7 @@
 		4F10300A269F0568008C1E86 /* Checks */ = {
 			isa = PBXGroup;
 			children = (
-				4F5E887F26A053A9005271FB /* MenuItemCheck.swift */,
+				4F5E887F26A053A9005271FB /* ParetoCheck.swift */,
 				4FD0A24026A024440070BED4 /* GateKeeper.swift */,
 			);
 			path = Checks;
@@ -228,13 +225,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4F5E888026A053A9005271FB /* MenuItemCheck.swift in Sources */,
+				4F5E888026A053A9005271FB /* ParetoCheck.swift in Sources */,
 				4FEBA2F4269CD48F009B2469 /* ContentView.swift in Sources */,
 				4FEBA304269CD4E0009B2469 /* StatusBarController.swift in Sources */,
 				4FEBA2F2269CD48F009B2469 /* ParetoApp.swift in Sources */,
 				4F103008269EE136008C1E86 /* SettingsView.swift in Sources */,
 				4FD0A24126A024440070BED4 /* GateKeeper.swift in Sources */,
-				4FAD1581269CDB3600074B19 /* EventMonitor.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -296,9 +292,11 @@
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				OTHER_SWIFT_FLAGS = "";
 				SDKROOT = macosx;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -350,9 +348,11 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
+				OTHER_SWIFT_FLAGS = "";
 				SDKROOT = macosx;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
