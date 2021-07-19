@@ -17,7 +17,7 @@ extension Date {
     }
 
     func fromTimeStamp(timeStamp: Int) -> String {
-        let date = NSDate(timeIntervalSince1970: TimeInterval(timeStamp/1000))
+        let date = NSDate(timeIntervalSince1970: TimeInterval(timeStamp / 1000))
 
         let dayTimePeriodFormatter = DateFormatter()
         dayTimePeriodFormatter.dateFormat = "dd MMM YY, hh:mm a"
@@ -149,7 +149,8 @@ class ParetoCheck: ObservableObject {
             submenu.addItem(addSubmenu(withTitle: "Snooze for 1 week", action: #selector(snoozeOneWeek)))
         } else {
             if isActive {
-                submenu.addItem(addSubmenu(withTitle: "Resume", action: #selector(unsnooze)))
+                submenu.addItem(addSubmenu(withTitle: "Unsnooze", action: #selector(unsnooze)))
+                submenu.addItem(addSubmenu(withTitle: "Resumes: \(Date().fromTimeStamp(timeStamp: checkTimestamp + (snoozeTime * 1000)))", action: nil))
             }
         }
 
@@ -165,6 +166,21 @@ class ParetoCheck: ObservableObject {
     }
 
     func run() {
+        if !isActive {
+            logger.info("Disabled \(self.UUID) - \(self.title)")
+            return
+        }
+        logger.info("Running check \(self.UUID) - \(self.title)")
+        if snoozeTime != 0 {
+            if checkTimestamp + (snoozeTime * 1000) >= Int(Date().currentTimeMillis()) {
+                logger.info("Resetting snooze for \(self.UUID) - \(self.title)")
+                snoozeTime = 0
+            } else {
+                logger.info("Snooze in effect for \(self.UUID) - \(self.title)")
+                return
+            }
+        }
+
         checkPassed = checkPasses()
         checkTimestamp = Int(Date().currentTimeMillis())
     }

@@ -14,6 +14,9 @@ class StatusBarController: NSMenu, NSMenuDelegate {
 
     let checks = [
         GatekeeperCheck(),
+        FirewallCheck(),
+        AutologinCheck(),
+        ScreensaverCheck()
     ]
 
     required init(coder decoder: NSCoder) {
@@ -41,7 +44,6 @@ class StatusBarController: NSMenu, NSMenuDelegate {
         statusItem.button?.appearsDisabled = true
         workItem = DispatchWorkItem {
             for check in self.checks {
-                logger.info("Running check \(check.ID) - \(check.TITLE)")
                 check.run()
             }
         }
@@ -76,12 +78,14 @@ class StatusBarController: NSMenu, NSMenuDelegate {
     func addApplicationItems() {
         addItem(NSMenuItem.separator())
 
-        let aboutItem = NSMenuItem(title: "Preferences", action: #selector(AppDelegate.showPrefs), keyEquivalent: "s")
-        aboutItem.target = NSApp.delegate
-        addItem(aboutItem)
         let runItem = NSMenuItem(title: "Check", action: #selector(AppDelegate.runChecks), keyEquivalent: "c")
         runItem.target = NSApp.delegate
         addItem(runItem)
+
+        let aboutItem = NSMenuItem(title: "Preferences", action: #selector(AppDelegate.showPrefs), keyEquivalent: "s")
+        aboutItem.target = NSApp.delegate
+        addItem(aboutItem)
+
         let quitItem = NSMenuItem(title: "Quit Pareto App", action: #selector(AppDelegate.quitApp), keyEquivalent: "q")
         quitItem.target = NSApp.delegate
         addItem(quitItem)
