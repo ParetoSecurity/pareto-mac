@@ -5,6 +5,7 @@
 //  Created by Janez Troha on 15/07/2021.
 //
 import Foundation
+import os.log
 
 class GatekeeperCheck: ParetoCheck {
     final var ID = "b59e172e-6a2d-4309-94ed-11e8722836b3"
@@ -15,11 +16,8 @@ class GatekeeperCheck: ParetoCheck {
     }
 
     override func checkPasses() -> Bool {
-        let path = "/var/db/SystemPolicy-prefs.plist"
-        guard let dictionary = NSDictionary(contentsOfFile: path) else {
-            return false
-        }
-        if let enabled = dictionary.object(forKey: "enabled") as? String {
+        let dictionary = self.readDefaultsFile(path: "/var/db/SystemPolicy-prefs.plist")
+        if let enabled = dictionary?.object(forKey: "enabled") as? String {
             return enabled == "yes"
         }
         return false

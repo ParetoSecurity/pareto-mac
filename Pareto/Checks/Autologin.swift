@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import os.log
 
 class AutologinCheck: ParetoCheck {
     final var ID = "f962c423-fdf5-428a-a57a-816abc9b253e"
@@ -16,8 +17,9 @@ class AutologinCheck: ParetoCheck {
     }
 
     override func checkPasses() -> Bool {
-        if let autoLoginUser = CFPreferencesCopyAppValue("autoLoginUser" as CFString, "com.apple.loginwindow" as CFString) as? String {
-        //if let autoLoginUser = self.readDefaults(app: "com.apple.loginwindow", key: "autoLoginUser") {
+        let dictionary = self.readDefaultsFile(path: "/Library/Preferences/com.apple.loginwindow.plist")
+        if let autoLoginUser = dictionary?.value(forKey: "autoLoginUser") as? String {
+            os_log("autoLoginUser: %{public}s", autoLoginUser)
             return !autoLoginUser.isEmpty
         }
         return false

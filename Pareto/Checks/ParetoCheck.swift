@@ -8,7 +8,7 @@
 import AppKit
 import Combine
 import Foundation
-import OSLog
+import os.log
 import SwiftUI
 
 extension Date {
@@ -167,16 +167,16 @@ class ParetoCheck: ObservableObject {
 
     func run() {
         if !isActive {
-            logger.info("Disabled \(self.UUID) - \(self.title)")
+            os_log("Disabled for %{public}s - %{public}s", self.UUID, self.title)
             return
         }
-        logger.info("Running check \(self.UUID) - \(self.title)")
+        os_log("Running check for %{public}s - %{public}s", self.UUID, self.title)
         if snoozeTime != 0 {
             if checkTimestamp + (snoozeTime * 1000) >= Int(Date().currentTimeMillis()) {
-                logger.info("Resetting snooze for \(self.UUID) - \(self.title)")
+                os_log("Resetting snooze for %{public}s - %{public}s", self.UUID, self.title)
                 snoozeTime = 0
             } else {
-                logger.info("Snooze in effect for \(self.UUID) - \(self.title)")
+                os_log("Snooze in effect for %{public}s - %{public}s", self.UUID, self.title)
                 return
             }
         }
@@ -206,6 +206,7 @@ class ParetoCheck: ObservableObject {
     
     func readDefaultsFile(path: String) -> NSDictionary? {
         guard let dictionary = NSDictionary(contentsOfFile: path) else {
+            os_log("Failed reading \(path)")
             return nil
         }
         return dictionary

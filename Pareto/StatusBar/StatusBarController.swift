@@ -7,6 +7,8 @@
 
 import AppKit
 import SwiftUI
+import os.log
+
 
 class StatusBarController: NSMenu, NSMenuDelegate {
     let statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
@@ -52,19 +54,19 @@ class StatusBarController: NSMenu, NSMenuDelegate {
         workItem?.notify(queue: .main) {
             self.updateMenu()
             self.statusItem.button?.appearsDisabled = false
-            logger.info("Checks finished running")
+            os_log("Checks finished running")
         }
 
         // guard to prevent long running tasks
         DispatchQueue.global().asyncAfter(deadline: .now() + .seconds(60)) {
             self.workItem?.cancel()
             self.statusItem.button?.appearsDisabled = false
-            logger.warning("Checks took more than 60s to finish canceling")
+            os_log("Checks took more than 60s to finish canceling")
         }
 
         // run tasks
         DispatchQueue.main.async(execute: workItem!)
-        logger.info("Running check scheduler")
+        os_log("Running check scheduler")
     }
 
     func menuDidClose(_: NSMenu) {
