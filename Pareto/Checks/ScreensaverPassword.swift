@@ -21,7 +21,7 @@ class ScreensaverPasswordCheck: ParetoCheck {
         let dictionary = readDefaultsFile(path: homeDirURL.path + "/Library/Preferences/com.apple.screensaver.plist")
 
         if let askForPassword = dictionary?.value(forKey: "askForPassword") as? Int {
-            //os_log("askForPassword: %{public}s", askForPassword)
+            // os_log("askForPassword: %{public}s", askForPassword)
             return askForPassword == 1
         }
 

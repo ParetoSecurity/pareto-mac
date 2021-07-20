@@ -18,7 +18,7 @@ class StatusBarController: NSMenu, NSMenuDelegate {
         FirewallCheck(),
         AutologinCheck(),
         ScreensaverCheck(),
-        ScreensaverPasswordCheck()
+        ScreensaverPasswordCheck(),
     ]
 
     required init(coder decoder: NSCoder) {
@@ -39,7 +39,6 @@ class StatusBarController: NSMenu, NSMenuDelegate {
         removeAllItems()
         addChecksMenuItems()
         addApplicationItems()
-        
     }
 
     func runChecks() {
