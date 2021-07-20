@@ -16,7 +16,7 @@ class GatekeeperCheck: ParetoCheck {
     }
 
     override func checkPasses() -> Bool {
-        let dictionary = self.readDefaultsFile(path: "/var/db/SystemPolicy-prefs.plist")
+        let dictionary = readDefaultsFile(path: "/var/db/SystemPolicy-prefs.plist")
         if let enabled = dictionary?.object(forKey: "enabled") as? String {
             return enabled == "yes"
         }

@@ -6,9 +6,8 @@
 //
 
 import AppKit
-import SwiftUI
 import os.log
-
+import SwiftUI
 
 class StatusBarController: NSMenu, NSMenuDelegate {
     let statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
@@ -18,7 +17,7 @@ class StatusBarController: NSMenu, NSMenuDelegate {
         GatekeeperCheck(),
         FirewallCheck(),
         AutologinCheck(),
-        ScreensaverCheck()
+        ScreensaverCheck(),
     ]
 
     required init(coder decoder: NSCoder) {

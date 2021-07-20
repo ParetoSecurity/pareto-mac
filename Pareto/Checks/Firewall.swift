@@ -16,7 +16,7 @@ class FirewallCheck: ParetoCheck {
     }
 
     override func checkPasses() -> Bool {
-        let dictionary = self.readDefaultsFile(path: "/Library/Preferences/com.apple.alf.plist")
+        let dictionary = readDefaultsFile(path: "/Library/Preferences/com.apple.alf.plist")
         if let globalstate = dictionary?.value(forKey: "globalstate") as? Int {
             os_log("globalstate: %{public}s", globalstate)
             return globalstate == 1

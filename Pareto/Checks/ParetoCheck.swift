@@ -167,16 +167,16 @@ class ParetoCheck: ObservableObject {
 
     func run() {
         if !isActive {
-            os_log("Disabled for %{public}s - %{public}s", self.UUID, self.title)
+            os_log("Disabled for %{public}s - %{public}s", UUID, title)
             return
         }
-        os_log("Running check for %{public}s - %{public}s", self.UUID, self.title)
+        os_log("Running check for %{public}s - %{public}s", UUID, title)
         if snoozeTime != 0 {
             if checkTimestamp + (snoozeTime * 1000) >= Int(Date().currentTimeMillis()) {
-                os_log("Resetting snooze for %{public}s - %{public}s", self.UUID, self.title)
+                os_log("Resetting snooze for %{public}s - %{public}s", UUID, title)
                 snoozeTime = 0
             } else {
-                os_log("Snooze in effect for %{public}s - %{public}s", self.UUID, self.title)
+                os_log("Snooze in effect for %{public}s - %{public}s", UUID, title)
                 return
             }
         }
@@ -184,26 +184,24 @@ class ParetoCheck: ObservableObject {
         checkPassed = checkPasses()
         checkTimestamp = Int(Date().currentTimeMillis())
     }
-    
+
     func readDefaults(app: String, key: String) -> String? {
-        
-            let task = Process()
-            let pipe = Pipe()
-            
-            task.standardOutput = pipe
-            task.standardError = pipe
-            task.arguments = ["-currentHost", "read", app, key]
-            task.launchPath = "/usr/bin/defaults"
-            task.launch()
-            task.waitUntilExit()
-            
-            let data = pipe.fileHandleForReading.readDataToEndOfFile()
-            let output = String(data: data, encoding: .utf8)!
-            
-            return output.contains("does not exist") ? nil : output
-        
+        let task = Process()
+        let pipe = Pipe()
+
+        task.standardOutput = pipe
+        task.standardError = pipe
+        task.arguments = ["-currentHost", "read", app, key]
+        task.launchPath = "/usr/bin/defaults"
+        task.launch()
+        task.waitUntilExit()
+
+        let data = pipe.fileHandleForReading.readDataToEndOfFile()
+        let output = String(data: data, encoding: .utf8)!
+
+        return output.contains("does not exist") ? nil : output
     }
-    
+
     func readDefaultsFile(path: String) -> NSDictionary? {
         guard let dictionary = NSDictionary(contentsOfFile: path) else {
             os_log("Failed reading \(path)")
