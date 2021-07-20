@@ -27,6 +27,8 @@ extension Date {
     }
 }
 
+
+
 class ParetoCheck: ObservableObject {
     private enum Snooze {
         static let oneHour = 3600
@@ -134,10 +136,27 @@ class ParetoCheck: ObservableObject {
     func checkPasses() -> Bool {
         fatalError("checkPasses() is not implemented")
     }
-
+    
+    func sf(name: String) -> NSImage {
+        return NSImage(systemSymbolName: name, accessibilityDescription: nil)!
+    }
+    
     func menu() -> NSMenuItem {
-        let status = isActive ? snoozeTime == 0 ? checkPassed ? "✅ " : "❌ " : "🕒 " : ""
-        let item = NSMenuItem(title: status + title, action: nil, keyEquivalent: "")
+        let item = NSMenuItem(title: title, action: nil, keyEquivalent: "")
+        if isActive {
+            if snoozeTime > 0 {
+                item.image = sf(name:"powersleep")
+            }else{
+                if checkPasses() {
+                    item.image = sf(name:"checkmark.shield")
+                }else{
+                    item.image = sf(name:"exclamationmark.shield")
+                }
+            }
+        }else{
+            item.image = sf(name:"shield.slash")
+        }
+        
         let submenu = NSMenu()
 
         submenu.addItem(addSubmenu(withTitle: "More Information", action: #selector(moreInfo)))
@@ -185,6 +204,11 @@ class ParetoCheck: ObservableObject {
         checkTimestamp = Int(Date().currentTimeMillis())
     }
 
+}
+
+
+extension ParetoCheck {
+    
     func readDefaults(app: String, key: String) -> String? {
         let task = Process()
         let pipe = Pipe()
@@ -207,6 +231,8 @@ class ParetoCheck: ObservableObject {
             os_log("Failed reading \(path)")
             return nil
         }
+        print("\(path): \(dictionary as AnyObject)")
         return dictionary
     }
+    
 }

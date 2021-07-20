@@ -17,10 +17,12 @@ class ScreensaverPasswordCheck: ParetoCheck {
     }
 
     override func checkPasses() -> Bool {
-        // if let idleTime = CFPreferencesCopyAppValue("idleTime" as CFString, "com.apple.screensaver" as CFString) as? String {
-        if let askForPassword = readDefaults(app: "com.apple.screensaver", key: "askForPassword") {
-            os_log("askForPassword: %{public}s", askForPassword)
-            return Int(askForPassword) ?? 0 == 1
+        let homeDirURL = FileManager.default.homeDirectoryForCurrentUser
+        let dictionary = readDefaultsFile(path: homeDirURL.path + "/Library/Preferences/com.apple.screensaver.plist")
+
+        if let askForPassword = dictionary?.value(forKey: "askForPassword") as? Int {
+            //os_log("askForPassword: %{public}s", askForPassword)
+            return askForPassword == 1
         }
 
         return false

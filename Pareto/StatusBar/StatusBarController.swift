@@ -26,12 +26,11 @@ class StatusBarController: NSMenu, NSMenuDelegate {
     }
 
     init() {
+        let image = NSImage(systemSymbolName: "lasso.and.sparkles", accessibilityDescription: nil)
         super.init(title: "")
         delegate = self
         statusItem.menu = self
-        statusItem.button?.image = #imageLiteral(resourceName: "StatusBarIcon")
-        statusItem.button?.image?.size = NSSize(width: 18.0, height: 18.0)
-        statusItem.button?.image?.isTemplate = true
+        statusItem.button?.image = image
         statusItem.button?.target = self
         updateMenu()
     }
