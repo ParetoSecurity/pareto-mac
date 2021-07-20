@@ -22,6 +22,6 @@ class AutologinCheck: ParetoCheck {
             os_log("autoLoginUser: %{public}s", autoLoginUser)
             return !autoLoginUser.isEmpty
         }
-        return false
+        return true
     }
 }
