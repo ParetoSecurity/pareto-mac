@@ -11,6 +11,27 @@ import Foundation
 import os.log
 import SwiftUI
 
+extension NSImage {
+    func tint(color: NSColor) -> NSImage {
+        if self.isTemplate == false {
+            return self
+        }
+        
+        let image = self.copy() as! NSImage
+        image.lockFocus()
+        
+        color.set()
+        
+        let imageRect = NSRect(origin: .zero, size: image.size)
+        imageRect.fill(using: .sourceIn)
+        
+        image.unlockFocus()
+        image.isTemplate = false
+        
+        return image
+    }
+}
+
 extension Date {
     func currentTimeMillis() -> Int64 {
         return Int64(timeIntervalSince1970 * 1000)
@@ -26,6 +47,32 @@ extension Date {
         return dateString
     }
 }
+
+extension String {
+    func versionCompare(_ otherVersion: String) -> ComparisonResult {
+        let versionDelimiter = "."
+
+        var versionComponents = self.components(separatedBy: versionDelimiter) // <1>
+        var otherVersionComponents = otherVersion.components(separatedBy: versionDelimiter)
+
+        let zeroDiff = versionComponents.count - otherVersionComponents.count // <2>
+
+        if zeroDiff == 0 { // <3>
+            // Same format, compare normally
+            return self.compare(otherVersion, options: .numeric)
+        } else {
+            let zeros = Array(repeating: "0", count: abs(zeroDiff)) // <4>
+            if zeroDiff > 0 {
+                otherVersionComponents.append(contentsOf: zeros) // <5>
+            } else {
+                versionComponents.append(contentsOf: zeros)
+            }
+            return versionComponents.joined(separator: versionDelimiter)
+                .compare(otherVersionComponents.joined(separator: versionDelimiter), options: .numeric) // <6>
+        }
+    }
+}
+
 
 class ParetoCheck: ObservableObject {
     private enum Snooze {
@@ -136,19 +183,21 @@ class ParetoCheck: ObservableObject {
     }
 
     func sf(name: String) -> NSImage {
-        return NSImage(systemSymbolName: name, accessibilityDescription: nil)!
+        let icon = NSImage(systemSymbolName: name, accessibilityDescription: nil)!
+        icon.isTemplate = true
+        return icon
     }
 
     func menu() -> NSMenuItem {
         let item = NSMenuItem(title: title, action: nil, keyEquivalent: "")
         if isActive {
             if snoozeTime > 0 {
-                item.image = sf(name: "powersleep")
+                item.image = sf(name: "powersleep").tint(color: .systemGreen)
             } else {
-                if checkPasses() {
-                    item.image = sf(name: "checkmark.shield")
+                if checkPassed {
+                    item.image = sf(name: "checkmark.shield").tint(color: .systemBlue)
                 } else {
-                    item.image = sf(name: "exclamationmark.shield")
+                    item.image = sf(name: "exclamationmark.shield").tint(color: .systemRed)
                 }
             }
         } else {
@@ -228,5 +277,14 @@ extension ParetoCheck {
         }
         print("\(path): \(dictionary as AnyObject)")
         return dictionary
+    }
+    
+    func appVersion(app: String) -> String? {
+        guard let dictionary = NSDictionary(contentsOfFile: "/Applications/\(app).app/Contents/Info.plist") else {
+            os_log("Failed reading \(app)")
+            return nil
+        }
+        print("\(app): \(dictionary as AnyObject)")
+        return dictionary.value(forKey: "CFBundleShortVersionString") as? String
     }
 }

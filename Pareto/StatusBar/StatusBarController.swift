@@ -19,6 +19,7 @@ class StatusBarController: NSMenu, NSMenuDelegate {
         AutologinCheck(),
         ScreensaverCheck(),
         ScreensaverPasswordCheck(),
+        ZoomCheck()
     ]
 
     required init(coder decoder: NSCoder) {
@@ -49,7 +50,7 @@ class StatusBarController: NSMenu, NSMenuDelegate {
             }
         }
 
-        // update mensu after checks have ran
+        // update menus after checks have ran
         workItem?.notify(queue: .main) {
             self.updateMenu()
             self.statusItem.button?.appearsDisabled = false

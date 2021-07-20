@@ -14,6 +14,7 @@
 		4F868DD126A5C51C005B876E /* Autologin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F868DD026A5C51C005B876E /* Autologin.swift */; };
 		4F868DD326A5C751005B876E /* Screensaver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F868DD226A5C751005B876E /* Screensaver.swift */; };
 		4FB405EF26A6FC4800267D5D /* ScreensaverPassword.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB405EE26A6FC4800267D5D /* ScreensaverPassword.swift */; };
+		4FB405F126A70DCC00267D5D /* ZoomVersion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB405F026A70DCC00267D5D /* ZoomVersion.swift */; };
 		4FD0A24126A024440070BED4 /* Gatekeeper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FD0A24026A024440070BED4 /* Gatekeeper.swift */; };
 		4FEBA2F2269CD48F009B2469 /* ParetoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEBA2F1269CD48F009B2469 /* ParetoApp.swift */; };
 		4FEBA2F4269CD48F009B2469 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEBA2F3269CD48F009B2469 /* ContentView.swift */; };
@@ -29,6 +30,7 @@
 		4F868DD026A5C51C005B876E /* Autologin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Autologin.swift; sourceTree = "<group>"; };
 		4F868DD226A5C751005B876E /* Screensaver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Screensaver.swift; sourceTree = "<group>"; };
 		4FB405EE26A6FC4800267D5D /* ScreensaverPassword.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreensaverPassword.swift; sourceTree = "<group>"; };
+		4FB405F026A70DCC00267D5D /* ZoomVersion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZoomVersion.swift; sourceTree = "<group>"; };
 		4FD0A24026A024440070BED4 /* Gatekeeper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Gatekeeper.swift; sourceTree = "<group>"; };
 		4FEBA2EE269CD48F009B2469 /* Pareto Security.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Pareto Security.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4FEBA2F1269CD48F009B2469 /* ParetoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParetoApp.swift; sourceTree = "<group>"; };
@@ -75,6 +77,7 @@
 				4F5E887F26A053A9005271FB /* ParetoCheck.swift */,
 				4FD0A24026A024440070BED4 /* Gatekeeper.swift */,
 				4F868DCE26A591E6005B876E /* Firewall.swift */,
+				4FB405F026A70DCC00267D5D /* ZoomVersion.swift */,
 				4F868DD026A5C51C005B876E /* Autologin.swift */,
 				4F868DD226A5C751005B876E /* Screensaver.swift */,
 				4FB405EE26A6FC4800267D5D /* ScreensaverPassword.swift */,
@@ -247,6 +250,7 @@
 				4F103008269EE136008C1E86 /* SettingsView.swift in Sources */,
 				4F868DD326A5C751005B876E /* Screensaver.swift in Sources */,
 				4FD0A24126A024440070BED4 /* Gatekeeper.swift in Sources */,
+				4FB405F126A70DCC00267D5D /* ZoomVersion.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -390,7 +394,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
-				MARKETING_VERSION = 0.0.3;
+				MARKETING_VERSION = 0.0.4;
 				PRODUCT_BUNDLE_IDENTIFIER = dz0ny.dev.Pareto;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -415,7 +419,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
-				MARKETING_VERSION = 0.0.3;
+				MARKETING_VERSION = 0.0.4;
 				PRODUCT_BUNDLE_IDENTIFIER = dz0ny.dev.Pareto;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
