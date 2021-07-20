@@ -16,12 +16,9 @@ class AutologinCheck: ParetoCheck {
     }
 
     override func checkPasses() -> Bool {
-        let path = "/Library/Preferences/com.apple.loginwindow.plist"
-        guard let dictionary = NSDictionary(contentsOfFile: path) else {
-            return false
-        }
-        if let autoLoginUser = dictionary.object(forKey: "autoLoginUser") as? String {
-            return autoLoginUser.isEmpty
+        if let autoLoginUser = CFPreferencesCopyAppValue("autoLoginUser" as CFString, "com.apple.loginwindow" as CFString) as? String {
+        //if let autoLoginUser = self.readDefaults(app: "com.apple.loginwindow", key: "autoLoginUser") {
+            return !autoLoginUser.isEmpty
         }
         return false
     }

@@ -184,4 +184,30 @@ class ParetoCheck: ObservableObject {
         checkPassed = checkPasses()
         checkTimestamp = Int(Date().currentTimeMillis())
     }
+    
+    func readDefaults(app: String, key: String) -> String? {
+        
+            let task = Process()
+            let pipe = Pipe()
+            
+            task.standardOutput = pipe
+            task.standardError = pipe
+            task.arguments = ["-currentHost", "read", app, key]
+            task.launchPath = "/usr/bin/defaults"
+            task.launch()
+            task.waitUntilExit()
+            
+            let data = pipe.fileHandleForReading.readDataToEndOfFile()
+            let output = String(data: data, encoding: .utf8)!
+            
+            return output.contains("does not exist") ? nil : output
+        
+    }
+    
+    func readDefaultsFile(path: String) -> NSDictionary? {
+        guard let dictionary = NSDictionary(contentsOfFile: path) else {
+            return nil
+        }
+        return dictionary
+    }
 }

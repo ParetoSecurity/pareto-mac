@@ -15,11 +15,8 @@ class FirewallCheck: ParetoCheck {
     }
 
     override func checkPasses() -> Bool {
-        let path = "/Library/Preferences/com.apple.alf.plist"
-        guard let dictionary = NSDictionary(contentsOfFile: path) else {
-            return false
-        }
-        if let enabled = dictionary.object(forKey: "firewallunload") as? Int {
+        let dictionary = self.readDefaultsFile(path: "/Library/Preferences/com.apple.alf.plist")
+        if let enabled = dictionary?.object(forKey: "firewallunload") as? Int {
             return enabled == 0
         }
         return false

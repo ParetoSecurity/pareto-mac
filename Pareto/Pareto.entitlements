@@ -2,9 +2,23 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>com.apple.security.files.bookmarks.app-scope</key>
+	<string>YES</string>
 	<key>com.apple.security.app-sandbox</key>
-	<false/>
+	<true/>
+	<key>com.apple.security.temporary-exception.shared-preference.read-only</key>
+	<array>
+		<string>com.apple.screensaver</string>
+	</array>
+    <key>com.apple.security.temporary-exception.shared-preference.read-only</key>
+    <array>
+        <string>com.apple.loginwindow</string>
+    </array>
+    <key>com.apple.security.temporary-exception.shared-preference.read-only</key>
+    <array>
+        <string>com.apple.alf</string>
+    </array>
 	<key>com.apple.security.files.user-selected.read-only</key>
-	<false/>
+	<true/>
 </dict>
 </plist>
