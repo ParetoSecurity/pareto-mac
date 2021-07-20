@@ -16,6 +16,6 @@ class ZoomCheck: ParetoCheck {
     }
 
     override func checkPasses() -> Bool {
-        return appVersion(app: "zoom.us")?.versionCompare("1.0.0") == .orderedAscending
+        return appVersion(app: "zoom.us")?.versionCompare("5.6.0") == .orderedDescending
     }
 }

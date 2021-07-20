@@ -12,6 +12,13 @@ import os.log
 import SwiftUI
 
 extension NSImage {
+    
+    static func SF(name:String) -> NSImage {
+        let icon = NSImage(systemSymbolName: name, accessibilityDescription: nil)!
+        icon.isTemplate = true
+        return icon
+    }
+    
     func tint(color: NSColor) -> NSImage {
         if isTemplate == false {
             return self
@@ -181,26 +188,20 @@ class ParetoCheck: ObservableObject {
         fatalError("checkPasses() is not implemented")
     }
 
-    func sf(name: String) -> NSImage {
-        let icon = NSImage(systemSymbolName: name, accessibilityDescription: nil)!
-        icon.isTemplate = true
-        return icon
-    }
-
     func menu() -> NSMenuItem {
         let item = NSMenuItem(title: title, action: nil, keyEquivalent: "")
         if isActive {
             if snoozeTime > 0 {
-                item.image = sf(name: "powersleep").tint(color: .systemGreen)
+                item.image = NSImage.SF(name: "powersleep").tint(color: .systemGreen)
             } else {
                 if checkPassed {
-                    item.image = sf(name: "checkmark.shield").tint(color: .systemBlue)
+                    item.image = NSImage.SF(name: "checkmark.shield").tint(color: .systemBlue)
                 } else {
-                    item.image = sf(name: "exclamationmark.shield").tint(color: .systemRed)
+                    item.image = NSImage.SF(name: "exclamationmark.shield").tint(color: .systemRed)
                 }
             }
         } else {
-            item.image = sf(name: "shield.slash")
+            item.image = NSImage.SF(name: "shield.slash")
         }
 
         let submenu = NSMenu()
@@ -274,7 +275,7 @@ extension ParetoCheck {
             os_log("Failed reading %{public}s", path)
             return nil
         }
-        print("\(path): \(dictionary as AnyObject)")
+        //print("\(path): \(dictionary as AnyObject)")
         return dictionary
     }
 
@@ -284,7 +285,7 @@ extension ParetoCheck {
             os_log("Failed reading %{public}s", path)
             return nil
         }
-        print("\(app): \(dictionary as AnyObject)")
+        //print("\(app): \(dictionary as AnyObject)")
         return dictionary.value(forKey: "CFBundleShortVersionString") as? String
     }
 }

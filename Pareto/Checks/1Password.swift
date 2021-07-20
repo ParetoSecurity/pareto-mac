@@ -16,6 +16,6 @@ class OnePasswordCheck: ParetoCheck {
     }
 
     override func checkPasses() -> Bool {
-        return appVersion(app: "1Password 7")?.versionCompare("1.0.0") == .orderedAscending
+        return appVersion(app: "1Password 7")?.versionCompare("7.8.0") == .orderedDescending
     }
 }
