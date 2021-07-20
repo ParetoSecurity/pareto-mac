@@ -19,7 +19,8 @@ class StatusBarController: NSMenu, NSMenuDelegate {
         AutologinCheck(),
         ScreensaverCheck(),
         ScreensaverPasswordCheck(),
-        ZoomCheck()
+        ZoomCheck(),
+        OnePasswordCheck(),
     ]
 
     required init(coder decoder: NSCoder) {

@@ -13,21 +13,21 @@ import SwiftUI
 
 extension NSImage {
     func tint(color: NSColor) -> NSImage {
-        if self.isTemplate == false {
+        if isTemplate == false {
             return self
         }
-        
-        let image = self.copy() as! NSImage
+
+        let image = copy() as! NSImage
         image.lockFocus()
-        
+
         color.set()
-        
+
         let imageRect = NSRect(origin: .zero, size: image.size)
         imageRect.fill(using: .sourceIn)
-        
+
         image.unlockFocus()
         image.isTemplate = false
-        
+
         return image
     }
 }
@@ -52,14 +52,14 @@ extension String {
     func versionCompare(_ otherVersion: String) -> ComparisonResult {
         let versionDelimiter = "."
 
-        var versionComponents = self.components(separatedBy: versionDelimiter) // <1>
+        var versionComponents = components(separatedBy: versionDelimiter) // <1>
         var otherVersionComponents = otherVersion.components(separatedBy: versionDelimiter)
 
         let zeroDiff = versionComponents.count - otherVersionComponents.count // <2>
 
         if zeroDiff == 0 { // <3>
             // Same format, compare normally
-            return self.compare(otherVersion, options: .numeric)
+            return compare(otherVersion, options: .numeric)
         } else {
             let zeros = Array(repeating: "0", count: abs(zeroDiff)) // <4>
             if zeroDiff > 0 {
@@ -72,7 +72,6 @@ extension String {
         }
     }
 }
-
 
 class ParetoCheck: ObservableObject {
     private enum Snooze {
@@ -272,16 +271,17 @@ extension ParetoCheck {
 
     func readDefaultsFile(path: String) -> NSDictionary? {
         guard let dictionary = NSDictionary(contentsOfFile: path) else {
-            os_log("Failed reading \(path)")
+            os_log("Failed reading %{public}s", path)
             return nil
         }
         print("\(path): \(dictionary as AnyObject)")
         return dictionary
     }
-    
+
     func appVersion(app: String) -> String? {
-        guard let dictionary = NSDictionary(contentsOfFile: "/Applications/\(app).app/Contents/Info.plist") else {
-            os_log("Failed reading \(app)")
+        let path = "/Applications/\(app).app/Contents/Info.plist"
+        guard let dictionary = NSDictionary(contentsOfFile: path) else {
+            os_log("Failed reading %{public}s", path)
             return nil
         }
         print("\(app): \(dictionary as AnyObject)")
