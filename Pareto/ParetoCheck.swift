@@ -131,19 +131,16 @@ class ParetoCheck: ObservableObject {
     }
 
     var isActive: Bool {
-
         get { defaults.bool(forKey: EnabledKey) }
         set { defaults.set(newValue, forKey: EnabledKey) }
     }
 
     var snoozeTime: Int {
-
         get { defaults.integer(forKey: SnoozeKey) }
         set { defaults.set(newValue, forKey: SnoozeKey) }
     }
 
     var checkPassed: Bool {
-
         get { defaults.bool(forKey: PassesKey) }
         set { defaults.set(newValue, forKey: PassesKey) }
     }

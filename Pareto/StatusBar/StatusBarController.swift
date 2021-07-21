@@ -50,10 +50,8 @@ class StatusBarController: NSMenu, NSMenuDelegate {
         addChecksMenuItems()
         addApplicationItems()
         for check in checks where check.isActive {
-
             status = check.checkPassed && status
             snoozed += check.snoozeTime
-
         }
         if snoozed > 0 {
             statusItem.button?.image = imageWarning

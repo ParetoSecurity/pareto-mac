@@ -19,13 +19,13 @@ jobs:
       uses: sersoft-gmbh/xcodebuild-action@v1
       with:
         project: Pareto Security.xcodeproj
-        scheme: Pareto
+        scheme: Pareto Security
         destination: platform=macOS
         action: test
     - name: Nuild
       uses: sersoft-gmbh/xcodebuild-action@v1
       with:
         project: Pareto Security.xcodeproj
-        scheme: Pareto
+        scheme: Pareto Security
         destination: platform=macOS
         action: build

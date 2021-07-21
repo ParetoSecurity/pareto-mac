@@ -8,7 +8,7 @@
 import Foundation
 
 class OnePasswordCheck: ParetoCheck {
-    final var ID = "1ee63d54-875c-4e72-aca2-81517d0c9e20"
+    final var ID = "1ee63d54-875c-4e72-aca2-81517d0c9e21"
     final var TITLE = "1Password is up-to-date"
 
     required init(defaults: UserDefaults = .standard, id _: String! = "", title _: String! = "") {
