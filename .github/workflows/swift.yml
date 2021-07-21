@@ -1,0 +1,20 @@
+name: Swift
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  unit_tests:
+    runs-on: macos-latest
+    steps:
+    - name: Repository checkout
+      uses: actions/checkout@v2
+    - name: Lint
+      run: swiftlint
+    - name: Build for macOS
+      run: swift build -v
+    - name: Run macOS tests
+      run: swift test -v
