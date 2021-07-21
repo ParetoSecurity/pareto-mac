@@ -11,6 +11,7 @@
 		4F103012269F1C65008C1E86 /* LaunchAtLogin in Frameworks */ = {isa = PBXBuildFile; productRef = 4F103011269F1C65008C1E86 /* LaunchAtLogin */; };
 		4F52D47B26A81CD900F1A904 /* VPNConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F52D47A26A81CD900F1A904 /* VPNConnection.swift */; };
 		4F52D48C26A81F1100F1A904 /* TestParetoCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F52D47C26A81E0900F1A904 /* TestParetoCheck.swift */; };
+		4F52D48F26A8287E00F1A904 /* NetUtils in Frameworks */ = {isa = PBXBuildFile; productRef = 4F52D48E26A8287E00F1A904 /* NetUtils */; };
 		4F5E888026A053A9005271FB /* ParetoCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F5E887F26A053A9005271FB /* ParetoCheck.swift */; };
 		4F868DCF26A591E6005B876E /* Firewall.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F868DCE26A591E6005B876E /* Firewall.swift */; };
 		4F868DD126A5C51C005B876E /* Autologin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F868DD026A5C51C005B876E /* Autologin.swift */; };
@@ -70,6 +71,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4F52D48F26A8287E00F1A904 /* NetUtils in Frameworks */,
 				4F103012269F1C65008C1E86 /* LaunchAtLogin in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -197,6 +199,7 @@
 			name = "Pareto Security";
 			packageProductDependencies = (
 				4F103011269F1C65008C1E86 /* LaunchAtLogin */,
+				4F52D48E26A8287E00F1A904 /* NetUtils */,
 			);
 			productName = Pareto;
 			productReference = 4FEBA2EE269CD48F009B2469 /* Pareto Security.app */;
@@ -231,6 +234,7 @@
 			mainGroup = 4FEBA2E5269CD48F009B2469;
 			packageReferences = (
 				4F103010269F1C65008C1E86 /* XCRemoteSwiftPackageReference "LaunchAtLogin" */,
+				4F52D48D26A8287E00F1A904 /* XCRemoteSwiftPackageReference "swift-netutils" */,
 			);
 			productRefGroup = 4FEBA2EF269CD48F009B2469 /* Products */;
 			projectDirPath = "";
@@ -593,6 +597,14 @@
 				kind = branch;
 			};
 		};
+		4F52D48D26A8287E00F1A904 /* XCRemoteSwiftPackageReference "swift-netutils" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/svdo/swift-netutils";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.2.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -600,6 +612,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 4F103010269F1C65008C1E86 /* XCRemoteSwiftPackageReference "LaunchAtLogin" */;
 			productName = LaunchAtLogin;
+		};
+		4F52D48E26A8287E00F1A904 /* NetUtils */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4F52D48D26A8287E00F1A904 /* XCRemoteSwiftPackageReference "swift-netutils" */;
+			productName = NetUtils;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

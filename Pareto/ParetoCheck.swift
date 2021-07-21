@@ -235,9 +235,11 @@ class ParetoCheck: ObservableObject {
             os_log("Disabled for %{public}s - %{public}s", UUID, title)
             return
         }
-        os_log("Running check for %{public}s - %{public}s", UUID, title)
+
         if snoozeTime != 0 {
-            if checkTimestamp + (snoozeTime * 1000) >= Int(Date().currentTimeMillis()) {
+            let nextCheck = checkTimestamp + (snoozeTime * 1000)
+            let now = Int(Date().currentTimeMillis())
+            if now >= nextCheck {
                 os_log("Resetting snooze for %{public}s - %{public}s", UUID, title)
                 snoozeTime = 0
             } else {
@@ -245,7 +247,7 @@ class ParetoCheck: ObservableObject {
                 return
             }
         }
-
+        os_log("Running check for %{public}s - %{public}s", UUID, title)
         checkPassed = checkPasses()
         checkTimestamp = Int(Date().currentTimeMillis())
     }

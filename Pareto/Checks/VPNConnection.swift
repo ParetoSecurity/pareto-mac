@@ -6,8 +6,8 @@
 //
 
 import Foundation
+import NetUtils
 import os.log
-import CFNetwork
 
 class VPNConnectionCheck: ParetoCheck {
     final var ID = "c55ad77c-992f-4043-9be2-e3fb71c51d60"
@@ -18,16 +18,17 @@ class VPNConnectionCheck: ParetoCheck {
     }
 
     override func checkPasses() -> Bool {
-        guard let cfProxySettings = CFNetworkCopySystemProxySettings()?.takeRetainedValue(),
-              let proxySettings = cfProxySettings as? [String: AnyObject],
-              let connectedInterfaces = proxySettings["__SCOPED__"] as? [String: AnyObject] else { return false}
+        let monitor = Interface.allInterfaces()
         var vpnPresent = false
-        connectedInterfaces.keys.forEach { interface in
-            if interface.hasPrefix("ipsec") {
-                vpnPresent =  true
+        monitor.forEach { interface in monitor
+            os_log("Interface: %{public}s %{public}s", interface.name, interface.address!)
+            if interface.name.hasPrefix("ipsec") {
+                vpnPresent = interface.isRunning && interface.isUp
+            }
+            if interface.name.hasPrefix("utun3") {
+                vpnPresent = interface.isRunning && interface.isUp
             }
         }
         return vpnPresent
     }
 }
-

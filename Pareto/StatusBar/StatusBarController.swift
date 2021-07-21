@@ -15,7 +15,7 @@ class StatusBarController: NSMenu, NSMenuDelegate {
     let imageDefault = NSImage(named: "IconGreen")
     let imageWarning = NSImage(named: "IconOrange")
     let imageError = NSImage(named: "IconRed")
-    
+
     var workItem: DispatchWorkItem?
 
     let checks = [
@@ -26,7 +26,7 @@ class StatusBarController: NSMenu, NSMenuDelegate {
         ScreensaverPasswordCheck(),
         ZoomCheck(),
         OnePasswordCheck(),
-        VPNConnectionCheck()
+        VPNConnectionCheck(),
     ]
 
     required init(coder decoder: NSCoder) {
@@ -45,17 +45,24 @@ class StatusBarController: NSMenu, NSMenuDelegate {
 
     func updateMenu() {
         var status = true
-
+        var snoozed = 0
         removeAllItems()
         addChecksMenuItems()
         addApplicationItems()
         for check in checks {
-            status = check.checkPassed && status
+            if check.isActive {
+                status = check.checkPassed && status
+                snoozed += check.snoozeTime
+            }
         }
-        if status {
-            statusItem.button?.image = imageDefault
+        if snoozed > 0 {
+            statusItem.button?.image = imageWarning
         } else {
-            statusItem.button?.image = imageError
+            if status {
+                statusItem.button?.image = imageDefault
+            } else {
+                statusItem.button?.image = imageError
+            }
         }
     }
 
@@ -67,7 +74,6 @@ class StatusBarController: NSMenu, NSMenuDelegate {
                 check.run()
             }
         }
-
         // update menus after checks have ran
         workItem?.notify(queue: .main) {
             self.updateMenu()
@@ -77,11 +83,11 @@ class StatusBarController: NSMenu, NSMenuDelegate {
         }
 
         // guard to prevent long running tasks
-        DispatchQueue.global().asyncAfter(deadline: .now() + .seconds(60)) {
+        DispatchQueue.global().asyncAfter(deadline: .now() + .seconds(30)) {
             self.workItem?.cancel()
             self.statusItem.button?.appearsDisabled = false
             self.updateMenu()
-            os_log("Checks took more than 60s to finish canceling")
+            os_log("Checks took more than 30s to finish canceling")
         }
 
         // run tasks
