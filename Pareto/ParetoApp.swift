@@ -22,6 +22,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
         RunLoop.current.add(timer, forMode: .common)
         statusBar?.runChecks()
+
+        // Update when waking up from sleep
+        NSWorkspace.shared.notificationCenter.addObserver(forName: NSWorkspace.didWakeNotification,
+                                                          object: nil,
+                                                          queue: nil,
+                                                          using: { _ in
+                                                              self.statusBar?.runChecks()
+                                                          })
     }
 
     @objc func showPrefs() {

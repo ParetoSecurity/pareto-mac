@@ -15,7 +15,7 @@ class StatusBarController: NSMenu, NSMenuDelegate {
     let imageDefault = NSImage(named: "IconGreen")
     let imageWarning = NSImage(named: "IconOrange")
     let imageError = NSImage(named: "IconRed")
-
+    var isRunnig = false
     var workItem: DispatchWorkItem?
 
     let checks = [
@@ -65,15 +65,21 @@ class StatusBarController: NSMenu, NSMenuDelegate {
     }
 
     func runChecks() {
+        if isRunnig {
+            return
+        }
         statusItem.button?.appearsDisabled = true
         statusItem.button?.image = imageRunning
+        isRunnig = true
         workItem = DispatchWorkItem {
             for check in self.checks {
                 check.run()
             }
         }
+
         // update menus after checks have ran
         workItem?.notify(queue: .main) {
+            self.isRunnig = false
             self.updateMenu()
             self.statusItem.button?.appearsDisabled = false
             self.updateMenu()
@@ -83,9 +89,13 @@ class StatusBarController: NSMenu, NSMenuDelegate {
         // guard to prevent long running tasks
         DispatchQueue.global().asyncAfter(deadline: .now() + .seconds(30)) {
             self.workItem?.cancel()
-            self.statusItem.button?.appearsDisabled = false
-            self.updateMenu()
-            os_log("Checks took more than 30s to finish canceling")
+
+            // checks are still running kill them
+            if self.isRunnig {
+                self.statusItem.button?.appearsDisabled = false
+                self.updateMenu()
+                os_log("Checks took more than 30s to finish canceling")
+            }
         }
 
         // run tasks
