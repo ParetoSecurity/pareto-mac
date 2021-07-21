@@ -19,6 +19,8 @@ jobs:
     name: Test and build
     runs-on: macos-11  # need latest version of macOS becase of build targets
     steps:
+    - name: Repository checkout
+      uses: actions/checkout@v2
     - name: Build
       uses: sersoft-gmbh/xcodebuild-action@v1
       with:
