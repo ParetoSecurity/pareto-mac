@@ -1,17 +1,15 @@
 {
   "images" : [
     {
-      "filename" : "124941546-8aa4f900-e013-11eb-9c9e-e8b328d306cc.png",
+      "filename" : "StatusBar_icon_orange-16.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "124941546-8aa4f900-e013-11eb-9c9e-e8b328d306cc-1.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "124941546-8aa4f900-e013-11eb-9c9e-e8b328d306cc-2.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

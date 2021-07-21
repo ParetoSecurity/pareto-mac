@@ -12,13 +12,12 @@ import os.log
 import SwiftUI
 
 extension NSImage {
-    
-    static func SF(name:String) -> NSImage {
+    static func SF(name: String) -> NSImage {
         let icon = NSImage(systemSymbolName: name, accessibilityDescription: nil)!
         icon.isTemplate = true
         return icon
     }
-    
+
     func tint(color: NSColor) -> NSImage {
         if isTemplate == false {
             return self
@@ -89,7 +88,7 @@ class ParetoCheck: ObservableObject {
 
     private let cancellable: Cancellable
     private let defaults: UserDefaults
-    private let UUID: String
+    public let UUID: String
     private let title: String
 
     let objectWillChange = PassthroughSubject<Void, Never>()
@@ -192,7 +191,7 @@ class ParetoCheck: ObservableObject {
         let item = NSMenuItem(title: title, action: nil, keyEquivalent: "")
         if isActive {
             if snoozeTime > 0 {
-                item.image = NSImage.SF(name: "powersleep").tint(color: .systemGreen)
+                item.image = NSImage.SF(name: "powersleep").tint(color: .systemGray)
             } else {
                 if checkPassed {
                     item.image = NSImage.SF(name: "checkmark.shield").tint(color: .systemBlue)
@@ -275,7 +274,7 @@ extension ParetoCheck {
             os_log("Failed reading %{public}s", path)
             return nil
         }
-        //print("\(path): \(dictionary as AnyObject)")
+        // print("\(path): \(dictionary as AnyObject)")
         return dictionary
     }
 
@@ -285,7 +284,7 @@ extension ParetoCheck {
             os_log("Failed reading %{public}s", path)
             return nil
         }
-        //print("\(app): \(dictionary as AnyObject)")
+        // print("\(app): \(dictionary as AnyObject)")
         return dictionary.value(forKey: "CFBundleShortVersionString") as? String
     }
 }

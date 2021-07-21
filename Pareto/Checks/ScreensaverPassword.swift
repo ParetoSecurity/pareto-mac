@@ -1,5 +1,5 @@
 //
-//  Screensaver.swift
+//  ScreensaverPassword.swift
 //  Pareto Security
 //
 //  Created by Janez Troha on 19/07/2021.

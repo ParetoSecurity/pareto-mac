@@ -28,7 +28,7 @@ struct GeneralSettingsView: View {
 struct AboutSettingsView: View {
     var body: some View {
         HStack {
-            Image("Icon").resizable()
+            Image("Logo").resizable()
                 .aspectRatio(contentMode: .fit)
             Text("Made with ❤️ at Niteo.")
         }.frame(width: 350, height: 80).padding(5)

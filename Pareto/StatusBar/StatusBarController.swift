@@ -11,8 +11,11 @@ import SwiftUI
 
 class StatusBarController: NSMenu, NSMenuDelegate {
     let statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
-    let imageRunning = NSImage.SF(name: "bolt.horizontal.circle.fill").tint(color: .systemTeal)
-    let imageDefault = NSImage.SF(name: "icloud.fill")
+    let imageRunning = NSImage(named: "IconGray")
+    let imageDefault = NSImage(named: "IconGreen")
+    let imageWarning = NSImage(named: "IconOrange")
+    let imageError = NSImage(named: "IconRed")
+    
     var workItem: DispatchWorkItem?
 
     let checks = [
@@ -23,6 +26,7 @@ class StatusBarController: NSMenu, NSMenuDelegate {
         ScreensaverPasswordCheck(),
         ZoomCheck(),
         OnePasswordCheck(),
+        VPNConnectionCheck()
     ]
 
     required init(coder decoder: NSCoder) {
@@ -34,31 +38,30 @@ class StatusBarController: NSMenu, NSMenuDelegate {
         delegate = self
         statusItem.menu = self
         statusItem.button?.image = imageDefault
+        statusItem.button?.imagePosition = .imageRight
         statusItem.button?.target = self
         updateMenu()
     }
 
     func updateMenu() {
         var status = true
-        
+
         removeAllItems()
         addChecksMenuItems()
         addApplicationItems()
-        for check in self.checks {
+        for check in checks {
             status = check.checkPassed && status
         }
         if status {
-            self.statusItem.button?.image = self.imageDefault.tint(color: .systemBlue)
-        }else{
-            self.statusItem.button?.image = self.imageDefault.tint(color: .systemRed)
+            statusItem.button?.image = imageDefault
+        } else {
+            statusItem.button?.image = imageError
         }
-        
     }
 
     func runChecks() {
-
         statusItem.button?.appearsDisabled = true
-        self.statusItem.button?.image = self.imageRunning.tint(color: .systemOrange)
+        statusItem.button?.image = imageRunning
         workItem = DispatchWorkItem {
             for check in self.checks {
                 check.run()
@@ -69,17 +72,14 @@ class StatusBarController: NSMenu, NSMenuDelegate {
         workItem?.notify(queue: .main) {
             self.updateMenu()
             self.statusItem.button?.appearsDisabled = false
-            self.statusItem.button?.image = self.imageDefault
             self.updateMenu()
             os_log("Checks finished running")
-            
         }
 
         // guard to prevent long running tasks
         DispatchQueue.global().asyncAfter(deadline: .now() + .seconds(60)) {
             self.workItem?.cancel()
             self.statusItem.button?.appearsDisabled = false
-            self.statusItem.button?.image = self.imageDefault
             self.updateMenu()
             os_log("Checks took more than 60s to finish canceling")
         }
