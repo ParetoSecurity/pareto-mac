@@ -23,7 +23,10 @@ extension NSImage {
             return self
         }
 
-        let image = copy() as! NSImage
+        guard let image = copy() as? NSImage else {
+            return self
+        }
+
         image.lockFocus()
 
         color.set()
@@ -118,7 +121,7 @@ class ParetoCheck: ObservableObject {
             UUID + "-Enabled": true,
             UUID + "-Snooze": 0,
             UUID + "-Passes": false,
-            UUID + "-TS": 0,
+            UUID + "-TS": 0
         ])
 
         cancellable = NotificationCenter.default
@@ -128,23 +131,26 @@ class ParetoCheck: ObservableObject {
     }
 
     var isActive: Bool {
-        set { defaults.set(newValue, forKey: EnabledKey) }
+
         get { defaults.bool(forKey: EnabledKey) }
+        set { defaults.set(newValue, forKey: EnabledKey) }
     }
 
     var snoozeTime: Int {
-        set { defaults.set(newValue, forKey: SnoozeKey) }
+
         get { defaults.integer(forKey: SnoozeKey) }
+        set { defaults.set(newValue, forKey: SnoozeKey) }
     }
 
     var checkPassed: Bool {
-        set { defaults.set(newValue, forKey: PassesKey) }
+
         get { defaults.bool(forKey: PassesKey) }
+        set { defaults.set(newValue, forKey: PassesKey) }
     }
 
     var checkTimestamp: Int {
-        set { defaults.set(newValue, forKey: TimestampKey) }
         get { defaults.integer(forKey: TimestampKey) }
+        set { defaults.set(newValue, forKey: TimestampKey) }
     }
 
     @objc func moreInfo() {

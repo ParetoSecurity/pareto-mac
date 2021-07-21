@@ -1,0 +1,4 @@
+disabled_rules: # rule identifiers turned on by default to exclude from running
+  - identifier_name
+  - line_length
+  - weak_delegate

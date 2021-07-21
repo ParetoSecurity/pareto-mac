@@ -26,7 +26,7 @@ class StatusBarController: NSMenu, NSMenuDelegate {
         ScreensaverPasswordCheck(),
         ZoomCheck(),
         OnePasswordCheck(),
-        VPNConnectionCheck(),
+        VPNConnectionCheck()
     ]
 
     required init(coder decoder: NSCoder) {
@@ -49,11 +49,11 @@ class StatusBarController: NSMenu, NSMenuDelegate {
         removeAllItems()
         addChecksMenuItems()
         addApplicationItems()
-        for check in checks {
-            if check.isActive {
-                status = check.checkPassed && status
-                snoozed += check.snoozeTime
-            }
+        for check in checks where check.isActive {
+
+            status = check.checkPassed && status
+            snoozed += check.snoozeTime
+
         }
         if snoozed > 0 {
             statusItem.button?.image = imageWarning
