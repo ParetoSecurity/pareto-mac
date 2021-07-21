@@ -9,7 +9,7 @@ on:
 jobs:
   job:
     name: Lint, test and build
-    runs-on: macos-latest
+    runs-on: macos-11
     steps:
     - name: Repository checkout
       uses: actions/checkout@v2
@@ -22,7 +22,7 @@ jobs:
         scheme: Pareto Security
         destination: platform=macOS
         action: test
-    - name: Nuild
+    - name: Build
       uses: sersoft-gmbh/xcodebuild-action@v1
       with:
         project: Pareto Security.xcodeproj
