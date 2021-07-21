@@ -7,21 +7,18 @@ on:
     branches: [ main ]
 
 jobs:
-  job:
-    name: Lint, test and build
-    runs-on: macos-11
+  swift:
+    name: Lint
+    runs-on: macos-latest
     steps:
     - name: Repository checkout
       uses: actions/checkout@v2
     - name: Lint
       run: swiftlint
-    - name: Test
-      uses: sersoft-gmbh/xcodebuild-action@v1
-      with:
-        project: Pareto Security.xcodeproj
-        scheme: Pareto Security
-        destination: platform=macOS
-        action: test
+  mac:
+    name: Test and build
+    runs-on: macos-11  # need latest version of macOS becase of build targets
+    steps:
     - name: Build
       uses: sersoft-gmbh/xcodebuild-action@v1
       with:
@@ -29,3 +26,10 @@ jobs:
         scheme: Pareto Security
         destination: platform=macOS
         action: build
+    - name: Test
+      uses: sersoft-gmbh/xcodebuild-action@v1
+      with:
+        project: Pareto Security.xcodeproj
+        scheme: Pareto Security
+        destination: platform=macOS
+        action: test
