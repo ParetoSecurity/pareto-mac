@@ -7,14 +7,25 @@ on:
     branches: [ main ]
 
 jobs:
-  unit_tests:
+  job:
+    name: Lint, test and build
     runs-on: macos-latest
     steps:
     - name: Repository checkout
       uses: actions/checkout@v2
     - name: Lint
       run: swiftlint
-    - name: Build for macOS
-      run: swift build -v
-    - name: Run macOS tests
-      run: swift test -v
+    - name: Test
+      uses: sersoft-gmbh/xcodebuild-action@v1
+      with:
+        project: Pareto Security.xcodeproj
+        scheme: Pareto
+        destination: platform=macOS
+        action: test
+    - name: Nuild
+      uses: sersoft-gmbh/xcodebuild-action@v1
+      with:
+        project: Pareto Security.xcodeproj
+        scheme: Pareto
+        destination: platform=macOS
+        action: build
