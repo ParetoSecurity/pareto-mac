@@ -26,6 +26,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     @objc func showPrefs() {
         NSApp.sendAction(Selector(("showPreferencesWindow:")), to: nil, from: nil)
+        NSApp.activate(ignoringOtherApps: true)
     }
 
     @objc func quitApp() {
