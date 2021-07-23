@@ -20,12 +20,11 @@ class VPNConnectionCheck: ParetoCheck {
     override func checkPasses() -> Bool {
         let monitor = Interface.allInterfaces()
         var vpnPresent = false
-        monitor.forEach { interface in monitor
-            os_log("Interface: %{public}s %{public}s", interface.name, interface.address!)
+        monitor.forEach { interface in
             if interface.name.hasPrefix("ipsec") {
                 vpnPresent = interface.isRunning && interface.isUp
             }
-            if interface.name.hasPrefix("utun3") {
+            if interface.name.hasPrefix("utun") {
                 vpnPresent = interface.isRunning && interface.isUp
             }
         }

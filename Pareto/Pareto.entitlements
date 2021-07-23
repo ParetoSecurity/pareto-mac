@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>com.apple.security.app-sandbox</key>
-	<false/>
+	<true/>
 	<key>com.apple.security.temporary-exception.shared-preference.read-only</key>
 	<array>
 		<string>com.apple.screensaver</string>
@@ -20,9 +20,9 @@
 	<array>
 		<string>/Library/Preferences/com.apple.alf.plist</string>
 		<string>/var/db/SystemPolicy-prefs.plist</string>
-        <string>/Library/Preferences/com.apple.loginwindow.plist</string>
-        <string>/Applications/zoom.us.app/Contents/Info.plist</string>
-        <string>/Applications/1Password 7.app/Contents/Info.plist</string>
+		<string>/Library/Preferences/com.apple.loginwindow.plist</string>
+		<string>/Applications/zoom.us.app/Contents/Info.plist</string>
+		<string>/Applications/1Password 7.app/Contents/Info.plist</string>
 	</array>
 </dict>
 </plist>

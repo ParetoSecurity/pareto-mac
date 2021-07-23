@@ -14,9 +14,22 @@ class GatekeeperCheck: ParetoCheck {
     required init(defaults: UserDefaults = .standard, id _: String! = "", title _: String! = "") {
         super.init(defaults: defaults, id: ID, title: TITLE)
     }
-
+    func isSandboxingEnabled() -> Bool {
+        let environment = ProcessInfo.processInfo.environment
+        return environment["APP_SANDBOX_CONTAINER_ID"] != nil
+    }
     override func checkPasses() -> Bool {
-        let dictionary = readDefaultsFile(path: "/var/db/SystemPolicy-prefs.plist")
+        let path = "/var/db/SystemPolicy-prefs.plist"
+        if (isSandboxingEnabled()){
+            // if enabled one cannot read system file even with entitlement
+            guard let _ = NSDictionary(contentsOfFile: path) else {
+                return true
+            }
+            return false
+        }
+        
+        // If we are not sandboxed
+        let dictionary = readDefaultsFile(path: path)
         if let enabled = dictionary?.object(forKey: "enabled") as? String {
             return enabled == "yes"
         }
