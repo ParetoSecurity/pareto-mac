@@ -17,7 +17,7 @@ jobs:
       run: swiftlint
   mac:
     name: Test and build
-    runs-on: macos-11  # need latest version of macOS becase of build targets
+    runs-on: macos-latest  # need latest version of macOS becase of build targets
     steps:
     - name: Repository checkout
       uses: actions/checkout@v2
