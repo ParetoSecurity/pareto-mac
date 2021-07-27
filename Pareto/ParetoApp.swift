@@ -13,6 +13,7 @@ import SwiftUI
 class AppDelegate: NSObject, NSApplicationDelegate {
     var statusBar: StatusBarController?
     let updater = AppUpdater(owner: "ParetoSecurity", repo: "pareto-mac")
+    let userSettings = UserSettings()
 
     func applicationDidFinishLaunching(_: Notification) {
         statusBar = StatusBarController()
@@ -30,7 +31,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                                                           object: nil,
                                                           queue: nil,
                                                           using: { _ in
-                                                              self.statusBar?.runChecks()
+                                                              if self.userSettings.runAfterSleep {
+                                                                  self.statusBar?.runChecks()
+                                                              }
                                                           })
     }
 
