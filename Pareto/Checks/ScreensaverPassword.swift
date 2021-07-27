@@ -18,7 +18,7 @@ class ScreensaverPasswordCheck: ParetoCheck {
 
     override func checkPasses() -> Bool {
         let script = "tell application \"System Events\" to tell security preferences to get require password to wake"
-        let out = self.runOSA(appleScript: script) ?? "false"
+        let out = runOSA(appleScript: script) ?? "false"
         return out.contains("true")
     }
 }

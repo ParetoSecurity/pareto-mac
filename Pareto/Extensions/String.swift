@@ -1,15 +1,14 @@
 import Foundation
 
-
 extension String {
     func versionCompare(_ otherVersion: String) -> ComparisonResult {
         let versionDelimiter = "."
-        
+
         var versionComponents = components(separatedBy: versionDelimiter) // <1>
         var otherVersionComponents = otherVersion.components(separatedBy: versionDelimiter)
-        
+
         let zeroDiff = versionComponents.count - otherVersionComponents.count // <2>
-        
+
         if zeroDiff == 0 { // <3>
             // Same format, compare normally
             return compare(otherVersion, options: .numeric)
