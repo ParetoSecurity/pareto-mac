@@ -1,6 +1,6 @@
 import os
 
-private let subsystem = "dev.dz0ny.pareto"
+private let subsystem = "niteo.co.Pareto"
 
 enum Log {
     static let app = OSLog(subsystem: subsystem, category: "App")

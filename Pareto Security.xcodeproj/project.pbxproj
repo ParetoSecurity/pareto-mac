@@ -27,6 +27,7 @@
 		4FB7C68526AFF27400FB1C41 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB7C68326AFF27400FB1C41 /* String.swift */; };
 		4FB7C68726AFF29A00FB1C41 /* NSImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB7C68626AFF29A00FB1C41 /* NSImage.swift */; };
 		4FB7C68826AFF29A00FB1C41 /* NSImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB7C68626AFF29A00FB1C41 /* NSImage.swift */; };
+		4FB7C68B26AFF68A00FB1C41 /* AppUpdater in Frameworks */ = {isa = PBXBuildFile; productRef = 4FB7C68A26AFF68A00FB1C41 /* AppUpdater */; };
 		4FD0A24126A024440070BED4 /* Gatekeeper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FD0A24026A024440070BED4 /* Gatekeeper.swift */; };
 		4FEBA2F2269CD48F009B2469 /* ParetoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEBA2F1269CD48F009B2469 /* ParetoApp.swift */; };
 		4FEBA2F6269CD48F009B2469 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4FEBA2F5269CD48F009B2469 /* Assets.xcassets */; };
@@ -84,6 +85,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4F52D48F26A8287E00F1A904 /* NetUtils in Frameworks */,
+				4FB7C68B26AFF68A00FB1C41 /* AppUpdater in Frameworks */,
 				4F103012269F1C65008C1E86 /* LaunchAtLogin in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -224,6 +226,7 @@
 			packageProductDependencies = (
 				4F103011269F1C65008C1E86 /* LaunchAtLogin */,
 				4F52D48E26A8287E00F1A904 /* NetUtils */,
+				4FB7C68A26AFF68A00FB1C41 /* AppUpdater */,
 			);
 			productName = Pareto;
 			productReference = 4FEBA2EE269CD48F009B2469 /* Pareto Security.app */;
@@ -259,6 +262,7 @@
 			packageReferences = (
 				4F103010269F1C65008C1E86 /* XCRemoteSwiftPackageReference "LaunchAtLogin" */,
 				4F52D48D26A8287E00F1A904 /* XCRemoteSwiftPackageReference "swift-netutils" */,
+				4FB7C68926AFF68A00FB1C41 /* XCRemoteSwiftPackageReference "AppUpdater" */,
 			);
 			productRefGroup = 4FEBA2EF269CD48F009B2469 /* Products */;
 			projectDirPath = "";
@@ -389,7 +393,7 @@
 					"@loader_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
-				PRODUCT_BUNDLE_IDENTIFIER = dz0ny.dev.ParetoTests;
+				PRODUCT_BUNDLE_IDENTIFIER = niteo.co.ParetoTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Pareto Security.app/Contents/MacOS/Pareto Security";
@@ -410,7 +414,7 @@
 					"@loader_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
-				PRODUCT_BUNDLE_IDENTIFIER = dz0ny.dev.ParetoTests;
+				PRODUCT_BUNDLE_IDENTIFIER = niteo.co.ParetoTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Pareto Security.app/Contents/MacOS/Pareto Security";
@@ -556,8 +560,8 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
-				MARKETING_VERSION = 0.0.7;
-				PRODUCT_BUNDLE_IDENTIFIER = dz0ny.dev.Pareto;
+				MARKETING_VERSION = 0.0.8;
+				PRODUCT_BUNDLE_IDENTIFIER = niteo.co.Pareto;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 			};
@@ -583,8 +587,8 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
-				MARKETING_VERSION = 0.0.7;
-				PRODUCT_BUNDLE_IDENTIFIER = dz0ny.dev.Pareto;
+				MARKETING_VERSION = 0.0.8;
+				PRODUCT_BUNDLE_IDENTIFIER = niteo.co.Pareto;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 			};
@@ -639,6 +643,14 @@
 				minimumVersion = 4.2.0;
 			};
 		};
+		4FB7C68926AFF68A00FB1C41 /* XCRemoteSwiftPackageReference "AppUpdater" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/mxcl/AppUpdater.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -651,6 +663,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 4F52D48D26A8287E00F1A904 /* XCRemoteSwiftPackageReference "swift-netutils" */;
 			productName = NetUtils;
+		};
+		4FB7C68A26AFF68A00FB1C41 /* AppUpdater */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4FB7C68926AFF68A00FB1C41 /* XCRemoteSwiftPackageReference "AppUpdater" */;
+			productName = AppUpdater;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

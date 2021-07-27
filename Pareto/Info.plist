@@ -17,7 +17,7 @@
 	<key>CFBundleShortVersionString</key>
 	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleVersion</key>
-	<string>443</string>
+	<string>447</string>
 	<key>LSApplicationCategoryType</key>
 	<string>public.app-category.utilities</string>
 	<key>LSMinimumSystemVersion</key>
@@ -27,6 +27,6 @@
 	<key>LaunchOnlyOnce</key>
 	<true/>
 	<key>NSAppleEventsUsageDescription</key>
-	<string>Pareto needs access to your System Events 😎</string>
+	<string>Pareto needs access to your System Events to run some checks</string>
 </dict>
 </plist>

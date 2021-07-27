@@ -8,10 +8,12 @@
 import Foundation
 import os.log
 import SwiftUI
+import AppUpdater
 
 class AppDelegate: NSObject, NSApplicationDelegate {
     var statusBar: StatusBarController?
-
+    let updater = AppUpdater(owner: "ParetoSecurity", repo: "pareto-mac")
+    
     func applicationDidFinishLaunching(_: Notification) {
         statusBar = StatusBarController()
         NSWindow.allowsAutomaticWindowTabbing = false
