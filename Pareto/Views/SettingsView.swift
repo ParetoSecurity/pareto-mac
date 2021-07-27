@@ -14,7 +14,7 @@ let buildVersion: String = Bundle.main.infoDictionary?["CFBundleVersion"] as! St
 struct GeneralSettingsView: View {
     @ObservedObject private var atLogin = LaunchAtLogin.observable
     @ObservedObject var userSettings = UserSettings()
-    
+
     var body: some View {
         Form {
             Section(
@@ -29,7 +29,6 @@ struct GeneralSettingsView: View {
                         Toggle("Run checks after sleep", isOn: $userSettings.runAfterSleep)
                     }
             }
-            
         }
 
         .frame(width: 350, height: 100).padding(5)
