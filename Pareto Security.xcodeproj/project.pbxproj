@@ -27,7 +27,7 @@
 		4FB7C68526AFF27400FB1C41 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB7C68326AFF27400FB1C41 /* String.swift */; };
 		4FB7C68726AFF29A00FB1C41 /* NSImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB7C68626AFF29A00FB1C41 /* NSImage.swift */; };
 		4FB7C68826AFF29A00FB1C41 /* NSImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB7C68626AFF29A00FB1C41 /* NSImage.swift */; };
-		4FB7C68B26AFF68A00FB1C41 /* AppUpdater in Frameworks */ = {isa = PBXBuildFile; productRef = 4FB7C68A26AFF68A00FB1C41 /* AppUpdater */; };
+		4FB7C68D26AFFD2600FB1C41 /* FileVault.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB7C68C26AFFD2600FB1C41 /* FileVault.swift */; };
 		4FD0A24126A024440070BED4 /* Gatekeeper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FD0A24026A024440070BED4 /* Gatekeeper.swift */; };
 		4FEBA2F2269CD48F009B2469 /* ParetoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEBA2F1269CD48F009B2469 /* ParetoApp.swift */; };
 		4FEBA2F6269CD48F009B2469 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4FEBA2F5269CD48F009B2469 /* Assets.xcassets */; };
@@ -62,6 +62,7 @@
 		4FB7C68026AFF25300FB1C41 /* Date.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Date.swift; sourceTree = "<group>"; };
 		4FB7C68326AFF27400FB1C41 /* String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
 		4FB7C68626AFF29A00FB1C41 /* NSImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSImage.swift; sourceTree = "<group>"; };
+		4FB7C68C26AFFD2600FB1C41 /* FileVault.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileVault.swift; sourceTree = "<group>"; };
 		4FD0A24026A024440070BED4 /* Gatekeeper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Gatekeeper.swift; sourceTree = "<group>"; };
 		4FEBA2EE269CD48F009B2469 /* Pareto Security.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Pareto Security.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4FEBA2F1269CD48F009B2469 /* ParetoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParetoApp.swift; sourceTree = "<group>"; };
@@ -85,7 +86,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				4F52D48F26A8287E00F1A904 /* NetUtils in Frameworks */,
-				4FB7C68B26AFF68A00FB1C41 /* AppUpdater in Frameworks */,
 				4F103012269F1C65008C1E86 /* LaunchAtLogin in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -120,6 +120,7 @@
 				4FB405EE26A6FC4800267D5D /* ScreensaverPassword.swift */,
 				4FB405F226A7140C00267D5D /* 1Password.swift */,
 				4F52D47A26A81CD900F1A904 /* VPNConnection.swift */,
+				4FB7C68C26AFFD2600FB1C41 /* FileVault.swift */,
 			);
 			path = Checks;
 			sourceTree = "<group>";
@@ -226,7 +227,6 @@
 			packageProductDependencies = (
 				4F103011269F1C65008C1E86 /* LaunchAtLogin */,
 				4F52D48E26A8287E00F1A904 /* NetUtils */,
-				4FB7C68A26AFF68A00FB1C41 /* AppUpdater */,
 			);
 			productName = Pareto;
 			productReference = 4FEBA2EE269CD48F009B2469 /* Pareto Security.app */;
@@ -357,6 +357,7 @@
 				4FB405EF26A6FC4800267D5D /* ScreensaverPassword.swift in Sources */,
 				4F868DD126A5C51C005B876E /* Autologin.swift in Sources */,
 				4FEBA2F2269CD48F009B2469 /* ParetoApp.swift in Sources */,
+				4FB7C68D26AFFD2600FB1C41 /* FileVault.swift in Sources */,
 				4F103008269EE136008C1E86 /* SettingsView.swift in Sources */,
 				4F868DD326A5C751005B876E /* Screensaver.swift in Sources */,
 				4FD0A24126A024440070BED4 /* Gatekeeper.swift in Sources */,
@@ -663,11 +664,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 4F52D48D26A8287E00F1A904 /* XCRemoteSwiftPackageReference "swift-netutils" */;
 			productName = NetUtils;
-		};
-		4FB7C68A26AFF68A00FB1C41 /* AppUpdater */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 4FB7C68926AFF68A00FB1C41 /* XCRemoteSwiftPackageReference "AppUpdater" */;
-			productName = AppUpdater;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

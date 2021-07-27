@@ -5,14 +5,12 @@
 //  Created by Janez Troha on 12/07/2021.
 //
 
-import AppUpdater
 import Foundation
 import os.log
 import SwiftUI
 
 class AppDelegate: NSObject, NSApplicationDelegate {
     var statusBar: StatusBarController?
-    let updater = AppUpdater(owner: "ParetoSecurity", repo: "pareto-mac")
 
     func applicationDidFinishLaunching(_: Notification) {
         statusBar = StatusBarController()
