@@ -28,6 +28,7 @@
 		4FB7C68726AFF29A00FB1C41 /* NSImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB7C68626AFF29A00FB1C41 /* NSImage.swift */; };
 		4FB7C68826AFF29A00FB1C41 /* NSImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB7C68626AFF29A00FB1C41 /* NSImage.swift */; };
 		4FB7C68D26AFFD2600FB1C41 /* FileVault.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB7C68C26AFFD2600FB1C41 /* FileVault.swift */; };
+		4FB7C69026AFFEE500FB1C41 /* AppUpdater in Frameworks */ = {isa = PBXBuildFile; productRef = 4FB7C68F26AFFEE500FB1C41 /* AppUpdater */; };
 		4FD0A24126A024440070BED4 /* Gatekeeper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FD0A24026A024440070BED4 /* Gatekeeper.swift */; };
 		4FEBA2F2269CD48F009B2469 /* ParetoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEBA2F1269CD48F009B2469 /* ParetoApp.swift */; };
 		4FEBA2F6269CD48F009B2469 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4FEBA2F5269CD48F009B2469 /* Assets.xcassets */; };
@@ -86,6 +87,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4F52D48F26A8287E00F1A904 /* NetUtils in Frameworks */,
+				4FB7C69026AFFEE500FB1C41 /* AppUpdater in Frameworks */,
 				4F103012269F1C65008C1E86 /* LaunchAtLogin in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -144,12 +146,20 @@
 			path = Extensions;
 			sourceTree = "<group>";
 		};
+		4FB7C68E26AFFEE500FB1C41 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		4FEBA2E5269CD48F009B2469 = {
 			isa = PBXGroup;
 			children = (
 				4FEBA2F0269CD48F009B2469 /* Pareto */,
 				4F52D48326A81F0B00F1A904 /* ParetoTests */,
 				4FEBA2EF269CD48F009B2469 /* Products */,
+				4FB7C68E26AFFEE500FB1C41 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -227,6 +237,7 @@
 			packageProductDependencies = (
 				4F103011269F1C65008C1E86 /* LaunchAtLogin */,
 				4F52D48E26A8287E00F1A904 /* NetUtils */,
+				4FB7C68F26AFFEE500FB1C41 /* AppUpdater */,
 			);
 			productName = Pareto;
 			productReference = 4FEBA2EE269CD48F009B2469 /* Pareto Security.app */;
@@ -664,6 +675,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 4F52D48D26A8287E00F1A904 /* XCRemoteSwiftPackageReference "swift-netutils" */;
 			productName = NetUtils;
+		};
+		4FB7C68F26AFFEE500FB1C41 /* AppUpdater */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4FB7C68926AFF68A00FB1C41 /* XCRemoteSwiftPackageReference "AppUpdater" */;
+			productName = AppUpdater;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
