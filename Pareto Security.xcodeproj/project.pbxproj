@@ -19,6 +19,14 @@
 		4FB405EF26A6FC4800267D5D /* ScreensaverPassword.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB405EE26A6FC4800267D5D /* ScreensaverPassword.swift */; };
 		4FB405F126A70DCC00267D5D /* ZoomVersion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB405F026A70DCC00267D5D /* ZoomVersion.swift */; };
 		4FB405F326A7140C00267D5D /* 1Password.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB405F226A7140C00267D5D /* 1Password.swift */; };
+		4FB7C67D26AFF1AB00FB1C41 /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB7C67C26AFF1AB00FB1C41 /* Log.swift */; };
+		4FB7C67E26AFF1AB00FB1C41 /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB7C67C26AFF1AB00FB1C41 /* Log.swift */; };
+		4FB7C68126AFF25300FB1C41 /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB7C68026AFF25300FB1C41 /* Date.swift */; };
+		4FB7C68226AFF25300FB1C41 /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB7C68026AFF25300FB1C41 /* Date.swift */; };
+		4FB7C68426AFF27400FB1C41 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB7C68326AFF27400FB1C41 /* String.swift */; };
+		4FB7C68526AFF27400FB1C41 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB7C68326AFF27400FB1C41 /* String.swift */; };
+		4FB7C68726AFF29A00FB1C41 /* NSImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB7C68626AFF29A00FB1C41 /* NSImage.swift */; };
+		4FB7C68826AFF29A00FB1C41 /* NSImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB7C68626AFF29A00FB1C41 /* NSImage.swift */; };
 		4FD0A24126A024440070BED4 /* Gatekeeper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FD0A24026A024440070BED4 /* Gatekeeper.swift */; };
 		4FEBA2F2269CD48F009B2469 /* ParetoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEBA2F1269CD48F009B2469 /* ParetoApp.swift */; };
 		4FEBA2F6269CD48F009B2469 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4FEBA2F5269CD48F009B2469 /* Assets.xcassets */; };
@@ -49,6 +57,10 @@
 		4FB405EE26A6FC4800267D5D /* ScreensaverPassword.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreensaverPassword.swift; sourceTree = "<group>"; };
 		4FB405F026A70DCC00267D5D /* ZoomVersion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZoomVersion.swift; sourceTree = "<group>"; };
 		4FB405F226A7140C00267D5D /* 1Password.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = 1Password.swift; sourceTree = "<group>"; };
+		4FB7C67C26AFF1AB00FB1C41 /* Log.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
+		4FB7C68026AFF25300FB1C41 /* Date.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Date.swift; sourceTree = "<group>"; };
+		4FB7C68326AFF27400FB1C41 /* String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
+		4FB7C68626AFF29A00FB1C41 /* NSImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSImage.swift; sourceTree = "<group>"; };
 		4FD0A24026A024440070BED4 /* Gatekeeper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Gatekeeper.swift; sourceTree = "<group>"; };
 		4FEBA2EE269CD48F009B2469 /* Pareto Security.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Pareto Security.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4FEBA2F1269CD48F009B2469 /* ParetoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParetoApp.swift; sourceTree = "<group>"; };
@@ -119,6 +131,16 @@
 			path = ParetoTests;
 			sourceTree = "<group>";
 		};
+		4FB7C67F26AFF22C00FB1C41 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				4FB7C68026AFF25300FB1C41 /* Date.swift */,
+				4FB7C68326AFF27400FB1C41 /* String.swift */,
+				4FB7C68626AFF29A00FB1C41 /* NSImage.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
 		4FEBA2E5269CD48F009B2469 = {
 			isa = PBXGroup;
 			children = (
@@ -140,6 +162,7 @@
 		4FEBA2F0269CD48F009B2469 /* Pareto */ = {
 			isa = PBXGroup;
 			children = (
+				4FB7C67F26AFF22C00FB1C41 /* Extensions */,
 				4F5E887F26A053A9005271FB /* ParetoCheck.swift */,
 				4F10300A269F0568008C1E86 /* Checks */,
 				4F103009269F054C008C1E86 /* StatusBar */,
@@ -149,6 +172,7 @@
 				4FEBA2FA269CD48F009B2469 /* Info.plist */,
 				4FEBA2FB269CD48F009B2469 /* Pareto.entitlements */,
 				4FEBA2F7269CD48F009B2469 /* Preview Content */,
+				4FB7C67C26AFF1AB00FB1C41 /* Log.swift */,
 			);
 			path = Pareto;
 			sourceTree = "<group>";
@@ -309,7 +333,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4FB7C67E26AFF1AB00FB1C41 /* Log.swift in Sources */,
+				4FB7C68226AFF25300FB1C41 /* Date.swift in Sources */,
+				4FB7C68526AFF27400FB1C41 /* String.swift in Sources */,
 				4F52D48C26A81F1100F1A904 /* TestParetoCheck.swift in Sources */,
+				4FB7C68826AFF29A00FB1C41 /* NSImage.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -319,7 +347,9 @@
 			files = (
 				4F5E888026A053A9005271FB /* ParetoCheck.swift in Sources */,
 				4FEBA304269CD4E0009B2469 /* StatusBarController.swift in Sources */,
+				4FB7C67D26AFF1AB00FB1C41 /* Log.swift in Sources */,
 				4F868DCF26A591E6005B876E /* Firewall.swift in Sources */,
+				4FB7C68126AFF25300FB1C41 /* Date.swift in Sources */,
 				4FB405EF26A6FC4800267D5D /* ScreensaverPassword.swift in Sources */,
 				4F868DD126A5C51C005B876E /* Autologin.swift in Sources */,
 				4FEBA2F2269CD48F009B2469 /* ParetoApp.swift in Sources */,
@@ -327,6 +357,8 @@
 				4F868DD326A5C751005B876E /* Screensaver.swift in Sources */,
 				4FD0A24126A024440070BED4 /* Gatekeeper.swift in Sources */,
 				4FB405F326A7140C00267D5D /* 1Password.swift in Sources */,
+				4FB7C68726AFF29A00FB1C41 /* NSImage.swift in Sources */,
+				4FB7C68426AFF27400FB1C41 /* String.swift in Sources */,
 				4FB405F126A70DCC00267D5D /* ZoomVersion.swift in Sources */,
 				4F52D47B26A81CD900F1A904 /* VPNConnection.swift in Sources */,
 			);

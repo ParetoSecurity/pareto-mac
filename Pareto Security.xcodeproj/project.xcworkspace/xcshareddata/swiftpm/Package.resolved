@@ -11,7 +11,7 @@
         }
       },
       {
-        "package": "NetUtils",
+        "package": "swift-netutils",
         "repositoryURL": "https://github.com/svdo/swift-netutils",
         "state": {
           "branch": null,

@@ -19,7 +19,7 @@ class AutologinCheck: ParetoCheck {
     override func checkPasses() -> Bool {
         let dictionary = readDefaultsFile(path: "/Library/Preferences/com.apple.loginwindow.plist")
         if let autoLoginUser = dictionary?.value(forKey: "autoLoginUser") as? String {
-            os_log("autoLoginUser: %{public}s", autoLoginUser)
+            os_log("autoLoginUser: %{public}s", log: Log.check, autoLoginUser)
             return !autoLoginUser.isEmpty
         }
         return true

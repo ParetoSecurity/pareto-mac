@@ -17,14 +17,8 @@ class ScreensaverPasswordCheck: ParetoCheck {
     }
 
     override func checkPasses() -> Bool {
-        let homeDirURL = FileManager.default.homeDirectoryForCurrentUser.path.replacingOccurrences(of: "/Library/Containers/dz0ny.dev.Pareto/Data", with: "")
-        let dictionary = readDefaultsFile(path: homeDirURL + "/Library/Preferences/com.apple.screensaver.plist")
-
-        if let askForPassword = dictionary?.value(forKey: "askForPassword") as? Int {
-            // os_log("askForPassword: %{public}s", askForPassword)
-            return askForPassword == 1
-        }
-
-        return false
+        let script = "tell application \"System Events\" to tell security preferences to get require password to wake"
+        let out = self.runOSA(appleScript: script) ?? "false"
+        return out.contains("true")
     }
 }

@@ -83,7 +83,7 @@ class StatusBarController: NSMenu, NSMenuDelegate {
             self.updateMenu()
             self.statusItem.button?.appearsDisabled = false
             self.updateMenu()
-            os_log("Checks finished running")
+            os_log("Checks finished running", log: Log.app)
         }
 
         // guard to prevent long running tasks
@@ -94,13 +94,13 @@ class StatusBarController: NSMenu, NSMenuDelegate {
             if self.isRunnig {
                 self.statusItem.button?.appearsDisabled = false
                 self.updateMenu()
-                os_log("Checks took more than 30s to finish canceling")
+                os_log("Checks took more than 30s to finish canceling", log: Log.app)
             }
         }
 
         // run tasks
         DispatchQueue.main.async(execute: workItem!)
-        os_log("Running check scheduler")
+        os_log("Running check scheduler", log: Log.app)
     }
 
     func menuDidClose(_: NSMenu) {
