@@ -164,7 +164,7 @@ class ParetoCheck: ObservableObject {
 
     func run() {
         if !isActive {
-            os_log("Disabled for %{public}s - %{public}s", log: Log.check, UUID, title)
+            os_log("Disabled for %{public}s - %{public}s", log: Log.app, UUID, title)
             return
         }
 
@@ -172,14 +172,14 @@ class ParetoCheck: ObservableObject {
             let nextCheck = checkTimestamp + (snoozeTime * 1000)
             let now = Int(Date().currentTimeMillis())
             if now >= nextCheck {
-                os_log("Resetting snooze for %{public}s - %{public}s", log: Log.check, UUID, title)
+                os_log("Resetting snooze for %{public}s - %{public}s", log: Log.app, UUID, title)
                 snoozeTime = 0
             } else {
-                os_log("Snooze in effect for %{public}s - %{public}s", log: Log.check, UUID, title)
+                os_log("Snooze in effect for %{public}s - %{public}s", log: Log.app, UUID, title)
                 return
             }
         }
-        os_log("Running check for %{public}s - %{public}s", UUID, title)
+        os_log("Running check for %{public}s - %{public}s", log: Log.app, UUID, title)
         checkPassed = checkPasses()
         checkTimestamp = Int(Date().currentTimeMillis())
     }
