@@ -17,7 +17,7 @@ struct GeneralSettingsView: View {
     var body: some View {
         Form {
             Section(
-                footer: Text("Automaticly opens the app when you start your Mac.")) {
+                footer: Text("Automatically opens the app when you start your Mac.")) {
                     VStack(alignment: .leading) {
                         Toggle("Start at Login", isOn: $atLogin.isEnabled)
                     }
