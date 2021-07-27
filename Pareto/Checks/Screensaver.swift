@@ -17,12 +17,8 @@ class ScreensaverCheck: ParetoCheck {
     }
 
     override func checkPasses() -> Bool {
-        // if let idleTime = CFPreferencesCopyAppValue("idleTime" as CFString, "com.apple.screensaver" as CFString) as? String {
-        if let idleTime = readDefaults(app: "com.apple.screensaver", key: "idleTime") {
-            os_log("idleTime: %{public}s", log: Log.check, idleTime)
-            return Int(idleTime) ?? 0 <= 300
-        }
-
-        return false
+        let script = "tell application \"System Events\" to tell screen saver preferences to get delay interval"
+        let out = runOSA(appleScript: script) ?? "0"
+        return Int(out) ?? 0 <= 300
     }
 }

@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		4F103008269EE136008C1E86 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F103007269EE135008C1E86 /* SettingsView.swift */; };
 		4F103012269F1C65008C1E86 /* LaunchAtLogin in Frameworks */ = {isa = PBXBuildFile; productRef = 4F103011269F1C65008C1E86 /* LaunchAtLogin */; };
+		4F47221026B08A0E0071CE2A /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F47220F26B08A0E0071CE2A /* Settings.swift */; };
 		4F52D47B26A81CD900F1A904 /* VPNConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F52D47A26A81CD900F1A904 /* VPNConnection.swift */; };
 		4F52D48C26A81F1100F1A904 /* TestParetoCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F52D47C26A81E0900F1A904 /* TestParetoCheck.swift */; };
 		4F52D48F26A8287E00F1A904 /* NetUtils in Frameworks */ = {isa = PBXBuildFile; productRef = 4F52D48E26A8287E00F1A904 /* NetUtils */; };
@@ -48,6 +49,7 @@
 
 /* Begin PBXFileReference section */
 		4F103007269EE135008C1E86 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		4F47220F26B08A0E0071CE2A /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		4F52D47A26A81CD900F1A904 /* VPNConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VPNConnection.swift; sourceTree = "<group>"; };
 		4F52D47C26A81E0900F1A904 /* TestParetoCheck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestParetoCheck.swift; sourceTree = "<group>"; };
 		4F52D48226A81F0B00F1A904 /* ParetoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ParetoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -186,6 +188,7 @@
 				4FEBA2FB269CD48F009B2469 /* Pareto.entitlements */,
 				4FEBA2F7269CD48F009B2469 /* Preview Content */,
 				4FB7C67C26AFF1AB00FB1C41 /* Log.swift */,
+				4F47220F26B08A0E0071CE2A /* Settings.swift */,
 			);
 			path = Pareto;
 			sourceTree = "<group>";
@@ -366,6 +369,7 @@
 				4F868DCF26A591E6005B876E /* Firewall.swift in Sources */,
 				4FB7C68126AFF25300FB1C41 /* Date.swift in Sources */,
 				4FB405EF26A6FC4800267D5D /* ScreensaverPassword.swift in Sources */,
+				4F47221026B08A0E0071CE2A /* Settings.swift in Sources */,
 				4F868DD126A5C51C005B876E /* Autologin.swift in Sources */,
 				4FEBA2F2269CD48F009B2469 /* ParetoApp.swift in Sources */,
 				4FB7C68D26AFFD2600FB1C41 /* FileVault.swift in Sources */,
@@ -572,7 +576,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
-				MARKETING_VERSION = 0.0.8;
+				MARKETING_VERSION = 0.0.9;
 				PRODUCT_BUNDLE_IDENTIFIER = niteo.co.Pareto;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -599,7 +603,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
-				MARKETING_VERSION = 0.0.8;
+				MARKETING_VERSION = 0.0.9;
 				PRODUCT_BUNDLE_IDENTIFIER = niteo.co.Pareto;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;

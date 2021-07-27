@@ -13,7 +13,8 @@ let buildVersion: String = Bundle.main.infoDictionary?["CFBundleVersion"] as! St
 
 struct GeneralSettingsView: View {
     @ObservedObject private var atLogin = LaunchAtLogin.observable
-
+    @ObservedObject var userSettings = UserSettings()
+    
     var body: some View {
         Form {
             Section(
@@ -22,6 +23,13 @@ struct GeneralSettingsView: View {
                         Toggle("Start at Login", isOn: $atLogin.isEnabled)
                     }
             }
+            Section(
+                footer: Text("Run all checks some time after waking from sleep.")) {
+                    VStack(alignment: .leading) {
+                        Toggle("Run checks after sleep", isOn: $userSettings.runAfterSleep)
+                    }
+            }
+            
         }
 
         .frame(width: 350, height: 100).padding(5)
@@ -71,7 +79,6 @@ struct SettingsView: View {
 struct SettingsView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            SettingsView()
             SettingsView()
         }
     }

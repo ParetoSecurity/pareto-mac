@@ -89,10 +89,9 @@ class StatusBarController: NSMenu, NSMenuDelegate {
 
         // guard to prevent long running tasks
         DispatchQueue.global().asyncAfter(deadline: .now() + .seconds(30)) {
-            self.workItem?.cancel()
-
             // checks are still running kill them
             if self.isRunnig {
+                self.workItem?.cancel()
                 self.statusItem.button?.appearsDisabled = false
                 self.updateMenu()
                 os_log("Checks took more than 30s to finish canceling", log: Log.app)
