@@ -1,0 +1,36 @@
+version: 2.1
+
+jobs: # a basic unit of work in a run
+  test: # your job name
+    macos:
+      xcode: 11.3.0 # indicate our selected version of Xcode
+    steps: # a series of commands to run
+      - checkout  # pull down code from your version control system.
+      - run:
+          name: Run Unit Tests
+          command: make test
+
+  build: 
+    macos:
+      xcode: 11.3.0 # indicate our selected version of Xcode
+    steps: 
+      - checkout
+      - run:
+          # build our application
+          name: Build Application
+          command: make build
+      #- run:
+      #    name: Compress app for storage
+      #    command: zip -r app.zip build/Release/circleci-demo-macos.app
+      #- store_artifacts: # store this build output. Read more: https://circleci.com/docs/2.0/artifacts/
+      #    path: app.zip
+      #    destination: app
+          
+workflows:
+  version: 2
+  test_build:
+    jobs:
+      - test
+      - build:
+          requires:
+            - test
