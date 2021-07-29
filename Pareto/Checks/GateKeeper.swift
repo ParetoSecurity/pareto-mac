@@ -23,8 +23,10 @@ class GatekeeperCheck: ParetoCheck {
     override func checkPasses() -> Bool {
         let path = "/var/db/SystemPolicy-prefs.plist"
         if isSandboxingEnabled() {
+            os_log("Running in sandbox %{public}s - %{public}s", log: Log.check, ID, TITLE)
             // if enabled one cannot read system file even with entitlement
             guard let _ = NSDictionary(contentsOfFile: path) else {
+                os_log("Gatekeeper file not found", log: Log.check)
                 return true
             }
             return false
@@ -33,8 +35,12 @@ class GatekeeperCheck: ParetoCheck {
         // If we are not sandboxed
         let dictionary = readDefaultsFile(path: path)
         if let enabled = dictionary?.object(forKey: "enabled") as? String {
+            os_log("Gatekeeper file found, status %{enabled}s", log: Log.check, enabled)
             return enabled == "yes"
         }
-        return false
+
+        let output = runCMD(app: "/usr/bin/spctl", args: ["--status"])
+        os_log("spctl fallback, status %{enabled}s", log: Log.check, output)
+        return output.contains("assessments enabled")
     }
 }

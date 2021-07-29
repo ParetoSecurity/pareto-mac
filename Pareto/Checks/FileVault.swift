@@ -16,19 +16,7 @@ class FileVaultCheck: ParetoCheck {
     }
 
     override func checkPasses() -> Bool {
-        let task = Process()
-        let pipe = Pipe()
-
-        task.standardOutput = pipe
-        task.standardError = pipe
-        task.arguments = ["status"]
-        task.launchPath = "/usr/bin/fdesetup"
-        task.launch()
-        task.waitUntilExit()
-
-        let data = pipe.fileHandleForReading.readDataToEndOfFile()
-        let output = String(data: data, encoding: .utf8)!
-
+        let output = runCMD(app: "/usr/bin/fdesetup", args: ["status"])
         return output.contains("FileVault is On")
     }
 }
