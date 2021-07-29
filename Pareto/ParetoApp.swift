@@ -54,7 +54,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     @objc func reportBug() {
         if #available(macOS 12.0, *) {
             let logs = getLogEntries().joined(separator: "\n").addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
-            if let url = URL(string: "https://github.com/ParetoSecurity/pareto-mac/issues/new?assignees=dz0ny&labels=bug%2Ctriage&template=report_bug.yml&title=%5BBug%5D%3A+&logs="+logs!) {
+            if let url = URL(string: "https://github.com/ParetoSecurity/pareto-mac/issues/new?assignees=dz0ny&labels=bug%2Ctriage&template=report_bug.yml&title=%5BBug%5D%3A+&logs=" + logs!) {
                 NSWorkspace.shared.open(url)
             }
         } else {
@@ -62,9 +62,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 NSWorkspace.shared.open(url)
             }
         }
-
     }
-    
+
     @available(macOS 12.0, *)
     func getLogEntries() -> [String] {
         var logs = [String]()
@@ -76,7 +75,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             let osLogEntryLogObjects = osLogEntryObjects.compactMap { $0 as? OSLogEntryLog }
             let subsystem = Bundle.main.bundleIdentifier!
             for entry in osLogEntryLogObjects where entry.subsystem == subsystem {
-                logs.append(entry.category+": "+entry.composedMessage)
+                logs.append(entry.category + ": " + entry.composedMessage)
             }
         } catch {
             logs.append("Error: \(error)")
