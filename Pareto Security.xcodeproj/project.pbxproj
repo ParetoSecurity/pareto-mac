@@ -576,7 +576,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
-				MARKETING_VERSION = 0.0.9;
+				MARKETING_VERSION = 0.0.10;
 				PRODUCT_BUNDLE_IDENTIFIER = niteo.co.Pareto;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -603,7 +603,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
-				MARKETING_VERSION = 0.0.9;
+				MARKETING_VERSION = 0.0.10;
 				PRODUCT_BUNDLE_IDENTIFIER = niteo.co.Pareto;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
