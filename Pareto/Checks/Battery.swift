@@ -7,100 +7,94 @@
 
 import Foundation
 import IOKit
+import IOKit.ps
 import os.log
+
+public class Battery {
+    public var batteryInstalled: Bool?
+    public var cycleCount: Int?
+    public var designCycleCount: Int?
+    public var avgTimeToEmpty: Int?
+
+    public init() {}
+}
+
+// ioreg -b -w 0 -f -r -c AppleSmartBattery
+public class BatteryInfo {
+    static let BatteryInstalled = "BatteryInstalled" as CFString
+    static let CycleCount = "CycleCount" as CFString
+    static let AvgTimeToEmpty = "avgTimeToEmpty" as CFString
+    static let DesignCycleCount = "DesignCycleCount9C" as CFString
+
+    private var serviceInternal: io_connect_t = 0 // io_object_t
+
+    public init() {}
+
+    private func open() {
+        serviceInternal = IOServiceGetMatchingService(kIOMasterPortDefault, IOServiceMatching("AppleSmartBattery"))
+    }
+
+    private func close() {
+        IOServiceClose(serviceInternal)
+        IOObjectRelease(serviceInternal)
+        serviceInternal = 0
+    }
+
+    private func getIntValue(_ identifier: CFString) -> Int? {
+        if let value = IORegistryEntryCreateCFProperty(serviceInternal, identifier, kCFAllocatorDefault, 0) {
+            return value.takeRetainedValue() as? Int
+        }
+
+        return nil
+    }
+
+    private func getStringValue(_ identifier: CFString) -> String? {
+        if let value = IORegistryEntryCreateCFProperty(serviceInternal, identifier, kCFAllocatorDefault, 0) {
+            return value.takeRetainedValue() as? String
+        }
+
+        return nil
+    }
+
+    private func getBoolValue(_ forIdentifier: CFString) -> Bool? {
+        if let value = IORegistryEntryCreateCFProperty(serviceInternal, forIdentifier, kCFAllocatorDefault, 0) {
+            return value.takeRetainedValue() as? Bool
+        }
+
+        return nil
+    }
+
+    public func getInternalBattery() -> Battery {
+        open()
+
+        let battery = Battery()
+        battery.batteryInstalled = getBoolValue(BatteryInfo.BatteryInstalled) ?? false
+        battery.cycleCount = getIntValue(BatteryInfo.CycleCount) ?? 0
+        battery.designCycleCount = getIntValue(BatteryInfo.DesignCycleCount) ?? 1000
+        battery.avgTimeToEmpty = getIntValue(BatteryInfo.AvgTimeToEmpty) ?? 800
+
+        close()
+
+        return battery
+    }
+}
 
 class BatteryCheck: ParetoCheck {
     final var ID = "2e46c89a-5461-4865-a92e-3b799c12034f"
     final var TITLE = "Battery healthy"
-
-    // ioreg -b -w 0 -f -r -c AppleSmartBattery
-    func isBatteryInstalled() -> Bool {
-        var batteryInstalled: Bool? {
-            let batteryService = IOServiceGetMatchingService(kIOMasterPortDefault, IOServiceMatching("AppleSmartBattery"))
-
-            guard batteryService > 0 else {
-                return nil
-            }
-
-            guard let batteryInstalled = (IORegistryEntryCreateCFProperty(batteryService, "BatteryInstalled" as CFString, kCFAllocatorDefault, 0).takeUnretainedValue() as? Bool) else {
-                return nil
-            }
-
-            IOObjectRelease(batteryService)
-
-            return batteryInstalled
-        }
-
-        return batteryInstalled ?? false
-    }
-
-    func cycleCount() -> Int {
-        var cycleCount: Int? {
-            let batteryService = IOServiceGetMatchingService(kIOMasterPortDefault, IOServiceMatching("CycleCount"))
-
-            guard batteryService > 0 else {
-                return nil
-            }
-
-            guard let cycleCount = (IORegistryEntryCreateCFProperty(batteryService, "CycleCount" as CFString, kCFAllocatorDefault, 0).takeUnretainedValue() as? Int) else {
-                return nil
-            }
-
-            IOObjectRelease(batteryService)
-
-            return cycleCount
-        }
-
-        return cycleCount ?? 0
-    }
-
-    func avgTimeToEmpty() -> Int {
-        var avgTimeToEmpty: Int? {
-            let batteryService = IOServiceGetMatchingService(kIOMasterPortDefault, IOServiceMatching("avgTimeToEmpty"))
-
-            guard batteryService > 0 else {
-                return nil
-            }
-
-            guard let avgTimeToEmpty = (IORegistryEntryCreateCFProperty(batteryService, "avgTimeToEmpty" as CFString, kCFAllocatorDefault, 0).takeUnretainedValue() as? Int) else {
-                return nil
-            }
-
-            IOObjectRelease(batteryService)
-
-            return avgTimeToEmpty
-        }
-
-        return avgTimeToEmpty ?? 0
-    }
-
-    func designedCycleCount() -> Int {
-        var designedCycleCount: Int? {
-            let batteryService = IOServiceGetMatchingService(kIOMasterPortDefault, IOServiceMatching("CycleCount"))
-
-            guard batteryService > 0 else {
-                return nil
-            }
-
-            guard let designedCycleCount = (IORegistryEntryCreateCFProperty(batteryService, "DesignCycleCount9C" as CFString, kCFAllocatorDefault, 0).takeUnretainedValue() as? Int) else {
-                return nil
-            }
-
-            IOObjectRelease(batteryService)
-
-            return designedCycleCount
-        }
-
-        return designedCycleCount ?? 0
-    }
 
     required init(defaults: UserDefaults = .standard, id _: String! = "", title _: String! = "") {
         super.init(defaults: defaults, id: ID, title: TITLE)
     }
 
     override func checkPasses() -> Bool {
-        if isBatteryInstalled() {
-            return cycleCount() < designedCycleCount()
+        let bat = BatteryInfo().getInternalBattery()
+        os_log("batteryService isInstalled:%{public}d", log: Log.check, bat.batteryInstalled!)
+        if bat.batteryInstalled! {
+            os_log("batteryService cycleCount:%{public}d", log: Log.check, bat.cycleCount!)
+            os_log("batteryService designCycleCount:%{public}d", log: Log.check, bat.designCycleCount!)
+            os_log("batteryService avgTimeToEmpty:%{public}d", log: Log.check, bat.avgTimeToEmpty!)
+            return bat.cycleCount! < bat.designCycleCount!
         }
         return false
     }
