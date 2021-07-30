@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		4F103008269EE136008C1E86 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F103007269EE135008C1E86 /* SettingsView.swift */; };
 		4F103012269F1C65008C1E86 /* LaunchAtLogin in Frameworks */ = {isa = PBXBuildFile; productRef = 4F103011269F1C65008C1E86 /* LaunchAtLogin */; };
+		4F29424826B3ED1D0017B504 /* Battery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F29424726B3ED1D0017B504 /* Battery.swift */; };
 		4F47221026B08A0E0071CE2A /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F47220F26B08A0E0071CE2A /* Settings.swift */; };
 		4F52D48C26A81F1100F1A904 /* TestParetoCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F52D47C26A81E0900F1A904 /* TestParetoCheck.swift */; };
 		4F5E888026A053A9005271FB /* ParetoCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F5E887F26A053A9005271FB /* ParetoCheck.swift */; };
@@ -46,6 +47,7 @@
 
 /* Begin PBXFileReference section */
 		4F103007269EE135008C1E86 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		4F29424726B3ED1D0017B504 /* Battery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Battery.swift; sourceTree = "<group>"; };
 		4F47220F26B08A0E0071CE2A /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		4F52D47C26A81E0900F1A904 /* TestParetoCheck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestParetoCheck.swift; sourceTree = "<group>"; };
 		4F52D48226A81F0B00F1A904 /* ParetoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ParetoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -118,6 +120,7 @@
 				4FB405EE26A6FC4800267D5D /* ScreensaverPassword.swift */,
 				4FB405F226A7140C00267D5D /* 1Password.swift */,
 				4FB7C68C26AFFD2600FB1C41 /* FileVault.swift */,
+				4F29424726B3ED1D0017B504 /* Battery.swift */,
 			);
 			path = Checks;
 			sourceTree = "<group>";
@@ -361,6 +364,7 @@
 				4F47221026B08A0E0071CE2A /* Settings.swift in Sources */,
 				4F868DD126A5C51C005B876E /* Autologin.swift in Sources */,
 				4FEBA2F2269CD48F009B2469 /* ParetoApp.swift in Sources */,
+				4F29424826B3ED1D0017B504 /* Battery.swift in Sources */,
 				4FB7C68D26AFFD2600FB1C41 /* FileVault.swift in Sources */,
 				4F103008269EE136008C1E86 /* SettingsView.swift in Sources */,
 				4F868DD326A5C751005B876E /* Screensaver.swift in Sources */,

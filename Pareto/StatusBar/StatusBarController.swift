@@ -27,6 +27,7 @@ class StatusBarController: NSMenu, NSMenuDelegate {
         ZoomCheck(),
         OnePasswordCheck(),
         FileVaultCheck(),
+        BatteryCheck(),
     ]
 
     required init(coder decoder: NSCoder) {
@@ -40,7 +41,6 @@ class StatusBarController: NSMenu, NSMenuDelegate {
         statusItem.button?.image = imageDefault
         statusItem.button?.imagePosition = .imageRight
         statusItem.button?.target = self
-        updateMenu()
     }
 
     func updateMenu() {

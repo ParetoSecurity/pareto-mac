@@ -8,9 +8,6 @@ import AppKit
 import LaunchAtLogin
 import SwiftUI
 
-let appVersion: String = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as! String
-let buildVersion: String = Bundle.main.infoDictionary?["CFBundleVersion"] as! String
-
 struct GeneralSettingsView: View {
     @ObservedObject private var atLogin = LaunchAtLogin.observable
     @ObservedObject var userSettings = UserSettings()
@@ -43,8 +40,8 @@ struct AboutSettingsView: View {
             VStack(alignment: .leading) {
                 Link("Pareto Security",
                      destination: URL(string: "https://paretosecurity.app")!)
-                Text("Version: \(appVersion)")
-                Text("Build: \(buildVersion)")
+                Text("Version: \(AppInfo.appVersion)")
+                Text("Build: \(AppInfo.buildVersion)")
                 Text("Made with ❤️ at Niteo.")
             }
 
