@@ -5,7 +5,6 @@
 //  Created by Janez Troha on 12/07/2021.
 //
 
-import AppUpdater
 import Foundation
 import os.log
 import OSLog
@@ -13,7 +12,6 @@ import SwiftUI
 
 class AppDelegate: NSObject, NSApplicationDelegate {
     var statusBar: StatusBarController?
-    let updater = AppUpdater(owner: "ParetoSecurity", repo: "pareto-mac")
     let userSettings = UserSettings()
 
     func applicationDidFinishLaunching(_: Notification) {

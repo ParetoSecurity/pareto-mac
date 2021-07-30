@@ -10,9 +10,7 @@
 		4F103008269EE136008C1E86 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F103007269EE135008C1E86 /* SettingsView.swift */; };
 		4F103012269F1C65008C1E86 /* LaunchAtLogin in Frameworks */ = {isa = PBXBuildFile; productRef = 4F103011269F1C65008C1E86 /* LaunchAtLogin */; };
 		4F47221026B08A0E0071CE2A /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F47220F26B08A0E0071CE2A /* Settings.swift */; };
-		4F52D47B26A81CD900F1A904 /* VPNConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F52D47A26A81CD900F1A904 /* VPNConnection.swift */; };
 		4F52D48C26A81F1100F1A904 /* TestParetoCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F52D47C26A81E0900F1A904 /* TestParetoCheck.swift */; };
-		4F52D48F26A8287E00F1A904 /* NetUtils in Frameworks */ = {isa = PBXBuildFile; productRef = 4F52D48E26A8287E00F1A904 /* NetUtils */; };
 		4F5E888026A053A9005271FB /* ParetoCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F5E887F26A053A9005271FB /* ParetoCheck.swift */; };
 		4F868DCF26A591E6005B876E /* Firewall.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F868DCE26A591E6005B876E /* Firewall.swift */; };
 		4F868DD126A5C51C005B876E /* Autologin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F868DD026A5C51C005B876E /* Autologin.swift */; };
@@ -29,7 +27,6 @@
 		4FB7C68726AFF29A00FB1C41 /* NSImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB7C68626AFF29A00FB1C41 /* NSImage.swift */; };
 		4FB7C68826AFF29A00FB1C41 /* NSImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB7C68626AFF29A00FB1C41 /* NSImage.swift */; };
 		4FB7C68D26AFFD2600FB1C41 /* FileVault.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB7C68C26AFFD2600FB1C41 /* FileVault.swift */; };
-		4FB7C69026AFFEE500FB1C41 /* AppUpdater in Frameworks */ = {isa = PBXBuildFile; productRef = 4FB7C68F26AFFEE500FB1C41 /* AppUpdater */; };
 		4FD0A24126A024440070BED4 /* Gatekeeper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FD0A24026A024440070BED4 /* Gatekeeper.swift */; };
 		4FEBA2F2269CD48F009B2469 /* ParetoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEBA2F1269CD48F009B2469 /* ParetoApp.swift */; };
 		4FEBA2F6269CD48F009B2469 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4FEBA2F5269CD48F009B2469 /* Assets.xcassets */; };
@@ -50,7 +47,6 @@
 /* Begin PBXFileReference section */
 		4F103007269EE135008C1E86 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		4F47220F26B08A0E0071CE2A /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
-		4F52D47A26A81CD900F1A904 /* VPNConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VPNConnection.swift; sourceTree = "<group>"; };
 		4F52D47C26A81E0900F1A904 /* TestParetoCheck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestParetoCheck.swift; sourceTree = "<group>"; };
 		4F52D48226A81F0B00F1A904 /* ParetoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ParetoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4F52D48626A81F0B00F1A904 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -88,8 +84,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4F52D48F26A8287E00F1A904 /* NetUtils in Frameworks */,
-				4FB7C69026AFFEE500FB1C41 /* AppUpdater in Frameworks */,
 				4F103012269F1C65008C1E86 /* LaunchAtLogin in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -123,7 +117,6 @@
 				4F868DD026A5C51C005B876E /* Autologin.swift */,
 				4FB405EE26A6FC4800267D5D /* ScreensaverPassword.swift */,
 				4FB405F226A7140C00267D5D /* 1Password.swift */,
-				4F52D47A26A81CD900F1A904 /* VPNConnection.swift */,
 				4FB7C68C26AFFD2600FB1C41 /* FileVault.swift */,
 			);
 			path = Checks;
@@ -239,8 +232,6 @@
 			name = "Pareto Security";
 			packageProductDependencies = (
 				4F103011269F1C65008C1E86 /* LaunchAtLogin */,
-				4F52D48E26A8287E00F1A904 /* NetUtils */,
-				4FB7C68F26AFFEE500FB1C41 /* AppUpdater */,
 			);
 			productName = Pareto;
 			productReference = 4FEBA2EE269CD48F009B2469 /* Pareto Security.app */;
@@ -275,8 +266,6 @@
 			mainGroup = 4FEBA2E5269CD48F009B2469;
 			packageReferences = (
 				4F103010269F1C65008C1E86 /* XCRemoteSwiftPackageReference "LaunchAtLogin" */,
-				4F52D48D26A8287E00F1A904 /* XCRemoteSwiftPackageReference "swift-netutils" */,
-				4FB7C68926AFF68A00FB1C41 /* XCRemoteSwiftPackageReference "AppUpdater" */,
 			);
 			productRefGroup = 4FEBA2EF269CD48F009B2469 /* Products */;
 			projectDirPath = "";
@@ -380,7 +369,6 @@
 				4FB7C68726AFF29A00FB1C41 /* NSImage.swift in Sources */,
 				4FB7C68426AFF27400FB1C41 /* String.swift in Sources */,
 				4FB405F126A70DCC00267D5D /* ZoomVersion.swift in Sources */,
-				4F52D47B26A81CD900F1A904 /* VPNConnection.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -651,22 +639,6 @@
 				kind = branch;
 			};
 		};
-		4F52D48D26A8287E00F1A904 /* XCRemoteSwiftPackageReference "swift-netutils" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/svdo/swift-netutils";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 4.2.0;
-			};
-		};
-		4FB7C68926AFF68A00FB1C41 /* XCRemoteSwiftPackageReference "AppUpdater" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/mxcl/AppUpdater.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.0;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -674,16 +646,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 4F103010269F1C65008C1E86 /* XCRemoteSwiftPackageReference "LaunchAtLogin" */;
 			productName = LaunchAtLogin;
-		};
-		4F52D48E26A8287E00F1A904 /* NetUtils */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 4F52D48D26A8287E00F1A904 /* XCRemoteSwiftPackageReference "swift-netutils" */;
-			productName = NetUtils;
-		};
-		4FB7C68F26AFFEE500FB1C41 /* AppUpdater */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 4FB7C68926AFF68A00FB1C41 /* XCRemoteSwiftPackageReference "AppUpdater" */;
-			productName = AppUpdater;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

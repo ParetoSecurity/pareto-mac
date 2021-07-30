@@ -26,7 +26,6 @@ class StatusBarController: NSMenu, NSMenuDelegate {
         ScreensaverPasswordCheck(),
         ZoomCheck(),
         OnePasswordCheck(),
-        VPNConnectionCheck(),
         FileVaultCheck(),
     ]
 
