@@ -9,7 +9,7 @@ import os.log
 
 class FirewallCheck: ParetoCheck {
     final var ID = "2e46c89a-5461-4865-a92e-3b799c12034c"
-    final var TITLE = "Firewall active"
+    final var TITLE = "Firewall is on"
 
     required init(defaults: UserDefaults = .standard, id _: String! = "", title _: String! = "") {
         super.init(defaults: defaults, id: ID, title: TITLE)
