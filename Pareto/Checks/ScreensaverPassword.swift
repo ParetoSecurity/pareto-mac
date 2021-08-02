@@ -10,7 +10,7 @@ import os.log
 
 class ScreensaverPasswordCheck: ParetoCheck {
     final var ID = "37dee029-605b-4aab-96b9-5438e5aa44d8"
-    final var TITLE = "Unlocking macOS requires password"
+    final var TITLE = "Password after sleep or screen saver"
 
     required init(defaults: UserDefaults = .standard, id _: String! = "", title _: String! = "") {
         super.init(defaults: defaults, id: ID, title: TITLE)
