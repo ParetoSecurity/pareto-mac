@@ -59,7 +59,7 @@ class ParetoCheck: ObservableObject {
             .map { _ in () }
             .subscribe(objectWillChange)
     }
-    
+
     var isActive: Bool {
         get { defaults.bool(forKey: EnabledKey) }
         set { defaults.set(newValue, forKey: EnabledKey) }

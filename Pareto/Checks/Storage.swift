@@ -14,10 +14,12 @@ class StorageCheck: ParetoCheck {
     required init(defaults: UserDefaults = .standard, id _: String! = "", title _: String! = "") {
         super.init(defaults: defaults, id: ID, title: TITLE)
     }
+
     var systemSize: Int64 {
         guard let systemAttributes = try? FileManager.default.attributesOfFileSystem(forPath: NSHomeDirectory() as String),
-            let totalSize = (systemAttributes[.systemSize] as? NSNumber)?.int64Value else {
-                return 0
+              let totalSize = (systemAttributes[.systemSize] as? NSNumber)?.int64Value
+        else {
+            return 0
         }
 
         return totalSize
@@ -25,16 +27,17 @@ class StorageCheck: ParetoCheck {
 
     var systemFreeSize: Int64 {
         guard let systemAttributes = try? FileManager.default.attributesOfFileSystem(forPath: NSHomeDirectory() as String),
-            let freeSize = (systemAttributes[.systemFreeSize] as? NSNumber)?.int64Value else {
-                return 0
+              let freeSize = (systemAttributes[.systemFreeSize] as? NSNumber)?.int64Value
+        else {
+            return 0
         }
 
         return freeSize
     }
-    
+
     override func checkPasses() -> Bool {
-        let used = self.systemSize - self.systemFreeSize
-        let perFree = (100 / self.systemSize ) * used
+        let used = systemSize - systemFreeSize
+        let perFree = (100 / systemSize) * used
         os_log("systemSize: %{public}d", log: Log.check, systemSize)
         os_log("systemFreeSize: %{public}d", log: Log.check, systemSize)
         os_log("used: %{public}d", log: Log.check, used)
@@ -42,4 +45,3 @@ class StorageCheck: ParetoCheck {
         return perFree >= 20
     }
 }
-
