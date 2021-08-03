@@ -22,6 +22,7 @@ class ParetoCheck: ObservableObject {
     private let defaults: UserDefaults
     public let UUID: String
     public let title: String
+    public var canRunInSandbox = true
 
     let objectWillChange = PassthroughSubject<Void, Never>()
 
@@ -58,7 +59,7 @@ class ParetoCheck: ObservableObject {
             .map { _ in () }
             .subscribe(objectWillChange)
     }
-
+    
     var isActive: Bool {
         get { defaults.bool(forKey: EnabledKey) }
         set { defaults.set(newValue, forKey: EnabledKey) }

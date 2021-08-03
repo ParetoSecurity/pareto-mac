@@ -102,6 +102,7 @@ enum AppInfo {
     static let appVersion: String = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as! String
     static let buildVersion: String = Bundle.main.infoDictionary?["CFBundleVersion"] as! String
     static let osVersion = ProcessInfo.processInfo.operatingSystemVersionString
+    static let inSandbox = ProcessInfo.processInfo.environment["APP_SANDBOX_CONTAINER_ID"] != nil
     static let hwModel = { () -> String in
         let service = IOServiceGetMatchingService(kIOMasterPortDefault,
                                                   IOServiceMatching("IOPlatformExpertDevice"))

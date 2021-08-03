@@ -26,7 +26,6 @@ class StatusBarController: NSMenu, NSMenuDelegate {
         ScreensaverPasswordCheck(),
         ZoomCheck(),
         OnePasswordCheck(),
-        FileVaultCheck(),
         BatteryCheck(),
     ]
 
@@ -131,9 +130,13 @@ class StatusBarController: NSMenu, NSMenuDelegate {
         addItem(quitItem)
     }
 
+
     func addChecksMenuItems() {
         for check in checks.sorted(by: { $0.title < $1.title }) {
-            addItem(check.menu())
+            if AppInfo.inSandbox && check.canRunInSandbox{
+                addItem(check.menu())
+            }
+            
         }
     }
 }

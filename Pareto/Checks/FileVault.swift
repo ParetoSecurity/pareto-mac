@@ -14,6 +14,7 @@ class FileVaultCheck: ParetoCheck {
 
     required init(defaults: UserDefaults = .standard, id _: String! = "", title _: String! = "") {
         super.init(defaults: defaults, id: ID, title: TITLE)
+        self.canRunInSandbox = false
     }
 
     override func checkPasses() -> Bool {
