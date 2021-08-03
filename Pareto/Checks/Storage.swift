@@ -5,10 +5,11 @@
 //  Created by Janez Troha on 03/08/2021.
 //
 import Foundation
+import os.log
 
 class StorageCheck: ParetoCheck {
     final var ID = "c3aee29a-f16d-4573-a861-b3ba0d860061"
-    final var TITLE = "Enough free storage"
+    final var TITLE = "Enough free disk storage"
 
     required init(defaults: UserDefaults = .standard, id _: String! = "", title _: String! = "") {
         super.init(defaults: defaults, id: ID, title: TITLE)
@@ -32,8 +33,13 @@ class StorageCheck: ParetoCheck {
     }
     
     override func checkPasses() -> Bool {
-
-        return self.systemFreeSize >= self.systemSize
+        let used = self.systemSize - self.systemFreeSize
+        let perFree = (100 / self.systemSize ) * used
+        os_log("systemSize: %{public}d", log: Log.check, systemSize)
+        os_log("systemFreeSize: %{public}d", log: Log.check, systemSize)
+        os_log("used: %{public}d", log: Log.check, used)
+        os_log("perFree: %{public}d", log: Log.check, perFree)
+        return perFree >= 20
     }
 }
 

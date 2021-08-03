@@ -132,7 +132,7 @@ class StatusBarController: NSMenu, NSMenuDelegate {
     }
 
     func addChecksMenuItems() {
-        for check in checks {
+        for check in checks.sorted(by: { $0.title < $1.title }) {
             addItem(check.menu())
         }
     }

@@ -21,7 +21,7 @@ class ParetoCheck: ObservableObject {
     private let cancellable: Cancellable
     private let defaults: UserDefaults
     public let UUID: String
-    private let title: String
+    public let title: String
 
     let objectWillChange = PassthroughSubject<Void, Never>()
 
