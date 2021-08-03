@@ -11,8 +11,9 @@
 		4F103012269F1C65008C1E86 /* LaunchAtLogin in Frameworks */ = {isa = PBXBuildFile; productRef = 4F103011269F1C65008C1E86 /* LaunchAtLogin */; };
 		4F29424826B3ED1D0017B504 /* Battery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F29424726B3ED1D0017B504 /* Battery.swift */; };
 		4F47221026B08A0E0071CE2A /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F47220F26B08A0E0071CE2A /* Settings.swift */; };
-		4F52D48C26A81F1100F1A904 /* TestParetoCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F52D47C26A81E0900F1A904 /* TestParetoCheck.swift */; };
 		4F5E888026A053A9005271FB /* ParetoCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F5E887F26A053A9005271FB /* ParetoCheck.swift */; };
+		4F690D4E26B93DD9004539C3 /* Storage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F690D4D26B93DD9004539C3 /* Storage.swift */; };
+		4F690D5626B93E01004539C3 /* ParetoSecurityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F690D5526B93E01004539C3 /* ParetoSecurityTests.swift */; };
 		4F868DCF26A591E6005B876E /* Firewall.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F868DCE26A591E6005B876E /* Firewall.swift */; };
 		4F868DD126A5C51C005B876E /* Autologin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F868DD026A5C51C005B876E /* Autologin.swift */; };
 		4F868DD326A5C751005B876E /* Screensaver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F868DD226A5C751005B876E /* Screensaver.swift */; };
@@ -20,13 +21,9 @@
 		4FB405F126A70DCC00267D5D /* ZoomVersion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB405F026A70DCC00267D5D /* ZoomVersion.swift */; };
 		4FB405F326A7140C00267D5D /* 1Password.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB405F226A7140C00267D5D /* 1Password.swift */; };
 		4FB7C67D26AFF1AB00FB1C41 /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB7C67C26AFF1AB00FB1C41 /* Log.swift */; };
-		4FB7C67E26AFF1AB00FB1C41 /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB7C67C26AFF1AB00FB1C41 /* Log.swift */; };
 		4FB7C68126AFF25300FB1C41 /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB7C68026AFF25300FB1C41 /* Date.swift */; };
-		4FB7C68226AFF25300FB1C41 /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB7C68026AFF25300FB1C41 /* Date.swift */; };
 		4FB7C68426AFF27400FB1C41 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB7C68326AFF27400FB1C41 /* String.swift */; };
-		4FB7C68526AFF27400FB1C41 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB7C68326AFF27400FB1C41 /* String.swift */; };
 		4FB7C68726AFF29A00FB1C41 /* NSImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB7C68626AFF29A00FB1C41 /* NSImage.swift */; };
-		4FB7C68826AFF29A00FB1C41 /* NSImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB7C68626AFF29A00FB1C41 /* NSImage.swift */; };
 		4FB7C68D26AFFD2600FB1C41 /* FileVault.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB7C68C26AFFD2600FB1C41 /* FileVault.swift */; };
 		4FD0A24126A024440070BED4 /* Gatekeeper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FD0A24026A024440070BED4 /* Gatekeeper.swift */; };
 		4FEBA2F2269CD48F009B2469 /* ParetoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEBA2F1269CD48F009B2469 /* ParetoApp.swift */; };
@@ -36,7 +33,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		4F52D48726A81F0B00F1A904 /* PBXContainerItemProxy */ = {
+		4F690D5726B93E01004539C3 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 4FEBA2E6269CD48F009B2469 /* Project object */;
 			proxyType = 1;
@@ -49,10 +46,10 @@
 		4F103007269EE135008C1E86 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		4F29424726B3ED1D0017B504 /* Battery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Battery.swift; sourceTree = "<group>"; };
 		4F47220F26B08A0E0071CE2A /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
-		4F52D47C26A81E0900F1A904 /* TestParetoCheck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestParetoCheck.swift; sourceTree = "<group>"; };
-		4F52D48226A81F0B00F1A904 /* ParetoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ParetoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		4F52D48626A81F0B00F1A904 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4F5E887F26A053A9005271FB /* ParetoCheck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParetoCheck.swift; sourceTree = "<group>"; };
+		4F690D4D26B93DD9004539C3 /* Storage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Storage.swift; sourceTree = "<group>"; };
+		4F690D5326B93E01004539C3 /* ParetoSecurityTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ParetoSecurityTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		4F690D5526B93E01004539C3 /* ParetoSecurityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParetoSecurityTests.swift; sourceTree = "<group>"; };
 		4F868DCE26A591E6005B876E /* Firewall.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Firewall.swift; sourceTree = "<group>"; };
 		4F868DD026A5C51C005B876E /* Autologin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Autologin.swift; sourceTree = "<group>"; };
 		4F868DD226A5C751005B876E /* Screensaver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Screensaver.swift; sourceTree = "<group>"; };
@@ -75,7 +72,7 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		4F52D47F26A81F0B00F1A904 /* Frameworks */ = {
+		4F690D5026B93E01004539C3 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -121,17 +118,17 @@
 				4FB405F226A7140C00267D5D /* 1Password.swift */,
 				4FB7C68C26AFFD2600FB1C41 /* FileVault.swift */,
 				4F29424726B3ED1D0017B504 /* Battery.swift */,
+				4F690D4D26B93DD9004539C3 /* Storage.swift */,
 			);
 			path = Checks;
 			sourceTree = "<group>";
 		};
-		4F52D48326A81F0B00F1A904 /* ParetoTests */ = {
+		4F690D5426B93E01004539C3 /* ParetoSecurityTests */ = {
 			isa = PBXGroup;
 			children = (
-				4F52D47C26A81E0900F1A904 /* TestParetoCheck.swift */,
-				4F52D48626A81F0B00F1A904 /* Info.plist */,
+				4F690D5526B93E01004539C3 /* ParetoSecurityTests.swift */,
 			);
-			path = ParetoTests;
+			path = ParetoSecurityTests;
 			sourceTree = "<group>";
 		};
 		4FB7C67F26AFF22C00FB1C41 /* Extensions */ = {
@@ -155,7 +152,7 @@
 			isa = PBXGroup;
 			children = (
 				4FEBA2F0269CD48F009B2469 /* Pareto */,
-				4F52D48326A81F0B00F1A904 /* ParetoTests */,
+				4F690D5426B93E01004539C3 /* ParetoSecurityTests */,
 				4FEBA2EF269CD48F009B2469 /* Products */,
 				4FB7C68E26AFFEE500FB1C41 /* Frameworks */,
 			);
@@ -165,7 +162,7 @@
 			isa = PBXGroup;
 			children = (
 				4FEBA2EE269CD48F009B2469 /* Pareto Security.app */,
-				4F52D48226A81F0B00F1A904 /* ParetoTests.xctest */,
+				4F690D5326B93E01004539C3 /* ParetoSecurityTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -200,22 +197,22 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		4F52D48126A81F0B00F1A904 /* ParetoTests */ = {
+		4F690D5226B93E01004539C3 /* ParetoSecurityTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 4F52D48926A81F0B00F1A904 /* Build configuration list for PBXNativeTarget "ParetoTests" */;
+			buildConfigurationList = 4F690D5926B93E01004539C3 /* Build configuration list for PBXNativeTarget "ParetoSecurityTests" */;
 			buildPhases = (
-				4F52D47E26A81F0B00F1A904 /* Sources */,
-				4F52D47F26A81F0B00F1A904 /* Frameworks */,
-				4F52D48026A81F0B00F1A904 /* Resources */,
+				4F690D4F26B93E01004539C3 /* Sources */,
+				4F690D5026B93E01004539C3 /* Frameworks */,
+				4F690D5126B93E01004539C3 /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				4F52D48826A81F0B00F1A904 /* PBXTargetDependency */,
+				4F690D5826B93E01004539C3 /* PBXTargetDependency */,
 			);
-			name = ParetoTests;
-			productName = ParetoTests;
-			productReference = 4F52D48226A81F0B00F1A904 /* ParetoTests.xctest */;
+			name = ParetoSecurityTests;
+			productName = ParetoSecurityTests;
+			productReference = 4F690D5326B93E01004539C3 /* ParetoSecurityTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 		4FEBA2ED269CD48F009B2469 /* Pareto Security */ = {
@@ -246,11 +243,11 @@
 		4FEBA2E6269CD48F009B2469 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 1250;
+				LastSwiftUpdateCheck = 1300;
 				LastUpgradeCheck = 1300;
 				TargetAttributes = {
-					4F52D48126A81F0B00F1A904 = {
-						CreatedOnToolsVersion = 12.5.1;
+					4F690D5226B93E01004539C3 = {
+						CreatedOnToolsVersion = 13.0;
 						TestTargetID = 4FEBA2ED269CD48F009B2469;
 					};
 					4FEBA2ED269CD48F009B2469 = {
@@ -275,13 +272,13 @@
 			projectRoot = "";
 			targets = (
 				4FEBA2ED269CD48F009B2469 /* Pareto Security */,
-				4F52D48126A81F0B00F1A904 /* ParetoTests */,
+				4F690D5226B93E01004539C3 /* ParetoSecurityTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		4F52D48026A81F0B00F1A904 /* Resources */ = {
+		4F690D5126B93E01004539C3 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -339,15 +336,11 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		4F52D47E26A81F0B00F1A904 /* Sources */ = {
+		4F690D4F26B93E01004539C3 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4FB7C67E26AFF1AB00FB1C41 /* Log.swift in Sources */,
-				4FB7C68226AFF25300FB1C41 /* Date.swift in Sources */,
-				4FB7C68526AFF27400FB1C41 /* String.swift in Sources */,
-				4F52D48C26A81F1100F1A904 /* TestParetoCheck.swift in Sources */,
-				4FB7C68826AFF29A00FB1C41 /* NSImage.swift in Sources */,
+				4F690D5626B93E01004539C3 /* ParetoSecurityTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -358,6 +351,7 @@
 				4F5E888026A053A9005271FB /* ParetoCheck.swift in Sources */,
 				4FEBA304269CD4E0009B2469 /* StatusBarController.swift in Sources */,
 				4FB7C67D26AFF1AB00FB1C41 /* Log.swift in Sources */,
+				4F690D4E26B93DD9004539C3 /* Storage.swift in Sources */,
 				4F868DCF26A591E6005B876E /* Firewall.swift in Sources */,
 				4FB7C68126AFF25300FB1C41 /* Date.swift in Sources */,
 				4FB405EF26A6FC4800267D5D /* ScreensaverPassword.swift in Sources */,
@@ -379,55 +373,59 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		4F52D48826A81F0B00F1A904 /* PBXTargetDependency */ = {
+		4F690D5826B93E01004539C3 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 4FEBA2ED269CD48F009B2469 /* Pareto Security */;
-			targetProxy = 4F52D48726A81F0B00F1A904 /* PBXContainerItemProxy */;
+			targetProxy = 4F690D5726B93E01004539C3 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		4F52D48A26A81F0B00F1A904 /* Debug */ = {
+		4F690D5A26B93E01004539C3 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_IDENTITY = "-";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = "";
-				INFOPLIST_FILE = ParetoTests/Info.plist;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = JND55328G8;
+				GENERATE_INFOPLIST_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 					"@loader_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 11.0;
-				PRODUCT_BUNDLE_IDENTIFIER = niteo.co.ParetoTests;
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = niteo.co.ParetoSecurityTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Pareto Security.app/Contents/MacOS/Pareto Security";
 			};
 			name = Debug;
 		};
-		4F52D48B26A81F0B00F1A904 /* Release */ = {
+		4F690D5B26B93E01004539C3 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_IDENTITY = "-";
-				CODE_SIGN_STYLE = Manual;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = "";
-				INFOPLIST_FILE = ParetoTests/Info.plist;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = JND55328G8;
+				GENERATE_INFOPLIST_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 					"@loader_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 11.0;
-				PRODUCT_BUNDLE_IDENTIFIER = niteo.co.ParetoTests;
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = niteo.co.ParetoSecurityTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Pareto Security.app/Contents/MacOS/Pareto Security";
 			};
@@ -609,11 +607,11 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		4F52D48926A81F0B00F1A904 /* Build configuration list for PBXNativeTarget "ParetoTests" */ = {
+		4F690D5926B93E01004539C3 /* Build configuration list for PBXNativeTarget "ParetoSecurityTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				4F52D48A26A81F0B00F1A904 /* Debug */,
-				4F52D48B26A81F0B00F1A904 /* Release */,
+				4F690D5A26B93E01004539C3 /* Debug */,
+				4F690D5B26B93E01004539C3 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

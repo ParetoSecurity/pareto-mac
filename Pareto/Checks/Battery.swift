@@ -81,7 +81,7 @@ public class BatteryInfo {
 
 class BatteryCheck: ParetoCheck {
     final var ID = "2e46c89a-5461-4865-a92e-3b799c12034f"
-    final var TITLE = "Battery healthy"
+    final var TITLE = "Battery health"
 
     required init(defaults: UserDefaults = .standard, id _: String! = "", title _: String! = "") {
         super.init(defaults: defaults, id: ID, title: TITLE)

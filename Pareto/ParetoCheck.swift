@@ -137,7 +137,7 @@ class ParetoCheck: ObservableObject {
 
         let submenu = NSMenu()
 
-        submenu.addItem(addSubmenu(withTitle: "More Information", action: #selector(moreInfo)))
+        // submenu.addItem(addSubmenu(withTitle: "More Information", action: #selector(moreInfo)))
         submenu.addItem(addSubmenu(withTitle: "Last check: \(Date().fromTimeStamp(timeStamp: checkTimestamp))", action: nil))
         submenu.addItem(NSMenuItem.separator())
         if snoozeTime == 0 {

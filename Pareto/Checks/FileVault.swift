@@ -6,6 +6,7 @@
 //
 import Foundation
 import os.log
+import IOKit
 
 class FileVaultCheck: ParetoCheck {
     final var ID = "c3aee29a-f16d-4573-a861-b3ba0d860067"
