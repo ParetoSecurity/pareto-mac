@@ -9,7 +9,7 @@ import os.log
 
 class FileVaultCheck: ParetoCheck {
     final var ID = "c3aee29a-f16d-4573-a861-b3ba0d860067"
-    final var TITLE = "FileVault is active"
+    final var TITLE = "FileVault is on"
 
     required init(defaults: UserDefaults = .standard, id _: String! = "", title _: String! = "") {
         super.init(defaults: defaults, id: ID, title: TITLE)
