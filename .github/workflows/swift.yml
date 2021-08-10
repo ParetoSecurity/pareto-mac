@@ -17,7 +17,7 @@ jobs:
       run: swiftlint
   mac:
      name: Test and build
-     runs-on: self-hosted
+     runs-on: macos-latest
      steps:
      - name: Repository checkout
        uses: actions/checkout@v2
