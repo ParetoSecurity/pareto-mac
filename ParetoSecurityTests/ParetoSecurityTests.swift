@@ -2,12 +2,13 @@
 //  ParetoSecurityTests.swift
 //  ParetoSecurityTests
 //
-//  Created by Janez Troha on 03/08/2021.
+//  Created by Janez Troha on 11/08/2021.
 //
 
 import XCTest
 
 class ParetoSecurityTests: XCTestCase {
+
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
     }
@@ -27,4 +28,5 @@ class ParetoSecurityTests: XCTestCase {
             // Put the code you want to measure the time of here.
         }
     }
+
 }
