@@ -19,6 +19,6 @@ let package = Package(
         .testTarget(
             name: "ParetoTests",
             dependencies: ["Pareto"]
-        ),
+        )
     ]
 )

@@ -51,7 +51,7 @@ class ParetoCheck: ObservableObject {
             UUID + "-Enabled": true,
             UUID + "-Snooze": 0,
             UUID + "-Passes": false,
-            UUID + "-TS": 0,
+            UUID + "-TS": 0
         ])
 
         cancellable = NotificationCenter.default

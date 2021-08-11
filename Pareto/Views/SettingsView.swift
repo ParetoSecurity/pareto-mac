@@ -42,7 +42,13 @@ struct AboutSettingsView: View {
                      destination: URL(string: "https://paretosecurity.app")!)
                 Text("Version: \(AppInfo.appVersion)")
                 Text("Build: \(AppInfo.buildVersion)")
-                Text("Made with ❤️ at Niteo.")
+                HStack(spacing: 0) {
+                    Text("We’d love to ")
+                    Link("hear from you!",
+                         destination: URL(string: "https://paretosecurity.app/contact")!)
+                }
+
+                Text("Made with ❤️ at Niteo.co")
             }
 
         }.frame(width: 350, height: 100).padding(5)

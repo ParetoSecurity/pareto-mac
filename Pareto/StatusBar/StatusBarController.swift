@@ -26,7 +26,7 @@ class StatusBarController: NSMenu, NSMenuDelegate {
         ScreensaverPasswordCheck(),
         ZoomCheck(),
         OnePasswordCheck(),
-        BatteryCheck(),
+        BatteryCheck()
     ]
 
     required init(coder decoder: NSCoder) {

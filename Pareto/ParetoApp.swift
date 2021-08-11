@@ -53,11 +53,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         if #available(macOS 12.0, *) {
             let logs = getLogEntries().joined(separator: "\n").addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
             let versions = getVersions().addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
-            if let url = URL(string: "https://github.com/ParetoSecurity/pareto-mac/issues/new?assignees=dz0ny&labels=bug%2Ctriage&template=report_bug.yml&title=%5BBug%5D%3A+&logs=" + logs! + "&version=" + versions!) {
+            if let url = URL(string: "https://github.com/ParetoSecurity/pareto-mac/issues/new?labels=bug%2Ctriage&template=report_bug.yml&title=%5BBug%5D%3A+&logs=" + logs! + "&version=" + versions!) {
                 NSWorkspace.shared.open(url)
             }
         } else {
-            if let url = URL(string: "https://github.com/ParetoSecurity/pareto-mac/issues/new?assignees=dz0ny&labels=bug%2Ctriage&template=report_bug.yml&title=%5BBug%5D%3A+") {
+            let versions = getVersions().addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
+            if let url = URL(string: "https://github.com/ParetoSecurity/pareto-mac/issues/new?labels=bug%2Ctriage&template=report_bug.yml&title=%5BBug%5D%3A+&version=" + versions!) {
                 NSWorkspace.shared.open(url)
             }
         }
