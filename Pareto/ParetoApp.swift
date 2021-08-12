@@ -57,6 +57,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     @objc func reportBug() {
+        // Don't open browser if running tests
+        if AppInfo.isRunningTests {
+            return
+        }
         NSWorkspace.shared.open(AppInfo.bugReportURL())
     }
 }
