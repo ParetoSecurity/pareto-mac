@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-    mac-permissions: circleci/macos
+  macos: circleci/macos@1.1.0
     
 jobs: # a basic unit of work in a run
   test: # your job name
@@ -9,7 +9,8 @@ jobs: # a basic unit of work in a run
       xcode: 13.0.0
     steps: # a series of commands to run
       - checkout  # pull down code from your version control system.
-      - mac-permissions/add-uitest-permissions
+      - run: echo 'chruby ruby-2.7' >> ~/.bash_profile
+      - macos/add-uitest-permissions
       - run:
           name: Run Unit Tests
           command: make test
@@ -19,7 +20,8 @@ jobs: # a basic unit of work in a run
       xcode: 13.0.0
     steps: 
       - checkout
-      - mac-permissions/add-uitest-permissions
+      - run: echo 'chruby ruby-2.7' >> ~/.bash_profile
+      - macos/add-uitest-permissions
       - run:
           name: Build Application
           command: make build
