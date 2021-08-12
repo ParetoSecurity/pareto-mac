@@ -8,21 +8,26 @@
 import XCTest
 
 class ParetoSecurityUITests: XCTestCase {
-    override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+    let app = XCUIApplication()
 
-        // In UI tests it is usually best to stop immediately when a failure occurs.
-        continueAfterFailure = false
-
-        // In UI tests it’s important to set the initial state - such as interface orientation - required for your tests before they run. The setUp method is a good place to do this.
+    override func setUp() {
+        super.setUp()
+        app.launchArguments.append("ui-testing")
+        app.launch()
     }
 
-    func testAppCanRun() throws {
-        // UI tests must launch the application that they test.
-        let app = XCUIApplication()
-        app.launch()
+    override func tearDown() {
+        super.tearDown()
+        app.terminate()
+    }
 
-        // Use recording to get started writing UI tests.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
+    func testSettingsOpens() throws {
+        app.children(matching: .menuBar).element(boundBy: 1).children(matching: .statusItem).element.click()
+        app.menuBars/*@START_MENU_TOKEN@*/ .menuItems["showPrefs"]/*[[".statusItems",".menus",".menuItems[\"Preferences\"]",".menuItems[\"showPrefs\"]"],[[[-1,3],[-1,2],[-1,1,2],[-1,0,1]],[[-1,3],[-1,2],[-1,1,2]],[[-1,3],[-1,2]]],[0]]@END_MENU_TOKEN@*/ .click()
+    }
+
+    func testBrowserOpens() throws {
+        app.children(matching: .menuBar).element(boundBy: 1).children(matching: .statusItem).element.click()
+        app.menuBars/*@START_MENU_TOKEN@*/ .menuItems["reportBug"]/*[[".statusItems",".menus",".menuItems[\"Report Bug\"]",".menuItems[\"reportBug\"]"],[[[-1,3],[-1,2],[-1,1,2],[-1,0,1]],[[-1,3],[-1,2],[-1,1,2]],[[-1,3],[-1,2]]],[0]]@END_MENU_TOKEN@*/ .click()
     }
 }

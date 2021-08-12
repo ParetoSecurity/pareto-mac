@@ -52,7 +52,9 @@
       </EnvironmentVariables>
       <Testables>
          <TestableReference
-            skipped = "NO">
+            skipped = "NO"
+            parallelizable = "YES"
+            testExecutionOrdering = "random">
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "4FC81A4826C41DC8006EABA8"
@@ -62,10 +64,12 @@
             </BuildableReference>
          </TestableReference>
          <TestableReference
-            skipped = "YES">
+            skipped = "NO"
+            parallelizable = "YES"
+            testExecutionOrdering = "random">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "4F080D2126C5116C00686786"
+               BlueprintIdentifier = "4F6A92EE26C555C6006C2F2D"
                BuildableName = "ParetoSecurityUITests.xctest"
                BlueprintName = "ParetoSecurityUITests"
                ReferencedContainer = "container:Pareto Security.xcodeproj">
