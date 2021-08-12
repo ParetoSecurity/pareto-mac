@@ -15,6 +15,8 @@
 		4F47221026B08A0E0071CE2A /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F47220F26B08A0E0071CE2A /* Settings.swift */; };
 		4F5E888026A053A9005271FB /* ParetoCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F5E887F26A053A9005271FB /* ParetoCheck.swift */; };
 		4F690D4E26B93DD9004539C3 /* Storage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F690D4D26B93DD9004539C3 /* Storage.swift */; };
+		4F6A92E626C521BE006C2F2D /* CheckIntegrationTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F6A92E526C521BE006C2F2D /* CheckIntegrationTest.swift */; };
+		4F6A92E826C52210006C2F2D /* IntegrationCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F6A92E726C52210006C2F2D /* IntegrationCheck.swift */; };
 		4F868DCF26A591E6005B876E /* Firewall.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F868DCE26A591E6005B876E /* Firewall.swift */; };
 		4F868DD126A5C51C005B876E /* Autologin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F868DD026A5C51C005B876E /* Autologin.swift */; };
 		4F868DD326A5C751005B876E /* Screensaver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F868DD226A5C751005B876E /* Screensaver.swift */; };
@@ -58,6 +60,8 @@
 		4F47220F26B08A0E0071CE2A /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		4F5E887F26A053A9005271FB /* ParetoCheck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParetoCheck.swift; sourceTree = "<group>"; };
 		4F690D4D26B93DD9004539C3 /* Storage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Storage.swift; sourceTree = "<group>"; };
+		4F6A92E526C521BE006C2F2D /* CheckIntegrationTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckIntegrationTest.swift; sourceTree = "<group>"; };
+		4F6A92E726C52210006C2F2D /* IntegrationCheck.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntegrationCheck.swift; sourceTree = "<group>"; };
 		4F868DCE26A591E6005B876E /* Firewall.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Firewall.swift; sourceTree = "<group>"; };
 		4F868DD026A5C51C005B876E /* Autologin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Autologin.swift; sourceTree = "<group>"; };
 		4F868DD226A5C751005B876E /* Screensaver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Screensaver.swift; sourceTree = "<group>"; };
@@ -134,6 +138,7 @@
 		4F10300A269F0568008C1E86 /* Checks */ = {
 			isa = PBXGroup;
 			children = (
+				4F6A92E726C52210006C2F2D /* IntegrationCheck.swift */,
 				4F868DD226A5C751005B876E /* Screensaver.swift */,
 				4FD0A24026A024440070BED4 /* Gatekeeper.swift */,
 				4F868DCE26A591E6005B876E /* Firewall.swift */,
@@ -168,6 +173,7 @@
 		4FC81A4A26C41DC8006EABA8 /* ParetoSecurityTests */ = {
 			isa = PBXGroup;
 			children = (
+				4F6A92E526C521BE006C2F2D /* CheckIntegrationTest.swift */,
 				4FC81A4B26C41DC8006EABA8 /* ParetoSecurityTests.swift */,
 			);
 			path = ParetoSecurityTests;
@@ -406,6 +412,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4F080D1D26C50D2800686786 /* ParetoSecurityTests.swift in Sources */,
+				4F6A92E626C521BE006C2F2D /* CheckIntegrationTest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -424,6 +431,7 @@
 				4F868DD126A5C51C005B876E /* Autologin.swift in Sources */,
 				4FEBA2F2269CD48F009B2469 /* ParetoApp.swift in Sources */,
 				4F29424826B3ED1D0017B504 /* Battery.swift in Sources */,
+				4F6A92E826C52210006C2F2D /* IntegrationCheck.swift in Sources */,
 				4FB7C68D26AFFD2600FB1C41 /* FileVault.swift in Sources */,
 				4F103008269EE136008C1E86 /* SettingsView.swift in Sources */,
 				4F868DD326A5C751005B876E /* Screensaver.swift in Sources */,
