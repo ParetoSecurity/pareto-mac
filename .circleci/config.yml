@@ -2,23 +2,25 @@ version: 2.1
 
 orbs:
   macos: circleci/macos@1.1.0
-    
+  codecov: codecov/codecov@1.0.2
+
 jobs: # a basic unit of work in a run
   test: # your job name
     macos:
       xcode: 13.0.0
     steps: # a series of commands to run
-      - checkout  # pull down code from your version control system.
+      - checkout # pull down code from your version control system.
       - run: echo 'chruby ruby-2.7' >> ~/.bash_profile
       - macos/add-uitest-permissions
       - run:
           name: Run Unit Tests
           command: make test
-
-  build: 
+      - codecov/upload:
+          file: {{coverage_report_filepath}}
+  build:
     macos:
       xcode: 13.0.0
-    steps: 
+    steps:
       - checkout
       - run: echo 'chruby ruby-2.7' >> ~/.bash_profile
       - macos/add-uitest-permissions
@@ -34,7 +36,7 @@ jobs: # a basic unit of work in a run
       # - store_artifacts:
       #    path: app.zip
       #    destination: app
-          
+
 workflows:
   version: 2
   test_build:
