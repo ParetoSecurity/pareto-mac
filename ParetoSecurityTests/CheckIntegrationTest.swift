@@ -63,7 +63,7 @@ class CheckIntegrationTest: XCTestCase {
 
     func testThatActiveCheckDoesRun() throws {
         let check = IntegrationCheck()
-        check.disableCheck()
+        check.enableCheck()
         check.run()
         XCTAssert(check.checkTimestamp > 0)
     }
