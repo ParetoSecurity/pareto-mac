@@ -16,15 +16,14 @@ jobs: # a basic unit of work in a run
     steps: 
       - checkout
       - run:
-          # build our application
           name: Build Application
-          command: make build
-      #- run:
-      #    name: Compress app for storage
-      #    command: zip -r app.zip build/Release/circleci-demo-macos.app
-      #- store_artifacts: # store this build output. Read more: https://circleci.com/docs/2.0/artifacts/
-      #    path: app.zip
-      #    destination: app
+          command: make build archive
+      - run:
+         name: Compress app for storage
+         command: zip -r app.zip build/mac/Pareto Security.app
+      - store_artifacts:
+         path: app.zip
+         destination: app
           
 workflows:
   version: 2
