@@ -9,6 +9,17 @@
 import XCTest
 
 class CheckIntegrationTest: XCTestCase {
+    override class func setUp() {
+        super.setUp()
+
+        // reset to the default state
+        let check = IntegrationCheck()
+        check.checkPassed = false
+        check.checkTimestamp = 0
+        check.snoozeTime = 0
+        check.isActive = true
+    }
+
     func testInit() throws {
         let check = IntegrationCheck()
         XCTAssertEqual(check.UUID, "aaaaaaaa-bbbb-cccc-dddd-abcdef123456")
@@ -58,7 +69,7 @@ class CheckIntegrationTest: XCTestCase {
         let check = IntegrationCheck()
         check.disableCheck()
         check.run()
-        XCTAssertEqual(check.checkTimestamp, 0, "Check should not have timestamp if not ran yet")
+        XCTAssert(!check.checkPassed, "Check should not run if disabled")
     }
 
     func testThatActiveCheckDoesRun() throws {
