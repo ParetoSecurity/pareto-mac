@@ -9,6 +9,7 @@ jobs: # a basic unit of work in a run
       xcode: 13.0.0
     steps: # a series of commands to run
       - checkout  # pull down code from your version control system.
+      - mac-permissions/add-uitest-permissions
       - run:
           name: Run Unit Tests
           command: make test
