@@ -88,10 +88,14 @@ class ParetoCheck: ObservableObject {
 
     @objc func disableCheck() {
         isActive = false
+        checkPassed = false
+        checkTimestamp = 0
     }
 
     @objc func enableCheck() {
         isActive = true
+        checkPassed = false
+        checkTimestamp = 0
     }
 
     @objc func snoozeOneHour() {
