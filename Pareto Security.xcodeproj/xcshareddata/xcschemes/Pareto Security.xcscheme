@@ -60,6 +60,16 @@
                ReferencedContainer = "container:Pareto Security.xcodeproj">
             </BuildableReference>
          </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "4F080D2126C5116C00686786"
+               BuildableName = "ParetoSecurityUITests.xctest"
+               BlueprintName = "ParetoSecurityUITests"
+               ReferencedContainer = "container:Pareto Security.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction
