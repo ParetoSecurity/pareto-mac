@@ -63,8 +63,8 @@ class CheckIntegrationTest: XCTestCase {
 
     func testThatActiveCheckDoesRun() throws {
         let check = IntegrationCheck()
-        check.enableCheck()
+        XCTAssert(!check.checkPassed, "Check before run should not pass")
         check.run()
-        XCTAssert(check.checkTimestamp > 0)
+        XCTAssert(check.checkPassed, "Check after run should pass")
     }
 }
