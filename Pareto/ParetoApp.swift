@@ -15,6 +15,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     let userSettings = UserSettings()
 
     func applicationDidFinishLaunching(_: Notification) {
+        // Don't init app if running unit tests
+        if AppInfo.isRunningTests {
+            return
+        }
+
         statusBar = StatusBarController()
         NSWindow.allowsAutomaticWindowTabbing = false
         statusBar?.updateMenu()
@@ -104,6 +109,8 @@ enum AppInfo {
     static let buildVersion: String = Bundle.main.infoDictionary?["CFBundleVersion"] as! String
     static let osVersion = ProcessInfo.processInfo.operatingSystemVersionString
     static let inSandbox = ProcessInfo.processInfo.environment["APP_SANDBOX_CONTAINER_ID"] != nil
+    static let isRunningTests = UserDefaults.standard.bool(forKey: "isRunningTests")
+
     static let hwModel = { () -> String in
         let service = IOServiceGetMatchingService(kIOMasterPortDefault,
                                                   IOServiceMatching("IOPlatformExpertDevice"))

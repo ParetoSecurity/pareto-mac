@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4F080D1D26C50D2800686786 /* ParetoSecurityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FC81A4B26C41DC8006EABA8 /* ParetoSecurityTests.swift */; };
 		4F103008269EE136008C1E86 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F103007269EE135008C1E86 /* SettingsView.swift */; };
 		4F103012269F1C65008C1E86 /* LaunchAtLogin in Frameworks */ = {isa = PBXBuildFile; productRef = 4F103011269F1C65008C1E86 /* LaunchAtLogin */; };
 		4F29424826B3ED1D0017B504 /* Battery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F29424726B3ED1D0017B504 /* Battery.swift */; };
@@ -24,7 +25,6 @@
 		4FB7C68426AFF27400FB1C41 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB7C68326AFF27400FB1C41 /* String.swift */; };
 		4FB7C68726AFF29A00FB1C41 /* NSImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB7C68626AFF29A00FB1C41 /* NSImage.swift */; };
 		4FB7C68D26AFFD2600FB1C41 /* FileVault.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB7C68C26AFFD2600FB1C41 /* FileVault.swift */; };
-		4FC81A4C26C41DC8006EABA8 /* ParetoSecurityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FC81A4B26C41DC8006EABA8 /* ParetoSecurityTests.swift */; };
 		4FC81A5726C41DFF006EABA8 /* ParetoSecurityUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FC81A5626C41DFF006EABA8 /* ParetoSecurityUITests.swift */; };
 		4FD0A24126A024440070BED4 /* Gatekeeper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FD0A24026A024440070BED4 /* Gatekeeper.swift */; };
 		4FEBA2F2269CD48F009B2469 /* ParetoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEBA2F1269CD48F009B2469 /* ParetoApp.swift */; };
@@ -32,6 +32,23 @@
 		4FEBA2F9269CD48F009B2469 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4FEBA2F8269CD48F009B2469 /* Preview Assets.xcassets */; };
 		4FEBA304269CD4E0009B2469 /* StatusBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEBA303269CD4E0009B2469 /* StatusBarController.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		4F080CDF26C5084600686786 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4FEBA2E6269CD48F009B2469 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 4FEBA2ED269CD48F009B2469;
+			remoteInfo = "Pareto Security";
+		};
+		4F080CE126C5084B00686786 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4FEBA2E6269CD48F009B2469 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 4FEBA2ED269CD48F009B2469;
+			remoteInfo = "Pareto Security";
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		4F103007269EE135008C1E86 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
@@ -218,6 +235,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				4F080CE026C5084600686786 /* PBXTargetDependency */,
 			);
 			name = ParetoSecurityTests;
 			productName = ParetoSecurityTests;
@@ -235,6 +253,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				4F080CE226C5084B00686786 /* PBXTargetDependency */,
 			);
 			name = ParetoSecurityUITests;
 			productName = ParetoSecurityUITests;
@@ -274,9 +293,11 @@
 				TargetAttributes = {
 					4FC81A4826C41DC8006EABA8 = {
 						CreatedOnToolsVersion = 13.0;
+						TestTargetID = 4FEBA2ED269CD48F009B2469;
 					};
 					4FC81A5326C41DFF006EABA8 = {
 						CreatedOnToolsVersion = 13.0;
+						TestTargetID = 4FEBA2ED269CD48F009B2469;
 					};
 					4FEBA2ED269CD48F009B2469 = {
 						CreatedOnToolsVersion = 12.5.1;
@@ -376,7 +397,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4FC81A4C26C41DC8006EABA8 /* ParetoSecurityTests.swift in Sources */,
+				4F080D1D26C50D2800686786 /* ParetoSecurityTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -416,15 +437,29 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		4F080CE026C5084600686786 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 4FEBA2ED269CD48F009B2469 /* Pareto Security */;
+			targetProxy = 4F080CDF26C5084600686786 /* PBXContainerItemProxy */;
+		};
+		4F080CE226C5084B00686786 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 4FEBA2ED269CD48F009B2469 /* Pareto Security */;
+			targetProxy = 4F080CE126C5084B00686786 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
 		4FC81A4E26C41DC8006EABA8 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = JND55328G8;
 				GENERATE_INFOPLIST_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -437,17 +472,19 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Pareto Security.app/Contents/MacOS/Pareto Security";
 			};
 			name = Debug;
 		};
 		4FC81A4F26C41DC8006EABA8 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = JND55328G8;
 				GENERATE_INFOPLIST_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -460,6 +497,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Pareto Security.app/Contents/MacOS/Pareto Security";
 			};
 			name = Release;
 		};
@@ -470,7 +508,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = JND55328G8;
 				GENERATE_INFOPLIST_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -481,8 +519,10 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = niteo.co.ParetoSecurityUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = "Pareto Security";
 			};
 			name = Debug;
 		};
@@ -493,7 +533,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = JND55328G8;
 				GENERATE_INFOPLIST_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -504,8 +544,10 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = niteo.co.ParetoSecurityUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = "Pareto Security";
 			};
 			name = Release;
 		};
@@ -635,11 +677,11 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_USE_OPTIMIZATION_PROFILE = YES;
 				CODE_SIGN_ENTITLEMENTS = Pareto/Pareto.entitlements;
-				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_IDENTITY = "Mac Developer";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Pareto/Preview Content\"";
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = JND55328G8;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = Pareto/Info.plist;
@@ -662,7 +704,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_USE_OPTIMIZATION_PROFILE = YES;
 				CODE_SIGN_ENTITLEMENTS = Pareto/Pareto.entitlements;
-				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_IDENTITY = "Mac Developer";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Pareto/Preview Content\"";
