@@ -26,23 +26,35 @@
       buildConfiguration = "Debug"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
-      shouldUseLaunchSchemeArgsEnv = "YES">
+      shouldUseLaunchSchemeArgsEnv = "NO">
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "4FEBA2ED269CD48F009B2469"
+            BuildableName = "Pareto Security.app"
+            BlueprintName = "Pareto Security"
+            ReferencedContainer = "container:Pareto Security.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
+      <CommandLineArguments>
+         <CommandLineArgument
+            argument = "-isRunningTests YES"
+            isEnabled = "YES">
+         </CommandLineArgument>
+      </CommandLineArguments>
+      <EnvironmentVariables>
+         <EnvironmentVariable
+            key = "isRunningTests"
+            value = "YES"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+      </EnvironmentVariables>
       <Testables>
          <TestableReference
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "4F52D48126A81F0B00F1A904"
-               BuildableName = "ParetoTests.xctest"
-               BlueprintName = "ParetoTests"
-               ReferencedContainer = "container:Pareto Security.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "4F690D5226B93E01004539C3"
+               BlueprintIdentifier = "4FC81A4826C41DC8006EABA8"
                BuildableName = "ParetoSecurityTests.xctest"
                BlueprintName = "ParetoSecurityTests"
                ReferencedContainer = "container:Pareto Security.xcodeproj">
