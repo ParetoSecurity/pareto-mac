@@ -18,4 +18,14 @@ class ParetoSecurityTests: XCTestCase {
             uuids.append(check.UUID)
         }
     }
+
+    func testGetVersions() throws {
+        let versions = AppInfo.getVersions()
+        XCTAssert(versions.contains("App"))
+    }
+
+    func testGetBugReportURL() throws {
+        let url = AppInfo.bugReportURL()
+        XCTAssert(url.absoluteString.contains("report_bug.yml"))
+    }
 }
