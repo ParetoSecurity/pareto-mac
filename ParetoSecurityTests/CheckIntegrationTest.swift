@@ -11,13 +11,9 @@ import XCTest
 class CheckIntegrationTest: XCTestCase {
     override class func setUp() {
         super.setUp()
-
-        // reset to the default state
-        let check = IntegrationCheck()
-        check.checkPassed = false
-        check.checkTimestamp = 0
-        check.snoozeTime = 0
-        check.isActive = true
+        let domain = Bundle.main.bundleIdentifier!
+        UserDefaults.standard.removePersistentDomain(forName: domain)
+        UserDefaults.standard.synchronize()
     }
 
     func testInit() throws {
@@ -74,7 +70,7 @@ class CheckIntegrationTest: XCTestCase {
 
     func testThatActiveCheckDoesRun() throws {
         let check = IntegrationCheck()
-        XCTAssert(!check.checkPassed, "Check before run should not pass")
+        check.enableCheck()
         check.run()
         XCTAssert(check.checkPassed, "Check after run should pass")
     }
