@@ -9,4 +9,4 @@ More info and newsletter signup at https://paretosecurity.app/.
 
 Other checks that you want to be implemented? Let us know at https://github.com/ParetoSecurity/pareto-mac/discussions/3
 
-Download the latest release from https://github.com/ParetoSecurity/pareto-mac/releases
+Download the latest release from https://github.com/ParetoSecurity/pareto-mac/releases. If you see `You do not have permission to open application "Pareto Security"`, try running `chmod +x /Applications/Pareto\ Security.app/Contents/MacOS/*`` inside a Terminal. We're pending approval for the App Store, when that is done, this will no longer be needed. 
