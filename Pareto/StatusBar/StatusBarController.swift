@@ -22,7 +22,7 @@ class StatusBarController: NSMenu, NSMenuDelegate {
         FirewallCheck(),
         AutologinCheck(),
         ScreensaverCheck(),
-        ScreensaverPasswordCheck(),
+        ScreensaverPasswordCheck()
     ]
 
     required init(coder decoder: NSCoder) {
@@ -32,6 +32,7 @@ class StatusBarController: NSMenu, NSMenuDelegate {
     init() {
         super.init(title: "")
         delegate = self
+        setAccessibilityIdentifier("paretoMenu")
         statusItem.menu = self
         statusItem.button?.image = imageDefault
         statusItem.button?.imagePosition = .imageRight

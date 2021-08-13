@@ -11,6 +11,15 @@ jobs: # a basic unit of work in a run
       - checkout # pull down code from your version control system.
       - run: echo 'chruby ruby-2.7' >> ~/.bash_profile
       - macos/add-uitest-permissions
+      - macos/add-permission:
+          bundle-id: niteo.co.Pareto
+          permission-type: kTCCServiceAccessibility
+      - macos/add-permission:
+          bundle-id: niteo.co.Pareto
+          permission-type: kTCCServiceAppleEvents
+      - macos/add-permission:
+          bundle-id: niteo.co.Pareto
+          permission-type: kTCCServiceSystemPolicyAllFiles
       - run:
           name: Run Unit Tests
           command: make test
@@ -21,8 +30,6 @@ jobs: # a basic unit of work in a run
       xcode: 13.0.0
     steps:
       - checkout
-      - run: echo 'chruby ruby-2.7' >> ~/.bash_profile
-      - macos/add-uitest-permissions
       - run:
           name: Build Application
           command: make build

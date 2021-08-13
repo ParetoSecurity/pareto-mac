@@ -126,6 +126,7 @@ class ParetoCheck: ObservableObject {
 
     func menu() -> NSMenuItem {
         let item = NSMenuItem(title: title, action: nil, keyEquivalent: "")
+        item.setAccessibilityIdentifier("menu-\(UUID)")
         if isActive {
             if snoozeTime > 0 {
                 item.image = NSImage.SF(name: "powersleep").tint(color: .systemGray)
