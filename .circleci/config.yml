@@ -2,7 +2,6 @@ version: 2.1
 
 orbs:
   macos: circleci/macos@1.1.0
-  codecov: codecov/codecov@1.0.2
 
 jobs: # a basic unit of work in a run
   test: # your job name
@@ -15,8 +14,8 @@ jobs: # a basic unit of work in a run
       - run:
           name: Run Unit Tests
           command: make test
-      - codecov/upload:
-          file: {{coverage_report_filepath}}
+      - run: bash <(curl -s https://codecov.io/bash)
+
   build:
     macos:
       xcode: 13.0.0
