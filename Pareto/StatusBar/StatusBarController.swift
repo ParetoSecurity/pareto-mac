@@ -14,7 +14,6 @@ class StatusBarController: NSMenu, NSMenuDelegate {
     let imageRunning = NSImage(named: "IconGray")
     let imageDefault = NSImage(named: "IconGreen")
     let imageWarning = NSImage(named: "IconOrange")
-    let imageError = NSImage(named: "IconRed")
     var isRunnig = false
     var workItem: DispatchWorkItem?
 
@@ -24,9 +23,6 @@ class StatusBarController: NSMenu, NSMenuDelegate {
         AutologinCheck(),
         ScreensaverCheck(),
         ScreensaverPasswordCheck(),
-        ZoomCheck(),
-        OnePasswordCheck(),
-        BatteryCheck()
     ]
 
     required init(coder decoder: NSCoder) {
@@ -58,7 +54,7 @@ class StatusBarController: NSMenu, NSMenuDelegate {
             if status {
                 statusItem.button?.image = imageDefault
             } else {
-                statusItem.button?.image = imageError
+                statusItem.button?.image = imageWarning
             }
         }
     }
