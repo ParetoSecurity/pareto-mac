@@ -9,6 +9,8 @@ jobs: # a basic unit of work in a run
       xcode: 13.0.0
     steps: # a series of commands to run
       - checkout # pull down code from your version control system.
+      - restore_cache:
+          key: spm-cache-{{ checksum "Pareto Security.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved" }}
       - run: echo 'chruby ruby-2.7' >> ~/.bash_profile
       - macos/add-uitest-permissions
       - macos/add-permission:
@@ -24,18 +26,28 @@ jobs: # a basic unit of work in a run
           name: Run Unit Tests
           command: make test
       - run: bash <(curl -s https://codecov.io/bash)
+      - save_cache:
+          paths:
+            - SourcePackages/
+          key: spm-cache-{{ checksum "Pareto Security.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved" }}
 
   build:
     macos:
       xcode: 13.0.0
     steps:
       - checkout
+      - restore_cache:
+          key: spm-cache-{{ checksum "Pareto Security.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved" }}
       - run:
           name: Build Application
           command: make build
       - run:
           name: Archive Application
           command: make archive
+      - save_cache:
+          paths:
+            - SourcePackages/
+          key: spm-cache-{{ checksum "Pareto Security.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved" }}
       - run:
          name: Compress app for storage
          command: zip -r app.zip build/mac/Pareto\ Security.app
