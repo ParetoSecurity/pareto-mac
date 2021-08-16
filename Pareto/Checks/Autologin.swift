@@ -5,9 +5,6 @@
 //  Created by Janez Troha on 19/07/2021.
 //
 
-import Foundation
-import os.log
-
 class AutologinCheck: ParetoCheck {
     override var UUID: String {
         "f962c423-fdf5-428a-a57a-816abc9b253e"

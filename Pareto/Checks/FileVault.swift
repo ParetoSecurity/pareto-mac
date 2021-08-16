@@ -4,9 +4,6 @@
 //
 //  Created by Janez Troha on 15/07/2021.
 //
-import Foundation
-import IOKit
-import os.log
 
 class FileVaultCheck: ParetoCheck {
     override var UUID: String {

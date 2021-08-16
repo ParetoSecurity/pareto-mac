@@ -5,9 +5,6 @@
 //  Created by Janez Troha on 19/07/2021.
 //
 
-import Foundation
-import os.log
-
 class ScreensaverCheck: ParetoCheck {
     override var UUID: String {
         "13e4dbf1-f87f-4bd9-8a82-f62044f002f4"

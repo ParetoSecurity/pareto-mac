@@ -19,9 +19,9 @@ class StatusBarController: NSMenu, NSMenuDelegate {
     let claims = [
         Claim(withTitle: "User login is secure", withChecks: [AutologinCheck()]),
         Claim(withTitle: "Firewall is on and configured", withChecks: [FirewallCheck()]),
-        Claim(withTitle: "System integrity", withChecks: [FirewallCheck()]),
-        Claim(withTitle: "Mac locks after inactivity", withChecks: [FirewallCheck()]),
-        Claim(withTitle: "Apps are up-to-date", withChecks: [FirewallCheck()])
+        Claim(withTitle: "System integrity", withChecks: [GatekeeperCheck(), FileVaultCheck()]),
+        Claim(withTitle: "Mac locks after inactivity", withChecks: [ScreensaverPasswordCheck(), ScreensaverCheck()])
+        // Claim(withTitle: "Apps are up-to-date", withChecks: [IntegrationCheck(), IntegrationCheck()])
     ]
 
     required init(coder decoder: NSCoder) {
