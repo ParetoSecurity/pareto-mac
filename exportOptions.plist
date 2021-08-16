@@ -8,15 +8,6 @@
 	<true/>
 	<key>iCloudContainerEnvironment</key>
 	<string>""</string>
-	<key>manifest</key>
-	<dict>
-		<key>appURL</key>
-		<string>0</string>
-		<key>displayImageURL</key>
-		<string>0</string>
-		<key>fullSizeImageURL</key>
-		<string>0</string>
-	</dict>
 	<key>method</key>
 	<string>mac-application</string>
 	<key>onDemandResourcesAssetPacksBaseURL</key>
@@ -27,5 +18,7 @@
 	<true/>
 	<key>uploadSymbols</key>
 	<true/>
+	<key>signingStyle</key>
+  	<string>manual</string>
 </dict>
 </plist>
