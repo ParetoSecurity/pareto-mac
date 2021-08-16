@@ -8,11 +8,12 @@ import Foundation
 import os.log
 
 class FirewallCheck: ParetoCheck {
-    final var ID = "2e46c89a-5461-4865-a92e-3b799c12034c"
-    final var TITLE = "Firewall is on and configured"
+    override var UUID: String {
+        "2e46c89a-5461-4865-a92e-3b799c12034c"
+    }
 
-    required init(id _: String! = "", title _: String! = "") {
-        super.init(id: ID, title: TITLE)
+    override var Title: String {
+        "Firewall is on and configured"
     }
 
     override func checkPasses() -> Bool {

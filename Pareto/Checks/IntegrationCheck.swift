@@ -9,11 +9,12 @@ import Foundation
 import os.log
 
 class IntegrationCheck: ParetoCheck {
-    final var ID = "aaaaaaaa-bbbb-cccc-dddd-abcdef123456"
-    final var TITLE = "Unit test mock"
+    override var UUID: String {
+        "aaaaaaaa-bbbb-cccc-dddd-abcdef123456"
+    }
 
-    required init(id _: String! = "", title _: String! = "") {
-        super.init(id: ID, title: TITLE)
+    override var Title: String {
+        "Unit test mock"
     }
 
     override func checkPasses() -> Bool {

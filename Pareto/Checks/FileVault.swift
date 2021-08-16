@@ -9,12 +9,12 @@ import IOKit
 import os.log
 
 class FileVaultCheck: ParetoCheck {
-    final var ID = "c3aee29a-f16d-4573-a861-b3ba0d860067"
-    final var TITLE = "FileVault is on"
+    override var UUID: String {
+        "c3aee29a-f16d-4573-a861-b3ba0d860067"
+    }
 
-    required init(id _: String! = "", title _: String! = "") {
-        super.init(id: ID, title: TITLE)
-        canRunInSandbox = false
+    override var Title: String {
+        "FileVault is on"
     }
 
     override func checkPasses() -> Bool {

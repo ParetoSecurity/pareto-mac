@@ -12,7 +12,7 @@ class Claim {
     public var title: String
     public var checks: [ParetoCheck]
 
-    init(_ title: String, _ checks: [ParetoCheck]) {
+    init(withTitle title: String, withChecks checks: [ParetoCheck]) {
         self.title = title
         self.checks = checks
     }
@@ -32,7 +32,7 @@ class Claim {
     func menu() -> NSMenuItem {
         let item = NSMenuItem(title: title, action: nil, keyEquivalent: "")
         let submenu = NSMenu()
-        for check in checks.sorted(by: { $0.title < $1.title }) {
+        for check in checks.sorted(by: { $0.Title < $1.Title }) {
             submenu.addItem(check.menu())
             if isActive {
                 if snoozeTime > 0 {

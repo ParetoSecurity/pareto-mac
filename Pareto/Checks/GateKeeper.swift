@@ -8,11 +8,12 @@ import Foundation
 import os.log
 
 class GatekeeperCheck: ParetoCheck {
-    final var ID = "b59e172e-6a2d-4309-94ed-11e8722836b3"
-    final var TITLE = "Gatekeeper active"
+    override var UUID: String {
+        "b59e172e-6a2d-4309-94ed-11e8722836b3"
+    }
 
-    required init(id _: String! = "", title _: String! = "") {
-        super.init(id: ID, title: TITLE)
+    override var Title: String {
+        "Gatekeeper active"
     }
 
     func isSandboxingEnabled() -> Bool {
@@ -23,7 +24,7 @@ class GatekeeperCheck: ParetoCheck {
     override func checkPasses() -> Bool {
         let path = "/var/db/SystemPolicy-prefs.plist"
         if isSandboxingEnabled() {
-            os_log("Running in sandbox %{public}s - %{public}s", log: Log.check, ID, TITLE)
+            os_log("Running in sandbox %{public}s - %{public}s", log: Log.check, UUID, Title)
             // if enabled one cannot read system file even with entitlement
             guard let _ = NSDictionary(contentsOfFile: path) else {
                 os_log("Gatekeeper file not found", log: Log.check)

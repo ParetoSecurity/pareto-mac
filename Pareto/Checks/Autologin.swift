@@ -9,11 +9,12 @@ import Foundation
 import os.log
 
 class AutologinCheck: ParetoCheck {
-    final var ID = "f962c423-fdf5-428a-a57a-816abc9b253e"
-    final var TITLE = "Automatic login is off"
+    override var UUID: String {
+        "f962c423-fdf5-428a-a57a-816abc9b253e"
+    }
 
-    required init(id _: String! = "", title _: String! = "") {
-        super.init(id: ID, title: TITLE)
+    override var Title: String {
+        "Automatic login is off"
     }
 
     override func checkPasses() -> Bool {

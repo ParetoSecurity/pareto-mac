@@ -9,11 +9,12 @@ import Foundation
 import os.log
 
 class ScreensaverCheck: ParetoCheck {
-    final var ID = "13e4dbf1-f87f-4bd9-8a82-f62044f002f4"
-    final var TITLE = "Screen saver shows in under 5 minutes"
+    override var UUID: String {
+        "13e4dbf1-f87f-4bd9-8a82-f62044f002f4"
+    }
 
-    required init(id _: String! = "", title _: String! = "") {
-        super.init(id: ID, title: TITLE)
+    override var Title: String {
+        "Screen saver shows in under 5 minutes"
     }
 
     override func checkPasses() -> Bool {

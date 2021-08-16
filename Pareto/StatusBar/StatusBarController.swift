@@ -17,11 +17,11 @@ class StatusBarController: NSMenu, NSMenuDelegate {
     var workItem: DispatchWorkItem?
 
     let claims = [
-        Claim("User login is secure", [AutologinCheck()]),
-        Claim("Firewall is on and configured", [FirewallCheck()]),
-        Claim("System integrity", [FirewallCheck()]),
-        Claim("Mac locks after inactivity", [FirewallCheck()]),
-        Claim("Apps are up-to-date", [FirewallCheck()])
+        Claim(withTitle: "User login is secure", withChecks: [AutologinCheck()]),
+        Claim(withTitle: "Firewall is on and configured", withChecks: [FirewallCheck()]),
+        Claim(withTitle: "System integrity", withChecks: [FirewallCheck()]),
+        Claim(withTitle: "Mac locks after inactivity", withChecks: [FirewallCheck()]),
+        Claim(withTitle: "Apps are up-to-date", withChecks: [FirewallCheck()])
     ]
 
     required init(coder decoder: NSCoder) {

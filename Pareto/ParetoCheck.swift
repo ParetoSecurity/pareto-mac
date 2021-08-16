@@ -20,9 +20,9 @@ class ParetoCheck: ObservableObject {
 
     private let cancellable: Cancellable
     private let defaults: UserDefaults
-    public let UUID: String
-    public let title: String
-    public var canRunInSandbox = true
+
+    private(set) var UUID = "UUID"
+    private(set) var Title = "Title"
 
     let objectWillChange = PassthroughSubject<Void, Never>()
 
@@ -42,10 +42,8 @@ class ParetoCheck: ObservableObject {
         UUID + "-TS"
     }
 
-    required init(id: String! = "", title: String! = "") {
+    init() {
         defaults = UserDefaults.standard
-        UUID = id
-        self.title = title
 
         defaults.register(defaults: [
             UUID + "-Enabled": true,
@@ -125,7 +123,7 @@ class ParetoCheck: ObservableObject {
     }
 
     func menu() -> NSMenuItem {
-        let item = NSMenuItem(title: title, action: nil, keyEquivalent: "")
+        let item = NSMenuItem(title: Title, action: nil, keyEquivalent: "")
         item.setAccessibilityIdentifier("menu-\(UUID)")
         if isActive {
             if snoozeTime > 0 {
@@ -170,7 +168,7 @@ class ParetoCheck: ObservableObject {
 
     func run() {
         if !isActive {
-            os_log("Disabled for %{public}s - %{public}s", log: Log.app, UUID, title)
+            os_log("Disabled for %{public}s - %{public}s", log: Log.app, UUID, Title)
             return
         }
 
@@ -178,14 +176,14 @@ class ParetoCheck: ObservableObject {
             let nextCheck = checkTimestamp + (snoozeTime * 1000)
             let now = Int(Date().currentTimeMillis())
             if now >= nextCheck {
-                os_log("Resetting snooze for %{public}s - %{public}s", log: Log.app, UUID, title)
+                os_log("Resetting snooze for %{public}s - %{public}s", log: Log.app, UUID, Title)
                 snoozeTime = 0
             } else {
-                os_log("Snooze in effect for %{public}s - %{public}s", log: Log.app, UUID, title)
+                os_log("Snooze in effect for %{public}s - %{public}s", log: Log.app, UUID, Title)
                 return
             }
         }
-        os_log("Running check for %{public}s - %{public}s", log: Log.app, UUID, title)
+        os_log("Running check for %{public}s - %{public}s", log: Log.app, UUID, Title)
         checkPassed = checkPasses()
         checkTimestamp = Int(Date().currentTimeMillis())
     }
