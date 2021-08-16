@@ -33,14 +33,6 @@ class CheckIntegrationTest: XCTestCase {
         XCTAssert(check.checkPasses())
     }
 
-    func testObservables() throws {
-        let check = IntegrationCheck()
-        XCTAssertEqual(check.isActive, true, "New check should be enabled")
-        XCTAssertEqual(check.snoozeTime, 0, "New check should not be snoozed")
-        XCTAssertEqual(check.checkPassed, false, "New check should not pass if not ran yet")
-        XCTAssertEqual(check.checkTimestamp, 0, "New check should not have timestamp if not ran yet")
-    }
-
     func testSnooze() throws {
         let check = IntegrationCheck()
         check.snoozeOneDay()
