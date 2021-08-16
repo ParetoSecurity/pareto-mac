@@ -38,7 +38,7 @@ jobs: # a basic unit of work in a run
           command: make archive
       - run:
          name: Compress app for storage
-         command: zip -r app.zip build/mac/Pareto Security.app
+         command: zip -r app.zip build/mac/Pareto\ Security.app
       - store_artifacts:
          path: app.zip
          destination: app
