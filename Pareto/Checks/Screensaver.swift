@@ -12,8 +12,8 @@ class ScreensaverCheck: ParetoCheck {
     final var ID = "13e4dbf1-f87f-4bd9-8a82-f62044f002f4"
     final var TITLE = "Screen saver shows in under 5 minutes"
 
-    required init(defaults: UserDefaults = .standard, id _: String! = "", title _: String! = "") {
-        super.init(defaults: defaults, id: ID, title: TITLE)
+    required init(id _: String! = "", title _: String! = "") {
+        super.init(id: ID, title: TITLE)
     }
 
     override func checkPasses() -> Bool {

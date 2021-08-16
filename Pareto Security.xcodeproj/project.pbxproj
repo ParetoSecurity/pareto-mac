@@ -10,6 +10,7 @@
 		4F080D1D26C50D2800686786 /* ParetoSecurityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FC81A4B26C41DC8006EABA8 /* ParetoSecurityTests.swift */; };
 		4F103008269EE136008C1E86 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F103007269EE135008C1E86 /* SettingsView.swift */; };
 		4F103012269F1C65008C1E86 /* LaunchAtLogin in Frameworks */ = {isa = PBXBuildFile; productRef = 4F103011269F1C65008C1E86 /* LaunchAtLogin */; };
+		4F3EF24326CA859500841375 /* Claim.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F3EF24226CA859500841375 /* Claim.swift */; };
 		4F47221026B08A0E0071CE2A /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F47220F26B08A0E0071CE2A /* Settings.swift */; };
 		4F5E888026A053A9005271FB /* ParetoCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F5E887F26A053A9005271FB /* ParetoCheck.swift */; };
 		4F6A92E626C521BE006C2F2D /* CheckIntegrationTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F6A92E526C521BE006C2F2D /* CheckIntegrationTest.swift */; };
@@ -51,6 +52,7 @@
 
 /* Begin PBXFileReference section */
 		4F103007269EE135008C1E86 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		4F3EF24226CA859500841375 /* Claim.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Claim.swift; sourceTree = "<group>"; };
 		4F47220F26B08A0E0071CE2A /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		4F5E887F26A053A9005271FB /* ParetoCheck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParetoCheck.swift; sourceTree = "<group>"; };
 		4F6A92E526C521BE006C2F2D /* CheckIntegrationTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckIntegrationTest.swift; sourceTree = "<group>"; };
@@ -206,6 +208,7 @@
 				4FB7C67C26AFF1AB00FB1C41 /* Log.swift */,
 				4F47220F26B08A0E0071CE2A /* Settings.swift */,
 				4F6A92E926C54AB7006C2F2D /* AppInfo.swift */,
+				4F3EF24226CA859500841375 /* Claim.swift */,
 			);
 			path = Pareto;
 			sourceTree = "<group>";
@@ -421,6 +424,7 @@
 				4F868DD126A5C51C005B876E /* Autologin.swift in Sources */,
 				4FEBA2F2269CD48F009B2469 /* ParetoApp.swift in Sources */,
 				4F6A92E826C52210006C2F2D /* IntegrationCheck.swift in Sources */,
+				4F3EF24326CA859500841375 /* Claim.swift in Sources */,
 				4FB7C68D26AFFD2600FB1C41 /* FileVault.swift in Sources */,
 				4F103008269EE136008C1E86 /* SettingsView.swift in Sources */,
 				4F868DD326A5C751005B876E /* Screensaver.swift in Sources */,

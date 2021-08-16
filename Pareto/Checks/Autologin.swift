@@ -12,8 +12,8 @@ class AutologinCheck: ParetoCheck {
     final var ID = "f962c423-fdf5-428a-a57a-816abc9b253e"
     final var TITLE = "Automatic login is off"
 
-    required init(defaults: UserDefaults = .standard, id _: String! = "", title _: String! = "") {
-        super.init(defaults: defaults, id: ID, title: TITLE)
+    required init(id _: String! = "", title _: String! = "") {
+        super.init(id: ID, title: TITLE)
     }
 
     override func checkPasses() -> Bool {

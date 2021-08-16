@@ -12,8 +12,8 @@ class IntegrationCheck: ParetoCheck {
     final var ID = "aaaaaaaa-bbbb-cccc-dddd-abcdef123456"
     final var TITLE = "Unit test mock"
 
-    required init(defaults: UserDefaults = .standard, id _: String! = "", title _: String! = "") {
-        super.init(defaults: defaults, id: ID, title: TITLE)
+    required init(id _: String! = "", title _: String! = "") {
+        super.init(id: ID, title: TITLE)
     }
 
     override func checkPasses() -> Bool {

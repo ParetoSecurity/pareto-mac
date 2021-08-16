@@ -42,8 +42,8 @@ class ParetoCheck: ObservableObject {
         UUID + "-TS"
     }
 
-    required init(defaults: UserDefaults = .standard, id: String! = "", title: String! = "") {
-        self.defaults = defaults
+    required init(id: String! = "", title: String! = "") {
+        defaults = UserDefaults.standard
         UUID = id
         self.title = title
 
