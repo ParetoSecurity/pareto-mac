@@ -197,6 +197,7 @@
 			children = (
 				4FB7C67F26AFF22C00FB1C41 /* Extensions */,
 				4F5E887F26A053A9005271FB /* ParetoCheck.swift */,
+				4F3EF24226CA859500841375 /* Claim.swift */,
 				4F10300A269F0568008C1E86 /* Checks */,
 				4F103009269F054C008C1E86 /* StatusBar */,
 				4F103006269EDB82008C1E86 /* Views */,
@@ -208,7 +209,6 @@
 				4FB7C67C26AFF1AB00FB1C41 /* Log.swift */,
 				4F47220F26B08A0E0071CE2A /* Settings.swift */,
 				4F6A92E926C54AB7006C2F2D /* AppInfo.swift */,
-				4F3EF24226CA859500841375 /* Claim.swift */,
 			);
 			path = Pareto;
 			sourceTree = "<group>";

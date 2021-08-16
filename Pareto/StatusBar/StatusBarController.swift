@@ -16,12 +16,12 @@ class StatusBarController: NSMenu, NSMenuDelegate {
     var isRunnig = false
     var workItem: DispatchWorkItem?
 
-    let checks = [
-        GatekeeperCheck(),
-        FirewallCheck(),
-        ScreensaverPasswordCheck(),
-        AutologinCheck(),
-        ScreensaverCheck()
+    let claims = [
+        Claim("User login is secure", [AutologinCheck()]),
+        Claim("Firewall is on and configured", [FirewallCheck()]),
+        Claim("System integrity", [FirewallCheck()]),
+        Claim("Mac locks after inactivity", [FirewallCheck()]),
+        Claim("Apps are up-to-date", [FirewallCheck()])
     ]
 
     required init(coder decoder: NSCoder) {
@@ -39,20 +39,22 @@ class StatusBarController: NSMenu, NSMenuDelegate {
         statusItem.button?.target = self
     }
 
+    var claimsPassed: Bool { claims.reduce(true) {
+        $0 && $1.checkPassed
+    } }
+
+    var claimsSnoozed: Int { claims.reduce(0) {
+        $0 + $1.snoozeTime
+    } }
+
     func updateMenu() {
-        var status = true
-        var snoozed = 0
         removeAllItems()
         addChecksMenuItems()
         addApplicationItems()
-        for check in checks where check.isActive {
-            status = check.checkPassed && status
-            snoozed += check.snoozeTime
-        }
-        if snoozed > 0 {
+        if claimsSnoozed > 0 {
             statusItem.button?.image = imageWarning
         } else {
-            if status {
+            if claimsPassed {
                 statusItem.button?.image = imageDefault
             } else {
                 statusItem.button?.image = imageWarning
@@ -70,8 +72,8 @@ class StatusBarController: NSMenu, NSMenuDelegate {
         statusItem.button?.image = imageDefault
         isRunnig = true
         workItem = DispatchWorkItem {
-            for check in self.checks {
-                check.run()
+            for claim in self.claims {
+                claim.run()
             }
         }
 
@@ -109,7 +111,7 @@ class StatusBarController: NSMenu, NSMenuDelegate {
     func addApplicationItems() {
         addItem(NSMenuItem.separator())
 
-        let runItem = NSMenuItem(title: "Check", action: #selector(AppDelegate.runChecks), keyEquivalent: "c")
+        let runItem = NSMenuItem(title: "Update", action: #selector(AppDelegate.runChecks), keyEquivalent: "c")
         runItem.target = NSApp.delegate
         addItem(runItem)
 
@@ -128,10 +130,8 @@ class StatusBarController: NSMenu, NSMenuDelegate {
     }
 
     func addChecksMenuItems() {
-        for check in checks.sorted(by: { $0.title < $1.title }) {
-            if AppInfo.inSandbox, check.canRunInSandbox {
-                addItem(check.menu())
-            }
+        for claim in claims.sorted(by: { $0.title < $1.title }) {
+            addItem(claim.menu())
         }
     }
 }
