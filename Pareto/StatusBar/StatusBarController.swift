@@ -21,7 +21,7 @@ class StatusBarController: NSMenu, NSMenuDelegate {
         FirewallCheck(),
         ScreensaverPasswordCheck(),
         AutologinCheck(),
-        ScreensaverCheck(),
+        ScreensaverCheck()
     ]
 
     required init(coder decoder: NSCoder) {
