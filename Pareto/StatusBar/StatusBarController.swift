@@ -11,8 +11,7 @@ import SwiftUI
 
 class StatusBarController: NSMenu, NSMenuDelegate {
     let statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
-    let imageRunning = NSImage(named: "IconGray")
-    let imageDefault = NSImage(named: "IconGreen")
+    let imageDefault = NSImage(named: "IconGray")
     let imageWarning = NSImage(named: "IconOrange")
     var isRunnig = false
     var workItem: DispatchWorkItem?
@@ -20,9 +19,9 @@ class StatusBarController: NSMenu, NSMenuDelegate {
     let checks = [
         GatekeeperCheck(),
         FirewallCheck(),
+        ScreensaverPasswordCheck(),
         AutologinCheck(),
         ScreensaverCheck(),
-        ScreensaverPasswordCheck()
     ]
 
     required init(coder decoder: NSCoder) {
@@ -36,6 +35,7 @@ class StatusBarController: NSMenu, NSMenuDelegate {
         statusItem.menu = self
         statusItem.button?.image = imageDefault
         statusItem.button?.imagePosition = .imageRight
+        statusItem.button?.imageScaling = .scaleProportionallyDown
         statusItem.button?.target = self
     }
 
@@ -61,11 +61,13 @@ class StatusBarController: NSMenu, NSMenuDelegate {
     }
 
     func runChecks() {
+        if AppInfo.isRunningTests {
+            return
+        }
         if isRunnig {
             return
         }
-        statusItem.button?.appearsDisabled = true
-        statusItem.button?.image = imageRunning
+        statusItem.button?.image = imageDefault
         isRunnig = true
         workItem = DispatchWorkItem {
             for check in self.checks {
@@ -77,7 +79,6 @@ class StatusBarController: NSMenu, NSMenuDelegate {
         workItem?.notify(queue: .main) {
             self.isRunnig = false
             self.updateMenu()
-            self.statusItem.button?.appearsDisabled = false
             self.updateMenu()
             os_log("Checks finished running", log: Log.app)
         }
@@ -87,7 +88,6 @@ class StatusBarController: NSMenu, NSMenuDelegate {
             // checks are still running kill them
             if self.isRunnig {
                 self.workItem?.cancel()
-                self.statusItem.button?.appearsDisabled = false
                 self.updateMenu()
                 os_log("Checks took more than 30s to finish canceling", log: Log.app)
             }

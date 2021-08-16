@@ -9,10 +9,15 @@ import XCTest
 
 class ParetoSecurityUITests: XCTestCase {
     let app = XCUIApplication()
+    var menu: XCUIElement?
 
     override func setUp() {
         super.setUp()
+        app.launchArguments = ["-isRunningTests=YES"]
         app.launch()
+        if app.wait(for: .runningBackground, timeout: 10) {
+            XCTFail("Menu did not settle after run")
+        }
     }
 
     override func tearDown() {
@@ -20,18 +25,39 @@ class ParetoSecurityUITests: XCTestCase {
         app.terminate()
     }
 
+    private func waitUntilMenu() {
+        app.statusItems.firstMatch.click()
+        if !app.menuItems.firstMatch.waitForExistence(timeout: 3) {
+            XCTFail("Menu did not build")
+        }
+    }
+
+    func takeScreenshot(screenshot: XCUIScreenshot, name: String) {
+        let screenshotAttachment = XCTAttachment(
+            uniformTypeIdentifier: "public.png",
+            name: "Screenshot-\(name).png",
+            payload: screenshot.pngRepresentation,
+            userInfo: nil
+        )
+        screenshotAttachment.lifetime = .keepAlways
+        add(screenshotAttachment)
+    }
+
     func testSettingsOpens() throws {
-        app.children(matching: .menuBar).element(boundBy: 1).children(matching: .statusItem).element.click()
+        waitUntilMenu()
         app.menuBars/*@START_MENU_TOKEN@*/ .menuItems["showPrefs"]/*[[".statusItems",".menus[\"paretoMenu\"]",".menuItems[\"Preferences\"]",".menuItems[\"showPrefs\"]"],[[[-1,3],[-1,2],[-1,1,2],[-1,0,1]],[[-1,3],[-1,2],[-1,1,2]],[[-1,3],[-1,2]]],[0]]@END_MENU_TOKEN@*/ .click()
+        let settings = app.windows.firstMatch.screenshot()
+        takeScreenshot(screenshot: settings, name: "Settings")
     }
 
     func testBrowserOpens() throws {
-        app.children(matching: .menuBar).element(boundBy: 1).children(matching: .statusItem).element.click()
-        app.menuBars/*@START_MENU_TOKEN@*/ .menuItems["reportBug"]/*[[".statusItems",".menus",".menuItems[\"Report Bug\"]",".menuItems[\"reportBug\"]"],[[[-1,3],[-1,2],[-1,1,2],[-1,0,1]],[[-1,3],[-1,2],[-1,1,2]],[[-1,3],[-1,2]]],[0]]@END_MENU_TOKEN@*/ .click()
+        waitUntilMenu()
+        app.menuBars.menuItems["reportBug"].click()
     }
 
     func testAppExits() throws {
-        XCUIApplication().children(matching: .menuBar).element(boundBy: 1).children(matching: .statusItem).element.click()
+        waitUntilMenu()
+        takeScreenshot(screenshot: app.statusItems.firstMatch.menus.firstMatch.screenshot(), name: "App")
         app.menuBars.menuItems["quitApp"].click()
     }
 }
