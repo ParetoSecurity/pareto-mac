@@ -21,6 +21,17 @@ jobs:
     steps:
     - name: Repository checkout
       uses: actions/checkout@v2
+    - name: Cache SPM modules
+      uses: actions/cache@v2
+      env:
+        cache-name: cache-spm
+      with:
+        path: SourcePackages
+        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles("Pareto Security.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved") }}
+        restore-keys: |
+          ${{ runner.os }}-build-${{ env.cache-name }}-
+          ${{ runner.os }}-build-
+          ${{ runner.os }}-
     - name: Build
       run: make build archive
     - name: Compress app for storage
@@ -36,6 +47,17 @@ jobs:
     steps:
     - name: Repository checkout
       uses: actions/checkout@v2
+    - name: Cache SPM modules
+      uses: actions/cache@v2
+      env:
+        cache-name: cache-spm
+      with:
+        path: SourcePackages
+        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles("Pareto Security.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved") }}
+        restore-keys: |
+          ${{ runner.os }}-build-${{ env.cache-name }}-
+          ${{ runner.os }}-build-
+          ${{ runner.os }}-
     - name: Tests
       run: make test
     - uses: codecov/codecov-action@v2
