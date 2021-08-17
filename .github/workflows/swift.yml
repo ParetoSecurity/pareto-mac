@@ -21,11 +21,11 @@ jobs:
     steps:
     - name: Repository checkout
       uses: actions/checkout@v2
-    - name: Lint
+    - name: Build
       run: make build archive
   test:
     name: Unit Tests
-    runs-on: macos-latest
+    runs-on: macos-11
     steps:
     - name: Repository checkout
       uses: actions/checkout@v2
