@@ -6,11 +6,25 @@
 //
 
 @testable import Pareto_Security
+import ViewInspector
 import XCTest
 
 class SettingsViewTests: XCTestCase {
-    func testMain() throws {
-        let subject = SettingsView()
-        XCTAssert(subject.body != nil)
+    func testAbout() throws {
+        let subject = AboutSettingsView()
+        let text = try subject.inspect().hStack()[1].vStack()[4]
+            .text().string()
+        XCTAssertEqual(text, "Made with ❤️ at Niteo")
+    }
+
+    func testGeneral() throws {
+        let subject = GeneralSettingsView()
+        let one = try subject.inspect().form()[0].section().footer().text().string()
+        XCTAssertEqual(one, "Automatically opens the app when you start your Mac.")
+        let two = try subject.inspect().form()[1].section().footer().text().string()
+        XCTAssertEqual(two, "Run all checks some time after waking from sleep.")
     }
 }
+
+extension AboutSettingsView: Inspectable {}
+extension GeneralSettingsView: Inspectable {}

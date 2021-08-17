@@ -48,7 +48,7 @@ struct AboutSettingsView: View {
                          destination: URL(string: "https://paretosecurity.app/contact")!)
                 }
 
-                Text("Made with ❤️ at Niteo.co")
+                Text("Made with ❤️ at Niteo")
             }
 
         }.frame(width: 350, height: 100).padding(5)

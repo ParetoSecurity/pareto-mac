@@ -19,6 +19,7 @@
 		4F6A92F226C555C6006C2F2D /* ParetoSecurityUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F6A92F126C555C6006C2F2D /* ParetoSecurityUITests.swift */; };
 		4F84A94426CBBA6900A1579D /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F84A94326CBBA6900A1579D /* Settings.swift */; };
 		4F84A94926CBE21300A1579D /* PasswordFromLock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F84A94826CBE21300A1579D /* PasswordFromLock.swift */; };
+		4F84A94C26CBE4AE00A1579D /* ViewInspector in Frameworks */ = {isa = PBXBuildFile; productRef = 4F84A94B26CBE4AE00A1579D /* ViewInspector */; };
 		4F868DCF26A591E6005B876E /* Firewall.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F868DCE26A591E6005B876E /* Firewall.swift */; };
 		4F868DD126A5C51C005B876E /* Autologin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F868DD026A5C51C005B876E /* Autologin.swift */; };
 		4F868DD326A5C751005B876E /* Screensaver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F868DD226A5C751005B876E /* Screensaver.swift */; };
@@ -97,6 +98,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4F84A94C26CBE4AE00A1579D /* ViewInspector in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -262,6 +264,9 @@
 				4F080CE026C5084600686786 /* PBXTargetDependency */,
 			);
 			name = ParetoSecurityTests;
+			packageProductDependencies = (
+				4F84A94B26CBE4AE00A1579D /* ViewInspector */,
+			);
 			productName = ParetoSecurityTests;
 			productReference = 4FC81A4926C41DC8006EABA8 /* ParetoSecurityTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
@@ -321,6 +326,7 @@
 			mainGroup = 4FEBA2E5269CD48F009B2469;
 			packageReferences = (
 				4F103010269F1C65008C1E86 /* XCRemoteSwiftPackageReference "LaunchAtLogin" */,
+				4F84A94A26CBE4AE00A1579D /* XCRemoteSwiftPackageReference "ViewInspector" */,
 			);
 			productRefGroup = 4FEBA2EF269CD48F009B2469 /* Products */;
 			projectDirPath = "";
@@ -787,6 +793,14 @@
 				kind = branch;
 			};
 		};
+		4F84A94A26CBE4AE00A1579D /* XCRemoteSwiftPackageReference "ViewInspector" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/nalexn/ViewInspector";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -794,6 +808,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 4F103010269F1C65008C1E86 /* XCRemoteSwiftPackageReference "LaunchAtLogin" */;
 			productName = LaunchAtLogin;
+		};
+		4F84A94B26CBE4AE00A1579D /* ViewInspector */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4F84A94A26CBE4AE00A1579D /* XCRemoteSwiftPackageReference "ViewInspector" */;
+			productName = ViewInspector;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
