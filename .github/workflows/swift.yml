@@ -41,26 +41,26 @@ jobs:
       with:
         name: app.zip
         path: app.zip
-  test:
-    name: Unit Tests
-    runs-on: macos-11
-    steps:
-    - name: Repository checkout
-      uses: actions/checkout@v2
-    - name: Cache SPM modules
-      uses: actions/cache@v2
-      env:
-        cache-name: cache-spm
-      with:
-        path: SourcePackages
-        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('Pareto Security.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved') }}
-        restore-keys: |
-          ${{ runner.os }}-build-${{ env.cache-name }}-
-          ${{ runner.os }}-build-
-          ${{ runner.os }}-
-    - name: Tests
-      run: make test
-    - uses: codecov/codecov-action@v2
-      with:
-        fail_ci_if_error: true 
-        verbose: true
+  # test:
+  #   name: Unit Tests
+  #   runs-on: macos-11
+  #   steps:
+  #   - name: Repository checkout
+  #     uses: actions/checkout@v2
+  #   - name: Cache SPM modules
+  #     uses: actions/cache@v2
+  #     env:
+  #       cache-name: cache-spm
+  #     with:
+  #       path: SourcePackages
+  #       key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('Pareto Security.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved') }}
+  #       restore-keys: |
+  #         ${{ runner.os }}-build-${{ env.cache-name }}-
+  #         ${{ runner.os }}-build-
+  #         ${{ runner.os }}-
+  #   - name: Tests
+  #     run: make test
+  #   - uses: codecov/codecov-action@v2
+  #     with:
+  #       fail_ci_if_error: true 
+  #       verbose: true
