@@ -6,8 +6,5 @@ coverage:
         target: auto
         threshold: 5%
         base: auto 
-        # advanced settings
-        branches: 
-          - master
         if_ci_failed: error #success, failure, error, ignore
         only_pulls: false
