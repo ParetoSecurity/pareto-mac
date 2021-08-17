@@ -57,13 +57,13 @@ class CheckIntegrationTest: XCTestCase {
         let claim = Claim(withTitle: "Test", withChecks: [IntegrationCheck()])
         claim.disableCheck()
         claim.run()
-        XCTAssert(!check.checkPassed, "Check should not run if disabled")
+        XCTAssert(!claim.checkPassed, "Check should not run if disabled")
     }
 
     func testThatActiveCheckDoesRun() throws {
         let claim = Claim(withTitle: "Test", withChecks: [IntegrationCheck()])
         claim.enableCheck()
         claim.run()
-        XCTAssert(check.checkPassed, "Check after run should pass")
+        XCTAssert(claim.checkPassed, "Check after run should pass")
     }
 }
