@@ -45,10 +45,13 @@ jobs:
       uses: actions/github-script@v4
       if: github.event_name == 'pull_request'
       with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
         script: |
-          const { issue: { number: issue_number }, repo: { owner, repo }  } = context;
-          github.issues.createComment({ issue_number, owner, repo, body: 'You can find latest app build under the Actions tab!'});
+          github.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: 'You can find latest app build under the Actions tab!'
+          })
   # test:
   #   name: Unit Tests
   #   runs-on: macos-11
