@@ -31,7 +31,6 @@ jobs: # a basic unit of work in a run
             - SourcePackages/
           key: spm-cache-{{ checksum "Pareto Security.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved" }}
 
-
 workflows:
   version: 2
   test_build:
