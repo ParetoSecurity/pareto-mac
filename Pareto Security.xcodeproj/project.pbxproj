@@ -18,6 +18,7 @@
 		4F6A92EA26C54AB7006C2F2D /* AppInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F6A92E926C54AB7006C2F2D /* AppInfo.swift */; };
 		4F6A92F226C555C6006C2F2D /* ParetoSecurityUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F6A92F126C555C6006C2F2D /* ParetoSecurityUITests.swift */; };
 		4F84A94426CBBA6900A1579D /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F84A94326CBBA6900A1579D /* Settings.swift */; };
+		4F84A94926CBE21300A1579D /* PasswordFromLock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F84A94826CBE21300A1579D /* PasswordFromLock.swift */; };
 		4F868DCF26A591E6005B876E /* Firewall.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F868DCE26A591E6005B876E /* Firewall.swift */; };
 		4F868DD126A5C51C005B876E /* Autologin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F868DD026A5C51C005B876E /* Autologin.swift */; };
 		4F868DD326A5C751005B876E /* Screensaver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F868DD226A5C751005B876E /* Screensaver.swift */; };
@@ -62,6 +63,7 @@
 		4F6A92EF26C555C6006C2F2D /* ParetoSecurityUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ParetoSecurityUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4F6A92F126C555C6006C2F2D /* ParetoSecurityUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParetoSecurityUITests.swift; sourceTree = "<group>"; };
 		4F84A94326CBBA6900A1579D /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
+		4F84A94826CBE21300A1579D /* PasswordFromLock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordFromLock.swift; sourceTree = "<group>"; };
 		4F868DCE26A591E6005B876E /* Firewall.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Firewall.swift; sourceTree = "<group>"; };
 		4F868DD026A5C51C005B876E /* Autologin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Autologin.swift; sourceTree = "<group>"; };
 		4F868DD226A5C751005B876E /* Screensaver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Screensaver.swift; sourceTree = "<group>"; };
@@ -135,6 +137,7 @@
 				4F868DD026A5C51C005B876E /* Autologin.swift */,
 				4FB405EE26A6FC4800267D5D /* ScreensaverPassword.swift */,
 				4FB7C68C26AFFD2600FB1C41 /* FileVault.swift */,
+				4F84A94826CBE21300A1579D /* PasswordFromLock.swift */,
 			);
 			path = Checks;
 			sourceTree = "<group>";
@@ -427,6 +430,7 @@
 				4F47221026B08A0E0071CE2A /* Settings.swift in Sources */,
 				4F868DD126A5C51C005B876E /* Autologin.swift in Sources */,
 				4FEBA2F2269CD48F009B2469 /* ParetoApp.swift in Sources */,
+				4F84A94926CBE21300A1579D /* PasswordFromLock.swift in Sources */,
 				4F6A92E826C52210006C2F2D /* IntegrationCheck.swift in Sources */,
 				4F3EF24326CA859500841375 /* Claim.swift in Sources */,
 				4FB7C68D26AFFD2600FB1C41 /* FileVault.swift in Sources */,

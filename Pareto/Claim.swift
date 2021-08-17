@@ -24,7 +24,7 @@ class Claim {
     }
 
     var checkPassed: Bool { checks.reduce(true) {
-        $0 && $1.isActive ? $1.checkPassed : false
+        $0 && $1.isActive && $1.checkPassed
     } }
 
     var snoozeTime: Int { checks.reduce(0) {
