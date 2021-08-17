@@ -17,10 +17,10 @@ class StatusBarController: NSMenu, NSMenuDelegate {
     var workItem: DispatchWorkItem?
 
     let claims = [
-        Claim(withTitle: "User login is secure", withChecks: [AutologinCheck()]),
-        Claim(withTitle: "Firewall is on and configured", withChecks: [FirewallCheck()]),
+        Claim(withTitle: "Login is secure", withChecks: [AutologinCheck()]),
+        Claim(withTitle: "Firewall is on", withChecks: [FirewallCheck()]),
+        Claim(withTitle: "Locks after inactivity", withChecks: [ScreensaverPasswordCheck(), ScreensaverCheck()])
         Claim(withTitle: "System integrity", withChecks: [GatekeeperCheck(), FileVaultCheck()]),
-        Claim(withTitle: "Mac locks after inactivity", withChecks: [ScreensaverPasswordCheck(), ScreensaverCheck()])
         // Claim(withTitle: "Apps are up-to-date", withChecks: [IntegrationCheck(), IntegrationCheck()])
     ]
 
