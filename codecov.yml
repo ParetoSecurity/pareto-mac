@@ -1,10 +1,8 @@
 coverage:
   status:
     project:
-      default: # This can be anything, but it needs to exist as the name
-        # basic settings
+      default:
         target: 34%
-        threshold: 1%
-        base: auto 
-        if_ci_failed: error #success, failure, error, ignore
+        informational: false
         only_pulls: false
+        if_ci_failed: error
