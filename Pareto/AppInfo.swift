@@ -46,21 +46,24 @@ enum AppInfo {
         return URL(string: baseURL)!
     }
 
-    @available(macOS 12.0, *)
+    @available(macOS 10.15, *)
+
     static let logEntries = { () -> [String] in
         var logs = [String]()
         do {
-            let logStore = try OSLogStore(scope: .currentProcessIdentifier)
-            let enumerator = try logStore.__entriesEnumerator(position: nil, predicate: nil)
-            let allEntries = Array(enumerator)
-            let osLogEntryObjects = allEntries.compactMap { $0 as? OSLogEntry }
-            let osLogEntryLogObjects = osLogEntryObjects.compactMap { $0 as? OSLogEntryLog }
             let subsystem = Bundle.main.bundleIdentifier!
+            let logStore = try OSLogStore.local()
+            let lastBoot = logStore.position(timeIntervalSinceLatestBoot: 0)
+            let matchingPredicate = NSPredicate(format: "subsystem == '\(subsystem)'")
+            let enumerator = try logStore.getEntries(with: [],
+                                                     at: lastBoot,
+                                                     matching: matchingPredicate)
+            let osLogEntryLogObjects = Array(enumerator).compactMap { $0 as? OSLogEntryLog }
             for entry in osLogEntryLogObjects where entry.subsystem == subsystem {
                 logs.append(entry.category + ": " + entry.composedMessage)
             }
         } catch {
-            logs.append("Error: \(error)")
+            logs.append("logEntries: \(error)")
         }
         return logs
     }

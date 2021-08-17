@@ -12,19 +12,8 @@ import os.log
 import SwiftUI
 
 class ParetoCheck: ObservableObject {
-    private enum Snooze {
-        static let oneHour = 3600
-        static let oneDay = oneHour * 24
-        static let oneWeek = oneDay * 7
-    }
-
-    private let cancellable: Cancellable
-    private let defaults: UserDefaults
-
     private(set) var UUID = "UUID"
     private(set) var Title = "Title"
-
-    let objectWillChange = PassthroughSubject<Void, Never>()
 
     var EnabledKey: String {
         UUID + "-Enabled"
@@ -43,79 +32,32 @@ class ParetoCheck: ObservableObject {
     }
 
     init() {
-        defaults = UserDefaults.standard
-
-        defaults.register(defaults: [
+        UserDefaults.standard.register(defaults: [
             UUID + "-Enabled": true,
             UUID + "-Snooze": 0,
             UUID + "-Passes": false,
             UUID + "-TS": 0
         ])
-
-        cancellable = NotificationCenter.default
-            .publisher(for: UserDefaults.didChangeNotification)
-            .map { _ in () }
-            .subscribe(objectWillChange)
     }
 
-    var isActive: Bool {
-        get { defaults.bool(forKey: EnabledKey) }
-        set { defaults.set(newValue, forKey: EnabledKey) }
+    public var isActive: Bool {
+        get { UserDefaults.standard.bool(forKey: EnabledKey) }
+        set { UserDefaults.standard.set(newValue, forKey: EnabledKey) }
     }
 
-    var snoozeTime: Int {
-        get { defaults.integer(forKey: SnoozeKey) }
-        set { defaults.set(newValue, forKey: SnoozeKey) }
-    }
-
-    var checkPassed: Bool {
-        get { defaults.bool(forKey: PassesKey) }
-        set { defaults.set(newValue, forKey: PassesKey) }
+    public var snoozeTime: Int {
+        get { UserDefaults.standard.integer(forKey: SnoozeKey) }
+        set { UserDefaults.standard.set(newValue, forKey: SnoozeKey) }
     }
 
     var checkTimestamp: Int {
-        get { defaults.integer(forKey: TimestampKey) }
-        set { defaults.set(newValue, forKey: TimestampKey) }
+        get { UserDefaults.standard.integer(forKey: TimestampKey) }
+        set { UserDefaults.standard.set(newValue, forKey: TimestampKey) }
     }
 
-    @objc func moreInfo() {
-        if let url = URL(string: "https://paretosecurity.app/check/" + UUID) {
-            NSWorkspace.shared.open(url)
-        }
-    }
-
-    @objc func disableCheck() {
-        isActive = false
-        checkPassed = false
-        checkTimestamp = 0
-    }
-
-    @objc func enableCheck() {
-        isActive = true
-        checkPassed = false
-        checkTimestamp = 0
-    }
-
-    @objc func snoozeOneHour() {
-        snoozeTime = Snooze.oneHour
-    }
-
-    @objc func snoozeOneDay() {
-        snoozeTime = Snooze.oneDay
-    }
-
-    @objc func snoozeOneWeek() {
-        snoozeTime = Snooze.oneWeek
-    }
-
-    @objc func unsnooze() {
-        snoozeTime = 0
-    }
-
-    func addSubmenu(withTitle: String, action: Selector?) -> NSMenuItem {
-        let item = NSMenuItem(title: withTitle, action: action, keyEquivalent: "")
-        item.target = self
-        return item
+    var checkPassed: Bool {
+        get { UserDefaults.standard.bool(forKey: PassesKey) }
+        set { UserDefaults.standard.set(newValue, forKey: PassesKey) }
     }
 
     func checkPasses() -> Bool {
@@ -123,46 +65,22 @@ class ParetoCheck: ObservableObject {
     }
 
     func menu() -> NSMenuItem {
-        let item = NSMenuItem(title: Title, action: nil, keyEquivalent: "")
-        item.setAccessibilityIdentifier("menu-\(UUID)")
+        let item = NSMenuItem(title: Title, action: #selector(moreInfo), keyEquivalent: "")
+        item.target = self
         if isActive {
             if snoozeTime > 0 {
                 item.image = NSImage.SF(name: "powersleep").tint(color: .systemGray)
             } else {
                 if checkPassed {
-                    item.image = NSImage.SF(name: "checkmark.shield").tint(color: .systemBlue)
+                    item.image = NSImage.SF(name: "checkmark").tint(color: .systemBlue)
                 } else {
-                    item.image = NSImage.SF(name: "exclamationmark.shield").tint(color: .systemRed)
+                    item.image = NSImage.SF(name: "exclamationmark").tint(color: .systemRed)
                 }
             }
         } else {
             item.image = NSImage.SF(name: "shield.slash")
         }
 
-        let submenu = NSMenu()
-
-        // submenu.addItem(addSubmenu(withTitle: "More Information", action: #selector(moreInfo)))
-        submenu.addItem(addSubmenu(withTitle: "Last check: \(Date().fromTimeStamp(timeStamp: checkTimestamp))", action: nil))
-        submenu.addItem(NSMenuItem.separator())
-        if snoozeTime == 0 {
-            submenu.addItem(addSubmenu(withTitle: "Snooze for 1 hour", action: #selector(snoozeOneHour)))
-            submenu.addItem(addSubmenu(withTitle: "Snooze for 1 day", action: #selector(snoozeOneDay)))
-            submenu.addItem(addSubmenu(withTitle: "Snooze for 1 week", action: #selector(snoozeOneWeek)))
-        } else {
-            if isActive {
-                submenu.addItem(addSubmenu(withTitle: "Unsnooze", action: #selector(unsnooze)))
-                submenu.addItem(addSubmenu(withTitle: "Resumes: \(Date().fromTimeStamp(timeStamp: checkTimestamp + (snoozeTime * 1000)))", action: nil))
-            }
-        }
-
-        submenu.addItem(NSMenuItem.separator())
-        if isActive {
-            submenu.addItem(addSubmenu(withTitle: "Disable", action: #selector(disableCheck)))
-        } else {
-            submenu.addItem(addSubmenu(withTitle: "Enable", action: #selector(enableCheck)))
-        }
-
-        item.submenu = submenu
         return item
     }
 
@@ -186,6 +104,12 @@ class ParetoCheck: ObservableObject {
         os_log("Running check for %{public}s - %{public}s", log: Log.app, UUID, Title)
         checkPassed = checkPasses()
         checkTimestamp = Int(Date().currentTimeMillis())
+    }
+
+    @objc func moreInfo() {
+        if let url = URL(string: "https://paretosecurity.app/check/" + UUID) {
+            NSWorkspace.shared.open(url)
+        }
     }
 }
 
