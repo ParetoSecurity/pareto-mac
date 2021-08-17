@@ -16,13 +16,20 @@ jobs:
     - name: Lint
       run: swiftlint
   build:
-    name: Build
+    name: Build and Archive
     runs-on: macos-11
     steps:
     - name: Repository checkout
       uses: actions/checkout@v2
     - name: Build
       run: make build archive
+    - name: Compress app for storage
+      run: zip -r app.zip build/mac/Pareto\ Security.app
+    - name: Upload App to Artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: app.zip
+        path: app.zip
   test:
     name: Unit Tests
     runs-on: macos-11
@@ -31,3 +38,7 @@ jobs:
       uses: actions/checkout@v2
     - name: Tests
       run: make test
+    - uses: codecov/codecov-action@v2
+      with:
+        fail_ci_if_error: true 
+        verbose: true
