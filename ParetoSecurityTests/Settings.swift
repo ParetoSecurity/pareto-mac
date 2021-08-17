@@ -9,8 +9,5 @@
 import XCTest
 
 class SettingsViewTests: XCTestCase {
-    func testMain() throws {
-        let subject = SettingsView()
-        XCTAssert(subject.body != nil)
-    }
+
 }
