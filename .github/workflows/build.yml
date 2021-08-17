@@ -42,3 +42,13 @@ jobs:
       with:
         name: app.zip
         path: app.zip
+    - name: Extract branch name
+      shell: bash
+      run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+      id: extract_branch
+    - uses: mshick/add-pr-comment@v1
+      with:
+        message: |
+          You can find the built app under the GitHub Action workflow https://github.com/ParetoSecurity/pareto-mac/actions/workflows/build.yml?query=branch:${{ steps.extract_branch.outputs.branch }}
+        repo-token: ${{ secrets.RELEASE_SECRET }}
+        repo-token-user-login: 'github-actions[bot]'
