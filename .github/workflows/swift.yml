@@ -27,7 +27,7 @@ jobs:
         cache-name: cache-spm
       with:
         path: SourcePackages
-        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles("Pareto Security.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved") }}
+        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('Pareto Security.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved') }}
         restore-keys: |
           ${{ runner.os }}-build-${{ env.cache-name }}-
           ${{ runner.os }}-build-
@@ -53,7 +53,7 @@ jobs:
         cache-name: cache-spm
       with:
         path: SourcePackages
-        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles("Pareto Security.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved") }}
+        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('Pareto Security.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved') }}
         restore-keys: |
           ${{ runner.os }}-build-${{ env.cache-name }}-
           ${{ runner.os }}-build-
