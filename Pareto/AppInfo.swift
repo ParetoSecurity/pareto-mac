@@ -60,7 +60,7 @@ enum AppInfo {
                     logs.append(entry.category + ": " + entry.composedMessage)
                 }
             } else {
-                logs.append("Please copy logs from the Konsole.app with ParetoSecurity filter.")
+                logs.append("Please copy the logs from the Konsole.app with the ParetoSecurity filter.")
             }
         } catch {
             logs.append("logEntries: \(error)")
