@@ -1,5 +1,10 @@
 coverage:
+  range: 20..60
   status:
+    # do not run coverage on patch nor changes
+    patch:
+      default:
+        enabled: false
     project:
       default:
         target: 34%
