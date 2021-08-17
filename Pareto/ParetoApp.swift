@@ -15,11 +15,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     let userSettings = UserSettings()
 
     func applicationDidFinishLaunching(_: Notification) {
-        // Don't init app if running unit tests
-        if AppInfo.isRunningTests {
-            return
-        }
-
         statusBar = StatusBarController()
         NSWindow.allowsAutomaticWindowTabbing = false
 
@@ -57,10 +52,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     @objc func reportBug() {
-        // Don't open browser if running tests
-        if AppInfo.isRunningTests {
-            return
-        }
         NSWorkspace.shared.open(AppInfo.bugReportURL())
     }
 }

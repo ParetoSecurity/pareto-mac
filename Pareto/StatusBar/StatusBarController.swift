@@ -63,9 +63,6 @@ class StatusBarController: NSMenu, NSMenuDelegate {
     }
 
     func runChecks() {
-        if AppInfo.isRunningTests {
-            return
-        }
         if isRunnig {
             return
         }
