@@ -9,9 +9,25 @@ on:
 jobs:
   swift:
     name: Lint
-    runs-on: macos-latest
+    runs-on: macos-11
     steps:
     - name: Repository checkout
       uses: actions/checkout@v2
     - name: Lint
       run: swiftlint
+  build:
+    name: Build
+    runs-on: macos-11
+    steps:
+    - name: Repository checkout
+      uses: actions/checkout@v2
+    - name: Lint
+      run: make build archive
+  test:
+    name: Unit Tests
+    runs-on: macos-latest
+    steps:
+    - name: Repository checkout
+      uses: actions/checkout@v2
+    - name: Tests
+      run: make test
