@@ -11,7 +11,7 @@ class RequirePasswordToUnlock: ParetoCheck {
     }
 
     override var Title: String {
-        "Require password to unlock"
+        "Password to unlock preferences"
     }
 
     override func checkPasses() -> Bool {

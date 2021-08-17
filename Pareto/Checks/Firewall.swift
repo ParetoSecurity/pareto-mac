@@ -13,7 +13,7 @@ class FirewallCheck: ParetoCheck {
     }
 
     override var Title: String {
-        "Firewall is on"
+        "Firewall is on and configured"
     }
 
     override func checkPasses() -> Bool {
