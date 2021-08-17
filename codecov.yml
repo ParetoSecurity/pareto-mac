@@ -3,8 +3,8 @@ coverage:
     project:
       default: # This can be anything, but it needs to exist as the name
         # basic settings
-        target: auto
-        threshold: 5%
+        target: 34%
+        threshold: 1%
         base: auto 
         if_ci_failed: error #success, failure, error, ignore
         only_pulls: false

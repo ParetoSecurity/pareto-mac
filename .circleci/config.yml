@@ -31,35 +31,9 @@ jobs: # a basic unit of work in a run
             - SourcePackages/
           key: spm-cache-{{ checksum "Pareto Security.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved" }}
 
-  build:
-    macos:
-      xcode: 13.0.0
-    steps:
-      - checkout
-      - restore_cache:
-          key: spm-cache-{{ checksum "Pareto Security.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved" }}
-      - run:
-          name: Build Application
-          command: make build
-      - run:
-          name: Archive Application
-          command: make archive
-      - save_cache:
-          paths:
-            - SourcePackages/
-          key: spm-cache-{{ checksum "Pareto Security.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved" }}
-      - run:
-         name: Compress app for storage
-         command: zip -r app.zip build/mac/Pareto\ Security.app
-      - store_artifacts:
-         path: app.zip
-         destination: app
 
 workflows:
   version: 2
   test_build:
     jobs:
       - test
-      - build:
-          requires:
-            - test
