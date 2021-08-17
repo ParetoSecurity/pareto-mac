@@ -19,7 +19,7 @@ class CheckIntegrationTest: XCTestCase {
     func testInit() throws {
         let check = IntegrationCheck()
         XCTAssertEqual(check.UUID, "aaaaaaaa-bbbb-cccc-dddd-abcdef123456")
-        XCTAssertEqual(check.TITLE, "Unit test mock")
+        XCTAssertEqual(check.Title, "Unit test mock")
 
         // Ensure keys are not changed without migration
         XCTAssertEqual(check.PassesKey, "aaaaaaaa-bbbb-cccc-dddd-abcdef123456-Passes")
@@ -34,36 +34,36 @@ class CheckIntegrationTest: XCTestCase {
     }
 
     func testSnooze() throws {
-        let check = IntegrationCheck()
-        check.snoozeOneDay()
-        XCTAssertEqual(check.snoozeTime, 3600 * 24)
-        check.snoozeOneHour()
-        XCTAssertEqual(check.snoozeTime, 3600)
-        check.snoozeOneWeek()
-        XCTAssertEqual(check.snoozeTime, 3600 * 24 * 7)
-        check.unsnooze()
-        XCTAssertEqual(check.snoozeTime, 0)
+        let claim = Claim(withTitle: "Test", withChecks: [IntegrationCheck()])
+        claim.snoozeOneDay()
+        XCTAssertEqual(claim.snoozeTime, 3600 * 24)
+        claim.snoozeOneHour()
+        XCTAssertEqual(claim.snoozeTime, 3600)
+        claim.snoozeOneWeek()
+        XCTAssertEqual(claim.snoozeTime, 3600 * 24 * 7)
+        claim.unsnooze()
+        XCTAssertEqual(claim.snoozeTime, 0)
     }
 
     func testDisableAndEnable() throws {
-        let check = IntegrationCheck()
-        check.disableCheck()
-        XCTAssertEqual(check.isActive, false)
-        check.enableCheck()
-        XCTAssertEqual(check.isActive, true)
+        let claim = Claim(withTitle: "Test", withChecks: [IntegrationCheck()])
+        claim.disableCheck()
+        XCTAssertEqual(claim.isActive, false)
+        claim.enableCheck()
+        XCTAssertEqual(claim.isActive, true)
     }
 
     func testThatInactiveCheckDoesNotRun() throws {
-        let check = IntegrationCheck()
-        check.disableCheck()
-        check.run()
+        let claim = Claim(withTitle: "Test", withChecks: [IntegrationCheck()])
+        claim.disableCheck()
+        claim.run()
         XCTAssert(!check.checkPassed, "Check should not run if disabled")
     }
 
     func testThatActiveCheckDoesRun() throws {
-        let check = IntegrationCheck()
-        check.enableCheck()
-        check.run()
+        let claim = Claim(withTitle: "Test", withChecks: [IntegrationCheck()])
+        claim.enableCheck()
+        claim.run()
         XCTAssert(check.checkPassed, "Check after run should pass")
     }
 }
