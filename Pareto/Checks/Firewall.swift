@@ -4,8 +4,6 @@
 //
 //  Created by Janez Troha on 15/07/2021.
 //
-import Foundation
-import os.log
 
 class FirewallCheck: ParetoCheck {
     override var UUID: String {
