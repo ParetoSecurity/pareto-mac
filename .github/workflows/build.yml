@@ -10,6 +10,9 @@ jobs:
   build:
     name: Build and Archive
     runs-on: macos-11
+    permissions:
+      issues: write 
+      pull-requests: write
     steps:
     - uses: maxim-lobanov/setup-xcode@v1
       with:
@@ -46,5 +49,5 @@ jobs:
       with:
         message: |
           You can find the built app under the GitHub Action workflow https://github.com/ParetoSecurity/pareto-mac/actions/workflows/build.yml
-        repo-token: ${{ secrets.RELEASE_SECRET }}
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
         repo-token-user-login: 'github-actions[bot]'
