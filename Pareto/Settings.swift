@@ -9,13 +9,15 @@ import Combine
 import Foundation
 
 class UserSettings: ObservableObject {
+    var Datastore = UserDefaults(suiteName: "ParetoSecurity")!
+
     @Published var runAfterSleep: Bool {
         didSet {
-            UserDefaults.standard.set(runAfterSleep, forKey: "runAfterSleep")
+            Datastore.set(runAfterSleep, forKey: "runAfterSleep")
         }
     }
 
     init() {
-        runAfterSleep = UserDefaults.standard.object(forKey: "runAfterSleep") as? Bool ?? true
+        runAfterSleep = Datastore.bool(forKey: "runAfterSleep")
     }
 }

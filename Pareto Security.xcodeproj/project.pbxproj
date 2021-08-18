@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		4F0371BC26CD00B700B35E43 /* Boot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F0371BB26CD00B700B35E43 /* Boot.swift */; };
+		4F0371BE26CD4E5600B35E43 /* Samba.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F0371BD26CD4E5600B35E43 /* Samba.swift */; };
+		4F0371C026CD4F0500B35E43 /* PrinterSharing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F0371BF26CD4F0500B35E43 /* PrinterSharing.swift */; };
 		4F080D1D26C50D2800686786 /* ParetoSecurityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FC81A4B26C41DC8006EABA8 /* ParetoSecurityTests.swift */; };
 		4F103008269EE136008C1E86 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F103007269EE135008C1E86 /* SettingsView.swift */; };
 		4F103012269F1C65008C1E86 /* LaunchAtLogin in Frameworks */ = {isa = PBXBuildFile; productRef = 4F103011269F1C65008C1E86 /* LaunchAtLogin */; };
@@ -55,6 +57,8 @@
 
 /* Begin PBXFileReference section */
 		4F0371BB26CD00B700B35E43 /* Boot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Boot.swift; sourceTree = "<group>"; };
+		4F0371BD26CD4E5600B35E43 /* Samba.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Samba.swift; sourceTree = "<group>"; };
+		4F0371BF26CD4F0500B35E43 /* PrinterSharing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrinterSharing.swift; sourceTree = "<group>"; };
 		4F103007269EE135008C1E86 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		4F3EF24226CA859500841375 /* Claim.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Claim.swift; sourceTree = "<group>"; };
 		4F47220F26B08A0E0071CE2A /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
@@ -141,6 +145,8 @@
 				4FB7C68C26AFFD2600FB1C41 /* FileVault.swift */,
 				4F84A94826CBE21300A1579D /* PasswordFromLock.swift */,
 				4F0371BB26CD00B700B35E43 /* Boot.swift */,
+				4F0371BD26CD4E5600B35E43 /* Samba.swift */,
+				4F0371BF26CD4F0500B35E43 /* PrinterSharing.swift */,
 			);
 			path = Checks;
 			sourceTree = "<group>";
@@ -433,6 +439,7 @@
 				4F868DCF26A591E6005B876E /* Firewall.swift in Sources */,
 				4FB7C68126AFF25300FB1C41 /* Date.swift in Sources */,
 				4FB405EF26A6FC4800267D5D /* ScreensaverPassword.swift in Sources */,
+				4F0371BE26CD4E5600B35E43 /* Samba.swift in Sources */,
 				4F47221026B08A0E0071CE2A /* Settings.swift in Sources */,
 				4F868DD126A5C51C005B876E /* Autologin.swift in Sources */,
 				4FEBA2F2269CD48F009B2469 /* ParetoApp.swift in Sources */,
@@ -445,6 +452,7 @@
 				4F868DD326A5C751005B876E /* Screensaver.swift in Sources */,
 				4FD0A24126A024440070BED4 /* Gatekeeper.swift in Sources */,
 				4FB7C68726AFF29A00FB1C41 /* NSImage.swift in Sources */,
+				4F0371C026CD4F0500B35E43 /* PrinterSharing.swift in Sources */,
 				4F6A92EA26C54AB7006C2F2D /* AppInfo.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -14,21 +14,21 @@ class ParetoSecurityUITests: XCTestCase {
     override func setUp() {
         super.setUp()
         app.launch()
-        if app.wait(for: .runningBackground, timeout: 10) {
-            print("Menu did not settle after run")
+        if app.wait(for: .runningBackground, timeout: 3) {
+            print("App did not settle after run")
         }
     }
 
     override func tearDown() {
-        super.tearDown()
         app.terminate()
+        super.tearDown()
     }
 
     private func waitUntilMenu() {
-        app.statusItems.firstMatch.click()
-        if !app.menuItems.firstMatch.waitForExistence(timeout: 3) {
+        if !app.menuBars.statusItems["paretoButton"].waitForExistence(timeout: 3) {
             XCTFail("Menu did not build")
         }
+        app.menuBars.statusItems["paretoButton"].click()
     }
 
     func takeScreenshot(screenshot: XCUIScreenshot, name: String) {

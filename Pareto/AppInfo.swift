@@ -48,6 +48,14 @@ enum AppInfo {
 
     static let logEntries = { () -> [String] in
         var logs = [String]()
+        logs.append("State:")
+        for (k, v) in UserDefaults().dictionaryRepresentation() {
+            if k.starts(with: "Check-") {
+                print("\(k)=\(v)")
+                logs.append("\(k)=\(v)")
+            }
+        }
+        logs.append("\nLogs:")
         do {
             if #available(macOS 12.0, *) {
                 let logStore = try OSLogStore(scope: .currentProcessIdentifier)

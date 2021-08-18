@@ -14,50 +14,51 @@ import SwiftUI
 class ParetoCheck: ObservableObject {
     private(set) var UUID = "UUID"
     private(set) var Title = "Title"
+    private var datastore = UserDefaults()
 
     var EnabledKey: String {
-        UUID + "-Enabled"
+        "Check-" + UUID + "-Enabled"
     }
 
     var SnoozeKey: String {
-        UUID + "-Snooze"
+        "Check-" + UUID + "-Snooze"
     }
 
     var PassesKey: String {
-        UUID + "-Passes"
+        "Check-" + UUID + "-Passes"
     }
 
     var TimestampKey: String {
-        UUID + "-TS"
+        "Check-" + UUID + "-TS"
     }
 
     init() {
-        UserDefaults.standard.register(defaults: [
-            UUID + "-Enabled": true,
-            UUID + "-Snooze": 0,
-            UUID + "-Passes": false,
-            UUID + "-TS": 0
+        datastore.register(defaults: [
+            EnabledKey: true,
+            SnoozeKey: 0,
+            PassesKey: false,
+            TimestampKey: 0
         ])
     }
 
     public var isActive: Bool {
-        get { UserDefaults.standard.bool(forKey: EnabledKey) }
-        set { UserDefaults.standard.set(newValue, forKey: EnabledKey) }
+        get { datastore.bool(forKey: EnabledKey) }
+        set { datastore.set(newValue, forKey: EnabledKey) }
     }
 
     public var snoozeTime: Int {
-        get { UserDefaults.standard.integer(forKey: SnoozeKey) }
-        set { UserDefaults.standard.set(newValue, forKey: SnoozeKey) }
+        get { datastore.integer(forKey: SnoozeKey) }
+        set { datastore.set(newValue, forKey: SnoozeKey) }
     }
 
     var checkTimestamp: Int {
-        get { UserDefaults.standard.integer(forKey: TimestampKey) }
-        set { UserDefaults.standard.set(newValue, forKey: TimestampKey) }
+        get { datastore.integer(forKey: TimestampKey) }
+        set { datastore.set(newValue, forKey: TimestampKey) }
     }
 
     var checkPassed: Bool {
-        get { UserDefaults.standard.bool(forKey: PassesKey) }
-        set { UserDefaults.standard.set(newValue, forKey: PassesKey) }
+        get { datastore.bool(forKey: PassesKey) }
+        set { datastore.set(newValue, forKey: PassesKey) }
     }
 
     func checkPasses() -> Bool {
@@ -166,5 +167,30 @@ extension ParetoCheck {
         }
         // print("\(app): \(dictionary as AnyObject)")
         return dictionary.value(forKey: "CFBundleShortVersionString") as? String
+    }
+
+    func isListening(withPort port: Int) -> Bool {
+        let port = UInt16(port)
+        let socketFileDescriptor = socket(AF_INET, SOCK_STREAM, 0)
+        if socketFileDescriptor == -1 {
+            return false
+        }
+
+        var addr = sockaddr_in()
+        let sizeOfSockkAddr = MemoryLayout<sockaddr_in>.size
+        addr.sin_len = __uint8_t(sizeOfSockkAddr)
+        addr.sin_family = sa_family_t(AF_INET)
+        addr.sin_port = Int(OSHostByteOrder()) == OSLittleEndian ? _OSSwapInt16(port) : port
+        addr.sin_addr = in_addr(s_addr: inet_addr("127.0.0.1"))
+        addr.sin_zero = (0, 0, 0, 0, 0, 0, 0, 0)
+        var bind_addr = sockaddr()
+        memcpy(&bind_addr, &addr, Int(sizeOfSockkAddr))
+
+        if Darwin.bind(socketFileDescriptor, &bind_addr, socklen_t(sizeOfSockkAddr)) == -1 {
+            return false
+        }
+        let isOpen = listen(socketFileDescriptor, SOMAXCONN) != -1
+        Darwin.close(socketFileDescriptor)
+        return isOpen
     }
 }
