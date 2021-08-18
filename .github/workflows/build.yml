@@ -14,6 +14,12 @@ jobs:
       issues: write 
       pull-requests: write
     steps:
+    - uses: mshick/add-pr-comment@v1
+      with:
+        message: |
+          You can find the built app under the Artifacts at https://github.com/ParetoSecurity/pareto-mac/actions/runs/${{ github.run_id }}
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
+        repo-token-user-login: 'github-actions[bot]'
     - uses: maxim-lobanov/setup-xcode@v1
       with:
         xcode-version: '13.0'
@@ -45,9 +51,4 @@ jobs:
       with:
         name: app.zip
         path: app.zip
-    - uses: mshick/add-pr-comment@v1
-      with:
-        message: |
-          You can find the built app under the GitHub Action workflow https://github.com/ParetoSecurity/pareto-mac/actions/workflows/build.yml
-        repo-token: ${{ secrets.GITHUB_TOKEN }}
-        repo-token-user-login: 'github-actions[bot]'
+
