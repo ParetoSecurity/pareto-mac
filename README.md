@@ -14,4 +14,4 @@ Other checks that you want to be implemented? Let us know at https://github.com/
 
 Download the latest release from https://github.com/ParetoSecurity/pareto-mac/releases or if you are want the latest build from https://nightly.link/ParetoSecurity/pareto-mac/workflows/build/main/app.zip. 
 
-For the latest build you will also need to follow the instructions detailed at [If you want to open an app that hasn’t been notarized or is from an unidentified developer](https://support.apple.com/en-us/HT202491#:~:text=If%20you%20want%20to%20open%20an%20app%20that%20hasn%E2%80%99t%20been%20notarized%20or%20is%20from%20an%20unidentified%20developer) releases are notaried and such step is not needed.
+For the latest build you will also need to follow the instructions detailed at [If you want to open an app that hasn’t been notarized or is from an unidentified developer](https://support.apple.com/en-us/HT202491#:~:text=If%20you%20want%20to%20open%20an%20app%20that%20hasn%E2%80%99t%20been%20notarized%20or%20is%20from%20an%20unidentified%20developer), stable releases are notarized and such step is not needed.
