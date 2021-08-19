@@ -42,17 +42,9 @@ class ParetoSecurityUITests: XCTestCase {
         add(screenshotAttachment)
     }
 
-    func testSettingsOpens() throws {
-        waitUntilMenu()
-        app.menuBars/*@START_MENU_TOKEN@*/ .menuItems["showPrefs"]/*[[".statusItems",".menus[\"paretoMenu\"]",".menuItems[\"Preferences\"]",".menuItems[\"showPrefs\"]"],[[[-1,3],[-1,2],[-1,1,2],[-1,0,1]],[[-1,3],[-1,2],[-1,1,2]],[[-1,3],[-1,2]]],[0]]@END_MENU_TOKEN@*/ .click()
-        let settings = app.windows.firstMatch.screenshot()
-        takeScreenshot(screenshot: settings, name: "Settings")
-    }
-
     func testHoverMenus() throws {
         waitUntilMenu()
-        app.menuBars/*@START_MENU_TOKEN@*/ .menuItems["runChecks"]/*[[".statusItems",".menus[\"paretoMenu\"]",".menuItems[\"Verify\"]",".menuItems[\"runChecks\"]"],[[[-1,3],[-1,2],[-1,1,2],[-1,0,1]],[[-1,3],[-1,2],[-1,1,2]],[[-1,3],[-1,2]]],[0]]@END_MENU_TOKEN@*/ .click()
-        waitUntilMenu()
+
         let menuBarsQuery = app.menuBars
         menuBarsQuery.menuItems["Lock after inactivity"].hover()
         takeScreenshot(screenshot: app.statusItems.firstMatch.menus.firstMatch.screenshot(), name: "Lock")
