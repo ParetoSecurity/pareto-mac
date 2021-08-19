@@ -17,27 +17,27 @@ class ParetoCheck: ObservableObject {
     private(set) var canRunInSandbox = true
 
     var EnabledKey: String {
-        UUID + "-Enabled"
+        "ParetoCheck-" + UUID + "-Enabled"
     }
 
     var SnoozeKey: String {
-        UUID + "-Snooze"
+        "ParetoCheck-" + UUID + "-Snooze"
     }
 
     var PassesKey: String {
-        UUID + "-Passes"
+        "ParetoCheck-" + UUID + "-Passes"
     }
 
     var TimestampKey: String {
-        UUID + "-TS"
+        "ParetoCheck-" + UUID + "-TS"
     }
 
     init() {
         UserDefaults.standard.register(defaults: [
-            UUID + "-Enabled": true,
-            UUID + "-Snooze": 0,
-            UUID + "-Passes": false,
-            UUID + "-TS": 0
+            "ParetoCheck-" + UUID + "-Enabled": true,
+            "ParetoCheck-" + UUID + "-Snooze": 0,
+            "ParetoCheck-" + UUID + "-Passes": false,
+            "ParetoCheck-" + UUID + "-TS": 0
         ])
     }
 

@@ -10,6 +10,7 @@ jobs:
   build:
     name: Build and Archive
     runs-on: macos-11
+    timeout-minutes: 3
     permissions:
       issues: write 
       pull-requests: write
@@ -43,7 +44,7 @@ jobs:
           ${{ runner.os }}-build-
           ${{ runner.os }}-
     - name: Build
-      run: make build archive | xcpretty
+      run: make build archive | xcpretty && exit ${PIPESTATUS[0]}
     - name: Compress app for storage
       run: zip -r app.zip build/mac/Pareto\ Security.app
     - name: Upload App to Artifacts
