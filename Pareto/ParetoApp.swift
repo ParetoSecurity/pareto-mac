@@ -5,6 +5,7 @@
 //  Created by Janez Troha on 12/07/2021.
 //
 
+import Defaults
 import Foundation
 import os.log
 import OSLog
@@ -12,7 +13,6 @@ import SwiftUI
 
 class AppDelegate: NSObject, NSApplicationDelegate {
     var statusBar: StatusBarController?
-    let userSettings = UserSettings()
 
     func applicationDidFinishLaunching(_: Notification) {
         statusBar = StatusBarController()
@@ -32,7 +32,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                                                           object: nil,
                                                           queue: nil,
                                                           using: { _ in
-                                                              if self.userSettings.runAfterSleep {
+                                                              if Defaults[.runAfterSleep] {
                                                                   self.statusBar?.runChecks()
                                                               }
                                                           })

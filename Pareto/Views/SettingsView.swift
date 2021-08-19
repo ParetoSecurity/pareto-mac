@@ -5,12 +5,13 @@
 //  Created by Janez Troha on 14/07/2021.
 //
 import AppKit
+import Defaults
 import LaunchAtLogin
 import SwiftUI
 
 struct GeneralSettingsView: View {
     @ObservedObject private var atLogin = LaunchAtLogin.observable
-    @ObservedObject var userSettings = UserSettings()
+    @Default(.runAfterSleep) var runAfterSleep
 
     var body: some View {
         Form {
@@ -23,7 +24,7 @@ struct GeneralSettingsView: View {
             Section(
                 footer: Text("Run all checks some time after waking from sleep.")) {
                     VStack(alignment: .leading) {
-                        Toggle("Run checks after sleep", isOn: $userSettings.runAfterSleep)
+                        Toggle("Run checks after sleep", isOn: $runAfterSleep)
                     }
             }
         }

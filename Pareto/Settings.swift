@@ -6,16 +6,8 @@
 //
 
 import Combine
-import Foundation
+import Defaults
 
-class UserSettings: ObservableObject {
-    @Published var runAfterSleep: Bool {
-        didSet {
-            UserDefaults.standard.set(runAfterSleep, forKey: "runAfterSleep")
-        }
-    }
-
-    init() {
-        runAfterSleep = UserDefaults.standard.object(forKey: "runAfterSleep") as? Bool ?? true
-    }
+extension Defaults.Keys {
+    static let runAfterSleep = Key<Bool>("runAfterSleep", default: true)
 }
