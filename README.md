@@ -33,7 +33,7 @@ The simplest security is the most important. 80% of hacks are caused by 20% of c
 
 - You **forgot to enable FileVault** disk encryption, then lost your MacBook and now a stranger has all your photos and documents?
 - You needed to **turn off Gatekeeper** to be able to install an app you found on the Internet, then failed to turn it back on again and got malware?
-- You **turned off firewall** to debug a router, then did not remember to turn it on and accidentally exposed your local webserver to the entire Starbucks network?
+- You **turned off firewall** to debug a router, then did not remember to turn it on and accidentally exposed your local webserver to the entire Starbucks or hotel network?
 - You **procrastinated on updating your apps** for a long time and got hacked because you were not running a more recent version with the security patch already applied?
 - You lent your Mac Mini to your mom for a weekend, then forgot you enabled **automatic login** for her convenience?
 - You used your MacBook for a presentation, temporarily disabled **automatic screen locking**, did not re-enable it, then left it running in your office the next day only to find your coworkers having fun with your Facebook account when coming back from lunch?
