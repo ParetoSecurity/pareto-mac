@@ -63,4 +63,9 @@ class ParetoSecurityUITests: XCTestCase {
     func testAppRuns() throws {
         takeScreenshot(screenshot: app.screenshot(), name: "App")
     }
+
+    // func testSettings() throws {
+    //    app.typeKey(",", modifierFlags: .command)
+    //    takeScreenshot(screenshot: app.windows.firstMatch.screenshot(), name: "Settings")
+    // }
 }

@@ -49,3 +49,8 @@ jobs:
       run: make test | xcpretty -tc && exit ${PIPESTATUS[0]}
     - name: Update coverage
       run: bash <(curl -s https://codecov.io/bash)
+    - name: Upload test.xcresult
+      uses: actions/upload-artifact@v2
+      with:
+        name: results.zip
+        path: test.xcresult
