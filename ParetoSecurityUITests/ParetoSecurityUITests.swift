@@ -61,7 +61,9 @@ class ParetoSecurityUITests: XCTestCase {
     // }
 
     func testAppRuns() throws {
+        waitUntilMenu()
         takeScreenshot(screenshot: app.screenshot(), name: "App")
+        takeScreenshot(screenshot: app.statusItems.firstMatch.menus.firstMatch.screenshot(), name: "Menu")
     }
 
     // func testSettings() throws {
