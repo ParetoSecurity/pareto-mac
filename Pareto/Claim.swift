@@ -20,7 +20,7 @@ class Claim {
 
     init(withTitle title: String, withChecks checks: [ParetoCheck]) {
         self.title = title
-        self.checks = checks
+        self.checks = AppInfo.inSandbox ? checks.filter { $0.canRunInSandbox } : checks
     }
 
     var checkPassed: Bool { checks.reduce(true) {

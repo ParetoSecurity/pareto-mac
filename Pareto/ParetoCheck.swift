@@ -14,6 +14,7 @@ import SwiftUI
 class ParetoCheck: ObservableObject {
     private(set) var UUID = "UUID"
     private(set) var Title = "Title"
+    private(set) var canRunInSandbox = true
 
     var EnabledKey: String {
         UUID + "-Enabled"

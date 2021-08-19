@@ -14,6 +14,10 @@ class FileVaultCheck: ParetoCheck {
         "FileVault is on"
     }
 
+    override var canRunInSandbox: Bool {
+        false
+    }
+
     override func checkPasses() -> Bool {
         let output = runCMD(app: "/usr/bin/fdesetup", args: ["status"])
         return output.contains("FileVault is On")
