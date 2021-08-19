@@ -26,6 +26,8 @@ jobs:
     - uses: maxim-lobanov/setup-xcode@v1
       with:
         xcode-version: '13.0'
+    - name: Install xcparse
+      run: brew install chargepoint/xcparse/xcparse
     - name: "Import Certificate: Development"
       uses: devbotsxyz/xcode-import-certificate@master
       with:
@@ -49,8 +51,18 @@ jobs:
       run: make test | xcpretty -tc && exit ${PIPESTATUS[0]}
     - name: Update coverage
       run: bash <(curl -s https://codecov.io/bash)
-    - name: Upload test.xcresult
+    - name: Gather screenshots
+      if: ${{ always() }}
+      run: |
+            mkdir -p "${{ runner.temp }}/screenshots/"
+            # export the screenshots, organized by test
+            xcparse screenshots --test ./test.xcresult '${{ runner.temp }}/screenshots/all'
+            for screenshot_file in $(find '${{ runner.temp }}/screenshots/all/ScreenshotGenerator' -name  '*.png' -or -name '*.jpg'); do
+              mv "$screenshot_file" "${{ runner.temp }}/screenshots/"
+            done
+    - name: Upload screenshots
+      if: ${{ always() }}
       uses: actions/upload-artifact@v2
       with:
-        name: results.zip
-        path: test.xcresult
+        name: screenshots-${{ github.run_number }}
+        path: ${{ runner.temp }}/screenshots

@@ -37,7 +37,7 @@ struct AboutSettingsView: View {
     var body: some View {
         HStack {
             Image("Logo").resizable()
-                .aspectRatio(contentMode: .fit).padding(5)
+                .aspectRatio(contentMode: .fit)
             VStack(alignment: .leading) {
                 Link("Pareto Security",
                      destination: URL(string: "https://paretosecurity.app")!)
