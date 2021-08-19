@@ -55,14 +55,18 @@ jobs:
       if: ${{ always() }}
       run: |
             mkdir -p "${{ runner.temp }}/screenshots/"
-            # export the screenshots, organized by test
-            xcparse screenshots --test ./test.xcresult '${{ runner.temp }}/screenshots/all'
-            for screenshot_file in $(find '${{ runner.temp }}/screenshots/all/ScreenshotGenerator' -name  '*.png' -or -name '*.jpg'); do
-              mv "$screenshot_file" "${{ runner.temp }}/screenshots/"
-            done
+            # export the screenshots
+            xcparse screenshots --test ./test.xcresult '${{ runner.temp }}/screenshots'
     - name: Upload screenshots
       if: ${{ always() }}
       uses: actions/upload-artifact@v2
       with:
         name: screenshots-${{ github.run_number }}
         path: ${{ runner.temp }}/screenshots
+    - uses: mshick/add-pr-comment@v1
+      if: ${{ always() }}
+      with:
+        message: |
+          You can find the app screenshots under the Artifacts at https://github.com/ParetoSecurity/pareto-mac/actions/runs/${{ github.run_id }}
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
+        repo-token-user-login: 'github-actions[bot]'
