@@ -14,7 +14,7 @@ class ParetoSecurityUITests: XCTestCase {
     override func setUp() {
         super.setUp()
         app.launch()
-        if app.wait(for: .runningBackground, timeout: 10) {
+        if app.wait(for: .runningBackground, timeout: 3) {
             print("Menu did not settle after run")
         }
     }
@@ -26,7 +26,7 @@ class ParetoSecurityUITests: XCTestCase {
 
     private func waitUntilMenu() {
         app.statusItems.firstMatch.click()
-        if !app.menuItems.firstMatch.waitForExistence(timeout: 3) {
+        if !app.statusItems.firstMatch.waitForExistence(timeout: 3) {
             XCTFail("Menu did not build")
         }
     }
@@ -42,32 +42,35 @@ class ParetoSecurityUITests: XCTestCase {
         add(screenshotAttachment)
     }
 
-    // func testSettingsOpens() throws {
-    //    waitUntilMenu()
-    //    app.menuBars/*@START_MENU_TOKEN@*/ .menuItems["showPrefs"]/*[[".statusItems",".menus[\"paretoMenu\"]",".menuItems[\"Preferences\"]",".menuItems[\"showPrefs\"]"],[[[-1,3],[-1,2],[-1,1,2],[-1,0,1]],[[-1,3],[-1,2],[-1,1,2]],[[-1,3],[-1,2]]],[0]]@END_MENU_TOKEN@*/ .click()
-    //    let settings = app.windows.firstMatch.screenshot()
-    //    takeScreenshot(screenshot: settings, name: "Settings")
-    // }
+    func testSettingsOpens() throws {
+        waitUntilMenu()
+        app.menuBars/*@START_MENU_TOKEN@*/ .menuItems["showPrefs"]/*[[".statusItems",".menus[\"paretoMenu\"]",".menuItems[\"Preferences\"]",".menuItems[\"showPrefs\"]"],[[[-1,3],[-1,2],[-1,1,2],[-1,0,1]],[[-1,3],[-1,2],[-1,1,2]],[[-1,3],[-1,2]]],[0]]@END_MENU_TOKEN@*/ .click()
+        let settings = app.windows.firstMatch.screenshot()
+        takeScreenshot(screenshot: settings, name: "Settings")
+    }
 
-    // func testBrowserOpens() throws {
-    //    waitUntilMenu()
-    //    app.menuBars.menuItems["reportBug"].click()
-    // }
-
-    // func testAppExits() throws {
-    //    waitUntilMenu()
-    //    takeScreenshot(screenshot: app.statusItems.firstMatch.menus.firstMatch.screenshot(), name: "App")
-    //    app.menuBars.menuItems["quitApp"].click()
-    // }
+    func testHoverMenus() throws {
+        waitUntilMenu()
+        app.menuBars/*@START_MENU_TOKEN@*/ .menuItems["runChecks"]/*[[".statusItems",".menus[\"paretoMenu\"]",".menuItems[\"Verify\"]",".menuItems[\"runChecks\"]"],[[[-1,3],[-1,2],[-1,1,2],[-1,0,1]],[[-1,3],[-1,2],[-1,1,2]],[[-1,3],[-1,2]]],[0]]@END_MENU_TOKEN@*/ .click()
+        waitUntilMenu()
+        let menuBarsQuery = app.menuBars
+        menuBarsQuery.menuItems["Lock after inactivity"].hover()
+        takeScreenshot(screenshot: app.statusItems.firstMatch.menus.firstMatch.screenshot(), name: "Lock")
+        takeScreenshot(screenshot: app.screenshot(), name: "Lock App")
+        menuBarsQuery.menuItems["Firewall is on"].hover()
+        takeScreenshot(screenshot: app.statusItems.firstMatch.menus.firstMatch.screenshot(), name: "Firewall")
+        takeScreenshot(screenshot: app.screenshot(), name: "Firewall App")
+        menuBarsQuery.menuItems["Login is secure"].hover()
+        takeScreenshot(screenshot: app.statusItems.firstMatch.menus.firstMatch.screenshot(), name: "Login")
+        takeScreenshot(screenshot: app.screenshot(), name: "Login App")
+        menuBarsQuery.menuItems["System integrity"].hover()
+        takeScreenshot(screenshot: app.statusItems.firstMatch.menus.firstMatch.screenshot(), name: "System")
+        takeScreenshot(screenshot: app.screenshot(), name: "System App")
+    }
 
     func testAppRuns() throws {
         waitUntilMenu()
         takeScreenshot(screenshot: app.screenshot(), name: "App")
         takeScreenshot(screenshot: app.statusItems.firstMatch.menus.firstMatch.screenshot(), name: "Menu")
     }
-
-    // func testSettings() throws {
-    //    app.typeKey(",", modifierFlags: .command)
-    //    takeScreenshot(screenshot: app.windows.firstMatch.screenshot(), name: "Settings")
-    // }
 }
