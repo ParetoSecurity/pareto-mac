@@ -108,7 +108,7 @@ class StatusBarController: NSMenu, NSMenuDelegate {
     func addApplicationItems() {
         addItem(NSMenuItem.separator())
 
-        let runItem = NSMenuItem(title: "Update", action: #selector(AppDelegate.runChecks), keyEquivalent: "c")
+        let runItem = NSMenuItem(title: "Verify", action: #selector(AppDelegate.runChecks), keyEquivalent: "r")
         runItem.target = NSApp.delegate
         addItem(runItem)
 
