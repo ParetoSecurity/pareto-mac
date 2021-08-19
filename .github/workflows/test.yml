@@ -45,6 +45,6 @@ jobs:
           ${{ runner.os }}-build-
           ${{ runner.os }}-
     - name: Tests
-      run: make test
+      run: make test | xcpretty
     - name: Update coverage
       run: bash <(curl -s https://codecov.io/bash)

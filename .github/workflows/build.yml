@@ -43,7 +43,7 @@ jobs:
           ${{ runner.os }}-build-
           ${{ runner.os }}-
     - name: Build
-      run: make build archive
+      run: make build archive | xcpretty
     - name: Compress app for storage
       run: zip -r app.zip build/mac/Pareto\ Security.app
     - name: Upload App to Artifacts
