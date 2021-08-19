@@ -40,7 +40,7 @@ class StatusBarController: NSMenu, NSMenuDelegate {
     }
 
     var claimsPassed: Bool { claims.reduce(true) {
-        $0 && $1.checkPassed
+        $0 && $1.isActive ? $1.checkPassed : true
     } }
 
     var claimsSnoozed: Int { claims.reduce(0) {
@@ -52,7 +52,7 @@ class StatusBarController: NSMenu, NSMenuDelegate {
         addChecksMenuItems()
         addApplicationItems()
         if claimsSnoozed > 0 {
-            statusItem.button?.image = imageWarning
+            statusItem.button?.image = imageDefault
         } else {
             if claimsPassed {
                 statusItem.button?.image = imageDefault

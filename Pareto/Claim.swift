@@ -64,8 +64,8 @@ class Claim {
                 item.image = NSImage.SF(name: "shield.slash")
             }
         }
-        submenu.addItem(NSMenuItem.separator())
         submenu.addItem(addSubmenu(withTitle: "Last check: \(Date().fromTimeStamp(timeStamp: lastCheck))", action: nil))
+        submenu.addItem(NSMenuItem.separator())
 
         if snoozeTime == 0 {
             submenu.addItem(addSubmenu(withTitle: "Snooze for 1 hour", action: #selector(snoozeOneHour)))
