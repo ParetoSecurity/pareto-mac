@@ -10,6 +10,7 @@ jobs:
   swift:
     name: Lint
     runs-on: macos-11
+    timeout-minutes: 3
     steps:
     - uses: maxim-lobanov/setup-xcode@v1
       with:
@@ -45,6 +46,6 @@ jobs:
           ${{ runner.os }}-build-
           ${{ runner.os }}-
     - name: Tests
-      run: make test | xcpretty
+      run: make test | xcpretty -tc && exit ${PIPESTATUS[0]}
     - name: Update coverage
       run: bash <(curl -s https://codecov.io/bash)

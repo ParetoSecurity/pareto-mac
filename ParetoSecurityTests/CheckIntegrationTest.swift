@@ -22,10 +22,10 @@ class CheckIntegrationTest: XCTestCase {
         XCTAssertEqual(check.Title, "Unit test mock")
 
         // Ensure keys are not changed without migration
-        XCTAssertEqual(check.PassesKey, "aaaaaaaa-bbbb-cccc-dddd-abcdef123456-Passes")
-        XCTAssertEqual(check.SnoozeKey, "aaaaaaaa-bbbb-cccc-dddd-abcdef123456-Snooze")
-        XCTAssertEqual(check.EnabledKey, "aaaaaaaa-bbbb-cccc-dddd-abcdef123456-Enabled")
-        XCTAssertEqual(check.TimestampKey, "aaaaaaaa-bbbb-cccc-dddd-abcdef123456-TS")
+        XCTAssertEqual(check.PassesKey, "ParetoCheck-aaaaaaaa-bbbb-cccc-dddd-abcdef123456-Passes")
+        XCTAssertEqual(check.SnoozeKey, "ParetoCheck-aaaaaaaa-bbbb-cccc-dddd-abcdef123456-Snooze")
+        XCTAssertEqual(check.EnabledKey, "ParetoCheck-aaaaaaaa-bbbb-cccc-dddd-abcdef123456-Enabled")
+        XCTAssertEqual(check.TimestampKey, "ParetoCheck-aaaaaaaa-bbbb-cccc-dddd-abcdef123456-TS")
     }
 
     func testCheckPasses() throws {
