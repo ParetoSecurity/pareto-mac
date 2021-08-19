@@ -16,6 +16,7 @@
 		4F5E888026A053A9005271FB /* ParetoCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F5E887F26A053A9005271FB /* ParetoCheck.swift */; };
 		4F6A0E0E26CE484A003B00A3 /* PrinterSharingCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F6A0E0D26CE484A003B00A3 /* PrinterSharingCheck.swift */; };
 		4F6A0E1026CE4868003B00A3 /* FileSharingCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F6A0E0F26CE4868003B00A3 /* FileSharingCheck.swift */; };
+		4F6A0E1326CE608C003B00A3 /* Defaults in Frameworks */ = {isa = PBXBuildFile; productRef = 4F6A0E1226CE608C003B00A3 /* Defaults */; };
 		4F6A92E626C521BE006C2F2D /* CheckIntegrationTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F6A92E526C521BE006C2F2D /* CheckIntegrationTest.swift */; };
 		4F6A92E826C52210006C2F2D /* IntegrationCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F6A92E726C52210006C2F2D /* IntegrationCheck.swift */; };
 		4F6A92EA26C54AB7006C2F2D /* AppInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F6A92E926C54AB7006C2F2D /* AppInfo.swift */; };
@@ -110,6 +111,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4F6A0E1326CE608C003B00A3 /* Defaults in Frameworks */,
 				4F103012269F1C65008C1E86 /* LaunchAtLogin in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -294,6 +296,7 @@
 			name = "Pareto Security";
 			packageProductDependencies = (
 				4F103011269F1C65008C1E86 /* LaunchAtLogin */,
+				4F6A0E1226CE608C003B00A3 /* Defaults */,
 			);
 			productName = Pareto;
 			productReference = 4FEBA2EE269CD48F009B2469 /* Pareto Security.app */;
@@ -333,6 +336,7 @@
 			packageReferences = (
 				4F103010269F1C65008C1E86 /* XCRemoteSwiftPackageReference "LaunchAtLogin" */,
 				4F84A94A26CBE4AE00A1579D /* XCRemoteSwiftPackageReference "ViewInspector" */,
+				4F6A0E1126CE608C003B00A3 /* XCRemoteSwiftPackageReference "Defaults" */,
 			);
 			productRefGroup = 4FEBA2EF269CD48F009B2469 /* Products */;
 			projectDirPath = "";
@@ -801,6 +805,14 @@
 				kind = branch;
 			};
 		};
+		4F6A0E1126CE608C003B00A3 /* XCRemoteSwiftPackageReference "Defaults" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sindresorhus/Defaults";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.0;
+			};
+		};
 		4F84A94A26CBE4AE00A1579D /* XCRemoteSwiftPackageReference "ViewInspector" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/nalexn/ViewInspector";
@@ -816,6 +828,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 4F103010269F1C65008C1E86 /* XCRemoteSwiftPackageReference "LaunchAtLogin" */;
 			productName = LaunchAtLogin;
+		};
+		4F6A0E1226CE608C003B00A3 /* Defaults */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4F6A0E1126CE608C003B00A3 /* XCRemoteSwiftPackageReference "Defaults" */;
+			productName = Defaults;
 		};
 		4F84A94B26CBE4AE00A1579D /* ViewInspector */ = {
 			isa = XCSwiftPackageProductDependency;
