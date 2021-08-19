@@ -25,10 +25,10 @@ class ParetoSecurityUITests: XCTestCase {
     }
 
     private func waitUntilMenu() {
-        app.statusItems.firstMatch.click()
         if !app.statusItems.firstMatch.waitForExistence(timeout: 3) {
             XCTFail("Menu did not build")
         }
+        app.statusItems.firstMatch.click()
     }
 
     func takeScreenshot(screenshot: XCUIScreenshot, name: String) {
@@ -42,19 +42,38 @@ class ParetoSecurityUITests: XCTestCase {
         add(screenshotAttachment)
     }
 
+    func enableClaim(_ menu: String) {
+        let menuBarsQuery = app.menuBars.menus["paretoMenu"]
+        if menuBarsQuery.menuItems[menu].menuItems["enableCheck"].exists {
+            menuBarsQuery.menuItems[menu].menuItems["enableCheck"].click()
+            waitUntilMenu()
+        }
+    }
+
     func testHoverMenus() throws {
+        let menuBarsQuery = app.menuBars.menus["paretoMenu"]
         waitUntilMenu()
 
-        let menuBarsQuery = app.menuBars
-        menuBarsQuery.menuItems["Lock after inactivity"].hover()
-        takeScreenshot(screenshot: app.statusItems.firstMatch.menus.firstMatch.screenshot(), name: "Lock")
-        takeScreenshot(screenshot: app.screenshot(), name: "Lock App")
+        enableClaim("Firewall is on")
+        enableClaim("Lock after inactivity")
+        enableClaim("Login is secure")
+        enableClaim("System integrity")
+
+        menuBarsQuery.menuItems["runChecks"].click()
+        waitUntilMenu()
+
         menuBarsQuery.menuItems["Firewall is on"].hover()
         takeScreenshot(screenshot: app.statusItems.firstMatch.menus.firstMatch.screenshot(), name: "Firewall")
         takeScreenshot(screenshot: app.screenshot(), name: "Firewall App")
+
+        menuBarsQuery.menuItems["Lock after inactivity"].hover()
+        takeScreenshot(screenshot: app.statusItems.firstMatch.menus.firstMatch.screenshot(), name: "Lock")
+        takeScreenshot(screenshot: app.screenshot(), name: "Lock App")
+
         menuBarsQuery.menuItems["Login is secure"].hover()
         takeScreenshot(screenshot: app.statusItems.firstMatch.menus.firstMatch.screenshot(), name: "Login")
         takeScreenshot(screenshot: app.screenshot(), name: "Login App")
+
         menuBarsQuery.menuItems["System integrity"].hover()
         takeScreenshot(screenshot: app.statusItems.firstMatch.menus.firstMatch.screenshot(), name: "System")
         takeScreenshot(screenshot: app.screenshot(), name: "System App")
