@@ -10,6 +10,8 @@ jobs:
     runs-on: macos-11
     timeout-minutes: 3
     permissions:
+      issues: write 
+      contents: write
       deployments: write
     steps:
     - uses: maxim-lobanov/setup-xcode@v1
@@ -34,10 +36,20 @@ jobs:
           ${{ runner.os }}-build-${{ env.cache-name }}-
           ${{ runner.os }}-build-
           ${{ runner.os }}-
-    - name: Build
-      run: make build archive | xcpretty && exit ${PIPESTATUS[0]}
+    - name: Archive
+      run: make archive | xcpretty && exit ${PIPESTATUS[0]}
+    - name: "Notarize Release Build"
+      uses: devbotsxyz/xcode-notarize@v1
+      with:
+        product-path: "build/mac/Pareto\ Security.app"
+        appstore-connect-username: ${{ secrets.NOTARIZATION_USERNAME }}
+        appstore-connect-password: ${{ secrets.NOTARIZATION_PASSWORD }}
+    - name: "Staple Release Build"
+      uses: devbotsxyz/xcode-staple@v1
+      with:
+        product-path: "build/mac/Pareto\ Security.app"
     - name: Compress app for storage
-      run: zip -r app.zip build/mac/Pareto\ Security.app
+      run: ditto -V -c -k --keepParent build/mac/Pareto\ Security.app app.zip
     - name: Upload App to Artifacts
       uses: actions/upload-artifact@v2
       with:
