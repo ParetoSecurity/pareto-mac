@@ -29,6 +29,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         statusBar = StatusBarController()
         statusBar?.configureChecks()
         statusBar?.updateMenu()
+
+        // stop running checks here
+        if AppInfo.isRunningTests {
+            return
+        }
         statusBar?.runChecks()
 
         // Update when waking up from sleep

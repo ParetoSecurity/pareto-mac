@@ -14,9 +14,6 @@ class ParetoSecurityUITests: XCTestCase {
     override func setUp() {
         super.setUp()
         app.launch()
-        if app.wait(for: .runningBackground, timeout: 3) {
-            print("Menu did not settle after run")
-        }
     }
 
     override func tearDown() {

@@ -66,9 +66,11 @@ class Claim {
         submenu.addItem(NSMenuItem.separator())
 
         if snoozeTime == 0 {
-            submenu.addItem(addSubmenu(withTitle: "Snooze for 1 hour", action: #selector(snoozeOneHour)))
-            submenu.addItem(addSubmenu(withTitle: "Snooze for 1 day", action: #selector(snoozeOneDay)))
-            submenu.addItem(addSubmenu(withTitle: "Snooze for 1 week", action: #selector(snoozeOneWeek)))
+            if isActive {
+                submenu.addItem(addSubmenu(withTitle: "Snooze for 1 hour", action: #selector(snoozeOneHour)))
+                submenu.addItem(addSubmenu(withTitle: "Snooze for 1 day", action: #selector(snoozeOneDay)))
+                submenu.addItem(addSubmenu(withTitle: "Snooze for 1 week", action: #selector(snoozeOneWeek)))
+            }
         } else {
             if isActive {
                 submenu.addItem(addSubmenu(withTitle: "Unsnooze", action: #selector(unsnooze)))
