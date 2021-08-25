@@ -39,13 +39,25 @@ class StatusBarController: NSMenu, NSMenuDelegate {
         statusItem.button?.target = self
     }
 
-    var claimsPassed: Bool { claims.reduce(true) {
-        $0 && $1.isActive ? $1.checkPassed : true
-    } }
+    var claimsPassed: Bool {
+        var passed = true
+        for claim in claims {
+            if claim.isActive {
+                passed = passed && claim.checkPassed
+            }
+        }
+        return passed
+    }
 
-    var claimsSnoozed: Int { claims.reduce(0) {
-        $0 + $1.snoozeTime
-    } }
+    var claimsSnoozed: Int {
+        var snoozedTime = 0
+        for claim in claims {
+            if claim.isActive {
+                snoozedTime = snoozedTime + snoozedTime
+            }
+        }
+        return snoozedTime
+    }
 
     func updateMenu() {
         removeAllItems()
@@ -113,13 +125,13 @@ class StatusBarController: NSMenu, NSMenuDelegate {
     func addApplicationItems() {
         addItem(NSMenuItem.separator())
 
-        let runItem = NSMenuItem(title: "Verify", action: #selector(AppDelegate.runChecks), keyEquivalent: "r")
+        let runItem = NSMenuItem(title: "Run checks", action: #selector(AppDelegate.runChecks), keyEquivalent: "r")
         runItem.target = NSApp.delegate
         addItem(runItem)
 
-        let aboutItem = NSMenuItem(title: "Preferences", action: #selector(AppDelegate.showPrefs), keyEquivalent: "s")
-        aboutItem.target = NSApp.delegate
-        addItem(aboutItem)
+        let preferencesItem = NSMenuItem(title: "Preferences", action: #selector(AppDelegate.showPrefs), keyEquivalent: "s")
+        preferencesItem.target = NSApp.delegate
+        addItem(preferencesItem)
 
         let reportItem = NSMenuItem(title: "Report Bug", action: #selector(AppDelegate.reportBug), keyEquivalent: "b")
         reportItem.target = NSApp.delegate

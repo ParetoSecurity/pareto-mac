@@ -5,7 +5,9 @@
 //  Created by Janez Troha on 16/08/2021.
 //
 
+import AppKit
 import Foundation
+import os.log
 import SwiftUI
 
 class Claim {
@@ -24,7 +26,7 @@ class Claim {
     }
 
     var checkPassed: Bool { checks.reduce(true) {
-        $0 && $1.isActive && $1.checkPassed
+        $0 && $1.checkPassed
     } }
 
     var snoozeTime: Int { checks.reduce(0) {
@@ -104,6 +106,7 @@ class Claim {
     }
 
     @objc func disableCheck() {
+        os_log("Disabling claim for %{public}s", log: Log.app, title)
         for check in checks {
             check.isActive = false
             check.checkPassed = false
@@ -113,6 +116,7 @@ class Claim {
     }
 
     @objc func enableCheck() {
+        os_log("Enabling claim for %{public}s", log: Log.app, title)
         for check in checks {
             check.isActive = true
             check.checkPassed = false
