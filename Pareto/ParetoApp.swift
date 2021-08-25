@@ -11,11 +11,23 @@ import os.log
 import OSLog
 import SwiftUI
 
+enum Window: String, CaseIterable {
+    case Welcome
+    case Update
+
+    func show() {
+        if let url = URL(string: "paretosecurity://\(rawValue)") { // replace myapp with your app's name
+            NSWorkspace.shared.open(url)
+        }
+    }
+}
+
 class AppDelegate: NSObject, NSApplicationDelegate {
     var statusBar: StatusBarController?
 
     func applicationDidFinishLaunching(_: Notification) {
         statusBar = StatusBarController()
+        statusBar?.configureChecks()
         statusBar?.updateMenu()
         statusBar?.runChecks()
 
@@ -31,6 +43,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             self.statusBar?.runChecks()
             os_log("Running checks")
             completion(.finished)
+        }
+
+        if Defaults[.showWelcome] {
+            Window.Welcome.show()
+            Defaults[.showWelcome] = false
         }
     }
 
@@ -60,5 +77,13 @@ struct Pareto: App {
         Settings {
             SettingsView()
         }
+
+        WindowGroup(Window.Welcome.rawValue) {
+            WelcomeView()
+        }.handlesExternalEvents(matching: Set(arrayLiteral: Window.Welcome.rawValue)).windowStyle(.hiddenTitleBar)
+
+        WindowGroup(Window.Update.rawValue) {
+            WelcomeView()
+        }.handlesExternalEvents(matching: Set(arrayLiteral: Window.Update.rawValue)).windowStyle(.hiddenTitleBar)
     }
 }

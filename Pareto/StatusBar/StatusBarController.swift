@@ -62,6 +62,12 @@ class StatusBarController: NSMenu, NSMenuDelegate {
         }
     }
 
+    func configureChecks() {
+        for claim in claims {
+            claim.configure()
+        }
+    }
+
     func runChecks() {
         if isRunnig {
             return
@@ -77,7 +83,6 @@ class StatusBarController: NSMenu, NSMenuDelegate {
         // update menus after checks have ran
         workItem?.notify(queue: .main) {
             self.isRunnig = false
-            self.updateMenu()
             self.updateMenu()
             os_log("Checks finished running", log: Log.app)
         }

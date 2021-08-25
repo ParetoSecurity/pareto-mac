@@ -96,12 +96,20 @@ class Claim {
         }
     }
 
+    func configure() {
+        for check in checks {
+            check.configure()
+        }
+        UserDefaults.standard.synchronize()
+    }
+
     @objc func disableCheck() {
         for check in checks {
             check.isActive = false
             check.checkPassed = false
             check.checkTimestamp = 0
         }
+        UserDefaults.standard.synchronize()
     }
 
     @objc func enableCheck() {
@@ -110,29 +118,34 @@ class Claim {
             check.checkPassed = false
             check.checkTimestamp = 0
         }
+        UserDefaults.standard.synchronize()
     }
 
     @objc func snoozeOneHour() {
         for check in checks {
             check.snoozeTime = Snooze.oneHour
         }
+        UserDefaults.standard.synchronize()
     }
 
     @objc func snoozeOneDay() {
         for check in checks {
             check.snoozeTime = Snooze.oneDay
         }
+        UserDefaults.standard.synchronize()
     }
 
     @objc func snoozeOneWeek() {
         for check in checks {
             check.snoozeTime = Snooze.oneWeek
         }
+        UserDefaults.standard.synchronize()
     }
 
     @objc func unsnooze() {
         for check in checks {
             check.snoozeTime = 0
         }
+        UserDefaults.standard.synchronize()
     }
 }

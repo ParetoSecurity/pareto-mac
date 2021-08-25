@@ -11,7 +11,7 @@ import Foundation
 import os.log
 import SwiftUI
 
-class ParetoCheck: ObservableObject {
+class ParetoCheck {
     private(set) var UUID = "UUID"
     private(set) var Title = "Title"
     private(set) var canRunInSandbox = true
@@ -30,15 +30,6 @@ class ParetoCheck: ObservableObject {
 
     var TimestampKey: String {
         "ParetoCheck-" + UUID + "-TS"
-    }
-
-    init() {
-        UserDefaults.standard.register(defaults: [
-            "ParetoCheck-" + UUID + "-Enabled": true,
-            "ParetoCheck-" + UUID + "-Snooze": 0,
-            "ParetoCheck-" + UUID + "-Passes": false,
-            "ParetoCheck-" + UUID + "-TS": 0
-        ])
     }
 
     public var isActive: Bool {
@@ -83,6 +74,15 @@ class ParetoCheck: ObservableObject {
         }
 
         return item
+    }
+
+    func configure() {
+        UserDefaults.standard.register(defaults: [
+            EnabledKey: true,
+            SnoozeKey: 0,
+            PassesKey: false,
+            TimestampKey: 0
+        ])
     }
 
     func run() {

@@ -10,4 +10,5 @@ import Defaults
 
 extension Defaults.Keys {
     static let runAfterSleep = Key<Bool>("runAfterSleep", default: true)
+    static let showWelcome = Key<Bool>("showWelcome", default: true)
 }
