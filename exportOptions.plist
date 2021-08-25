@@ -7,7 +7,7 @@
 	<key>embedOnDemandResourcesAssetPacksInBundle</key>
 	<true/>
 	<key>iCloudContainerEnvironment</key>
-	<string>""</string>
+	<string>Production</string>
 	<key>method</key>
 	<string>mac-application</string>
 	<key>onDemandResourcesAssetPacksBaseURL</key>
@@ -18,7 +18,5 @@
 	<true/>
 	<key>uploadSymbols</key>
 	<true/>
-	<key>signingStyle</key>
-  	<string>manual</string>
 </dict>
 </plist>
