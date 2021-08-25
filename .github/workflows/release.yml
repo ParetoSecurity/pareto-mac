@@ -36,28 +36,30 @@ jobs:
           ${{ runner.os }}-build-${{ env.cache-name }}-
           ${{ runner.os }}-build-
           ${{ runner.os }}-
-    - name: Archive
-      run: make archive | xcpretty && exit ${PIPESTATUS[0]}
+    - name: "Archive for dist"
+      uses: devbotsxyz/xcode-archive@v1
+    - name: "Export & Sign Release Build"
+      uses: devbotsxyz/xcode-export-archive@master
     - name: "Notarize Release Build"
       uses: devbotsxyz/xcode-notarize@v1
       with:
-        product-path: "build/mac/Pareto\ Security.app"
+        product-path: "Export/Pareto\ Security.app"
         appstore-connect-username: ${{ secrets.NOTARIZATION_USERNAME }}
         appstore-connect-password: ${{ secrets.NOTARIZATION_PASSWORD }}
     - name: "Staple Release Build"
       uses: devbotsxyz/xcode-staple@v1
       with:
-        product-path: "build/mac/Pareto\ Security.app"
+        product-path: "Export/Pareto\ Security.app"
     - name: Compress app for storage
-      run: ditto -V -c -k --keepParent build/mac/Pareto\ Security.app app.zip
+      run: ditto -V -c -k --keepParent Export/Pareto\ Security.app ParetoSecurity.app.zip
     - name: Upload App to Artifacts
       uses: actions/upload-artifact@v2
       with:
-        name: app.zip
-        path: app.zip
+        name: ParetoSecurity.app.zip
+        path: ParetoSecurity.app.zip
     - name: Release app
       uses: softprops/action-gh-release@v1
       with:
-        files: app.zip
+        files: ParetoSecurity.app.zip
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
