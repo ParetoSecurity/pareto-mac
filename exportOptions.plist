@@ -9,11 +9,11 @@
 	<key>iCloudContainerEnvironment</key>
 	<string>Production</string>
 	<key>method</key>
-	<string>mac-application</string>
+	<string>developer-id</string>
 	<key>onDemandResourcesAssetPacksBaseURL</key>
 	<string>0</string>
 	<key>teamID</key>
-	<string>""</string>
+	<string>PM784W7B8X</string>
 	<key>uploadBitcode</key>
 	<true/>
 	<key>uploadSymbols</key>
