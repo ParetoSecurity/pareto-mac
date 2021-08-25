@@ -16,26 +16,22 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationDidFinishLaunching(_: Notification) {
         statusBar = StatusBarController()
-        NSWindow.allowsAutomaticWindowTabbing = false
-
-        let timer = Timer.scheduledTimer(withTimeInterval: 3600, repeats: true) { [self] _ in
-            self.statusBar?.runChecks()
-            os_log("Running checks")
-        }
-        RunLoop.current.add(timer, forMode: .common)
-
         statusBar?.updateMenu()
         statusBar?.runChecks()
 
         // Update when waking up from sleep
-        NSWorkspace.shared.notificationCenter.addObserver(forName: NSWorkspace.didWakeNotification,
-                                                          object: nil,
-                                                          queue: nil,
-                                                          using: { _ in
-                                                              if Defaults[.runAfterSleep] {
-                                                                  self.statusBar?.runChecks()
-                                                              }
-                                                          })
+        NSWorkspace.onWakeup { _ in
+            if Defaults[.runAfterSleep] {
+                self.statusBar?.runChecks()
+            }
+        }
+
+        // Schedule hourly claim updates
+        NSBackgroundActivityScheduler.repeating(withInterval: 60 * 60) { (completion: NSBackgroundActivityScheduler.CompletionHandler) in
+            self.statusBar?.runChecks()
+            os_log("Running checks")
+            completion(.finished)
+        }
     }
 
     @objc func showPrefs() {
