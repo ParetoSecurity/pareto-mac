@@ -6,8 +6,6 @@
 //
 
 import Foundation
-
-import Foundation
 import IOKit
 
 class BootCheck: ParetoCheck {
@@ -20,8 +18,8 @@ class BootCheck: ParetoCheck {
     }
 
     func GetNVRAM(_ name: String) -> String {
-        let masterPort = IOServiceGetMatchingService(kIOMasterPortDefault, nil)
-        let gOptionsRef = IORegistryEntryFromPath(masterPort, "IODeviceTree:/options")
+        let port = IOServiceGetMatchingService(kIOMasterPortDefault, nil)
+        let gOptionsRef = IORegistryEntryFromPath(port, "IODeviceTree:/options")
 
         let nameRef = CFStringCreateWithCString(kCFAllocatorDefault, name, CFStringBuiltInEncodings.UTF8.rawValue)
 

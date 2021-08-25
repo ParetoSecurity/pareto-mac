@@ -25,17 +25,13 @@ class Claim {
         self.checks = AppInfo.inSandbox ? checks.filter { $0.canRunInSandbox } : checks
     }
 
-    var checkPassed: Bool { checks.reduce(true) {
-        $0 && $1.checkPassed
-    } }
+    var checkPassed: Bool { checks.allSatisfy { $0.checkPassed } }
 
     var snoozeTime: Int { checks.reduce(0) {
         $0 + $1.snoozeTime
     } }
 
-    var isActive: Bool { checks.reduce(true) {
-        $0 && $1.isActive
-    } }
+    var isActive: Bool { checks.allSatisfy { $0.isActive } }
 
     var lastCheck: Int {
         return checks.first!.checkTimestamp

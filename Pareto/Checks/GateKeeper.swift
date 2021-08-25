@@ -26,7 +26,7 @@ class GatekeeperCheck: ParetoCheck {
         if isSandboxingEnabled() {
             os_log("Running in sandbox %{public}s - %{public}s", log: Log.check, UUID, Title)
             // if enabled one cannot read system file even with entitlement
-            guard let _ = NSDictionary(contentsOfFile: path) else {
+            if NSDictionary(contentsOfFile: path) != nil {
                 os_log("Gatekeeper file not found", log: Log.check)
                 return true
             }

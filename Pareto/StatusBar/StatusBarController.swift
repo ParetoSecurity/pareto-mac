@@ -41,20 +41,16 @@ class StatusBarController: NSMenu, NSMenuDelegate {
 
     var claimsPassed: Bool {
         var passed = true
-        for claim in claims {
-            if claim.isActive {
-                passed = passed && claim.checkPassed
-            }
+        for claim in claims where claim.isActive {
+            passed = passed && claim.checkPassed
         }
         return passed
     }
 
     var claimsSnoozed: Int {
         var snoozedTime = 0
-        for claim in claims {
-            if claim.isActive {
-                snoozedTime = snoozedTime + snoozedTime
-            }
+        for claim in claims where claim.isActive {
+            snoozedTime += claim.snoozeTime
         }
         return snoozedTime
     }
