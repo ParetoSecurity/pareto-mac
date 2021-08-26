@@ -50,10 +50,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             completion(.finished)
         }
 
-        if Defaults[.showWelcome] {
-            Window.Welcome.show()
-            Defaults[.showWelcome] = false
-        }
+        // if Defaults[.showWelcome] {
+        //     Window.Welcome.show()
+        //     Defaults[.showWelcome] = false
+        // }
     }
 
     @objc func showPrefs() {

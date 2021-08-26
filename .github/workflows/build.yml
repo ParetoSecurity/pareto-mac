@@ -53,14 +53,13 @@ jobs:
       run: make archive-debug | xcpretty && exit ${PIPESTATUS[0]}
     - name: Compress app for storage
       run: ditto -V -c -k --keepParent Export/Pareto\ Security.app ParetoSecurity.app.zip
-    - name: Build dmg for storage
-      run: npm install --global create-dmg && make dmg
     - name: Upload App to Artifacts
       uses: actions/upload-artifact@v2
       with:
         name: ParetoSecurity.app.zip
         path: ParetoSecurity.app.zip
-
+    - name: Build dmg for storage
+      run: npm install --global create-dmg && make dmg
     - name: Upload DMG to Artifacts
       uses: actions/upload-artifact@v2
       with:

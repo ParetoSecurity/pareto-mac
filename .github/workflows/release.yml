@@ -23,6 +23,12 @@ jobs:
         certificate-data: ${{ secrets.RELEASE_CERTIFICATE_DATA }}
         certificate-passphrase: ${{ secrets.RELEASE_CERTIFICATE_PASSPHRASE }}
         keychain-password: ${{ secrets.KEYCHAIN_PASSWORD }}
+    - name: "Import Certificate: Developer ID Application"
+      uses: devbotsxyz/xcode-import-certificate@master
+      with:
+        certificate-data: ${{ secrets.APPLICATION_CERTIFICATE_DATA }}
+        certificate-passphrase: ${{ secrets.APPLICATION_CERTIFICATE_PASSPHRASE }}
+        keychain-password: ${{ secrets.KEYCHAIN_PASSWORD }}
     - name: Repository checkout
       uses: actions/checkout@v2
     - name: Cache SPM modules
@@ -61,3 +67,10 @@ jobs:
         files: ParetoSecurity.app.zip
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Build dmg for release
+      run: npm install --global create-dmg && make dmg
+    - name: Upload DMG to Artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: ParetoSecurity.dmg
+        path: ParetoSecurity.dmg
