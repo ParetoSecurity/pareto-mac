@@ -37,7 +37,7 @@ jobs:
           ${{ runner.os }}-build-
           ${{ runner.os }}-
     - name: "Archive for dist"
-      run: make archive | xcpretty -tc && exit ${PIPESTATUS[0]}
+      run: make archive-release | xcpretty -tc && exit ${PIPESTATUS[0]}
     - name: "Notarize Release Build"
       uses: devbotsxyz/xcode-notarize@v1
       with:

@@ -44,7 +44,7 @@ jobs:
           ${{ runner.os }}-build-
           ${{ runner.os }}-
     - name: Build
-      run: make archive | xcpretty && exit ${PIPESTATUS[0]}
+      run: make archive-debug | xcpretty && exit ${PIPESTATUS[0]}
     - name: Compress app for storage
       run: ditto -V -c -k --keepParent Export/Pareto\ Security.app ParetoSecurity.app.zip
     - name: Upload App to Artifacts
