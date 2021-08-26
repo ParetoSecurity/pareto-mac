@@ -48,15 +48,10 @@ jobs:
           ${{ runner.os }}-build-${{ env.cache-name }}-
           ${{ runner.os }}-build-
           ${{ runner.os }}-
-    - name: Patch permissions 
+    - name: Patch permissions kTCCServiceAppleEvents
       run: |
         epochdate=$(($(date +'%s * 1000 + %-N / 1000000')))
-        macos_major_version=$(sw_vers -productVersion | awk -F. '{ print $1 }')
-        if [[ $macos_major_version -le 10 ]]; then
-            tcc_update="replace into access (service,client,client_type,allowed,prompt_count,indirect_object_identifier,flags,last_modified) values (\"kTCCServiceAppleEvents\",\"niteo.co.Pareto\",0,1,1,\"UNUSED\",0,$epochdate);"
-        else
-            tcc_update="replace into access (service,client,client_type,auth_value,auth_reason,auth_version,indirect_object_identifier,flags,last_modified) values (\"kTCCServiceAppleEvents\",\"niteo.co.Pareto\",0,2,1,1,\"UNUSED\",0,$epochdate);"
-        fi
+        tcc_update="replace into access (service,client,client_type,auth_value,auth_reason,auth_version,indirect_object_identifier,flags,last_modified) values (\"kTCCServiceAppleEvents\",\"niteo.co.Pareto\",0,2,3,1,\"com.apple.systemevents\",0,$epochdate);"
         sudo sqlite3 "$HOME/Library/Application Support/com.apple.TCC/TCC.db" "$tcc_update"
     - name: Tests
       run: make test | xcpretty -tc && exit ${PIPESTATUS[0]}
