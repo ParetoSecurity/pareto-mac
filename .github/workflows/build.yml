@@ -56,7 +56,7 @@ jobs:
     - name: Upload App to Artifacts
       uses: actions/upload-artifact@v2
       with:
-        name: ParetoSecurity.app.zip
+        name: ParetoSecurity.app
         path: ParetoSecurity.app.zip
     - name: Build dmg for storage
       run: npm install --global create-dmg && make dmg
