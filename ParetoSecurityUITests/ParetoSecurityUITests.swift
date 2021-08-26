@@ -47,31 +47,31 @@ class ParetoSecurityUITests: XCTestCase {
         }
     }
 
-    // func testHoverMenus() throws {
-    //     let menuBarsQuery = app.menuBars.menus["paretoMenu"]
-    //     waitUntilMenu()
+    func testHoverMenus() throws {
+        let menuBarsQuery = app.menuBars.menus["paretoMenu"]
+        waitUntilMenu()
 
-    //     enableClaim("Firewall is on")
-    //     enableClaim("Lock after inactivity")
-    //     enableClaim("Login is secure")
-    //     enableClaim("System integrity")
+        enableClaim("Firewall is on")
+        enableClaim("Lock after inactivity")
+        enableClaim("Login is secure")
+        enableClaim("System integrity")
 
-    //     menuBarsQuery.menuItems["Firewall is on"].hover()
-    //     takeScreenshot(screenshot: app.statusItems.firstMatch.menus.firstMatch.screenshot(), name: "Firewall")
-    //     takeScreenshot(screenshot: app.screenshot(), name: "Firewall App")
+        menuBarsQuery.menuItems["Firewall is on"].hover()
+        takeScreenshot(screenshot: app.statusItems.firstMatch.menus.firstMatch.screenshot(), name: "Firewall")
+        takeScreenshot(screenshot: app.screenshot(), name: "Firewall App")
 
-    //     menuBarsQuery.menuItems["Lock after inactivity"].hover()
-    //     takeScreenshot(screenshot: app.statusItems.firstMatch.menus.firstMatch.screenshot(), name: "Lock")
-    //     takeScreenshot(screenshot: app.screenshot(), name: "Lock App")
+        menuBarsQuery.menuItems["Lock after inactivity"].hover()
+        takeScreenshot(screenshot: app.statusItems.firstMatch.menus.firstMatch.screenshot(), name: "Lock")
+        takeScreenshot(screenshot: app.screenshot(), name: "Lock App")
 
-    //     menuBarsQuery.menuItems["Login is secure"].hover()
-    //     takeScreenshot(screenshot: app.statusItems.firstMatch.menus.firstMatch.screenshot(), name: "Login")
-    //     takeScreenshot(screenshot: app.screenshot(), name: "Login App")
+        menuBarsQuery.menuItems["Login is secure"].hover()
+        takeScreenshot(screenshot: app.statusItems.firstMatch.menus.firstMatch.screenshot(), name: "Login")
+        takeScreenshot(screenshot: app.screenshot(), name: "Login App")
 
-    //     menuBarsQuery.menuItems["System integrity"].hover()
-    //     takeScreenshot(screenshot: app.statusItems.firstMatch.menus.firstMatch.screenshot(), name: "System")
-    //     takeScreenshot(screenshot: app.screenshot(), name: "System App")
-    // }
+        menuBarsQuery.menuItems["System integrity"].hover()
+        takeScreenshot(screenshot: app.statusItems.firstMatch.menus.firstMatch.screenshot(), name: "System")
+        takeScreenshot(screenshot: app.screenshot(), name: "System App")
+    }
 
     func testAppRuns() throws {
         takeScreenshot(screenshot: app.screenshot(), name: "App")

@@ -63,7 +63,7 @@
             </BuildableReference>
          </TestableReference>
          <TestableReference
-            skipped = "YES"
+            skipped = "NO"
             testExecutionOrdering = "random">
             <BuildableReference
                BuildableIdentifier = "primary"
