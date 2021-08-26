@@ -30,6 +30,12 @@ jobs:
         certificate-data: ${{ secrets.DEVELOPMENT_CERTIFICATE_DATA }}
         certificate-passphrase: ${{ secrets.DEVELOPMENT_CERTIFICATE_PASSPHRASE }}
         keychain-password: ${{ secrets.KEYCHAIN_PASSWORD }}
+    - name: "Import Certificate: Developer ID Application"
+      uses: devbotsxyz/xcode-import-certificate@master
+      with:
+        certificate-data: ${{ secrets.APPLICATION_CERTIFICATE_DATA }}
+        certificate-passphrase: ${{ secrets.APPLICATION_CERTIFICATE_PASSPHRASE }}
+        keychain-password: ${{ secrets.KEYCHAIN_PASSWORD }}
     - name: Repository checkout
       uses: actions/checkout@v2
     - name: Cache SPM modules
@@ -47,9 +53,16 @@ jobs:
       run: make archive-debug | xcpretty && exit ${PIPESTATUS[0]}
     - name: Compress app for storage
       run: ditto -V -c -k --keepParent Export/Pareto\ Security.app ParetoSecurity.app.zip
+    - name: Build dmg for storage
+      run: npm install --global create-dmg && make dmg
     - name: Upload App to Artifacts
       uses: actions/upload-artifact@v2
       with:
         name: ParetoSecurity.app.zip
         path: ParetoSecurity.app.zip
 
+    - name: Upload DMG to Artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: ParetoSecurity.dmg
+        path: ParetoSecurity.dmg

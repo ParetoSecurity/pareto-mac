@@ -10,3 +10,4 @@ SourcePackages
 test.xcresult
 app.xcarchive
 Export
+*.dmg
