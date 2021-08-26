@@ -69,15 +69,25 @@ jobs:
     - name: "Staple Release Build"
       uses: devbotsxyz/xcode-staple@v1
       with:
-        product-path: "ParetoSecurity.dmg"
+        product-path: "Export/Pareto\ Security.app"
     - name: Upload DMG to Artifacts
       uses: actions/upload-artifact@v2
       with:
         name: ParetoSecurity.dmg
         path: ParetoSecurity.dmg
-    - name: Release app
+    - name: Release DMG
       uses: softprops/action-gh-release@v1
       with:
         files: ParetoSecurity.dmg
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Cleanup
+      run: rm -f ParetoSecurity.app.zip
+    - name: Compress app for release
+      run: ditto -V -c -k --keepParent Export/Pareto\ Security.app ParetoSecurity.app.zip
+    - name: Release app
+      uses: softprops/action-gh-release@v1
+      with:
+        files: ParetoSecurity.app.zip
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
