@@ -83,12 +83,12 @@ struct Pareto: App {
             SettingsView()
         }
 
-        WindowGroup(Window.Welcome.rawValue) {
-            WelcomeView()
-        }.handlesExternalEvents(matching: Set([Window.Welcome.rawValue])).windowStyle(.hiddenTitleBar)
+        // WindowGroup(Window.Welcome.rawValue) {
+        //     WelcomeView()
+        // }.handlesExternalEvents(matching: Set([Window.Welcome.rawValue])).windowStyle(.hiddenTitleBar)
 
-        WindowGroup(Window.Update.rawValue) {
-            WelcomeView()
-        }.handlesExternalEvents(matching: Set([Window.Update.rawValue])).windowStyle(.hiddenTitleBar)
+        // WindowGroup(Window.Update.rawValue) {
+        //     WelcomeView()
+        // }.handlesExternalEvents(matching: Set([Window.Update.rawValue])).windowStyle(.hiddenTitleBar)
     }
 }

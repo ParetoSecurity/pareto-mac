@@ -6,6 +6,7 @@
 //
 
 import AppKit
+import Defaults
 import Foundation
 import os.log
 import SwiftUI
@@ -32,6 +33,7 @@ class Claim {
     } }
 
     var isActive: Bool { checks.allSatisfy { $0.isActive } }
+    var isNotSnoozed: Bool { checks.allSatisfy { $0.snoozeTime == 0 } }
 
     var lastCheck: Int {
         return checks.first!.checkTimestamp
@@ -110,7 +112,6 @@ class Claim {
             check.checkPassed = false
             check.checkTimestamp = 0
         }
-        UserDefaults.standard.synchronize()
     }
 
     @objc func enableCheck() {
@@ -120,34 +121,31 @@ class Claim {
             check.checkPassed = false
             check.checkTimestamp = 0
         }
-        UserDefaults.standard.synchronize()
+        Defaults[.internalRunChecks] = true
     }
 
     @objc func snoozeOneHour() {
         for check in checks {
             check.snoozeTime = Snooze.oneHour
         }
-        UserDefaults.standard.synchronize()
     }
 
     @objc func snoozeOneDay() {
         for check in checks {
             check.snoozeTime = Snooze.oneDay
         }
-        UserDefaults.standard.synchronize()
     }
 
     @objc func snoozeOneWeek() {
         for check in checks {
             check.snoozeTime = Snooze.oneWeek
         }
-        UserDefaults.standard.synchronize()
     }
 
     @objc func unsnooze() {
         for check in checks {
             check.snoozeTime = 0
         }
-        UserDefaults.standard.synchronize()
+        Defaults[.internalRunChecks] = true
     }
 }

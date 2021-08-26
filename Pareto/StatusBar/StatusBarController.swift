@@ -6,6 +6,7 @@
 //
 
 import AppKit
+import Defaults
 import os.log
 import SwiftUI
 
@@ -41,7 +42,7 @@ class StatusBarController: NSMenu, NSMenuDelegate {
 
     var claimsPassed: Bool {
         var passed = true
-        for claim in claims where claim.isActive {
+        for claim in claims where claim.isActive && claim.isNotSnoozed {
             passed = passed && claim.checkPassed
         }
         return passed
@@ -59,14 +60,11 @@ class StatusBarController: NSMenu, NSMenuDelegate {
         removeAllItems()
         addChecksMenuItems()
         addApplicationItems()
-        if claimsSnoozed > 0 {
+
+        if claimsPassed {
             statusItem.button?.image = imageDefault
         } else {
-            if claimsPassed {
-                statusItem.button?.image = imageDefault
-            } else {
-                statusItem.button?.image = imageWarning
-            }
+            statusItem.button?.image = imageWarning
         }
     }
 
@@ -112,6 +110,10 @@ class StatusBarController: NSMenu, NSMenuDelegate {
 
     func menuDidClose(_: NSMenu) {
         updateMenu()
+        if Defaults[.internalRunChecks] {
+            Defaults[.internalRunChecks] = false
+            runChecks()
+        }
     }
 
     func menuWillOpen(_: NSMenu) {
