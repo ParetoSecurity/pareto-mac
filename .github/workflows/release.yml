@@ -44,33 +44,33 @@ jobs:
           ${{ runner.os }}-
     - name: "Archive for dist"
       run: make archive-release | xcpretty -tc && exit ${PIPESTATUS[0]}
-    - name: "Notarize Release Build"
-      uses: devbotsxyz/xcode-notarize@v1
-      with:
-        product-path: "Export/Pareto\ Security.app"
-        appstore-connect-username: ${{ secrets.NOTARIZATION_USERNAME }}
-        appstore-connect-password: ${{ secrets.NOTARIZATION_PASSWORD }}
-    - name: "Staple Release Build"
-      uses: devbotsxyz/xcode-staple@v1
-      with:
-        product-path: "Export/Pareto\ Security.app"
     - name: Compress app for storage
       run: ditto -V -c -k --keepParent Export/Pareto\ Security.app ParetoSecurity.app.zip
     - name: Upload App to Artifacts
       uses: actions/upload-artifact@v2
       with:
-        name: ParetoSecurity.app.zip
+        name: ParetoSecurity.app
         path: ParetoSecurity.app.zip
-    - name: Release app
-      uses: softprops/action-gh-release@v1
-      with:
-        files: ParetoSecurity.app.zip
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: Build dmg for release
       run: npm install --global create-dmg && make dmg
+    - name: "Notarize Release Build"
+      uses: devbotsxyz/xcode-notarize@v1
+      with:
+        product-path: "ParetoSecurity.dmg"
+        appstore-connect-username: ${{ secrets.NOTARIZATION_USERNAME }}
+        appstore-connect-password: ${{ secrets.NOTARIZATION_PASSWORD }}
+    - name: "Staple Release Build"
+      uses: devbotsxyz/xcode-staple@v1
+      with:
+        product-path: "ParetoSecurity.dmg"
     - name: Upload DMG to Artifacts
       uses: actions/upload-artifact@v2
       with:
         name: ParetoSecurity.dmg
         path: ParetoSecurity.dmg
+    - name: Release app
+      uses: softprops/action-gh-release@v1
+      with:
+        files: ParetoSecurity.dmg
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
