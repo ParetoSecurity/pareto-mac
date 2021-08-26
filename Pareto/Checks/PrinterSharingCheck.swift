@@ -11,7 +11,7 @@ class PrinterSharingCheck: ParetoCheck {
     }
 
     override var Title: String {
-        "Printer sharing is disabled"
+        "Sharing printers if off"
     }
 
     override func checkPasses() -> Bool {

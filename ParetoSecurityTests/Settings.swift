@@ -21,8 +21,6 @@ class SettingsViewTests: XCTestCase {
         let subject = GeneralSettingsView()
         let one = try subject.inspect().form()[0].section().footer().text().string()
         XCTAssertEqual(one, "Automatically opens the app when you start your Mac.")
-        let two = try subject.inspect().form()[1].section().footer().text().string()
-        XCTAssertEqual(two, "Run all checks some time after waking from sleep.")
     }
 }
 

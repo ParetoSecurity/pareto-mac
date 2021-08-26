@@ -21,3 +21,6 @@ lint:
 fmt:
 	swiftformat --swiftversion 5 .
 	swiftlint . --fix
+
+notarize:
+	xcrun altool --notarize-app -f ParetoSecurity.dmg --primary-bundle-id niteo.co.Pareto

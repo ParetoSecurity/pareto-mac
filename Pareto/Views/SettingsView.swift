@@ -21,12 +21,6 @@ struct GeneralSettingsView: View {
                         Toggle("Start at Login", isOn: $atLogin.isEnabled)
                     }
             }
-            Section(
-                footer: Text("Run all checks some time after waking from sleep.")) {
-                    VStack(alignment: .leading) {
-                        Toggle("Run checks after sleep", isOn: $runAfterSleep)
-                    }
-            }
         }
 
         .frame(width: 350, height: 100).padding(5)
