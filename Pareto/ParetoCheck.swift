@@ -115,22 +115,6 @@ class ParetoCheck {
 }
 
 extension ParetoCheck {
-    func runCMD(app: String, args: [String]) -> String {
-        let task = Process()
-        let pipe = Pipe()
-
-        task.standardOutput = pipe
-        task.standardError = pipe
-        task.arguments = args
-        task.launchPath = app
-        task.launch()
-        task.waitUntilExit()
-
-        let data = pipe.fileHandleForReading.readDataToEndOfFile()
-        let output = String(data: data, encoding: .utf8)!
-        return output
-    }
-
     func readDefaults(app: String, key: String) -> String? {
         let output = runCMD(app: "/usr/bin/defaults", args: ["-currentHost", "read", app, key])
         return output.contains("does not exist") ? nil : output

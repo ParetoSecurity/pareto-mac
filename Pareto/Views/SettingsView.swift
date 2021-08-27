@@ -11,7 +11,7 @@ import SwiftUI
 
 struct GeneralSettingsView: View {
     @ObservedObject private var atLogin = LaunchAtLogin.observable
-    @Default(.runAfterSleep) var runAfterSleep
+    @Default(.betaChannel) var betaChannel
 
     var body: some View {
         Form {
@@ -19,6 +19,12 @@ struct GeneralSettingsView: View {
                 footer: Text("Automatically opens the app when you start your Mac.")) {
                     VStack(alignment: .leading) {
                         Toggle("Start at Login", isOn: $atLogin.isEnabled)
+                    }
+            }
+            Section(
+                footer: Text("Latest features but potentially bugs to report.")) {
+                    VStack(alignment: .leading) {
+                        Toggle("Update app to pre-release builds", isOn: $betaChannel)
                     }
             }
         }
@@ -50,9 +56,18 @@ struct AboutSettingsView: View {
     }
 }
 
+struct TeamSettingsView: View {
+    @Default(.teamID) var teamID
+    @Default(.userID) var userID
+
+    var body: some View {
+        Text("Coming soon!")
+    }
+}
+
 struct SettingsView: View {
     private enum Tabs: Hashable {
-        case general, about
+        case general, about, team, updater
     }
 
     var body: some View {
@@ -62,6 +77,12 @@ struct SettingsView: View {
                     Label("General", systemImage: "gear")
                 }
                 .tag(Tabs.general)
+            TeamSettingsView()
+                .tabItem {
+                    Label("Team", systemImage: "person.3.fill")
+                }
+                .tag(Tabs.team)
+                .disabled(true)
             AboutSettingsView()
                 .tabItem {
                     Label("About", systemImage: "info")
