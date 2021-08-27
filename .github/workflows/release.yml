@@ -57,8 +57,10 @@ jobs:
       with:
         name: ParetoSecurity.app
         path: ParetoSecurity.app.zip
+    - name: Install create-dmg
+      run: brew install graphicsmagick imagemagick && npm install --global create-dmg
     - name: Build dmg for release
-      run: npm install --global create-dmg && make dmg
+      run: make dmg
     - name: "Notarize Release Build"
       uses: ParetoSecurity/xcode-notarize@v5
       with:
@@ -70,6 +72,8 @@ jobs:
       uses: devbotsxyz/xcode-staple@v1
       with:
         product-path: "Export/Pareto\ Security.app"
+    - name: Compress dmg for storage
+      run: ditto -V -c -k --keepParent ParetoSecurity.dmg ParetoSecurity.dmg.zip
     - name: Upload DMG to Artifacts
       uses: actions/upload-artifact@v2
       with:
@@ -78,7 +82,7 @@ jobs:
     - name: Release DMG
       uses: softprops/action-gh-release@v1
       with:
-        files: ParetoSecurity.dmg
+        files: ParetoSecurity.dmg.zip
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: Cleanup
