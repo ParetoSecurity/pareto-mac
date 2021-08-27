@@ -64,7 +64,7 @@ class ParetoCheck {
                 item.image = NSImage.SF(name: "powersleep").tint(color: .systemGray)
             } else {
                 if checkPassed {
-                    item.image = NSImage.SF(name: "checkmark").tint(color: .systemBlue)
+                    item.image = NSImage.SF(name: "checkmark").tint(color: .systemGreen)
                 } else {
                     item.image = NSImage.SF(name: "exclamationmark").tint(color: .systemRed)
                 }
