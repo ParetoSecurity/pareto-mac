@@ -127,13 +127,17 @@ class StatusBarController: NSMenu, NSMenuDelegate {
         runItem.target = NSApp.delegate
         addItem(runItem)
 
-        let preferencesItem = NSMenuItem(title: "Preferences", action: #selector(AppDelegate.showPrefs), keyEquivalent: "s")
+        let preferencesItem = NSMenuItem(title: "Preferences", action: #selector(AppDelegate.showPrefs), keyEquivalent: "p")
         preferencesItem.target = NSApp.delegate
         addItem(preferencesItem)
 
         let reportItem = NSMenuItem(title: "Report Bug", action: #selector(AppDelegate.reportBug), keyEquivalent: "b")
         reportItem.target = NSApp.delegate
         addItem(reportItem)
+
+        let updateItem = NSMenuItem(title: "Update", action: #selector(AppDelegate.maybeUpdate), keyEquivalent: "u")
+        updateItem.target = NSApp.delegate
+        addItem(updateItem)
 
         addItem(NSMenuItem.separator())
         let quitItem = NSMenuItem(title: "Quit Pareto App", action: #selector(AppDelegate.quitApp), keyEquivalent: "q")

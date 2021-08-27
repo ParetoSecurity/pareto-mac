@@ -9,10 +9,12 @@ import Foundation
 import SwiftUI
 
 extension NSBackgroundActivityScheduler {
-    static func repeating(withInterval: TimeInterval, _ fn: @escaping (NSBackgroundActivityScheduler.CompletionHandler) -> Void) {
-        let activity = NSBackgroundActivityScheduler(identifier: "com.niteo.Pareto.UpdateClaims")
+    static func repeating(withName name: String, withInterval: TimeInterval, _ fn: @escaping (NSBackgroundActivityScheduler.CompletionHandler) -> Void) {
+        let activity = NSBackgroundActivityScheduler(identifier: "\(Bundle.main.bundleIdentifier!).\(name)")
         activity.repeats = true
         activity.interval = withInterval
+        activity.qualityOfService = .userInteractive
+        activity.tolerance = TimeInterval(1)
         activity.schedule { (completion: NSBackgroundActivityScheduler.CompletionHandler) in
             fn(completion)
         }

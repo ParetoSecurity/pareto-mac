@@ -24,12 +24,14 @@ enum Window: String, CaseIterable {
 
 class AppDelegate: NSObject, NSApplicationDelegate {
     var statusBar: StatusBarController?
+    var updater: AppUpdater?
 
     func applicationDidFinishLaunching(_: Notification) {
         statusBar = StatusBarController()
         statusBar?.configureChecks()
         statusBar?.updateMenu()
 
+        updater = AppUpdater(owner: "ParetoSecurity", repo: "pareto-mac")
         // stop running checks here
         if AppInfo.isRunningTests {
             return
@@ -44,9 +46,15 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
 
         // Schedule hourly claim updates
-        NSBackgroundActivityScheduler.repeating(withInterval: 60 * 60) { (completion: NSBackgroundActivityScheduler.CompletionHandler) in
-            self.statusBar?.runChecks()
+        NSBackgroundActivityScheduler.repeating(withName: "ClaimRunner", withInterval: 60 * 60) { (completion: NSBackgroundActivityScheduler.CompletionHandler) in
             os_log("Running checks")
+            self.statusBar?.runChecks()
+            completion(.finished)
+        }
+
+        NSBackgroundActivityScheduler.repeating(withName: "UpdateRunner", withInterval: 24 * 60 * 60) { (completion: NSBackgroundActivityScheduler.CompletionHandler) in
+            os_log("Running update check")
+            DispatchQueue.main.async { self.checkForRelease(isInteractive: false) }
             completion(.finished)
         }
 
@@ -54,6 +62,39 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         //     Window.Welcome.show()
         //     Defaults[.showWelcome] = false
         // }
+    }
+
+    func checkForRelease(isInteractive interactive: Bool) {
+        let currentVersion = Bundle.main.version
+        if let release = try? updater!.getLatestRelease() {
+            if currentVersion >= release.version {
+                if interactive {
+                    let alert = NSAlert()
+                    alert.messageText = "You are running the latest version"
+                    alert.informativeText = "No update is required."
+                    alert.alertStyle = NSAlert.Style.informational
+                    alert.addButton(withTitle: "OK")
+                    alert.runModal()
+                }
+
+            } else {
+                if let dmgURL = release.assets.filter({ $0.browser_download_url.path.hasSuffix(".dmg") }).first {
+                    let alert = NSAlert()
+                    alert.messageText = "New version of Pareto Security \(release.version) is available"
+                    alert.informativeText = release.body
+                    alert.alertStyle = NSAlert.Style.informational
+                    alert.addButton(withTitle: "Download")
+                    alert.addButton(withTitle: "Skip")
+                    if alert.runModal() == NSApplication.ModalResponse.alertFirstButtonReturn {
+                        NSWorkspace.shared.open(dmgURL.browser_download_url)
+                    }
+                }
+            }
+        }
+    }
+
+    @objc func maybeUpdate() {
+        checkForRelease(isInteractive: true)
     }
 
     @objc func showPrefs() {
@@ -84,8 +125,8 @@ struct Pareto: App {
         }
 
         // WindowGroup(Window.Welcome.rawValue) {
-        //     WelcomeView()
-        // }.handlesExternalEvents(matching: Set([Window.Welcome.rawValue])).windowStyle(.hiddenTitleBar)
+        //    UpdateView()
+        // }.handlesExternalEvents(matching: [Window.Welcome.rawValue])
 
         // WindowGroup(Window.Update.rawValue) {
         //     WelcomeView()
