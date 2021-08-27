@@ -55,7 +55,7 @@ class Claim {
                     item.image = NSImage.SF(name: "powersleep").tint(color: .systemGray)
                 } else {
                     if checkPassed {
-                        item.image = NSImage.SF(name: "checkmark.shield").tint(color: .systemBlue)
+                        item.image = NSImage.SF(name: "checkmark.shield").tint(color: .systemGreen)
                     } else {
                         item.image = NSImage.SF(name: "exclamationmark.shield").tint(color: .systemRed)
                     }
