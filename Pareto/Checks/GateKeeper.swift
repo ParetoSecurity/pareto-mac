@@ -16,6 +16,10 @@ class GatekeeperCheck: ParetoCheck {
         "Gatekeeper is on"
     }
 
+    override var moreURL: String {
+        "/security-checks/gatekeeper"
+    }
+
     func isSandboxingEnabled() -> Bool {
         let environment = ProcessInfo.processInfo.environment
         return environment["APP_SANDBOX_CONTAINER_ID"] != nil

@@ -17,6 +17,10 @@ class BootCheck: ParetoCheck {
         "Boot is secure"
     }
 
+    override var moreURL: String {
+        "/security-checks/boot"
+    }
+
     func GetNVRAM(_ name: String) -> String {
         let port = IOServiceGetMatchingService(kIOMasterPortDefault, nil)
         let gOptionsRef = IORegistryEntryFromPath(port, "IODeviceTree:/options")

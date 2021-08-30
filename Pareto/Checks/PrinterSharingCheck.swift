@@ -14,6 +14,10 @@ class PrinterSharingCheck: ParetoCheck {
         "Sharing printers is off"
     }
 
+    override var moreURL: String {
+        "/security-checks/sharing-printers"
+    }
+
     override func checkPasses() -> Bool {
         return !isListening(withPort: 88)
     }

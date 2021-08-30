@@ -14,6 +14,10 @@ class FileVaultCheck: ParetoCheck {
         "FileVault is on"
     }
 
+    override var moreURL: String {
+        "/security-checks/filevault"
+    }
+
     override var canRunInSandbox: Bool {
         false
     }

@@ -14,6 +14,10 @@ class FirewallCheck: ParetoCheck {
         "Firewall is on and configured"
     }
 
+    override var moreURL: String {
+        "/security-checks/firewall"
+    }
+
     override func checkPasses() -> Bool {
         let dictionary = readDefaultsFile(path: "/Library/Preferences/com.apple.alf.plist")
         if let globalstate = dictionary?.value(forKey: "globalstate") as? Int {

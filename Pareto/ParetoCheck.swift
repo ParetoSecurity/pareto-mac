@@ -14,6 +14,7 @@ import SwiftUI
 class ParetoCheck {
     private(set) var UUID = "UUID"
     private(set) var Title = "Title"
+    private(set) var moreURL = "/"
     private(set) var canRunInSandbox = true
 
     var EnabledKey: String {
@@ -108,7 +109,7 @@ class ParetoCheck {
     }
 
     @objc func moreInfo() {
-        if let url = URL(string: "https://paretosecurity.app/check/" + UUID) {
+        if let url = URL(string: "https://paretosecurity.app" + moreURL) {
             NSWorkspace.shared.open(url)
         }
     }

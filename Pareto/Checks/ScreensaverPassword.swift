@@ -14,6 +14,10 @@ class ScreensaverPasswordCheck: ParetoCheck {
         "Password after sleep or screen saver"
     }
 
+    override var moreURL: String {
+        "/security-checks/lock-inactivity"
+    }
+
     override func checkPasses() -> Bool {
         let script = "tell application \"System Events\" to tell security preferences to get require password to wake"
         let out = runOSA(appleScript: script) ?? "false"

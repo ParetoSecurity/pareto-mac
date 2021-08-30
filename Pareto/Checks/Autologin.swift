@@ -14,6 +14,10 @@ class AutologinCheck: ParetoCheck {
         "Automatic login is off"
     }
 
+    override var moreURL: String {
+        "/security-checks/automatic-login"
+    }
+
     override func checkPasses() -> Bool {
         // possible:{require password to wake:false, class:security preferences object, secure virtual memory:false, require password to unlock:false, automatic login:false, log out when inactive:false, log out when inactive interval:60}
         let script = "tell application \"System Events\" to tell security preferences to get automatic login"

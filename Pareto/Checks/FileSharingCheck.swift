@@ -14,6 +14,10 @@ class FileSharingCheck: ParetoCheck {
         "Sharing files is off"
     }
 
+    override var moreURL: String {
+        "/security-checks/sharing-files"
+    }
+
     override func checkPasses() -> Bool {
         return !isListening(withPort: 445)
     }
