@@ -37,6 +37,9 @@ jobs:
         keychain-password: ${{ secrets.KEYCHAIN_PASSWORD }}
     - name: Repository checkout
       uses: actions/checkout@v2
+    - name: Expose release info to actions
+      id: release
+      run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
     - name: Cache SPM modules
       uses: actions/cache@v2
       env:
@@ -48,6 +51,9 @@ jobs:
           ${{ runner.os }}-build-${{ env.cache-name }}-
           ${{ runner.os }}-build-
           ${{ runner.os }}-
+    - name: Patch version from release
+      run: |
+        sed -E -i '' 's/MARKETING_VERSION = .*;/MARKETING_VERSION = ${{ steps.release.outputs.tag }};/g' Pareto\ Security.xcodeproj/project.pbxproj
     - name: "Archive for dist"
       run: make archive-release | xcpretty -tc && exit ${PIPESTATUS[0]}
     - name: Compress app for storage
