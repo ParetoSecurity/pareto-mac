@@ -11,20 +11,10 @@ import os.log
 import OSLog
 import SwiftUI
 
-enum Window: String, CaseIterable {
-    case Welcome
-    case Update
-
-    func show() {
-        if let url = URL(string: "paretosecurity://\(rawValue)") { // replace myapp with your app's name
-            NSWorkspace.shared.open(url)
-        }
-    }
-}
-
 class AppDelegate: NSObject, NSApplicationDelegate {
     var statusBar: StatusBarController?
     var updater: AppUpdater?
+    var updateWindow: NSWindow!
 
     func applicationDidFinishLaunching(_: Notification) {
         statusBar = StatusBarController()
@@ -93,7 +83,29 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
     }
 
+    @objc func openUpdateWindow() {
+        if updateWindow == nil {
+            let updateView = UpdateView()
+            updateWindow = NSWindow(
+                contentRect: NSRect(x: 20, y: 20, width: 480, height: 300),
+                styleMask: [.titled, .closable],
+                backing: .buffered,
+                defer: false
+            )
+            updateWindow.center()
+            updateWindow.setFrameAutosaveName("Preferences")
+            updateWindow.isReleasedWhenClosed = false
+            updateWindow.contentView = NSHostingView(rootView: updateView)
+        }
+        updateWindow.makeKeyAndOrderFront(nil)
+    }
+
     @objc func maybeUpdate() {
+        NSApp.sendAction(#selector(openUpdateWindow), to: nil, from: nil)
+        NSApp.activate(ignoringOtherApps: true)
+    }
+
+    @objc func checkUpdate() {
         checkForRelease(isInteractive: true)
     }
 
@@ -123,13 +135,5 @@ struct Pareto: App {
         Settings {
             SettingsView()
         }
-
-        // WindowGroup(Window.Welcome.rawValue) {
-        //    UpdateView()
-        // }.handlesExternalEvents(matching: [Window.Welcome.rawValue])
-
-        // WindowGroup(Window.Update.rawValue) {
-        //     WelcomeView()
-        // }.handlesExternalEvents(matching: Set([Window.Update.rawValue])).windowStyle(.hiddenTitleBar)
     }
 }

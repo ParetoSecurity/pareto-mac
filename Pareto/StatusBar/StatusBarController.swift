@@ -135,7 +135,7 @@ class StatusBarController: NSMenu, NSMenuDelegate {
         reportItem.target = NSApp.delegate
         addItem(reportItem)
 
-        let updateItem = NSMenuItem(title: "Update", action: #selector(AppDelegate.maybeUpdate), keyEquivalent: "u")
+        let updateItem = NSMenuItem(title: "Update", action: #selector(AppDelegate.checkUpdate), keyEquivalent: "u")
         updateItem.target = NSApp.delegate
         addItem(updateItem)
 
