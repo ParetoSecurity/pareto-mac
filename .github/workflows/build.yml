@@ -10,7 +10,7 @@ jobs:
   build:
     name: Build and Archive
     runs-on: macos-11
-    timeout-minutes: 3
+    timeout-minutes: 5
     permissions:
       issues: write 
       pull-requests: write
