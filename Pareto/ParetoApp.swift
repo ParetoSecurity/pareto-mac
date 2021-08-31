@@ -66,9 +66,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                     alert.addButton(withTitle: "OK")
                     alert.runModal()
                 }
-
             } else {
-                if let dmgURL = release.assets.filter({ $0.browser_download_url.path.hasSuffix(".dmg") }).first {
+                if let zipURL = release.assets.filter({ $0.browser_download_url.path.hasSuffix(".zip") }).first {
                     let alert = NSAlert()
                     alert.messageText = "New version of Pareto Security \(release.version) is available"
                     alert.informativeText = release.body
@@ -76,7 +75,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                     alert.addButton(withTitle: "Download")
                     alert.addButton(withTitle: "Skip")
                     if alert.runModal() == NSApplication.ModalResponse.alertFirstButtonReturn {
-                        NSWorkspace.shared.open(dmgURL.browser_download_url)
+                        let done = updater!.downloadAndUpdate(withAsset: zipURL)
+                        if !done {
+                            if let dmgURL = release.assets.filter({ $0.browser_download_url.path.hasSuffix(".dmg") }).first {
+                                NSWorkspace.shared.open(dmgURL.browser_download_url)
+                            }
+                        }
                     }
                 }
             }

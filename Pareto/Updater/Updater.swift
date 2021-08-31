@@ -91,11 +91,13 @@ public class AppUpdater {
         try? FileManager.default.removeItem(at: tmpdir)
     }
 
-    func validate(codeSigning b1: Bundle, _ b2: Bundle) -> Bool {
+    func validate(_ b1: Bundle, _ b2: Bundle) -> Bool {
         b1.codeSigningIdentity == b2.codeSigningIdentity
     }
 
-    private func download(withAsset asset: Release.Asset) throws {
+    func downloadAndUpdate(withAsset asset: Release.Asset) -> Bool {
+        let lock = DispatchSemaphore(value: 0)
+        var state = false
         URLSession.shared.downloadTask(with: asset.browser_download_url) { tempLocalUrl, response, error in
             if let tempLocalUrl = tempLocalUrl, error == nil {
                 // Success
@@ -107,22 +109,61 @@ public class AppUpdater {
                     try FileManager.default.copyItem(at: tempLocalUrl, to: downloadPath)
                 } catch let writeError {
                     os_log("Error creating a file \(downloadPath) : \(writeError.localizedDescription)")
+                    lock.signal()
+                }
+                do {
+                    try self.update(withApp: downloadPath, withAsset: asset)
+                    state = true
+                    lock.signal()
+                } catch let writeError {
+                    os_log("Error creating a file \(downloadPath) : \(writeError.localizedDescription)")
+                    lock.signal()
                 }
 
             } else {
                 os_log("Error took place while downloading a file.")
+                lock.signal()
             }
         }.resume()
+        lock.wait()
+        return state
     }
 
-    private func update(withApp dst: URL, withAsset asset: Release.Asset) throws {
+    func update(withApp dst: URL, withAsset asset: Release.Asset) throws {
         let bundlePath = unzip(dst, contentType: asset.content_type)
         let downloadedAppBundle = Bundle(url: bundlePath)!
         let installedAppBundle = Bundle.main
+        guard let exe = downloadedAppBundle.executable, exe.exists else {
+            throw Error.invalidDownloadedBundle
+        }
+        let finalExecutable = installedAppBundle.path / exe.relative(to: downloadedAppBundle.path)
+        if validate(downloadedAppBundle, installedAppBundle) {
+            do {
+                try installedAppBundle.path.delete()
+                os_log("Delete installedAppBundle: \(installedAppBundle)")
+                try downloadedAppBundle.path.move(to: installedAppBundle.path)
+                os_log("Move new app to installedAppBundle: \(installedAppBundle)")
+                // runOSA(appleScript: "delay 3\n activate application \"Pareto Security\"")
 
-        try installedAppBundle.path.delete()
-        try downloadedAppBundle.path.move(to: installedAppBundle.path)
-        try FileManager.default.removeItem(at: tmpdir)
+                let proc = Process()
+                if #available(OSX 10.13, *) {
+                    proc.executableURL = finalExecutable.url
+                } else {
+                    proc.launchPath = finalExecutable.string
+                }
+                proc.launch()
+                DispatchQueue.main.async {
+                    NSApp.terminate(self)
+                }
+
+            } catch {
+                os_log("Failed update: \(error.localizedDescription)")
+                throw Error.invalidDownloadedBundle
+            }
+        } else {
+            os_log("Failed codeSigningIdentity")
+            throw Error.codeSigningIdentity
+        }
     }
 
     func getLatestRelease() throws -> Release? {
@@ -175,6 +216,7 @@ private func unzip(_ url: URL, contentType: Release.Asset.ContentType) -> URL {
         }
         return nil
     }
-
+    proc.launch()
+    proc.waitUntilExit()
     return try! findApp()!
 }

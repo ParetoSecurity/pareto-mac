@@ -129,20 +129,6 @@ extension ParetoCheck {
         return dictionary
     }
 
-    func runOSA(appleScript: String) -> String? {
-        var error: NSDictionary?
-        if let scriptObject = NSAppleScript(source: appleScript) {
-            if let outputString = scriptObject.executeAndReturnError(&error).stringValue {
-                os_log("OSA: %{public}s", log: Log.check, type: .debug, outputString)
-                return outputString
-            } else if let error = error {
-                os_log("Failed to execute script\n%{public}@", log: Log.check, type: .error, error.description)
-            }
-        }
-
-        return nil
-    }
-
     func appVersion(app: String) -> String? {
         let path = "/Applications/\(app).app/Contents/Info.plist"
         guard let dictionary = NSDictionary(contentsOfFile: path) else {
