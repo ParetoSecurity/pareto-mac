@@ -23,4 +23,4 @@ fmt:
 	swiftlint . --fix
 
 notarize:
-	xcrun altool --notarize-app -f ParetoSecurity.dmg --primary-bundle-id niteo.co.Pareto
+	xcrun notarytool submit ParetoSecurity.dmg --team-id PM784W7B8X --progress --wait
