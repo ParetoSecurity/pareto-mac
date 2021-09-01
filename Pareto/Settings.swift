@@ -7,6 +7,7 @@
 
 import Combine
 import Defaults
+import Foundation
 
 extension Defaults.Keys {
     static let runAfterSleep = Key<Bool>("runAfterSleep", default: true)
@@ -15,4 +16,5 @@ extension Defaults.Keys {
     static let showWelcome = Key<Bool>("showWelcome", default: false)
     static let betaChannel = Key<Bool>("betaChannel", default: false)
     static let internalRunChecks = Key<Bool>("internalRunChecks", default: false)
+    static let lastUpdateCheck = Key<Int>("lastUpdateCheck", default: Int(Date().currentTimeMillis()))
 }

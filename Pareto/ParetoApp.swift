@@ -27,11 +27,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             return
         }
         statusBar?.runChecks()
+        doUpdateCheck()
 
         // Update when waking up from sleep
         NSWorkspace.onWakeup { _ in
             if Defaults[.runAfterSleep] {
                 self.statusBar?.runChecks()
+                self.doUpdateCheck()
             }
         }
 
@@ -42,9 +44,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             completion(.finished)
         }
 
-        NSBackgroundActivityScheduler.repeating(withName: "UpdateRunner", withInterval: 24 * 60 * 60) { (completion: NSBackgroundActivityScheduler.CompletionHandler) in
-            os_log("Running update check")
-            DispatchQueue.main.async { self.checkForRelease(isInteractive: false) }
+        NSBackgroundActivityScheduler.repeating(withName: "UpdateRunner", withInterval: 60 * 60) { (completion: NSBackgroundActivityScheduler.CompletionHandler) in
+            self.doUpdateCheck()
             completion(.finished)
         }
 
@@ -52,6 +53,15 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         //     Window.Welcome.show()
         //     Defaults[.showWelcome] = false
         // }
+    }
+
+    func doUpdateCheck() {
+        let oneDayMS = (60 * 60 * 24 * 1000)
+        if Defaults[.lastUpdateCheck] + oneDayMS < Int(Date().currentTimeMillis()) {
+            os_log("Running update check")
+            DispatchQueue.main.async { self.checkForRelease(isInteractive: false) }
+            Defaults[.lastUpdateCheck] = Int(Date().currentTimeMillis())
+        }
     }
 
     func checkForRelease(isInteractive interactive: Bool) {
