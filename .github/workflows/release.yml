@@ -67,12 +67,7 @@ jobs:
     - name: Build dmg for release
       run: npm install --global create-dmg && make dmg
     - name: "Notarize Release Build"
-      uses: ParetoSecurity/xcode-notarize@v6
-      with:
-        product-path: "ParetoSecurity.dmg"
-        primary-bundle-id: "niteo.co.Pareto"
-        appstore-connect-username: ${{ secrets.NOTARIZATION_USERNAME }}
-        appstore-connect-password: ${{ secrets.NOTARIZATION_PASSWORD }}
+      run: xcrun notarytool submit ParetoSecurity.dmg --password ${{ secrets.NOTARIZATION_USERNAME }} --apple-id ${{ secrets.NOTARIZATION_PASSWORD }} --team-id PM784W7B8X --progress --wait
     - name: "Staple Release Build"
       uses: devbotsxyz/xcode-staple@v1
       with:
