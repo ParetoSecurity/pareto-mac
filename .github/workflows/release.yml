@@ -9,7 +9,7 @@ jobs:
   release:
     name: Release and Archive
     runs-on: macos-11
-    timeout-minutes: 15
+    timeout-minutes: 30
     permissions:
       issues: write 
       contents: write
@@ -67,7 +67,7 @@ jobs:
     - name: Build dmg for release
       run: npm install --global create-dmg && make dmg
     - name: "Notarize Release Build"
-      uses: ParetoSecurity/xcode-notarize@v5
+      uses: ParetoSecurity/xcode-notarize@v6
       with:
         product-path: "ParetoSecurity.dmg"
         primary-bundle-id: "niteo.co.Pareto"
