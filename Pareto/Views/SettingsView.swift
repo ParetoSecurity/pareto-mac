@@ -61,7 +61,11 @@ struct TeamSettingsView: View {
     @Default(.userID) var userID
 
     var body: some View {
-        Text("Coming soon!")
+        VStack {
+            Text("The Teams subscription will give you a web dashboard for an overview of the company’s devices.")
+            Link("Learn more »",
+                 destination: URL(string: "https://paretosecurity.app/pricing?utm_source=app&utm_medium=teams-link")!)
+        }.frame(width: 310, height: 100).padding(5)
     }
 }
 
@@ -79,10 +83,9 @@ struct SettingsView: View {
                 .tag(Tabs.general)
             TeamSettingsView()
                 .tabItem {
-                    Label("Team", systemImage: "person.3.fill")
+                    Label("Teams", systemImage: "person.3.fill")
                 }
                 .tag(Tabs.team)
-                .disabled(true)
             AboutSettingsView()
                 .tabItem {
                     Label("About", systemImage: "info")
