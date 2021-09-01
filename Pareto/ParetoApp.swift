@@ -75,10 +75,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                     alert.addButton(withTitle: "Download")
                     alert.addButton(withTitle: "Skip")
                     if alert.runModal() == NSApplication.ModalResponse.alertFirstButtonReturn {
-                        let done = updater!.downloadAndUpdate(withAsset: zipURL)
-                        if !done {
-                            if let dmgURL = release.assets.filter({ $0.browser_download_url.path.hasSuffix(".dmg") }).first {
-                                NSWorkspace.shared.open(dmgURL.browser_download_url)
+                        DispatchQueue.main.async {
+                            let done = self.updater!.downloadAndUpdate(withAsset: zipURL)
+                            if !done {
+                                if let dmgURL = release.assets.filter({ $0.browser_download_url.path.hasSuffix(".dmg") }).first {
+                                    NSWorkspace.shared.open(dmgURL.browser_download_url)
+                                }
                             }
                         }
                     }
