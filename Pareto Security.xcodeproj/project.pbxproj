@@ -27,12 +27,13 @@
 		4F6A92F226C555C6006C2F2D /* ParetoSecurityUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F6A92F126C555C6006C2F2D /* ParetoSecurityUITests.swift */; };
 		4F84531026D634E5007C3B04 /* NSWorkspace.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F84530F26D634E5007C3B04 /* NSWorkspace.swift */; };
 		4F84531226D638C0007C3B04 /* NSBackgroundActivityScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F84531126D638C0007C3B04 /* NSBackgroundActivityScheduler.swift */; };
-		4F84A94426CBBA6900A1579D /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F84A94326CBBA6900A1579D /* Settings.swift */; };
+		4F84A94426CBBA6900A1579D /* SettingsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F84A94326CBBA6900A1579D /* SettingsTests.swift */; };
 		4F84A94926CBE21300A1579D /* PasswordFromLock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F84A94826CBE21300A1579D /* PasswordFromLock.swift */; };
 		4F84A94C26CBE4AE00A1579D /* ViewInspector in Frameworks */ = {isa = PBXBuildFile; productRef = 4F84A94B26CBE4AE00A1579D /* ViewInspector */; };
 		4F868DCF26A591E6005B876E /* Firewall.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F868DCE26A591E6005B876E /* Firewall.swift */; };
 		4F868DD126A5C51C005B876E /* Autologin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F868DD026A5C51C005B876E /* Autologin.swift */; };
 		4F868DD326A5C751005B876E /* Screensaver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F868DD226A5C751005B876E /* Screensaver.swift */; };
+		4F9BE7B526E13AED008FE1E5 /* SpinnerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F9BE7B426E13AED008FE1E5 /* SpinnerView.swift */; };
 		4FB405EF26A6FC4800267D5D /* ScreensaverPassword.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB405EE26A6FC4800267D5D /* ScreensaverPassword.swift */; };
 		4FB7C67D26AFF1AB00FB1C41 /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB7C67C26AFF1AB00FB1C41 /* Log.swift */; };
 		4FB7C68126AFF25300FB1C41 /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB7C68026AFF25300FB1C41 /* Date.swift */; };
@@ -44,8 +45,6 @@
 		4FEBA2F9269CD48F009B2469 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4FEBA2F8269CD48F009B2469 /* Preview Assets.xcassets */; };
 		4FEBA304269CD4E0009B2469 /* StatusBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEBA303269CD4E0009B2469 /* StatusBarController.swift */; };
 		4FF13D9726DCCB9900E4084E /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FF13D9626DCCB9900E4084E /* Utils.swift */; };
-		4FF13D9926DD1BA100E4084E /* UpdateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FF13D9826DD1BA100E4084E /* UpdateView.swift */; };
-		4FF13D9B26DD458700E4084E /* NSWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FF13D9A26DD458700E4084E /* NSWindow.swift */; };
 		4FF13D9D26DE235700E4084E /* UpdaterTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FF13D9C26DE235700E4084E /* UpdaterTest.swift */; };
 /* End PBXBuildFile section */
 
@@ -83,11 +82,12 @@
 		4F6A92F126C555C6006C2F2D /* ParetoSecurityUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParetoSecurityUITests.swift; sourceTree = "<group>"; };
 		4F84530F26D634E5007C3B04 /* NSWorkspace.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSWorkspace.swift; sourceTree = "<group>"; };
 		4F84531126D638C0007C3B04 /* NSBackgroundActivityScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSBackgroundActivityScheduler.swift; sourceTree = "<group>"; };
-		4F84A94326CBBA6900A1579D /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
+		4F84A94326CBBA6900A1579D /* SettingsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTests.swift; sourceTree = "<group>"; };
 		4F84A94826CBE21300A1579D /* PasswordFromLock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordFromLock.swift; sourceTree = "<group>"; };
 		4F868DCE26A591E6005B876E /* Firewall.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Firewall.swift; sourceTree = "<group>"; };
 		4F868DD026A5C51C005B876E /* Autologin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Autologin.swift; sourceTree = "<group>"; };
 		4F868DD226A5C751005B876E /* Screensaver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Screensaver.swift; sourceTree = "<group>"; };
+		4F9BE7B426E13AED008FE1E5 /* SpinnerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpinnerView.swift; sourceTree = "<group>"; };
 		4FB405EE26A6FC4800267D5D /* ScreensaverPassword.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreensaverPassword.swift; sourceTree = "<group>"; };
 		4FB7C67C26AFF1AB00FB1C41 /* Log.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
 		4FB7C68026AFF25300FB1C41 /* Date.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Date.swift; sourceTree = "<group>"; };
@@ -104,8 +104,6 @@
 		4FEBA2FB269CD48F009B2469 /* Pareto.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Pareto.entitlements; sourceTree = "<group>"; };
 		4FEBA303269CD4E0009B2469 /* StatusBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusBarController.swift; sourceTree = "<group>"; };
 		4FF13D9626DCCB9900E4084E /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
-		4FF13D9826DD1BA100E4084E /* UpdateView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UpdateView.swift; sourceTree = "<group>"; };
-		4FF13D9A26DD458700E4084E /* NSWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSWindow.swift; sourceTree = "<group>"; };
 		4FF13D9C26DE235700E4084E /* UpdaterTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdaterTest.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -142,8 +140,8 @@
 		4F103006269EDB82008C1E86 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				4FF13D9826DD1BA100E4084E /* UpdateView.swift */,
 				4F103007269EE135008C1E86 /* SettingsView.swift */,
+				4F9BE7B426E13AED008FE1E5 /* SpinnerView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -198,7 +196,6 @@
 				4F84530F26D634E5007C3B04 /* NSWorkspace.swift */,
 				4F84531126D638C0007C3B04 /* NSBackgroundActivityScheduler.swift */,
 				4F14487B26D8EDB000A5BA34 /* Bundle.swift */,
-				4FF13D9A26DD458700E4084E /* NSWindow.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -215,7 +212,7 @@
 			children = (
 				4F6A92E526C521BE006C2F2D /* CheckIntegrationTest.swift */,
 				4FC81A4B26C41DC8006EABA8 /* ParetoSecurityTests.swift */,
-				4F84A94326CBBA6900A1579D /* Settings.swift */,
+				4F84A94326CBBA6900A1579D /* SettingsTests.swift */,
 				4FF13D9C26DE235700E4084E /* UpdaterTest.swift */,
 			);
 			path = ParetoSecurityTests;
@@ -467,7 +464,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4F84A94426CBBA6900A1579D /* Settings.swift in Sources */,
+				4F84A94426CBBA6900A1579D /* SettingsTests.swift in Sources */,
 				4FF13D9D26DE235700E4084E /* UpdaterTest.swift in Sources */,
 				4F080D1D26C50D2800686786 /* ParetoSecurityTests.swift in Sources */,
 				4F6A92E626C521BE006C2F2D /* CheckIntegrationTest.swift in Sources */,
@@ -480,15 +477,14 @@
 			files = (
 				4F5E888026A053A9005271FB /* ParetoCheck.swift in Sources */,
 				4FEBA304269CD4E0009B2469 /* StatusBarController.swift in Sources */,
-				4FF13D9B26DD458700E4084E /* NSWindow.swift in Sources */,
 				4F6A0E0E26CE484A003B00A3 /* PrinterSharingCheck.swift in Sources */,
 				4F6A0E1026CE4868003B00A3 /* FileSharingCheck.swift in Sources */,
 				4FB7C67D26AFF1AB00FB1C41 /* Log.swift in Sources */,
 				4FF13D9726DCCB9900E4084E /* Utils.swift in Sources */,
 				4F14487426D8EA5E00A5BA34 /* Updater.swift in Sources */,
-				4FF13D9926DD1BA100E4084E /* UpdateView.swift in Sources */,
 				4F868DCF26A591E6005B876E /* Firewall.swift in Sources */,
 				4FB7C68126AFF25300FB1C41 /* Date.swift in Sources */,
+				4F9BE7B526E13AED008FE1E5 /* SpinnerView.swift in Sources */,
 				4FB405EF26A6FC4800267D5D /* ScreensaverPassword.swift in Sources */,
 				4F47221026B08A0E0071CE2A /* Settings.swift in Sources */,
 				4F868DD126A5C51C005B876E /* Autologin.swift in Sources */,

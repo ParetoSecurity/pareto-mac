@@ -22,10 +22,10 @@ class ParetoSecurityUITests: XCTestCase {
     }
 
     private func waitUntilMenu() {
+        XCUIApplication().children(matching: .menuBar).element(boundBy: 1).children(matching: .statusItem).element.click()
         if !app.statusItems.firstMatch.waitForExistence(timeout: 3) {
             XCTFail("Menu did not build")
         }
-        app.statusItems.firstMatch.click()
     }
 
     func takeScreenshot(screenshot: XCUIScreenshot, name: String) {
