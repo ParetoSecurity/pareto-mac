@@ -48,35 +48,21 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             self.doUpdateCheck()
             completion(.finished)
         }
-
-        // if Defaults[.showWelcome] {
-        //     Window.Welcome.show()
-        //     Defaults[.showWelcome] = false
-        // }
     }
 
     func doUpdateCheck() {
         let oneDayMS = (60 * 60 * 24 * 1000)
         if Defaults[.lastUpdateCheck] + oneDayMS < Int(Date().currentTimeMillis()) {
             os_log("Running update check")
-            DispatchQueue.main.async { self.checkForRelease(isInteractive: false) }
+            DispatchQueue.main.async { self.checkForRelease() }
             Defaults[.lastUpdateCheck] = Int(Date().currentTimeMillis())
         }
     }
 
-    func checkForRelease(isInteractive interactive: Bool) {
+    func checkForRelease() {
         let currentVersion = Bundle.main.version
         if let release = try? updater!.getLatestRelease() {
-            if currentVersion >= release.version {
-                if interactive {
-                    let alert = NSAlert()
-                    alert.messageText = "You are running the latest version"
-                    alert.informativeText = "No update is required."
-                    alert.alertStyle = NSAlert.Style.informational
-                    alert.addButton(withTitle: "OK")
-                    alert.runModal()
-                }
-            } else {
+            if currentVersion < release.version {
                 if let zipURL = release.assets.filter({ $0.browser_download_url.path.hasSuffix(".zip") }).first {
                     let alert = NSAlert()
                     alert.messageText = "New version of Pareto Security \(release.version) is available"
@@ -97,32 +83,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 }
             }
         }
-    }
-
-    @objc func openUpdateWindow() {
-        if updateWindow == nil {
-            let updateView = UpdateView()
-            updateWindow = NSWindow(
-                contentRect: NSRect(x: 20, y: 20, width: 480, height: 300),
-                styleMask: [.titled, .closable],
-                backing: .buffered,
-                defer: false
-            )
-            updateWindow.center()
-            updateWindow.setFrameAutosaveName("Preferences")
-            updateWindow.isReleasedWhenClosed = false
-            updateWindow.contentView = NSHostingView(rootView: updateView)
-        }
-        updateWindow.makeKeyAndOrderFront(nil)
-    }
-
-    @objc func maybeUpdate() {
-        NSApp.sendAction(#selector(openUpdateWindow), to: nil, from: nil)
-        NSApp.activate(ignoringOtherApps: true)
-    }
-
-    @objc func checkUpdate() {
-        checkForRelease(isInteractive: true)
     }
 
     @objc func showPrefs() {

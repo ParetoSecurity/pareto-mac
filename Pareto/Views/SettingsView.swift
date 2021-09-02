@@ -34,6 +34,10 @@ struct GeneralSettingsView: View {
 }
 
 struct AboutSettingsView: View {
+    @State private var isLoading = false
+    @State private var fetched = false
+    @State private var status = "Checking for updates"
+
     var body: some View {
         HStack {
             Image("Logo").resizable()
@@ -41,8 +45,19 @@ struct AboutSettingsView: View {
             VStack(alignment: .leading) {
                 Link("Pareto Security",
                      destination: URL(string: "https://paretosecurity.app")!)
-                Text("Version: \(AppInfo.appVersion)")
-                Text("Build: \(AppInfo.buildVersion)")
+
+                VStack(alignment: .leading, spacing: 0) {
+                    Text("Version: \(AppInfo.appVersion) - \(AppInfo.buildVersion)")
+                    HStack {
+                        Text(status)
+                        if self.isLoading {
+                            SemiCircleSpin().frame(width: 15, height: 15, alignment: .center)
+                        } else {
+                            SemiCircleSpin().frame(width: 15, height: 15, alignment: .center).hidden()
+                        }
+                    }
+                }
+
                 HStack(spacing: 0) {
                     Text("We’d love to ")
                     Link("hear from you!",
@@ -52,7 +67,43 @@ struct AboutSettingsView: View {
                 Text("Made with ❤️ at Niteo")
             }
 
-        }.frame(width: 350, height: 100).padding(5)
+        }.frame(width: 350, height: 100).padding(5).onAppear(perform: fetch)
+    }
+
+    private func fetch() {
+        if fetched {
+            return
+        }
+        DispatchQueue.global(qos: .userInitiated).async {
+            isLoading = true
+            status = "Checking for update"
+            let updater = AppUpdater(owner: "ParetoSecurity", repo: "pareto-mac")
+            let currentVersion = Bundle.main.version
+            if let release = try? updater.getLatestRelease() {
+                fetched = true
+                isLoading = false
+                if currentVersion < release.version {
+                    status = "New version found"
+                    if let zipURL = release.assets.filter({ $0.browser_download_url.path.hasSuffix(".zip") }).first {
+                        status = "Installing new update"
+                        isLoading = true
+
+                        let done = updater.downloadAndUpdate(withAsset: zipURL)
+                        if !done {
+                            status = "Failed to update, download manualy"
+                            isLoading = false
+                        }
+
+                    } else {
+                        status = "App is up to date"
+                        isLoading = false
+                    }
+                } else {
+                    status = "App is up to date"
+                    isLoading = false
+                }
+            }
+        }
     }
 }
 

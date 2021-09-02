@@ -12,7 +12,7 @@ import XCTest
 class SettingsViewTests: XCTestCase {
     func testAbout() throws {
         let subject = AboutSettingsView()
-        let text = try subject.inspect().hStack()[1].vStack()[4]
+        let text = try subject.inspect().hStack()[1].vStack()[3]
             .text().string()
         XCTAssertEqual(text, "Made with ❤️ at Niteo")
     }
@@ -22,7 +22,14 @@ class SettingsViewTests: XCTestCase {
         let one = try subject.inspect().form()[0].section().footer().text().string()
         XCTAssertEqual(one, "Automatically opens the app when you start your Mac.")
     }
+
+    func testSpinner() throws {
+        let subject = SemiCircleSpin()
+        let one = try! subject.inspect()
+        XCTAssertTrue(!one.isHidden())
+    }
 }
 
 extension AboutSettingsView: Inspectable {}
 extension GeneralSettingsView: Inspectable {}
+extension SemiCircleSpin: Inspectable {}
