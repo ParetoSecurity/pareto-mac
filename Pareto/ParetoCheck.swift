@@ -11,7 +11,7 @@ import Foundation
 import os.log
 import SwiftUI
 
-class ParetoCheck: Hashable {
+class ParetoCheck: Hashable, ObservableObject, Identifiable {
     static func == (lhs: ParetoCheck, rhs: ParetoCheck) -> Bool {
         lhs.UUID == rhs.UUID
     }

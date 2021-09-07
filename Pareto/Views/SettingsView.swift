@@ -37,18 +37,26 @@ struct GeneralSettingsView: View {
 }
 
 struct ChecksSettingsView: View {
+    @State var updater: Bool = false
     var body: some View {
         VStack(alignment: .leading) {
             Text("Deselect the checks you don't want the app to run.")
 
             Form {
                 ForEach(AppInfo.claims.sorted(by: { $0.title < $1.title }), id: \.self) { claim in
-                    Text(claim.title).fontWeight(.bold).font(.system(size: 15)).padding(.top)
+                    // Hack to force update view
+                    // see https://developer.apple.com/forums/thread/131577
+                    if updater {
+                        Text(claim.title).fontWeight(.bold).font(.system(size: 15)).padding(.top)
+                    } else {
+                        Text(claim.title).fontWeight(.bold).font(.system(size: 15)).padding(.top)
+                    }
                     ForEach(claim.checks.sorted(by: { $0.Title < $1.Title }), id: \.self) { check in
                         Toggle(check.Title, isOn: Binding<Bool>(
                             get: { check.isActive },
                             set: {
                                 check.isActive = $0
+                                updater.toggle()
                             }
                         ))
                     }

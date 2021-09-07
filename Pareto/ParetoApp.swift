@@ -16,6 +16,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var updater: AppUpdater?
     var updateWindow: NSWindow!
 
+    func application(_: NSApplication, open urls: [URL]) {
+        for url in urls {
+            os_log("url:\(url)")
+        }
+    }
+
     func applicationDidFinishLaunching(_: Notification) {
         statusBar = StatusBarController()
         statusBar?.configureChecks()

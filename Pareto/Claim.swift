@@ -73,26 +73,27 @@ class Claim: Hashable {
             }
         }
         submenu.addItem(addSubmenu(withTitle: "Last check: \(Date().fromTimeStamp(timeStamp: lastCheck))", action: nil))
-        submenu.addItem(NSMenuItem.separator())
 
-        if snoozeTime == 0 {
-            if isActive {
-                submenu.addItem(addSubmenu(withTitle: "Snooze for 1 hour", action: #selector(snoozeOneHour)))
-                submenu.addItem(addSubmenu(withTitle: "Snooze for 1 day", action: #selector(snoozeOneDay)))
-                submenu.addItem(addSubmenu(withTitle: "Snooze for 1 week", action: #selector(snoozeOneWeek)))
+        if !Defaults[.showBeta] {
+            submenu.addItem(NSMenuItem.separator())
+            if snoozeTime == 0 {
+                if isActive {
+                    submenu.addItem(addSubmenu(withTitle: "Snooze for 1 hour", action: #selector(snoozeOneHour)))
+                    submenu.addItem(addSubmenu(withTitle: "Snooze for 1 day", action: #selector(snoozeOneDay)))
+                    submenu.addItem(addSubmenu(withTitle: "Snooze for 1 week", action: #selector(snoozeOneWeek)))
+                }
+            } else {
+                if isActive {
+                    submenu.addItem(addSubmenu(withTitle: "Unsnooze", action: #selector(unsnooze)))
+                    submenu.addItem(addSubmenu(withTitle: "Resumes: \(Date().fromTimeStamp(timeStamp: lastCheck + (snoozeTime * 1000)))", action: nil))
+                }
             }
-        } else {
+            submenu.addItem(NSMenuItem.separator())
             if isActive {
-                submenu.addItem(addSubmenu(withTitle: "Unsnooze", action: #selector(unsnooze)))
-                submenu.addItem(addSubmenu(withTitle: "Resumes: \(Date().fromTimeStamp(timeStamp: lastCheck + (snoozeTime * 1000)))", action: nil))
+                submenu.addItem(addSubmenu(withTitle: "Disable", action: #selector(disableCheck)))
+            } else {
+                submenu.addItem(addSubmenu(withTitle: "Enable", action: #selector(enableCheck)))
             }
-        }
-
-        submenu.addItem(NSMenuItem.separator())
-        if isActive {
-            submenu.addItem(addSubmenu(withTitle: "Disable", action: #selector(disableCheck)))
-        } else {
-            submenu.addItem(addSubmenu(withTitle: "Enable", action: #selector(enableCheck)))
         }
 
         // item.submenu = submenu
