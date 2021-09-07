@@ -17,14 +17,6 @@ class StatusBarController: NSMenu, NSMenuDelegate {
     var isRunnig = false
     var workItem: DispatchWorkItem?
 
-    let claims = [
-        Claim(withTitle: "Login is secure", withChecks: [AutologinCheck(), RequirePasswordToUnlock()]),
-        Claim(withTitle: "Firewall is on", withChecks: [FirewallCheck(), FileSharingCheck(), PrinterSharingCheck()]),
-        Claim(withTitle: "System integrity", withChecks: [GatekeeperCheck(), FileVaultCheck(), BootCheck()]),
-        Claim(withTitle: "Lock after inactivity", withChecks: [ScreensaverPasswordCheck(), ScreensaverCheck()])
-        // Claim(withTitle: "Apps are up-to-date", withChecks: [IntegrationCheck(), IntegrationCheck()])
-    ]
-
     required init(coder decoder: NSCoder) {
         super.init(coder: decoder)
     }
@@ -42,7 +34,7 @@ class StatusBarController: NSMenu, NSMenuDelegate {
 
     var claimsPassed: Bool {
         var passed = true
-        for claim in claims where claim.isActive && claim.isNotSnoozed {
+        for claim in AppInfo.claims where claim.isActive && claim.isNotSnoozed {
             passed = passed && claim.checkPassed
         }
         return passed
@@ -50,7 +42,7 @@ class StatusBarController: NSMenu, NSMenuDelegate {
 
     var claimsSnoozed: Int {
         var snoozedTime = 0
-        for claim in claims where claim.isActive {
+        for claim in AppInfo.claims where claim.isActive {
             snoozedTime += claim.snoozeTime
         }
         return snoozedTime
@@ -69,7 +61,7 @@ class StatusBarController: NSMenu, NSMenuDelegate {
     }
 
     func configureChecks() {
-        for claim in claims {
+        for claim in AppInfo.claims {
             claim.configure()
         }
     }
@@ -81,7 +73,7 @@ class StatusBarController: NSMenu, NSMenuDelegate {
         statusItem.button?.image = imageDefault
         isRunnig = true
         workItem = DispatchWorkItem {
-            for claim in self.claims {
+            for claim in AppInfo.claims {
                 claim.run()
             }
         }
@@ -142,7 +134,7 @@ class StatusBarController: NSMenu, NSMenuDelegate {
     }
 
     func addChecksMenuItems() {
-        for claim in claims.sorted(by: { $0.title < $1.title }) {
+        for claim in AppInfo.claims.sorted(by: { $0.title < $1.title }) {
             addItem(claim.menu())
         }
     }

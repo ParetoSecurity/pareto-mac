@@ -11,7 +11,15 @@ import Foundation
 import os.log
 import SwiftUI
 
-class Claim {
+class Claim: Hashable {
+    static func == (lhs: Claim, rhs: Claim) -> Bool {
+        lhs.title == rhs.title
+    }
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(title)
+    }
+
     private enum Snooze {
         static let oneHour = 3600
         static let oneDay = oneHour * 24

@@ -11,6 +11,14 @@ import OSLog
 import SwiftUI
 
 enum AppInfo {
+    static let claims = [
+        Claim(withTitle: "Login is secure", withChecks: [AutologinCheck(), RequirePasswordToUnlock()]),
+        Claim(withTitle: "Firewall is on", withChecks: [FirewallCheck(), FileSharingCheck(), PrinterSharingCheck()]),
+        Claim(withTitle: "System integrity", withChecks: [GatekeeperCheck(), FileVaultCheck(), BootCheck()]),
+        Claim(withTitle: "Lock after inactivity", withChecks: [ScreensaverPasswordCheck(), ScreensaverCheck()])
+        // Claim(withTitle: "Apps are up-to-date", withChecks: [IntegrationCheck(), IntegrationCheck()])
+    ]
+
     static let appVersion: String = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as! String
     static let buildVersion: String = Bundle.main.infoDictionary?["CFBundleVersion"] as! String
     static let osVersion = ProcessInfo.processInfo.operatingSystemVersionString
@@ -77,5 +85,13 @@ enum AppInfo {
 
     static let getVersions = { () -> String in
         "HW: \(AppInfo.hwModel())\nmacOS: \(AppInfo.osVersion)\nApp Version: \(AppInfo.appVersion)\nBuild: \(AppInfo.buildVersion)"
+    }
+
+    public static func getSystemUUID() -> String? {
+        let dev = IOServiceMatching("IOPlatformExpertDevice")
+        let platformExpert: io_service_t = IOServiceGetMatchingService(kIOMasterPortDefault, dev)
+        let serialNumberAsCFString = IORegistryEntryCreateCFProperty(platformExpert, kIOPlatformUUIDKey as CFString, kCFAllocatorDefault, 0)
+        IOObjectRelease(platformExpert)
+        return serialNumberAsCFString!.takeUnretainedValue() as? String
     }
 }
