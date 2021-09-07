@@ -17,6 +17,17 @@ class StatusBarController: NSMenu, NSMenuDelegate {
     var isRunnig = false
     var workItem: DispatchWorkItem?
 
+    private enum Snooze {
+        static let oneHour = 3600 * 1000
+        static let oneDay = oneHour * 24
+        static let oneWeek = oneDay * 7
+    }
+
+    public var snoozeTime: Int {
+        get { Defaults[.snoozeTime] }
+        set { Defaults[.snoozeTime] = newValue }
+    }
+
     required init(coder decoder: NSCoder) {
         super.init(coder: decoder)
     }
@@ -34,18 +45,10 @@ class StatusBarController: NSMenu, NSMenuDelegate {
 
     var claimsPassed: Bool {
         var passed = true
-        for claim in AppInfo.claims where claim.isActive && claim.isNotSnoozed {
+        for claim in AppInfo.claims where claim.isActive && Defaults[.snoozeTime] == 0 {
             passed = passed && claim.checkPassed
         }
         return passed
-    }
-
-    var claimsSnoozed: Int {
-        var snoozedTime = 0
-        for claim in AppInfo.claims where claim.isActive {
-            snoozedTime += claim.snoozeTime
-        }
-        return snoozedTime
     }
 
     func updateMenu() {
@@ -69,6 +72,16 @@ class StatusBarController: NSMenu, NSMenuDelegate {
     func runChecks() {
         if isRunnig {
             return
+        }
+
+        // Snooze in effect
+        if Defaults[.snoozeTime] >= Date().currentTimeMillis() {
+            os_log("Checks are snoozed until %s", log: Log.app, String(Defaults[.snoozeTime]))
+            return
+        } else {
+            // snoze expired
+            os_log("Snooze expired %s", log: Log.app, String(Defaults[.snoozeTime]))
+            Defaults[.snoozeTime] = 0
         }
         statusItem.button?.image = imageDefault
         isRunnig = true
@@ -112,12 +125,48 @@ class StatusBarController: NSMenu, NSMenuDelegate {
         updateMenu()
     }
 
+    func addSubmenu(withTitle: String, action: Selector?) -> NSMenuItem {
+        let item = NSMenuItem(title: withTitle, action: action, keyEquivalent: "")
+        item.target = self
+        return item
+    }
+
+    @objc func snoozeOneHour() {
+        snoozeTime = Date().currentTimeMillis() + Snooze.oneHour
+    }
+
+    @objc func snoozeOneDay() {
+        snoozeTime = Date().currentTimeMillis() + Snooze.oneDay
+    }
+
+    @objc func snoozeOneWeek() {
+        snoozeTime = Date().currentTimeMillis() + Snooze.oneWeek
+    }
+
+    @objc func unsnooze() {
+        snoozeTime = 0
+    }
+
     func addApplicationItems() {
         addItem(NSMenuItem.separator())
 
         let runItem = NSMenuItem(title: "Run Checks", action: #selector(AppDelegate.runChecks), keyEquivalent: "r")
         runItem.target = NSApp.delegate
         addItem(runItem)
+        let submenu = NSMenu()
+        if Defaults[.snoozeTime] == 0 {
+            submenu.addItem(addSubmenu(withTitle: "Snooze for 1 hour", action: #selector(snoozeOneHour)))
+            submenu.addItem(addSubmenu(withTitle: "Snooze for 1 day", action: #selector(snoozeOneDay)))
+            submenu.addItem(addSubmenu(withTitle: "Snooze for 1 week", action: #selector(snoozeOneWeek)))
+
+        } else {
+            submenu.addItem(addSubmenu(withTitle: "Resume", action: #selector(unsnooze)))
+            submenu.addItem(addSubmenu(withTitle: "Resumes: \(Date().fromTimeStamp(timeStamp: snoozeTime))", action: nil))
+        }
+
+        let snoozeItem = NSMenuItem(title: "Snooze", action: nil, keyEquivalent: "")
+        snoozeItem.submenu = submenu
+        addItem(snoozeItem)
 
         let preferencesItem = NSMenuItem(title: "Preferences", action: #selector(AppDelegate.showPrefs), keyEquivalent: "p")
         preferencesItem.target = NSApp.delegate

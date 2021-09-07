@@ -7,6 +7,7 @@
 
 import AppKit
 import Combine
+import Defaults
 import Foundation
 import os.log
 import SwiftUI
@@ -28,10 +29,6 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
         "ParetoCheck-" + UUID + "-Enabled"
     }
 
-    var SnoozeKey: String {
-        "ParetoCheck-" + UUID + "-Snooze"
-    }
-
     var PassesKey: String {
         "ParetoCheck-" + UUID + "-Passes"
     }
@@ -43,11 +40,6 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
     public var isActive: Bool {
         get { UserDefaults.standard.bool(forKey: EnabledKey) }
         set { UserDefaults.standard.set(newValue, forKey: EnabledKey) }
-    }
-
-    public var snoozeTime: Int {
-        get { UserDefaults.standard.integer(forKey: SnoozeKey) }
-        set { UserDefaults.standard.set(newValue, forKey: SnoozeKey) }
     }
 
     var checkTimestamp: Int {
@@ -68,7 +60,7 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
         let item = NSMenuItem(title: Title, action: #selector(moreInfo), keyEquivalent: "")
         item.target = self
         if isActive {
-            if snoozeTime > 0 {
+            if Defaults[.snoozeTime] > 0 {
                 item.image = NSImage.SF(name: "powersleep").tint(color: .systemGray)
             } else {
                 if checkPassed {
@@ -87,7 +79,6 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
     func configure() {
         UserDefaults.standard.register(defaults: [
             EnabledKey: true,
-            SnoozeKey: 0,
             PassesKey: false,
             TimestampKey: 0
         ])
@@ -99,17 +90,6 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
             return
         }
 
-        if snoozeTime != 0 {
-            let nextCheck = checkTimestamp + (snoozeTime * 1000)
-            let now = Int(Date().currentTimeMillis())
-            if now >= nextCheck {
-                os_log("Resetting snooze for %{public}s - %{public}s", log: Log.app, UUID, Title)
-                snoozeTime = 0
-            } else {
-                os_log("Snooze in effect for %{public}s - %{public}s", log: Log.app, UUID, Title)
-                return
-            }
-        }
         os_log("Running check for %{public}s - %{public}s", log: Log.app, UUID, Title)
         checkPassed = checkPasses()
         checkTimestamp = Int(Date().currentTimeMillis())

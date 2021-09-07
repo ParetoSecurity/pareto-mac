@@ -195,19 +195,16 @@ struct SettingsView: View {
                     Label("General", systemImage: "gear")
                 }
                 .tag(Tabs.general)
-
             TeamSettingsView()
                 .tabItem {
                     Label("Teams", systemImage: "person.3.fill")
                 }
                 .tag(Tabs.team)
-            if showBeta {
-                ChecksSettingsView()
-                    .tabItem {
-                        Label("Checks", systemImage: "pencil")
-                    }
-                    .tag(Tabs.checks)
-            }
+            ChecksSettingsView()
+                .tabItem {
+                    Label("Checks", systemImage: "pencil")
+                }
+                .tag(Tabs.checks)
             AboutSettingsView()
                 .tabItem {
                     Label("About", systemImage: "info")

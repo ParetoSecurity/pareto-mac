@@ -16,6 +16,7 @@ extension Defaults.Keys {
     static let showBeta = Key<Bool>("showBeta", default: false)
     static let betaChannel = Key<Bool>("betaChannel", default: false)
     static let internalRunChecks = Key<Bool>("internalRunChecks", default: false)
+    static let snoozeTime = Key<Int>("snoozeTime", default: 0)
     static let lastUpdateCheck = Key<Int>("lastUpdateCheck", default: Date().currentTimeMillis())
     static let machineUUID = Key<String>("machineUUID", default: AppInfo.getSystemUUID() ?? UUID().uuidString)
 }

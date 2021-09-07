@@ -23,7 +23,6 @@ class CheckIntegrationTest: XCTestCase {
 
         // Ensure keys are not changed without migration
         XCTAssertEqual(check.PassesKey, "ParetoCheck-aaaaaaaa-bbbb-cccc-dddd-abcdef123456-Passes")
-        XCTAssertEqual(check.SnoozeKey, "ParetoCheck-aaaaaaaa-bbbb-cccc-dddd-abcdef123456-Snooze")
         XCTAssertEqual(check.EnabledKey, "ParetoCheck-aaaaaaaa-bbbb-cccc-dddd-abcdef123456-Enabled")
         XCTAssertEqual(check.TimestampKey, "ParetoCheck-aaaaaaaa-bbbb-cccc-dddd-abcdef123456-TS")
     }
@@ -31,39 +30,5 @@ class CheckIntegrationTest: XCTestCase {
     func testCheckPasses() throws {
         let check = IntegrationCheck()
         XCTAssert(check.checkPasses())
-    }
-
-    func testSnooze() throws {
-        let claim = Claim(withTitle: "Test", withChecks: [IntegrationCheck()])
-        claim.snoozeOneDay()
-        XCTAssertEqual(claim.snoozeTime, 3600 * 24)
-        claim.snoozeOneHour()
-        XCTAssertEqual(claim.snoozeTime, 3600)
-        claim.snoozeOneWeek()
-        XCTAssertEqual(claim.snoozeTime, 3600 * 24 * 7)
-        claim.unsnooze()
-        XCTAssertEqual(claim.snoozeTime, 0)
-    }
-
-    func testDisableAndEnable() throws {
-        let claim = Claim(withTitle: "Test", withChecks: [IntegrationCheck()])
-        claim.disableCheck()
-        XCTAssertEqual(claim.isActive, false)
-        claim.enableCheck()
-        XCTAssertEqual(claim.isActive, true)
-    }
-
-    func testThatInactiveCheckDoesNotRun() throws {
-        let claim = Claim(withTitle: "Test", withChecks: [IntegrationCheck()])
-        claim.disableCheck()
-        claim.run()
-        XCTAssert(!claim.checkPassed, "Check should not run if disabled")
-    }
-
-    func testThatActiveCheckDoesRun() throws {
-        let claim = Claim(withTitle: "Test", withChecks: [IntegrationCheck()])
-        claim.enableCheck()
-        claim.run()
-        XCTAssert(claim.checkPassed, "Check after run should pass")
     }
 }
