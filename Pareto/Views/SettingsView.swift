@@ -7,6 +7,7 @@
 import AppKit
 import Defaults
 import LaunchAtLogin
+import LoaderUI
 import SwiftUI
 
 struct GeneralSettingsView: View {

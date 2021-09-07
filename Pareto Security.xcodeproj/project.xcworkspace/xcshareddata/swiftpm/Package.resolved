@@ -20,6 +20,15 @@
         }
       },
       {
+        "package": "LoaderUI",
+        "repositoryURL": "https://github.com/ParetoSecurity/LoaderUI",
+        "state": {
+          "branch": "master",
+          "revision": "4073a102681be36724734e6c45045f9eb777dee5",
+          "version": null
+        }
+      },
+      {
         "package": "Path.swift",
         "repositoryURL": "https://github.com/mxcl/Path.swift.git",
         "state": {

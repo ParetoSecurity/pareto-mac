@@ -22,14 +22,7 @@ class SettingsViewTests: XCTestCase {
         let one = try subject.inspect().form()[0].section().footer().text().string()
         XCTAssertEqual(one, "Automatically opens the app when you start your Mac.")
     }
-
-    func testSpinner() throws {
-        let subject = SemiCircleSpin()
-        let one = try! subject.inspect()
-        XCTAssertTrue(!one.isHidden())
-    }
 }
 
 extension AboutSettingsView: Inspectable {}
 extension GeneralSettingsView: Inspectable {}
-extension SemiCircleSpin: Inspectable {}
