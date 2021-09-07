@@ -11,7 +11,15 @@ import Foundation
 import os.log
 import SwiftUI
 
-class ParetoCheck {
+class ParetoCheck: Hashable {
+    static func == (lhs: ParetoCheck, rhs: ParetoCheck) -> Bool {
+        lhs.UUID == rhs.UUID
+    }
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(UUID)
+    }
+
     private(set) var UUID = "UUID"
     private(set) var Title = "Title"
     private(set) var canRunInSandbox = true

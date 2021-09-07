@@ -12,6 +12,7 @@ import SwiftUI
 struct GeneralSettingsView: View {
     @ObservedObject private var atLogin = LaunchAtLogin.observable
     @Default(.betaChannel) var betaChannel
+    @Default(.showBeta) var showBeta
 
     var body: some View {
         Form {
@@ -21,11 +22,13 @@ struct GeneralSettingsView: View {
                         Toggle("Start at Login", isOn: $atLogin.isEnabled)
                     }
             }
-            Section(
-                footer: Text("Latest features but potentially bugs to report.")) {
-                    VStack(alignment: .leading) {
-                        Toggle("Update app to pre-release builds", isOn: $betaChannel)
-                    }
+            if showBeta {
+                Section(
+                    footer: Text("Latest features but potentially bugs to report.")) {
+                        VStack(alignment: .leading) {
+                            Toggle("Update app to pre-release builds", isOn: $betaChannel)
+                        }
+                }
             }
         }
 
@@ -33,15 +36,66 @@ struct GeneralSettingsView: View {
     }
 }
 
+struct ChecksSettingsView: View {
+    var body: some View {
+        VStack(alignment: .leading) {
+            Text("Deselect the checks you don't want the app to run.")
+
+            Form {
+                ForEach(AppInfo.claims.sorted(by: { $0.title < $1.title }), id: \.self) { claim in
+                    Text(claim.title).fontWeight(.bold).font(.system(size: 15)).padding(.top)
+                    ForEach(claim.checks.sorted(by: { $0.Title < $1.Title }), id: \.self) { check in
+                        Toggle(check.Title, isOn: Binding<Bool>(
+                            get: { check.isActive },
+                            set: {
+                                check.isActive = $0
+                            }
+                        ))
+                    }
+                }
+            }
+        }
+        .frame(width: 350, height: 450).padding(5)
+    }
+}
+
 struct AboutSettingsView: View {
     @State private var isLoading = false
-    @State private var fetched = false
-    @State private var status = "Checking for updates"
+    @State private var status = UpdateStates.Checking
+    @State private var konami = 0
+    @Default(.showBeta) var showBeta
+
+    enum UpdateStates: String {
+        case Checking = "Checking for updates"
+        case NewVersion = "New version found"
+        case Installing = "Installing new update"
+        case Updated = "App is up to date"
+        case Failed = "Failed to update, download manualy"
+    }
 
     var body: some View {
         HStack {
             Image("Logo").resizable()
-                .aspectRatio(contentMode: .fit)
+                .aspectRatio(contentMode: .fit).onTapGesture {
+                    if !showBeta {
+                        konami += 1
+                        if konami >= 7 {
+                            showBeta = true
+                            konami = 0
+                            let alert = NSAlert()
+                            alert.messageText = "You are now part of a secret society seeing somewhat mysterious things."
+                            alert.alertStyle = NSAlert.Style.informational
+                            alert.addButton(withTitle: "Let me in")
+                            alert.runModal()
+                        }
+                    } else {
+                        konami += 1
+                        if konami >= 3 {
+                            showBeta = false
+                            konami = 0
+                        }
+                    }
+                }
             VStack(alignment: .leading) {
                 Link("Pareto Security",
                      destination: URL(string: "https://paretosecurity.app")!)
@@ -49,7 +103,7 @@ struct AboutSettingsView: View {
                 VStack(alignment: .leading, spacing: 0) {
                     Text("Version: \(AppInfo.appVersion) - \(AppInfo.buildVersion)")
                     HStack {
-                        Text(status)
+                        Text(status.rawValue)
                         if self.isLoading {
                             SemiCircleSpin().frame(width: 15, height: 15, alignment: .center)
                         } else {
@@ -71,37 +125,36 @@ struct AboutSettingsView: View {
     }
 
     private func fetch() {
-        if fetched {
-            return
-        }
         DispatchQueue.global(qos: .userInitiated).async {
             isLoading = true
-            status = "Checking for update"
+            status = UpdateStates.Checking
             let updater = AppUpdater(owner: "ParetoSecurity", repo: "pareto-mac")
             let currentVersion = Bundle.main.version
             if let release = try? updater.getLatestRelease() {
-                fetched = true
                 isLoading = false
                 if currentVersion < release.version {
-                    status = "New version found"
+                    status = UpdateStates.NewVersion
                     if let zipURL = release.assets.filter({ $0.browser_download_url.path.hasSuffix(".zip") }).first {
-                        status = "Installing new update"
+                        status = UpdateStates.Installing
                         isLoading = true
 
                         let done = updater.downloadAndUpdate(withAsset: zipURL)
                         if !done {
-                            status = "Failed to update, download manualy"
+                            status = UpdateStates.Failed
                             isLoading = false
                         }
 
                     } else {
-                        status = "App is up to date"
+                        status = UpdateStates.Updated
                         isLoading = false
                     }
                 } else {
-                    status = "App is up to date"
+                    status = UpdateStates.Updated
                     isLoading = false
                 }
+            } else {
+                status = UpdateStates.Updated
+                isLoading = false
             }
         }
     }
@@ -116,13 +169,15 @@ struct TeamSettingsView: View {
             Text("The Teams subscription will give you a web dashboard for an overview of the company’s devices.")
             Link("Learn more »",
                  destination: URL(string: "https://paretosecurity.app/pricing?utm_source=app&utm_medium=teams-link")!)
-        }.frame(width: 310, height: 100).padding(5)
+        }.frame(width: 350, height: 100).padding(5)
     }
 }
 
 struct SettingsView: View {
+    @Default(.showBeta) var showBeta
+
     private enum Tabs: Hashable {
-        case general, about, team, updater
+        case general, about, team, checks
     }
 
     var body: some View {
@@ -132,11 +187,19 @@ struct SettingsView: View {
                     Label("General", systemImage: "gear")
                 }
                 .tag(Tabs.general)
+
             TeamSettingsView()
                 .tabItem {
                     Label("Teams", systemImage: "person.3.fill")
                 }
                 .tag(Tabs.team)
+            if showBeta {
+                ChecksSettingsView()
+                    .tabItem {
+                        Label("Checks", systemImage: "pencil")
+                    }
+                    .tag(Tabs.checks)
+            }
             AboutSettingsView()
                 .tabItem {
                     Label("About", systemImage: "info")
@@ -144,7 +207,6 @@ struct SettingsView: View {
                 .tag(Tabs.about)
         }
         .padding(20)
-        .frame(width: 375, height: 150)
     }
 }
 

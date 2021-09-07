@@ -51,11 +51,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     func doUpdateCheck() {
-        let oneDayMS = (60 * 60 * 24 * 1000)
-        if Defaults[.lastUpdateCheck] + oneDayMS < Int(Date().currentTimeMillis()) {
+        if Defaults.shouldDoUpdateCheck() {
             os_log("Running update check")
             DispatchQueue.main.async { self.checkForRelease() }
-            Defaults[.lastUpdateCheck] = Int(Date().currentTimeMillis())
+            Defaults.doneUpdateCheck()
         }
     }
 
