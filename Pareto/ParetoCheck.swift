@@ -22,7 +22,8 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
     }
 
     private(set) var UUID = "UUID"
-    private(set) var Title = "Title"
+    private(set) var TitleON = "TitleON"
+    private(set) var TitleOFF = "TitleOFF"
     private(set) var canRunInSandbox = true
 
     var EnabledKey: String {
@@ -36,7 +37,11 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
     var TimestampKey: String {
         "ParetoCheck-" + UUID + "-TS"
     }
-
+    
+    var Title: String {
+        checkPassed ?  TitleON : TitleOFF
+    }
+    
     public var isActive: Bool {
         get { UserDefaults.standard.bool(forKey: EnabledKey) }
         set { UserDefaults.standard.set(newValue, forKey: EnabledKey) }
@@ -113,7 +118,6 @@ extension ParetoCheck {
             os_log("Failed reading %{public}s", path)
             return nil
         }
-        // print("\(path): \(dictionary as AnyObject)")
         return dictionary
     }
 

@@ -19,7 +19,7 @@ class CheckIntegrationTest: XCTestCase {
     func testInit() throws {
         let check = IntegrationCheck()
         XCTAssertEqual(check.UUID, "aaaaaaaa-bbbb-cccc-dddd-abcdef123456")
-        XCTAssertEqual(check.Title, "Unit test mock")
+        XCTAssertEqual(check.Title, "Unit test mock OFF")
 
         // Ensure keys are not changed without migration
         XCTAssertEqual(check.PassesKey, "ParetoCheck-aaaaaaaa-bbbb-cccc-dddd-abcdef123456-Passes")

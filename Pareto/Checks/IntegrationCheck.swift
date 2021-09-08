@@ -13,8 +13,11 @@ class IntegrationCheck: ParetoCheck {
         "aaaaaaaa-bbbb-cccc-dddd-abcdef123456"
     }
 
-    override var Title: String {
-        "Unit test mock"
+    override var TitleON: String {
+        "Unit test mock ON"
+    }
+    override var TitleOFF: String {
+        "Unit test mock OFF"
     }
 
     override func checkPasses() -> Bool {

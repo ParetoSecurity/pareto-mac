@@ -10,8 +10,11 @@ class ScreensaverPasswordCheck: ParetoCheck {
         "37dee029-605b-4aab-96b9-5438e5aa44d8"
     }
 
-    override var Title: String {
-        "Password after sleep or screen saver"
+    override var TitleON: String {
+        "Password after inactivity is on"
+    }
+    override var TitleOFF: String {
+        "Password after inactivity is off"
     }
 
     override func checkPasses() -> Bool {

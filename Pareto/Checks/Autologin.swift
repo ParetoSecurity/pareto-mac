@@ -10,8 +10,11 @@ class AutologinCheck: ParetoCheck {
         "f962c423-fdf5-428a-a57a-816abc9b253e"
     }
 
-    override var Title: String {
+    override var TitleON: String {
         "Automatic login is off"
+    }
+    override var TitleOFF: String {
+        "Automatic login is on"
     }
 
     override func checkPasses() -> Bool {

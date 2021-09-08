@@ -10,8 +10,11 @@ class FileSharingCheck: ParetoCheck {
         "b96524e0-850b-4bb8-abc7-517051b6c14e"
     }
 
-    override var Title: String {
+    override var TitleON: String {
         "Sharing files is off"
+    }
+    override var TitleOFF: String {
+        "Sharing files is on"
     }
 
     override func checkPasses() -> Bool {

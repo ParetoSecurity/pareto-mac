@@ -13,8 +13,11 @@ class BootCheck: ParetoCheck {
         "b96524e0-850b-4bb9-abc7-517051b6c14e"
     }
 
-    override var Title: String {
+    override var TitleON: String {
         "Boot is secure"
+    }
+    override var TitleOFF: String {
+        "Boot is unsecure"
     }
 
     func GetNVRAM(_ name: String) -> String {

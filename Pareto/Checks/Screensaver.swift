@@ -10,8 +10,11 @@ class ScreensaverCheck: ParetoCheck {
         "13e4dbf1-f87f-4bd9-8a82-f62044f002f4"
     }
 
-    override var Title: String {
-        "Screen saver shows in under 5 minutes"
+    override var TitleON: String {
+        "Screen saver shows in under 5min"
+    }
+    override var TitleOFF: String {
+        "Screen saver shows in more than 5min"
     }
 
     override func checkPasses() -> Bool {

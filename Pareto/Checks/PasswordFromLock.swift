@@ -10,8 +10,11 @@ class RequirePasswordToUnlock: ParetoCheck {
         "f962c423-fdf5-428a-a57a-816abc9b252d"
     }
 
-    override var Title: String {
+    override var TitleON: String {
         "Password to unlock preferences"
+    }
+    override var TitleOFF: String {
+        "No password to unlock preferences"
     }
 
     override func checkPasses() -> Bool {

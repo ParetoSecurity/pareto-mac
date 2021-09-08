@@ -12,8 +12,11 @@ class GatekeeperCheck: ParetoCheck {
         "b59e172e-6a2d-4309-94ed-11e8722836b3"
     }
 
-    override var Title: String {
+    override var TitleON: String {
         "Gatekeeper is on"
+    }
+    override var TitleOFF: String {
+        "Gatekeeper is off"
     }
 
     func isSandboxingEnabled() -> Bool {
