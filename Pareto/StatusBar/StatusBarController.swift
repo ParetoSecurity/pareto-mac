@@ -136,18 +136,22 @@ class StatusBarController: NSMenu, NSMenuDelegate {
 
     @objc func snoozeOneHour() {
         snoozeTime = Date().currentTimeMillis() + Snooze.oneHour
+        updateMenu()
     }
 
     @objc func snoozeOneDay() {
         snoozeTime = Date().currentTimeMillis() + Snooze.oneDay
+        updateMenu()
     }
 
     @objc func snoozeOneWeek() {
         snoozeTime = Date().currentTimeMillis() + Snooze.oneWeek
+        updateMenu()
     }
 
     @objc func unsnooze() {
         snoozeTime = 0
+        updateMenu()
     }
 
     func addApplicationItems() {
