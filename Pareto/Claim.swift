@@ -28,13 +28,9 @@ class Claim: Hashable {
         self.checks = AppInfo.inSandbox ? checks.filter { $0.canRunInSandbox } : checks
     }
 
-    var checkPassed: Bool { checks.allSatisfy { $0.checkPassed } }
-
+    var checkPassed: Bool { checks.allSatisfy { $0.isActive ? $0.checkPassed : true } }
     var isActive: Bool { checks.allSatisfy { $0.isActive } }
-
-    var lastCheck: Int {
-        return checks.first!.checkTimestamp
-    }
+    var isDisabled: Bool { checks.allSatisfy { !$0.isActive } }
 
     func addSubmenu(withTitle: String, action: Selector?) -> NSMenuItem {
         let item = NSMenuItem(title: withTitle, action: action, keyEquivalent: "")
@@ -47,21 +43,20 @@ class Claim: Hashable {
         let submenu = NSMenu()
         for check in checks.sorted(by: { $0.Title < $1.Title }) {
             submenu.addItem(check.menu())
-            if isActive {
+            if !isDisabled {
                 if Defaults[.snoozeTime] > 0 {
                     item.image = NSImage.SF(name: "powersleep").tint(color: .systemGray)
                 } else {
                     if checkPassed {
-                        item.image = NSImage.SF(name: "checkmark.shield").tint(color: .systemGreen)
+                        item.image = NSImage.SF(name: "checkmark.shield.fill").tint(color: .systemGreen)
                     } else {
-                        item.image = NSImage.SF(name: "exclamationmark.shield").tint(color: .systemRed)
+                        item.image = NSImage.SF(name: "xmark.shield.fill").tint(color: .systemOrange)
                     }
                 }
             } else {
-                item.image = NSImage.SF(name: "shield.slash")
+                item.image = NSImage.SF(name: "shield")
             }
         }
-        submenu.addItem(addSubmenu(withTitle: "Last check: \(Date().fromTimeStamp(timeStamp: lastCheck))", action: nil))
 
         // item.submenu = submenu
         item.submenu = submenu

@@ -13,6 +13,7 @@ class AutologinCheck: ParetoCheck {
     override var TitleON: String {
         "Automatic login is off"
     }
+
     override var TitleOFF: String {
         "Automatic login is on"
     }

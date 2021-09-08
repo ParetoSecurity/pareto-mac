@@ -13,6 +13,7 @@ class ScreensaverCheck: ParetoCheck {
     override var TitleON: String {
         "Screen saver shows in under 5min"
     }
+
     override var TitleOFF: String {
         "Screen saver shows in more than 5min"
     }

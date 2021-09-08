@@ -13,6 +13,7 @@ class RequirePasswordToUnlock: ParetoCheck {
     override var TitleON: String {
         "Password to unlock preferences"
     }
+
     override var TitleOFF: String {
         "No password to unlock preferences"
     }

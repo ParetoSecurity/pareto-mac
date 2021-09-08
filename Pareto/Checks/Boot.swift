@@ -16,6 +16,7 @@ class BootCheck: ParetoCheck {
     override var TitleON: String {
         "Boot is secure"
     }
+
     override var TitleOFF: String {
         "Boot is unsecure"
     }

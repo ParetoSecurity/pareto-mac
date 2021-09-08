@@ -15,6 +15,7 @@ class GatekeeperCheck: ParetoCheck {
     override var TitleON: String {
         "Gatekeeper is on"
     }
+
     override var TitleOFF: String {
         "Gatekeeper is off"
     }

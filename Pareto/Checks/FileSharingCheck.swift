@@ -13,6 +13,7 @@ class FileSharingCheck: ParetoCheck {
     override var TitleON: String {
         "Sharing files is off"
     }
+
     override var TitleOFF: String {
         "Sharing files is on"
     }

@@ -12,9 +12,9 @@ import SwiftUI
 
 enum AppInfo {
     static let claims = [
-        Claim(withTitle: "Access Security", withChecks: [AutologinCheck(), RequirePasswordToUnlock(),ScreensaverPasswordCheck(), ScreensaverCheck()]),
-        Claim(withTitle: "Firewall & Sharing", withChecks: [FirewallCheck(), FileSharingCheck(), PrinterSharingCheck()]),
-        Claim(withTitle: "System integrity", withChecks: [GatekeeperCheck(), FileVaultCheck(), BootCheck()]),
+        Claim(withTitle: "Access Security", withChecks: [AutologinCheck(), RequirePasswordToUnlock(), ScreensaverPasswordCheck(), ScreensaverCheck()]),
+        Claim(withTitle: "Firewall & Sharing", withChecks: [FirewallCheck(), FileSharingCheck(), PrinterSharingCheck(), RemoteManagmentCheck(), RemoteLoginCheck()]),
+        Claim(withTitle: "System integrity", withChecks: [GatekeeperCheck(), FileVaultCheck(), BootCheck()])
         // Claim(withTitle: "Apps are up-to-date", withChecks: [IntegrationCheck(), IntegrationCheck()])
     ]
 
