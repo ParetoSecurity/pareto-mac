@@ -83,6 +83,9 @@ class StatusBarController: NSMenu, NSMenuDelegate {
             os_log("Snooze expired %s", log: Log.app, String(Defaults[.snoozeTime]))
             Defaults[.snoozeTime] = 0
         }
+
+        Defaults[.lastCheck] = Date().currentTimeMillis()
+
         statusItem.button?.image = imageDefault
         isRunnig = true
         workItem = DispatchWorkItem {
@@ -148,11 +151,16 @@ class StatusBarController: NSMenu, NSMenuDelegate {
     }
 
     func addApplicationItems() {
+        let lastItem = NSMenuItem(title: "Last check: \(Date().fromTimeStamp(timeStamp: Defaults[.lastCheck]))", action: nil, keyEquivalent: "")
+        lastItem.target = NSApp.delegate
+        addItem(lastItem)
+
         addItem(NSMenuItem.separator())
 
         let runItem = NSMenuItem(title: "Run Checks", action: #selector(AppDelegate.runChecks), keyEquivalent: "r")
         runItem.target = NSApp.delegate
         addItem(runItem)
+
         let submenu = NSMenu()
         if Defaults[.snoozeTime] == 0 {
             submenu.addItem(addSubmenu(withTitle: "Snooze for 1 hour", action: #selector(snoozeOneHour)))

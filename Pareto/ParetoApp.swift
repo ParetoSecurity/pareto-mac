@@ -37,10 +37,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         // Update when waking up from sleep
         NSWorkspace.onWakeup { _ in
-            if Defaults[.runAfterSleep] {
-                self.statusBar?.runChecks()
-                self.doUpdateCheck()
-            }
+            self.statusBar?.runChecks()
+            self.doUpdateCheck()
         }
 
         // Schedule hourly claim updates

@@ -13,9 +13,11 @@ class FileVaultCheck: ParetoCheck {
     override var TitleON: String {
         "FileVault is on"
     }
+
     override var TitleOFF: String {
         "FileVault is off"
     }
+
     override var canRunInSandbox: Bool {
         false
     }

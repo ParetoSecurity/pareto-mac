@@ -37,11 +37,11 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
     var TimestampKey: String {
         "ParetoCheck-" + UUID + "-TS"
     }
-    
+
     var Title: String {
-        checkPassed ?  TitleON : TitleOFF
+        checkPassed ? TitleON : TitleOFF
     }
-    
+
     public var isActive: Bool {
         get { UserDefaults.standard.bool(forKey: EnabledKey) }
         set { UserDefaults.standard.set(newValue, forKey: EnabledKey) }
@@ -69,13 +69,13 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
                 item.image = NSImage.SF(name: "powersleep").tint(color: .systemGray)
             } else {
                 if checkPassed {
-                    item.image = NSImage.SF(name: "checkmark").tint(color: .systemGreen)
+                    item.image = NSImage.SF(name: "checkmark.seal.fill").tint(color: .systemGreen)
                 } else {
-                    item.image = NSImage.SF(name: "exclamationmark").tint(color: .systemRed)
+                    item.image = NSImage.SF(name: "xmark.seal.fill").tint(color: .systemOrange)
                 }
             }
         } else {
-            item.image = NSImage.SF(name: "shield.slash")
+            item.image = NSImage.SF(name: "seal")
         }
 
         return item

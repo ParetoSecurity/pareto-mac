@@ -17,6 +17,7 @@
 		4F14487C26D8EDB000A5BA34 /* Bundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F14487B26D8EDB000A5BA34 /* Bundle.swift */; };
 		4F35395326E8A6EA008F5DD3 /* LoaderUI in Frameworks */ = {isa = PBXBuildFile; productRef = 4F35395226E8A6EA008F5DD3 /* LoaderUI */; };
 		4F35395526E8AD4C008F5DD3 /* RemoteManagment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F35395426E8AD4B008F5DD3 /* RemoteManagment.swift */; };
+		4F35395726E8AE02008F5DD3 /* RemoteLogin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F35395626E8AE02008F5DD3 /* RemoteLogin.swift */; };
 		4F3EF24326CA859500841375 /* Claim.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F3EF24226CA859500841375 /* Claim.swift */; };
 		4F47221026B08A0E0071CE2A /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F47220F26B08A0E0071CE2A /* Settings.swift */; };
 		4F5E888026A053A9005271FB /* ParetoCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F5E887F26A053A9005271FB /* ParetoCheck.swift */; };
@@ -72,6 +73,7 @@
 		4F14487326D8EA5E00A5BA34 /* Updater.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Updater.swift; sourceTree = "<group>"; };
 		4F14487B26D8EDB000A5BA34 /* Bundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bundle.swift; sourceTree = "<group>"; };
 		4F35395426E8AD4B008F5DD3 /* RemoteManagment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteManagment.swift; sourceTree = "<group>"; };
+		4F35395626E8AE02008F5DD3 /* RemoteLogin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteLogin.swift; sourceTree = "<group>"; };
 		4F3EF24226CA859500841375 /* Claim.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Claim.swift; sourceTree = "<group>"; };
 		4F47220F26B08A0E0071CE2A /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		4F5E887F26A053A9005271FB /* ParetoCheck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParetoCheck.swift; sourceTree = "<group>"; };
@@ -170,6 +172,7 @@
 				4F6A0E0D26CE484A003B00A3 /* PrinterSharingCheck.swift */,
 				4F6A0E0F26CE4868003B00A3 /* FileSharingCheck.swift */,
 				4F35395426E8AD4B008F5DD3 /* RemoteManagment.swift */,
+				4F35395626E8AE02008F5DD3 /* RemoteLogin.swift */,
 			);
 			path = Checks;
 			sourceTree = "<group>";
@@ -480,6 +483,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4F5E888026A053A9005271FB /* ParetoCheck.swift in Sources */,
+				4F35395726E8AE02008F5DD3 /* RemoteLogin.swift in Sources */,
 				4FEBA304269CD4E0009B2469 /* StatusBarController.swift in Sources */,
 				4F6A0E0E26CE484A003B00A3 /* PrinterSharingCheck.swift in Sources */,
 				4F6A0E1026CE4868003B00A3 /* FileSharingCheck.swift in Sources */,

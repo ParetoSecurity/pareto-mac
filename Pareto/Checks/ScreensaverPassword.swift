@@ -13,6 +13,7 @@ class ScreensaverPasswordCheck: ParetoCheck {
     override var TitleON: String {
         "Password after inactivity is on"
     }
+
     override var TitleOFF: String {
         "Password after inactivity is off"
     }

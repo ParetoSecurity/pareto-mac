@@ -52,8 +52,8 @@ struct ChecksSettingsView: View {
                     } else {
                         Text(claim.title).fontWeight(.bold).font(.system(size: 15)).padding(.top)
                     }
-                    ForEach(claim.checks.sorted(by: { $0.Title < $1.Title }), id: \.self) { check in
-                        Toggle(check.Title, isOn: Binding<Bool>(
+                    ForEach(claim.checks.sorted(by: { $0.TitleON < $1.TitleON }), id: \.self) { check in
+                        Toggle(check.TitleON, isOn: Binding<Bool>(
                             get: { check.isActive },
                             set: {
                                 check.isActive = $0

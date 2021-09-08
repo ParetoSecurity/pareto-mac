@@ -11,13 +11,14 @@ class PrinterSharingCheck: ParetoCheck {
     }
 
     override var TitleON: String {
-        "Automatic login is off"
+        "Sharing printers is off"
     }
+
     override var TitleOFF: String {
-        "Automatic login is on"
+        "Sharing printers is on"
     }
 
     override func checkPasses() -> Bool {
-        return !isListening(withPort: 88)
+        return !isListening(withPort: 631)
     }
 }

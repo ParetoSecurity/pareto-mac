@@ -16,6 +16,7 @@ class IntegrationCheck: ParetoCheck {
     override var TitleON: String {
         "Unit test mock ON"
     }
+
     override var TitleOFF: String {
         "Unit test mock OFF"
     }
