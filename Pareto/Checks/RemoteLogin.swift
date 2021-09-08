@@ -21,6 +21,6 @@ class RemoteLoginCheck: ParetoCheck {
     }
 
     override func checkPasses() -> Bool {
-        return !isListening(withPort: 22)
+        return isNotListening(withPort: 22)
     }
 }

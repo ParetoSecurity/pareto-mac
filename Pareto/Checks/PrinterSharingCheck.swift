@@ -19,6 +19,6 @@ class PrinterSharingCheck: ParetoCheck {
     }
 
     override func checkPasses() -> Bool {
-        return !isListening(withPort: 631)
+        return isNotListening(withPort: 631)
     }
 }

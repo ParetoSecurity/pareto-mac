@@ -19,6 +19,6 @@ class FileSharingCheck: ParetoCheck {
     }
 
     override func checkPasses() -> Bool {
-        return !isListening(withPort: 445)
+        return isNotListening(withPort: 445)
     }
 }
