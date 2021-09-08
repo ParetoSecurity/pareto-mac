@@ -45,7 +45,7 @@
 
 All of the above are easily preventable. The Pareto Security app regularly checks such common security fails and reminds you to take care of them.
 
-[See all security checks on our website »](»)
+[See all security checks on our website »](https://paretosecurity.app/security-checks)
 
 
 ## More info
