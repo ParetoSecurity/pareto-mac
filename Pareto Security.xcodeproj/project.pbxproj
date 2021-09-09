@@ -15,7 +15,6 @@
 		4F14487726D8EB2E00A5BA34 /* Version in Frameworks */ = {isa = PBXBuildFile; productRef = 4F14487626D8EB2E00A5BA34 /* Version */; };
 		4F14487A26D8EB7A00A5BA34 /* Path in Frameworks */ = {isa = PBXBuildFile; productRef = 4F14487926D8EB7A00A5BA34 /* Path */; };
 		4F14487C26D8EDB000A5BA34 /* Bundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F14487B26D8EDB000A5BA34 /* Bundle.swift */; };
-		4F35395326E8A6EA008F5DD3 /* LoaderUI in Frameworks */ = {isa = PBXBuildFile; productRef = 4F35395226E8A6EA008F5DD3 /* LoaderUI */; };
 		4F35395526E8AD4C008F5DD3 /* RemoteManagment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F35395426E8AD4B008F5DD3 /* RemoteManagment.swift */; };
 		4F35395726E8AE02008F5DD3 /* RemoteLogin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F35395626E8AE02008F5DD3 /* RemoteLogin.swift */; };
 		4F3EF24326CA859500841375 /* Claim.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F3EF24226CA859500841375 /* Claim.swift */; };
@@ -133,7 +132,6 @@
 				4F14487726D8EB2E00A5BA34 /* Version in Frameworks */,
 				4F14487A26D8EB7A00A5BA34 /* Path in Frameworks */,
 				4F6A0E1326CE608C003B00A3 /* Defaults in Frameworks */,
-				4F35395326E8A6EA008F5DD3 /* LoaderUI in Frameworks */,
 				4F103012269F1C65008C1E86 /* LaunchAtLogin in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -337,7 +335,6 @@
 				4F6A0E1226CE608C003B00A3 /* Defaults */,
 				4F14487626D8EB2E00A5BA34 /* Version */,
 				4F14487926D8EB7A00A5BA34 /* Path */,
-				4F35395226E8A6EA008F5DD3 /* LoaderUI */,
 			);
 			productName = Pareto;
 			productReference = 4FEBA2EE269CD48F009B2469 /* Pareto Security.app */;
@@ -380,7 +377,6 @@
 				4F6A0E1126CE608C003B00A3 /* XCRemoteSwiftPackageReference "Defaults" */,
 				4F14487526D8EB2E00A5BA34 /* XCRemoteSwiftPackageReference "Version" */,
 				4F14487826D8EB7A00A5BA34 /* XCRemoteSwiftPackageReference "Path.swift" */,
-				4F35395126E8A6EA008F5DD3 /* XCRemoteSwiftPackageReference "LoaderUI" */,
 			);
 			productRefGroup = 4FEBA2EF269CD48F009B2469 /* Products */;
 			projectDirPath = "";
@@ -874,14 +870,6 @@
 				minimumVersion = 1.0.0;
 			};
 		};
-		4F35395126E8A6EA008F5DD3 /* XCRemoteSwiftPackageReference "LoaderUI" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/ParetoSecurity/LoaderUI";
-			requirement = {
-				branch = master;
-				kind = branch;
-			};
-		};
 		4F6A0E1126CE608C003B00A3 /* XCRemoteSwiftPackageReference "Defaults" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/sindresorhus/Defaults";
@@ -915,11 +903,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 4F14487826D8EB7A00A5BA34 /* XCRemoteSwiftPackageReference "Path.swift" */;
 			productName = Path;
-		};
-		4F35395226E8A6EA008F5DD3 /* LoaderUI */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 4F35395126E8A6EA008F5DD3 /* XCRemoteSwiftPackageReference "LoaderUI" */;
-			productName = LoaderUI;
 		};
 		4F6A0E1226CE608C003B00A3 /* Defaults */ = {
 			isa = XCSwiftPackageProductDependency;

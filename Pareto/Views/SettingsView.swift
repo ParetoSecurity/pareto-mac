@@ -7,7 +7,6 @@
 import AppKit
 import Defaults
 import LaunchAtLogin
-import LoaderUI
 import SwiftUI
 
 struct GeneralSettingsView: View {
@@ -114,9 +113,8 @@ struct AboutSettingsView: View {
                     HStack {
                         Text(status.rawValue)
                         if self.isLoading {
-                            SemiCircleSpin().frame(width: 15, height: 15, alignment: .center)
-                        } else {
-                            SemiCircleSpin().frame(width: 15, height: 15, alignment: .center).hidden()
+                            ProgressView().frame( width: 5.0, height: 5.0)
+                                .scaleEffect(x: 0.5, y: 0.5, anchor: .center)
                         }
                     }
                 }
