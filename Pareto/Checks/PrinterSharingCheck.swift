@@ -19,6 +19,10 @@ class PrinterSharingCheck: ParetoCheck {
     }
 
     override func checkPasses() -> Bool {
-        return isNotListening(withPort: 631)
+        let output = runCMD(app: "/usr/sbin/cupsctl", args: [])
+        let settings = ["_share_printers=0", "_remote_admin=0", "_remote_any=0"]
+        return settings.allSatisfy {
+            output.contains($0)
+        }
     }
 }
