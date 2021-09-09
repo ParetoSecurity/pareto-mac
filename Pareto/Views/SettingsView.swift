@@ -113,7 +113,7 @@ struct AboutSettingsView: View {
                     HStack {
                         Text(status.rawValue)
                         if self.isLoading {
-                            ProgressView().frame( width: 5.0, height: 5.0)
+                            ProgressView().frame(width: 5.0, height: 5.0)
                                 .scaleEffect(x: 0.5, y: 0.5, anchor: .center)
                         }
                     }
