@@ -18,7 +18,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     func application(_: NSApplication, open urls: [URL]) {
         for url in urls {
-            os_log("url:\(url)")
+            if url.host == "enroll" {
+                Defaults[.license] = url.queryParams()["token"] ?? ""
+            }
         }
     }
 
@@ -103,30 +105,26 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     @objc func runChecks() {
-        statusBar?.runChecks()
+        if AppInfo.Licensed {
+            statusBar?.runChecks()
+        } else {
+            NSApp.sendAction(#selector(runChecksNag), to: nil, from: nil)
+            NSApp.activate(ignoringOtherApps: true)
+        }
     }
 
     @objc func reportBug() {
-        // NSWorkspace.shared.open(AppInfo.bugReportURL())
-        NSApp.sendAction(#selector(openUpdateWindow), to: nil, from: nil)
-        NSApp.activate(ignoringOtherApps: true)
+        NSWorkspace.shared.open(AppInfo.bugReportURL())
     }
 
-    @objc func openUpdateWindow() {
-        let view = BuyView(onContinue: {})
-            .edgesIgnoringSafeArea(.top)
+    @objc func runChecksNag() {
+        let view = FreeView(onContinue: {
+            self.statusBar?.runChecks()
+        }).edgesIgnoringSafeArea(.top)
+
         // Create the window and set the content view.
         let newEntryPanel = FloatingPanel(contentRect: NSRect(x: 0, y: 0, width: 350, height: 90), backing: .buffered, defer: false)
-
-        newEntryPanel.title = "Pareto Security"
         newEntryPanel.contentView = NSHostingView(rootView: view)
-
-        // Center doesn't place it in the absolute center, see the documentation for more details
-        newEntryPanel.center()
-        newEntryPanel.styleMask.remove(.resizable)
-        // Shows the panel and makes it active
-        newEntryPanel.orderFront(nil)
-        newEntryPanel.makeKey()
     }
 }
 

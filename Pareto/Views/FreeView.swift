@@ -54,7 +54,7 @@ struct VisualEffectView: NSViewRepresentable {
 class FloatingPanel: NSPanel {
     init(contentRect: NSRect, backing: NSWindow.BackingStoreType, defer flag: Bool) {
         // Not sure if .titled does affect anything here. Kept it because I think it might help with accessibility but I did not test that.
-        super.init(contentRect: contentRect, styleMask: [.nonactivatingPanel, .titled, .resizable, .closable, .fullSizeContentView], backing: backing, defer: flag)
+        super.init(contentRect: contentRect, styleMask: [.nonactivatingPanel, .titled, .closable, .fullSizeContentView], backing: backing, defer: flag)
 
         // Set this if you want the panel to remember its size/position
         //        self.setFrameAutosaveName("a unique name")
@@ -82,6 +82,15 @@ class FloatingPanel: NSPanel {
         standardWindowButton(.closeButton)?.isHidden = true
         standardWindowButton(.miniaturizeButton)?.isHidden = true
         standardWindowButton(.zoomButton)?.isHidden = true
+
+        title = "Pareto Security"
+
+        // Center doesn't place it in the absolute center, see the documentation for more details
+        center()
+        styleMask.remove(.resizable)
+        // Shows the panel and makes it active
+        orderFront(nil)
+        makeKey()
     }
 
     // `canBecomeKey` and `canBecomeMain` are required so that text inputs inside the panel can receive focus

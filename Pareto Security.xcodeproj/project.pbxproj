@@ -15,6 +15,11 @@
 		4F14487726D8EB2E00A5BA34 /* Version in Frameworks */ = {isa = PBXBuildFile; productRef = 4F14487626D8EB2E00A5BA34 /* Version */; };
 		4F14487A26D8EB7A00A5BA34 /* Path in Frameworks */ = {isa = PBXBuildFile; productRef = 4F14487926D8EB7A00A5BA34 /* Path */; };
 		4F14487C26D8EDB000A5BA34 /* Bundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F14487B26D8EDB000A5BA34 /* Bundle.swift */; };
+		4F24A08E26EB734A0036F748 /* LicenseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F24A08D26EB734A0036F748 /* LicenseView.swift */; };
+		4F24A09026EB735F0036F748 /* TeamSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F24A08F26EB735F0036F748 /* TeamSettings.swift */; };
+		4F24A09226EB73980036F748 /* AboutSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F24A09126EB73980036F748 /* AboutSettingsView.swift */; };
+		4F24A09426EB73C80036F748 /* ChecksSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F24A09326EB73C80036F748 /* ChecksSettingsView.swift */; };
+		4F24A09626EB73F30036F748 /* GeneralSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F24A09526EB73F30036F748 /* GeneralSettingsView.swift */; };
 		4F35395526E8AD4C008F5DD3 /* RemoteManagment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F35395426E8AD4B008F5DD3 /* RemoteManagment.swift */; };
 		4F35395726E8AE02008F5DD3 /* RemoteLogin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F35395626E8AE02008F5DD3 /* RemoteLogin.swift */; };
 		4F3EF24326CA859500841375 /* Claim.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F3EF24226CA859500841375 /* Claim.swift */; };
@@ -29,6 +34,7 @@
 		4F6A92F226C555C6006C2F2D /* ParetoSecurityUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F6A92F126C555C6006C2F2D /* ParetoSecurityUITests.swift */; };
 		4F81C10026EA2DE20065F548 /* FreeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F81C0FF26EA2DE20065F548 /* FreeView.swift */; };
 		4F81C10626EB4F8E0065F548 /* JWTKit in Frameworks */ = {isa = PBXBuildFile; productRef = 4F81C10526EB4F8E0065F548 /* JWTKit */; };
+		4F81C10826EB5D270065F548 /* URL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F81C10726EB5D270065F548 /* URL.swift */; };
 		4F84531026D634E5007C3B04 /* NSWorkspace.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F84530F26D634E5007C3B04 /* NSWorkspace.swift */; };
 		4F84531226D638C0007C3B04 /* NSBackgroundActivityScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F84531126D638C0007C3B04 /* NSBackgroundActivityScheduler.swift */; };
 		4F84A94426CBBA6900A1579D /* SettingsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F84A94326CBBA6900A1579D /* SettingsTests.swift */; };
@@ -73,6 +79,11 @@
 		4F103007269EE135008C1E86 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		4F14487326D8EA5E00A5BA34 /* Updater.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Updater.swift; sourceTree = "<group>"; };
 		4F14487B26D8EDB000A5BA34 /* Bundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bundle.swift; sourceTree = "<group>"; };
+		4F24A08D26EB734A0036F748 /* LicenseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LicenseView.swift; sourceTree = "<group>"; };
+		4F24A08F26EB735F0036F748 /* TeamSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeamSettings.swift; sourceTree = "<group>"; };
+		4F24A09126EB73980036F748 /* AboutSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutSettingsView.swift; sourceTree = "<group>"; };
+		4F24A09326EB73C80036F748 /* ChecksSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChecksSettingsView.swift; sourceTree = "<group>"; };
+		4F24A09526EB73F30036F748 /* GeneralSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralSettingsView.swift; sourceTree = "<group>"; };
 		4F35395426E8AD4B008F5DD3 /* RemoteManagment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteManagment.swift; sourceTree = "<group>"; };
 		4F35395626E8AE02008F5DD3 /* RemoteLogin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteLogin.swift; sourceTree = "<group>"; };
 		4F3EF24226CA859500841375 /* Claim.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Claim.swift; sourceTree = "<group>"; };
@@ -86,6 +97,7 @@
 		4F6A92EF26C555C6006C2F2D /* ParetoSecurityUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ParetoSecurityUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4F6A92F126C555C6006C2F2D /* ParetoSecurityUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParetoSecurityUITests.swift; sourceTree = "<group>"; };
 		4F81C0FF26EA2DE20065F548 /* FreeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreeView.swift; sourceTree = "<group>"; };
+		4F81C10726EB5D270065F548 /* URL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URL.swift; sourceTree = "<group>"; };
 		4F84530F26D634E5007C3B04 /* NSWorkspace.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSWorkspace.swift; sourceTree = "<group>"; };
 		4F84531126D638C0007C3B04 /* NSBackgroundActivityScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSBackgroundActivityScheduler.swift; sourceTree = "<group>"; };
 		4F84A94326CBBA6900A1579D /* SettingsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTests.swift; sourceTree = "<group>"; };
@@ -148,6 +160,11 @@
 			children = (
 				4F103007269EE135008C1E86 /* SettingsView.swift */,
 				4F81C0FF26EA2DE20065F548 /* FreeView.swift */,
+				4F24A08D26EB734A0036F748 /* LicenseView.swift */,
+				4F24A08F26EB735F0036F748 /* TeamSettings.swift */,
+				4F24A09126EB73980036F748 /* AboutSettingsView.swift */,
+				4F24A09326EB73C80036F748 /* ChecksSettingsView.swift */,
+				4F24A09526EB73F30036F748 /* GeneralSettingsView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -204,6 +221,7 @@
 				4F84530F26D634E5007C3B04 /* NSWorkspace.swift */,
 				4F84531126D638C0007C3B04 /* NSBackgroundActivityScheduler.swift */,
 				4F14487B26D8EDB000A5BA34 /* Bundle.swift */,
+				4F81C10726EB5D270065F548 /* URL.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -490,11 +508,14 @@
 				4FEBA304269CD4E0009B2469 /* StatusBarController.swift in Sources */,
 				4F6A0E0E26CE484A003B00A3 /* PrinterSharingCheck.swift in Sources */,
 				4F6A0E1026CE4868003B00A3 /* FileSharingCheck.swift in Sources */,
+				4F24A09026EB735F0036F748 /* TeamSettings.swift in Sources */,
+				4F81C10826EB5D270065F548 /* URL.swift in Sources */,
 				4FB7C67D26AFF1AB00FB1C41 /* Log.swift in Sources */,
 				4F81C10026EA2DE20065F548 /* FreeView.swift in Sources */,
 				4FF13D9726DCCB9900E4084E /* Utils.swift in Sources */,
 				4F14487426D8EA5E00A5BA34 /* Updater.swift in Sources */,
 				4F868DCF26A591E6005B876E /* Firewall.swift in Sources */,
+				4F24A08E26EB734A0036F748 /* LicenseView.swift in Sources */,
 				4F35395526E8AD4C008F5DD3 /* RemoteManagment.swift in Sources */,
 				4FB7C68126AFF25300FB1C41 /* Date.swift in Sources */,
 				4FB405EF26A6FC4800267D5D /* ScreensaverPassword.swift in Sources */,
@@ -506,11 +527,14 @@
 				4F6A92E826C52210006C2F2D /* IntegrationCheck.swift in Sources */,
 				4F0371BC26CD00B700B35E43 /* Boot.swift in Sources */,
 				4F3EF24326CA859500841375 /* Claim.swift in Sources */,
+				4F24A09426EB73C80036F748 /* ChecksSettingsView.swift in Sources */,
+				4F24A09226EB73980036F748 /* AboutSettingsView.swift in Sources */,
 				4FB7C68D26AFFD2600FB1C41 /* FileVault.swift in Sources */,
 				4F103008269EE136008C1E86 /* SettingsView.swift in Sources */,
 				4F868DD326A5C751005B876E /* Screensaver.swift in Sources */,
 				4F84531226D638C0007C3B04 /* NSBackgroundActivityScheduler.swift in Sources */,
 				4FD0A24126A024440070BED4 /* Gatekeeper.swift in Sources */,
+				4F24A09626EB73F30036F748 /* GeneralSettingsView.swift in Sources */,
 				4F84531026D634E5007C3B04 /* NSWorkspace.swift in Sources */,
 				4FB7C68726AFF29A00FB1C41 /* NSImage.swift in Sources */,
 				4F6A92EA26C54AB7006C2F2D /* AppInfo.swift in Sources */,
