@@ -23,6 +23,7 @@ enum AppInfo {
     static let osVersion = ProcessInfo.processInfo.operatingSystemVersionString
     static let inSandbox = ProcessInfo.processInfo.environment["APP_SANDBOX_CONTAINER_ID"] != nil
     static let isRunningTests = ProcessInfo.processInfo.arguments.contains("isRunningTests")
+    static var Licensed = false
 
     static let hwModel = { () -> String in
         let service = IOServiceGetMatchingService(kIOMasterPortDefault,

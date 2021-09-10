@@ -32,6 +32,30 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     func application(_: NSApplication, open urls: [URL]) {
         for url in urls {
             switch url.host {
+            case "enrollSingle":
+                let jwt = url.queryParams()["token"] ?? ""
+                do {
+                    let license = try VerifyLicense(withLicense: jwt)
+                    Defaults[.license] = jwt
+                    Defaults[.userEmail] = license.subject.value
+                    Defaults[.userID] = license.uuid
+                    AppInfo.Licensed = true
+                    let alert = NSAlert()
+                    alert.messageText = "License is valid"
+                    alert.alertStyle = NSAlert.Style.informational
+                    alert.addButton(withTitle: "OK")
+                    alert.runModal()
+                } catch {
+                    Defaults[.license] = ""
+                    Defaults[.userEmail] = ""
+                    Defaults[.userID] = ""
+                    AppInfo.Licensed = false
+                    let alert = NSAlert()
+                    alert.messageText = "License is not valid"
+                    alert.alertStyle = NSAlert.Style.informational
+                    alert.addButton(withTitle: "OK")
+                    alert.runModal()
+                }
             case "reset":
                 resetSettings()
                 NSApplication.shared.terminate(self)
@@ -50,6 +74,19 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     func applicationDidFinishLaunching(_: Notification) {
+        // Verify license
+        do {
+            let license = try VerifyLicense(withLicense: Defaults[.license])
+            Defaults[.userEmail] = license.subject.value
+            Defaults[.userID] = license.uuid
+            AppInfo.Licensed = true
+        } catch {
+            Defaults[.userEmail] = ""
+            Defaults[.userID] = ""
+            AppInfo.Licensed = false
+            Defaults[.license] = ""
+        }
+
         statusBar = StatusBarController()
         statusBar?.configureChecks()
         statusBar?.updateMenu()
@@ -58,9 +95,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         // stop running checks here and reset to defaults
         if AppInfo.isRunningTests {
-            Defaults.removeAll()
-            UserDefaults.standard.removeAll()
-            UserDefaults.standard.synchronize()
+            resetSettings()
             return
         }
 
@@ -146,14 +181,20 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         NSApplication.shared.terminate(self)
     }
 
-    @objc func runChecks() {
-        DispatchQueue.main.async {
-            self.statusBar?.runChecks()
-        }
-    }
-
     @objc func showMenu() {
         statusBar?.showMenu()
+    }
+
+    @objc func runChecks() {
+        if !AppInfo.Licensed {
+            NSApp.sendAction(#selector(runChecksNag), to: nil, from: nil)
+            NSApp.activate(ignoringOtherApps: true)
+        } else {
+            DispatchQueue.main.async {
+                self.statusBar?.runChecks()
+            }
+        }
+
     }
 
     @objc func reportBug() {

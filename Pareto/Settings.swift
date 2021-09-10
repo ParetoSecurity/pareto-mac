@@ -13,6 +13,7 @@ extension Defaults.Keys {
     static let runAfterSleep = Key<Bool>("runAfterSleep", default: true)
     static let teamID = Key<String>("teamID", default: "")
     static let userID = Key<String>("userID", default: "")
+    static let userEmail = Key<String>("userEmail", default: "")
     static let showBeta = Key<Bool>("showBeta", default: false)
     static let betaChannel = Key<Bool>("betaChannel", default: false)
 
