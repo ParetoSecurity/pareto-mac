@@ -26,7 +26,11 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
+<<<<<<< HEAD
 	<string>1832</string>
+=======
+	<string>1809</string>
+>>>>>>> b70c051 (Add free view)
 	<key>LSApplicationCategoryType</key>
 	<string>public.app-category.utilities</string>
 	<key>LSMinimumSystemVersion</key>

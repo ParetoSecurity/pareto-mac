@@ -107,7 +107,26 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     @objc func reportBug() {
-        NSWorkspace.shared.open(AppInfo.bugReportURL())
+        // NSWorkspace.shared.open(AppInfo.bugReportURL())
+        NSApp.sendAction(#selector(openUpdateWindow), to: nil, from: nil)
+        NSApp.activate(ignoringOtherApps: true)
+    }
+
+    @objc func openUpdateWindow() {
+        let view = BuyView(onContinue: {})
+            .edgesIgnoringSafeArea(.top)
+        // Create the window and set the content view.
+        let newEntryPanel = FloatingPanel(contentRect: NSRect(x: 0, y: 0, width: 350, height: 90), backing: .buffered, defer: false)
+
+        newEntryPanel.title = "Pareto Security"
+        newEntryPanel.contentView = NSHostingView(rootView: view)
+
+        // Center doesn't place it in the absolute center, see the documentation for more details
+        newEntryPanel.center()
+        newEntryPanel.styleMask.remove(.resizable)
+        // Shows the panel and makes it active
+        newEntryPanel.orderFront(nil)
+        newEntryPanel.makeKey()
     }
 }
 

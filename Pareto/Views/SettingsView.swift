@@ -62,8 +62,16 @@ struct ChecksSettingsView: View {
                     }
                 }
             }
+            Spacer()
+            HStack(spacing: 0) {
+                Text("Learn more about the security checks on ")
+
+                Link("our website",
+                     destination: URL(string: "https://paretosecurity.app/security-checks?utm_source=app")!)
+                Text(".")
+            }
         }
-        .frame(width: 350, height: 450).padding(5)
+        .frame(width: 350, height: 480).padding(5)
     }
 }
 
