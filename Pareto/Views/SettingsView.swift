@@ -13,7 +13,7 @@ struct SettingsView: View {
     @Default(.showBeta) var showBeta
 
     private enum Tabs: Hashable {
-        case general, about, teams, checks
+        case general, about, teams, checks, license
     }
 
     var body: some View {
@@ -33,6 +33,11 @@ struct SettingsView: View {
                     Label("Checks", systemImage: "checkmark.seal")
                 }
                 .tag(Tabs.checks)
+            LicenseSettingsView()
+                .tabItem {
+                    Label("License", systemImage: "person.text.rectangle")
+                }
+                .tag(Tabs.license)
             AboutSettingsView()
                 .tabItem {
                     Label("About", systemImage: "info")
