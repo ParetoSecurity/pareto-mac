@@ -6,10 +6,6 @@ on:
   pull_request:
     branches: [ main ]
 
-concurrency: 
-  group: build-${{ github.ref }}
-  cancel-in-progress: true
-
 jobs:
   build:
     name: Build and Archive
