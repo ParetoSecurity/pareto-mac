@@ -48,19 +48,19 @@ class ParetoSecurityUITests: XCTestCase {
         let menuBarsQuery = app.menuBars
         waitUntilMenu()
 
-        menuBarsQuery/*@START_MENU_TOKEN@*/ .menuItems["Access Security"]/*[[".statusItems",".menus.menuItems[\"Access Security\"]",".menuItems[\"Access Security\"]"],[[[-1,2],[-1,1],[-1,0,1]],[[-1,2],[-1,1]]],[0]]@END_MENU_TOKEN@*/ .click()
+        menuBarsQuery .menuItems["Access Security"] .click()
         takeScreenshot(screenshot: app.statusItems.firstMatch.menus.firstMatch.screenshot(), name: "Access Security")
         takeScreenshot(screenshot: app.screenshot(), name: "Access Security App")
 
-        menuBarsQuery/*@START_MENU_TOKEN@*/ .menuItems["Firewall & Sharing"]/*[[".statusItems",".menus.menuItems[\"Firewall & Sharing\"]",".menuItems[\"Firewall & Sharing\"]"],[[[-1,2],[-1,1],[-1,0,1]],[[-1,2],[-1,1]]],[0]]@END_MENU_TOKEN@*/ .click()
+        menuBarsQuery .menuItems["Firewall & Sharing"] .click()
         takeScreenshot(screenshot: app.statusItems.firstMatch.menus.firstMatch.screenshot(), name: "Firewall & Sharing")
         takeScreenshot(screenshot: app.screenshot(), name: "Firewall & Sharing App")
 
-        menuBarsQuery/*@START_MENU_TOKEN@*/ .menuItems["System integrity"]/*[[".statusItems",".menus.menuItems[\"System integrity\"]",".menuItems[\"System integrity\"]"],[[[-1,2],[-1,1],[-1,0,1]],[[-1,2],[-1,1]]],[0]]@END_MENU_TOKEN@*/ .click()
+        menuBarsQuery .menuItems["System Integrity"] .click()
         takeScreenshot(screenshot: app.statusItems.firstMatch.menus.firstMatch.screenshot(), name: "System Integritiy")
         takeScreenshot(screenshot: app.screenshot(), name: "System Integritiy App")
 
-        menuBarsQuery/*@START_MENU_TOKEN@*/ .menuItems["Snooze"]/*[[".statusItems[\"ParetoSecurity\"]",".menus.menuItems[\"Snooze\"]",".menuItems[\"Snooze\"]"],[[[-1,2],[-1,1],[-1,0,1]],[[-1,2],[-1,1]]],[0]]@END_MENU_TOKEN@*/ .click()
+        menuBarsQuery .menuItems["Snooze"] .click()
         takeScreenshot(screenshot: app.statusItems.firstMatch.menus.firstMatch.screenshot(), name: "Snooze")
         takeScreenshot(screenshot: app.screenshot(), name: "Snooze App")
     }
@@ -71,10 +71,10 @@ class ParetoSecurityUITests: XCTestCase {
         let menuBarsQuery = app.menuBars
         waitUntilMenu()
 
-        menuBarsQuery/*@START_MENU_TOKEN@*/ .menuItems["Snooze"]/*[[".statusItems[\"ParetoSecurity\"]",".menus.menuItems[\"Snooze\"]",".menuItems[\"Snooze\"]"],[[[-1,2],[-1,1],[-1,0,1]],[[-1,2],[-1,1]]],[0]]@END_MENU_TOKEN@*/ .click()
+        menuBarsQuery .menuItems["Snooze"] .click()
         takeScreenshot(screenshot: app.statusItems.firstMatch.menus.firstMatch.screenshot(), name: "Snooze")
         takeScreenshot(screenshot: app.screenshot(), name: "Snooze App")
-        menuBarsQuery/*@START_MENU_TOKEN@*/ .menuItems["snoozeOneDay"]/*[[".statusItems[\"ParetoSecurity\"]",".menuItems[\"Snooze\"]",".menus",".menuItems[\"for 1 day\"]",".menuItems[\"snoozeOneDay\"]"],[[[-1,4],[-1,3],[-1,2,3],[-1,1,2],[-1,0,1]],[[-1,4],[-1,3],[-1,2,3],[-1,1,2]],[[-1,4],[-1,3],[-1,2,3]],[[-1,4],[-1,3]]],[0]]@END_MENU_TOKEN@*/ .click()
+        menuBarsQuery .menuItems["snoozeOneDay"] .click()
     }
 
     func testSettingsWindow() throws {
@@ -83,7 +83,7 @@ class ParetoSecurityUITests: XCTestCase {
         let menuBarsQuery = app.menuBars
         waitUntilMenu()
 
-        menuBarsQuery/*@START_MENU_TOKEN@*/ .menuItems["showPrefs"]/*[[".statusItems[\"ParetoSecurity\"]",".menus",".menuItems[\"Preferences\"]",".menuItems[\"showPrefs\"]"],[[[-1,3],[-1,2],[-1,1,2],[-1,0,1]],[[-1,3],[-1,2],[-1,1,2]],[[-1,3],[-1,2]]],[0]]@END_MENU_TOKEN@*/ .click()
+        menuBarsQuery .menuItems["showPrefs"] .click()
         app.windows.firstMatch.toolbars.buttons["General"].click()
         takeScreenshot(screenshot: app.windows.firstMatch.screenshot(), name: "Settings General")
         app.windows.firstMatch.toolbars.buttons["Teams"].click()
