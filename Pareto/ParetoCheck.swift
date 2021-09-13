@@ -101,7 +101,7 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
     }
 
     @objc func moreInfo() {
-        if let url = URL(string: "https://paretosecurity.app/check/" + UUID) {
+        if let url = URL(string: "https://paretosecurity.app/check/" + UUID + "?utm_source=app") {
             NSWorkspace.shared.open(url)
         }
     }

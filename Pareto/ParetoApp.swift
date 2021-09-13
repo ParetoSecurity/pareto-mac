@@ -18,7 +18,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     func application(_: NSApplication, open urls: [URL]) {
         for url in urls {
-            os_log("url:\(url)")
+            if url.host == "enroll" {
+                Defaults[.license] = url.queryParams()["token"] ?? ""
+            }
         }
     }
 
@@ -109,6 +111,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     @objc func reportBug() {
         NSWorkspace.shared.open(AppInfo.bugReportURL())
     }
+
 }
 
 @main

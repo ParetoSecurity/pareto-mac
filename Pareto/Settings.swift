@@ -21,6 +21,7 @@ extension Defaults.Keys {
     static let lastCheck = Key<Int>("lastCheck", default: 0)
     static let lastUpdateCheck = Key<Int>("lastUpdateCheck", default: Date().currentTimeMillis())
     static let machineUUID = Key<String>("machineUUID", default: AppInfo.getSystemUUID() ?? UUID().uuidString)
+    static let license = Key<String>("license", default: "")
 }
 
 public extension Defaults {
