@@ -74,6 +74,17 @@
                BlueprintName = "ParetoSecurityUITests"
                ReferencedContainer = "container:Pareto Security.xcodeproj">
             </BuildableReference>
+            <SkippedTests>
+               <Test
+                  Identifier = "ParetoSecurityUITests/testHoverMenus()">
+               </Test>
+               <Test
+                  Identifier = "ParetoSecurityUITests/testSettingsWindow()">
+               </Test>
+               <Test
+                  Identifier = "ParetoSecurityUITests/testSnooze()">
+               </Test>
+            </SkippedTests>
          </TestableReference>
       </Testables>
    </TestAction>

@@ -43,47 +43,47 @@ class ParetoSecurityUITests: XCTestCase {
     }
 
     func testHoverMenus() throws {
-        XCTExpectFailure("Fails with in xcode 13 env, working on a fix")
+        // XCTExpectFailure("Fails with in xcode 13 env, working on a fix")
 
         let menuBarsQuery = app.menuBars
         waitUntilMenu()
 
-        menuBarsQuery .menuItems["Access Security"] .click()
+        menuBarsQuery.menuItems["Access Security"].click()
         takeScreenshot(screenshot: app.statusItems.firstMatch.menus.firstMatch.screenshot(), name: "Access Security")
         takeScreenshot(screenshot: app.screenshot(), name: "Access Security App")
 
-        menuBarsQuery .menuItems["Firewall & Sharing"] .click()
+        menuBarsQuery.menuItems["Firewall & Sharing"].click()
         takeScreenshot(screenshot: app.statusItems.firstMatch.menus.firstMatch.screenshot(), name: "Firewall & Sharing")
         takeScreenshot(screenshot: app.screenshot(), name: "Firewall & Sharing App")
 
-        menuBarsQuery .menuItems["System Integrity"] .click()
+        menuBarsQuery.menuItems["System Integrity"].click()
         takeScreenshot(screenshot: app.statusItems.firstMatch.menus.firstMatch.screenshot(), name: "System Integritiy")
         takeScreenshot(screenshot: app.screenshot(), name: "System Integritiy App")
 
-        menuBarsQuery .menuItems["Snooze"] .click()
+        menuBarsQuery.menuItems["Snooze"].click()
         takeScreenshot(screenshot: app.statusItems.firstMatch.menus.firstMatch.screenshot(), name: "Snooze")
         takeScreenshot(screenshot: app.screenshot(), name: "Snooze App")
     }
 
     func testSnooze() throws {
-        XCTExpectFailure("Fails with in xcode 13 env, working on a fix")
+        // XCTExpectFailure("Fails with in xcode 13 env, working on a fix")
 
         let menuBarsQuery = app.menuBars
         waitUntilMenu()
 
-        menuBarsQuery .menuItems["Snooze"] .click()
+        menuBarsQuery.menuItems["Snooze"].click()
         takeScreenshot(screenshot: app.statusItems.firstMatch.menus.firstMatch.screenshot(), name: "Snooze")
         takeScreenshot(screenshot: app.screenshot(), name: "Snooze App")
-        menuBarsQuery .menuItems["snoozeOneDay"] .click()
+        menuBarsQuery.menuItems["snoozeOneDay"].click()
     }
 
     func testSettingsWindow() throws {
-        XCTExpectFailure("Fails with in xcode 13 env, working on a fix")
+        // XCTExpectFailure("Fails with in xcode 13 env, working on a fix")
 
         let menuBarsQuery = app.menuBars
         waitUntilMenu()
 
-        menuBarsQuery .menuItems["showPrefs"] .click()
+        menuBarsQuery.menuItems["showPrefs"].click()
         app.windows.firstMatch.toolbars.buttons["General"].click()
         takeScreenshot(screenshot: app.windows.firstMatch.screenshot(), name: "Settings General")
         app.windows.firstMatch.toolbars.buttons["Teams"].click()
