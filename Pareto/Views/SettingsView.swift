@@ -201,7 +201,7 @@ struct SettingsView: View {
                 .tag(Tabs.team)
             ChecksSettingsView()
                 .tabItem {
-                    Label("Checks", systemImage: "pencil")
+                    Label("Checks", systemImage: "checkmark.seal")
                 }
                 .tag(Tabs.checks)
             AboutSettingsView()
