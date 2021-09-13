@@ -11,8 +11,7 @@ import XCTest
 class CheckIntegrationTest: XCTestCase {
     override class func setUp() {
         super.setUp()
-        let domain = Bundle.main.bundleIdentifier!
-        UserDefaults.standard.removePersistentDomain(forName: domain)
+        UserDefaults.standard.removeAll()
         UserDefaults.standard.synchronize()
     }
 

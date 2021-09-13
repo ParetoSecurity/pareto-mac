@@ -14,6 +14,7 @@ extension Defaults.Keys {
     static let teamID = Key<String>("teamID", default: "")
     static let userID = Key<String>("userID", default: "")
     static let showBeta = Key<Bool>("showBeta", default: false)
+    static let firstLaunch = Key<Bool>("firstLaunch", default: true)
     static let betaChannel = Key<Bool>("betaChannel", default: false)
     static let internalRunChecks = Key<Bool>("internalRunChecks", default: false)
     static let snoozeTime = Key<Int>("snoozeTime", default: 0)

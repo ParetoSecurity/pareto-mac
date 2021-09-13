@@ -5,6 +5,10 @@ on:
     branches: [ main ]
   pull_request:
     branches: [ main ]
+    
+concurrency: 
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   swift:
@@ -22,7 +26,7 @@ jobs:
   test:
     name: Unit Tests
     runs-on: macos-11
-    timeout-minutes: 8    
+    timeout-minutes: 18    
     permissions:
       issues: write 
       pull-requests: write

@@ -66,7 +66,7 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
         item.target = self
         if isActive {
             if Defaults[.snoozeTime] > 0 {
-                item.image = NSImage.SF(name: "powersleep").tint(color: .systemGray)
+                item.image = NSImage.SF(name: "seal.fill").tint(color: .systemGray)
             } else {
                 if checkPassed {
                     item.image = NSImage.SF(name: "checkmark.seal.fill").tint(color: .systemGreen)

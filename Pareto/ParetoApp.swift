@@ -28,8 +28,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         statusBar?.updateMenu()
 
         updater = AppUpdater(owner: "ParetoSecurity", repo: "pareto-mac")
-        // stop running checks here
+
+        // stop running checks here and reset to defaults
         if AppInfo.isRunningTests {
+            Defaults.removeAll()
+            UserDefaults.standard.removeAll()
+            UserDefaults.standard.synchronize()
+            Defaults[.firstLaunch] = true
             return
         }
         statusBar?.runChecks()

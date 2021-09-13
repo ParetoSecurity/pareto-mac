@@ -11,3 +11,4 @@ test.xcresult
 app.xcarchive
 Export
 *.dmg
+*.private

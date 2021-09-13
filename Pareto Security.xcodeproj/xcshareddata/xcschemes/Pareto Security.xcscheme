@@ -27,6 +27,8 @@
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "NO"
+      systemAttachmentLifetime = "keepAlways"
+      userAttachmentLifetime = "keepAlways"
       codeCoverageEnabled = "YES">
       <MacroExpansion>
          <BuildableReference
@@ -39,7 +41,7 @@
       </MacroExpansion>
       <CommandLineArguments>
          <CommandLineArgument
-            argument = "-isRunningTests YES"
+            argument = "isRunningTests"
             isEnabled = "YES">
          </CommandLineArgument>
       </CommandLineArguments>

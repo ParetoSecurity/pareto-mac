@@ -10,8 +10,9 @@ import Defaults
 import os.log
 import SwiftUI
 
-class StatusBarController: NSMenu, NSMenuDelegate {
-    let statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
+class StatusBarController: NSObject, NSMenuDelegate {
+    var statusItem: NSStatusItem!
+    var statusItemMenu: NSMenu!
     let imageDefault = NSImage(named: "IconGray")
     let imageWarning = NSImage(named: "IconOrange")
     var isRunnig = false
@@ -28,19 +29,30 @@ class StatusBarController: NSMenu, NSMenuDelegate {
         set { Defaults[.snoozeTime] = newValue }
     }
 
-    required init(coder decoder: NSCoder) {
-        super.init(coder: decoder)
-    }
-
+    override
     init() {
-        super.init(title: "")
-        delegate = self
-        setAccessibilityIdentifier("paretoMenu")
-        statusItem.menu = self
-        statusItem.button?.image = imageDefault
-        statusItem.button?.imagePosition = .imageRight
-        statusItem.button?.imageScaling = .scaleProportionallyDown
-        statusItem.button?.target = self
+        super.init()
+        statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
+        statusItemMenu = NSMenu(title: "ParetoSecurity")
+        statusItemMenu.delegate = self
+
+        let button: NSStatusBarButton = statusItem.button!
+        button.target = self
+        button.image = imageDefault
+        button.imagePosition = .imageRight
+        button.imageScaling = .scaleProportionallyDown
+        button.title = "ParetoSecurity"
+        button.isEnabled = true
+
+        statusItem.menu = statusItemMenu
+        if Defaults[.firstLaunch] {
+            if let button = statusItem.button {
+                _ = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false) { _ in
+                    button.performClick(nil)
+                }
+            }
+            Defaults[.firstLaunch] = false
+        }
     }
 
     var claimsPassed: Bool {
@@ -52,7 +64,7 @@ class StatusBarController: NSMenu, NSMenuDelegate {
     }
 
     func updateMenu() {
-        removeAllItems()
+        statusItemMenu.removeAllItems()
         addChecksMenuItems()
         addApplicationItems()
 
@@ -155,48 +167,53 @@ class StatusBarController: NSMenu, NSMenuDelegate {
     }
 
     func addApplicationItems() {
-        let lastItem = NSMenuItem(title: "Last check: \(Date().fromTimeStamp(timeStamp: Defaults[.lastCheck]))", action: nil, keyEquivalent: "")
-        lastItem.target = NSApp.delegate
-        addItem(lastItem)
-
-        addItem(NSMenuItem.separator())
-
-        let runItem = NSMenuItem(title: "Run Checks", action: #selector(AppDelegate.runChecks), keyEquivalent: "r")
-        runItem.target = NSApp.delegate
-        addItem(runItem)
-
-        let submenu = NSMenu()
         if Defaults[.snoozeTime] == 0 {
-            submenu.addItem(addSubmenu(withTitle: "Snooze for 1 hour", action: #selector(snoozeOneHour)))
-            submenu.addItem(addSubmenu(withTitle: "Snooze for 1 day", action: #selector(snoozeOneDay)))
-            submenu.addItem(addSubmenu(withTitle: "Snooze for 1 week", action: #selector(snoozeOneWeek)))
-
+            let lastItem = NSMenuItem(title: "Last check \(Date().fromTimeStamp(timeStamp: Defaults[.lastCheck]).timeAgoDisplay())", action: nil, keyEquivalent: "")
+            lastItem.target = NSApp.delegate
+            statusItemMenu.addItem(lastItem)
         } else {
-            submenu.addItem(addSubmenu(withTitle: "Resume", action: #selector(unsnooze)))
-            submenu.addItem(addSubmenu(withTitle: "Resumes: \(Date().fromTimeStamp(timeStamp: snoozeTime))", action: nil))
+            let lastItem = NSMenuItem(title: "Resumes \(Date().fromTimeStamp(timeStamp: snoozeTime).timeAgoDisplay())", action: nil, keyEquivalent: "")
+            lastItem.target = NSApp.delegate
+            statusItemMenu.addItem(lastItem)
         }
+        statusItemMenu.addItem(NSMenuItem.separator())
 
-        let snoozeItem = NSMenuItem(title: "Snooze", action: nil, keyEquivalent: "")
-        snoozeItem.submenu = submenu
-        addItem(snoozeItem)
+        if Defaults[.snoozeTime] == 0 {
+            let runItem = NSMenuItem(title: "Run checks", action: #selector(AppDelegate.runChecks), keyEquivalent: "r")
+            runItem.target = NSApp.delegate
+            statusItemMenu.addItem(runItem)
+
+            let submenu = NSMenu()
+            submenu.addItem(addSubmenu(withTitle: "for 1 hour", action: #selector(snoozeOneHour)))
+            submenu.addItem(addSubmenu(withTitle: "for 1 day", action: #selector(snoozeOneDay)))
+            submenu.addItem(addSubmenu(withTitle: "for 1 week", action: #selector(snoozeOneWeek)))
+
+            let snoozeItem = NSMenuItem(title: "Snooze", action: nil, keyEquivalent: "")
+            snoozeItem.submenu = submenu
+            statusItemMenu.addItem(snoozeItem)
+        } else {
+            let unsnoozeItem = NSMenuItem(title: "Resume checks", action: #selector(unsnooze), keyEquivalent: "u")
+            unsnoozeItem.target = self
+            statusItemMenu.addItem(unsnoozeItem)
+        }
 
         let preferencesItem = NSMenuItem(title: "Preferences", action: #selector(AppDelegate.showPrefs), keyEquivalent: "p")
         preferencesItem.target = NSApp.delegate
-        addItem(preferencesItem)
+        statusItemMenu.addItem(preferencesItem)
 
-        let reportItem = NSMenuItem(title: "Report Bug", action: #selector(AppDelegate.reportBug), keyEquivalent: "b")
+        let reportItem = NSMenuItem(title: "Report bug", action: #selector(AppDelegate.reportBug), keyEquivalent: "b")
         reportItem.target = NSApp.delegate
-        addItem(reportItem)
+        statusItemMenu.addItem(reportItem)
 
-        addItem(NSMenuItem.separator())
-        let quitItem = NSMenuItem(title: "Quit Pareto App", action: #selector(AppDelegate.quitApp), keyEquivalent: "q")
+        statusItemMenu.addItem(NSMenuItem.separator())
+        let quitItem = NSMenuItem(title: "Quit Pareto", action: #selector(AppDelegate.quitApp), keyEquivalent: "q")
         quitItem.target = NSApp.delegate
-        addItem(quitItem)
+        statusItemMenu.addItem(quitItem)
     }
 
     func addChecksMenuItems() {
         for claim in AppInfo.claims.sorted(by: { $0.title < $1.title }) {
-            addItem(claim.menu())
+            statusItemMenu.addItem(claim.menu())
         }
     }
 }

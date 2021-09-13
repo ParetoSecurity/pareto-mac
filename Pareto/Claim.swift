@@ -45,7 +45,7 @@ class Claim: Hashable {
             submenu.addItem(check.menu())
             if !isDisabled {
                 if Defaults[.snoozeTime] > 0 {
-                    item.image = NSImage.SF(name: "powersleep").tint(color: .systemGray)
+                    item.image = NSImage.SF(name: "shield.fill").tint(color: .systemGray)
                 } else {
                     if checkPassed {
                         item.image = NSImage.SF(name: "checkmark.shield.fill").tint(color: .systemGreen)
