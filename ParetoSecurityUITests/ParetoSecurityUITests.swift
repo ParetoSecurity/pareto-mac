@@ -65,6 +65,18 @@ class ParetoSecurityUITests: XCTestCase {
         takeScreenshot(screenshot: app.screenshot(), name: "Snooze App")
     }
 
+    func testSnooze() throws {
+        // XCTExpectFailure("Fails with in xcode 13 env, working on a fix")
+
+        let menuBarsQuery = app.menuBars
+        waitUntilMenu()
+
+        menuBarsQuery/*@START_MENU_TOKEN@*/ .menuItems["Snooze"]/*[[".statusItems[\"ParetoSecurity\"]",".menus.menuItems[\"Snooze\"]",".menuItems[\"Snooze\"]"],[[[-1,2],[-1,1],[-1,0,1]],[[-1,2],[-1,1]]],[0]]@END_MENU_TOKEN@*/ .click()
+        takeScreenshot(screenshot: app.statusItems.firstMatch.menus.firstMatch.screenshot(), name: "Snooze")
+        takeScreenshot(screenshot: app.screenshot(), name: "Snooze App")
+        menuBarsQuery/*@START_MENU_TOKEN@*/ .menuItems["snoozeOneDay"]/*[[".statusItems[\"ParetoSecurity\"]",".menuItems[\"Snooze\"]",".menus",".menuItems[\"for 1 day\"]",".menuItems[\"snoozeOneDay\"]"],[[[-1,4],[-1,3],[-1,2,3],[-1,1,2],[-1,0,1]],[[-1,4],[-1,3],[-1,2,3],[-1,1,2]],[[-1,4],[-1,3],[-1,2,3]],[[-1,4],[-1,3]]],[0]]@END_MENU_TOKEN@*/ .click()
+    }
+
     func testSettingsWindow() throws {
         // XCTExpectFailure("Fails with in xcode 13 env, working on a fix")
 

@@ -27,7 +27,7 @@
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "NO"
-      systemAttachmentLifetime = "keepAlways"
+      systemAttachmentLifetime = "keepNever"
       userAttachmentLifetime = "keepAlways"
       codeCoverageEnabled = "YES">
       <MacroExpansion>
