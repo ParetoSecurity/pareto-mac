@@ -16,6 +16,8 @@ extension Defaults.Keys {
     static let showBeta = Key<Bool>("showBeta", default: false)
     static let firstLaunch = Key<Bool>("firstLaunch", default: true)
     static let betaChannel = Key<Bool>("betaChannel", default: false)
+
+    static let updateRunning = Key<Int>("updateRunning", default: 0)
     static let internalRunChecks = Key<Bool>("internalRunChecks", default: false)
     static let snoozeTime = Key<Int>("snoozeTime", default: 0)
     static let lastCheck = Key<Int>("lastCheck", default: 0)

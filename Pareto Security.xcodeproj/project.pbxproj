@@ -53,6 +53,7 @@
 		4FEBA304269CD4E0009B2469 /* StatusBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEBA303269CD4E0009B2469 /* StatusBarController.swift */; };
 		4FF13D9726DCCB9900E4084E /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FF13D9626DCCB9900E4084E /* Utils.swift */; };
 		4FF13D9D26DE235700E4084E /* UpdaterTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FF13D9C26DE235700E4084E /* UpdaterTest.swift */; };
+		4FF22A6526F0CFA500500213 /* Flags.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FF22A6426F0CFA500500213 /* Flags.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -118,6 +119,7 @@
 		4FEBA303269CD4E0009B2469 /* StatusBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusBarController.swift; sourceTree = "<group>"; };
 		4FF13D9626DCCB9900E4084E /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
 		4FF13D9C26DE235700E4084E /* UpdaterTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdaterTest.swift; sourceTree = "<group>"; };
+		4FF22A6426F0CFA500500213 /* Flags.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Flags.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -174,6 +176,8 @@
 		4F10300A269F0568008C1E86 /* Checks */ = {
 			isa = PBXGroup;
 			children = (
+				4F3EF24226CA859500841375 /* Claim.swift */,
+				4F5E887F26A053A9005271FB /* ParetoCheck.swift */,
 				4F6A92E726C52210006C2F2D /* IntegrationCheck.swift */,
 				4F868DD226A5C751005B876E /* Screensaver.swift */,
 				4FD0A24026A024440070BED4 /* Gatekeeper.swift */,
@@ -189,14 +193,6 @@
 				4F35395626E8AE02008F5DD3 /* RemoteLogin.swift */,
 			);
 			path = Checks;
-			sourceTree = "<group>";
-		};
-		4F14487226D8EA4D00A5BA34 /* Updater */ = {
-			isa = PBXGroup;
-			children = (
-				4F14487326D8EA5E00A5BA34 /* Updater.swift */,
-			);
-			path = Updater;
 			sourceTree = "<group>";
 		};
 		4F6A92F026C555C6006C2F2D /* ParetoSecurityUITests */ = {
@@ -262,22 +258,21 @@
 		4FEBA2F0269CD48F009B2469 /* Pareto */ = {
 			isa = PBXGroup;
 			children = (
-				4F14487226D8EA4D00A5BA34 /* Updater */,
-				4FB7C67F26AFF22C00FB1C41 /* Extensions */,
-				4F5E887F26A053A9005271FB /* ParetoCheck.swift */,
-				4F3EF24226CA859500841375 /* Claim.swift */,
 				4F10300A269F0568008C1E86 /* Checks */,
+				4FB7C67F26AFF22C00FB1C41 /* Extensions */,
 				4F103009269F054C008C1E86 /* StatusBar */,
 				4F103006269EDB82008C1E86 /* Views */,
-				4FEBA2F1269CD48F009B2469 /* ParetoApp.swift */,
+				4FEBA2F7269CD48F009B2469 /* Preview Content */,
 				4FEBA2F5269CD48F009B2469 /* Assets.xcassets */,
 				4FEBA2FA269CD48F009B2469 /* Info.plist */,
 				4FEBA2FB269CD48F009B2469 /* Pareto.entitlements */,
-				4FEBA2F7269CD48F009B2469 /* Preview Content */,
+				4FEBA2F1269CD48F009B2469 /* ParetoApp.swift */,
 				4FB7C67C26AFF1AB00FB1C41 /* Log.swift */,
 				4F47220F26B08A0E0071CE2A /* Settings.swift */,
 				4F6A92E926C54AB7006C2F2D /* AppInfo.swift */,
 				4FF13D9626DCCB9900E4084E /* Utils.swift */,
+				4F14487326D8EA5E00A5BA34 /* Updater.swift */,
+				4FF22A6426F0CFA500500213 /* Flags.swift */,
 			);
 			path = Pareto;
 			sourceTree = "<group>";
@@ -514,6 +509,7 @@
 				4F47221026B08A0E0071CE2A /* Settings.swift in Sources */,
 				4F868DD126A5C51C005B876E /* Autologin.swift in Sources */,
 				4FEBA2F2269CD48F009B2469 /* ParetoApp.swift in Sources */,
+				4FF22A6526F0CFA500500213 /* Flags.swift in Sources */,
 				4F84A94926CBE21300A1579D /* PasswordFromLock.swift in Sources */,
 				4F14487C26D8EDB000A5BA34 /* Bundle.swift in Sources */,
 				4F6A92E826C52210006C2F2D /* IntegrationCheck.swift in Sources */,

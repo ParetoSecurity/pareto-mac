@@ -14,7 +14,6 @@ import SwiftUI
 class AppDelegate: NSObject, NSApplicationDelegate {
     var statusBar: StatusBarController?
     var updater: AppUpdater?
-    var updateWindow: NSWindow!
 
     func application(_: NSApplication, open urls: [URL]) {
         for url in urls {
@@ -41,7 +40,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         statusBar = StatusBarController()
         statusBar?.configureChecks()
         statusBar?.updateMenu()
-
+        Defaults[.updateRunning] = 0
         updater = AppUpdater(owner: "ParetoSecurity", repo: "pareto-mac")
 
         // stop running checks here and reset to defaults
@@ -53,12 +52,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             return
         }
         statusBar?.runChecks()
-        doUpdateCheck()
 
         // Update when waking up from sleep
         NSWorkspace.onWakeup { _ in
             self.statusBar?.runChecks()
-            self.doUpdateCheck()
         }
 
         // Schedule hourly claim updates
@@ -69,20 +66,23 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
 
         NSBackgroundActivityScheduler.repeating(withName: "UpdateRunner", withInterval: 60 * 60) { (completion: NSBackgroundActivityScheduler.CompletionHandler) in
-            self.doUpdateCheck()
+            os_log("Running update checks")
+            os_log("Doing checkForRelease \(Defaults[.updateRunning])")
+            if Defaults[.updateRunning] > 0 {
+                os_log("Skip checkForRelease Defaults[.updateRunning]=\(Defaults[.updateRunning])")
+                return
+            }
+            if Defaults.shouldDoUpdateCheck() {
+                os_log("Running update check")
+                DispatchQueue.main.async { self.checkForRelease() }
+                Defaults.doneUpdateCheck()
+            }
             completion(.finished)
         }
     }
 
-    func doUpdateCheck() {
-        if Defaults.shouldDoUpdateCheck() {
-            os_log("Running update check")
-            DispatchQueue.main.async { self.checkForRelease() }
-            Defaults.doneUpdateCheck()
-        }
-    }
-
     func checkForRelease() {
+        Defaults[.updateRunning] += 1
         let currentVersion = Bundle.main.version
         if let release = try? updater!.getLatestRelease() {
             if currentVersion < release.version {
@@ -103,6 +103,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                             }
                         }
                     }
+                    Defaults[.updateRunning] = 0
+                    os_log("Defaults[.updateRunning] \(Defaults[.updateRunning])")
                 }
             }
         }
