@@ -41,7 +41,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                     Defaults[.userID] = license.uuid
                     AppInfo.Licensed = true
                     let alert = NSAlert()
-                    alert.messageText = "License is valid"
+                    alert.messageText = "Pareto Security is now licensed."
                     alert.alertStyle = NSAlert.Style.informational
                     alert.addButton(withTitle: "OK")
                     alert.runModal()
@@ -51,7 +51,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                     Defaults[.userID] = ""
                     AppInfo.Licensed = false
                     let alert = NSAlert()
-                    alert.messageText = "License is not valid"
+                    alert.messageText = "License is not valid. Please email support@paretosecurity.app."
                     alert.alertStyle = NSAlert.Style.informational
                     alert.addButton(withTitle: "OK")
                     alert.runModal()
@@ -187,14 +187,24 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     @objc func runChecks() {
         if !AppInfo.Licensed {
-            NSApp.sendAction(#selector(runChecksNag), to: nil, from: nil)
-            NSApp.activate(ignoringOtherApps: true)
+            let alert = NSAlert()
+            alert.messageText = "You are running the free version of the app. Please consider purchasing the Personal lifetime license for unlimited devices."
+            alert.alertStyle = NSAlert.Style.informational
+            alert.addButton(withTitle: "Purchase")
+            alert.addButton(withTitle: "Later")
+            switch alert.runModal() {
+            case NSApplication.ModalResponse.alertFirstButtonReturn:
+                NSWorkspace.shared.open(URL(string: "https://paretosecurity.app/pricing")!)
+            case NSApplication.ModalResponse.alertSecondButtonReturn:
+                statusBar?.runChecks()
+            default:
+                os_log("Unknown")
+            }
         } else {
             DispatchQueue.main.async {
                 self.statusBar?.runChecks()
             }
         }
-
     }
 
     @objc func reportBug() {
