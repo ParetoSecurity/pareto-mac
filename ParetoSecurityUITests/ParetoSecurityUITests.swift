@@ -90,6 +90,8 @@ class ParetoSecurityUITests: XCTestCase {
         takeScreenshot(screenshot: app.windows.firstMatch.screenshot(), name: "Settings Teams")
         app.windows.firstMatch.toolbars.buttons["Checks"].click()
         takeScreenshot(screenshot: app.windows.firstMatch.screenshot(), name: "Settings Checks")
+        app.windows.firstMatch.toolbars.buttons["License"].click()
+        takeScreenshot(screenshot: app.windows.firstMatch.screenshot(), name: "Settings License")
         app.windows.firstMatch.toolbars.buttons["About"].click()
         takeScreenshot(screenshot: app.windows.firstMatch.screenshot(), name: "Settings About")
         app.windows.firstMatch.buttons[XCUIIdentifierCloseWindow].click()
