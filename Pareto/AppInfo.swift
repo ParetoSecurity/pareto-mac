@@ -55,7 +55,16 @@ enum AppInfo {
 
     static let logEntries = { () -> [String] in
         var logs = [String]()
+
         logs.append("State:")
+        logs.append("Location: \(Bundle.main.path)")
+        #if DEBUG
+            logs.append("Build: debug")
+        #else
+
+            logs.append("Build: release")
+
+        #endif
         for (k, v) in UserDefaults.standard.dictionaryRepresentation().sorted(by: { $0.key < $1.key }) {
             if k.starts(with: "ParetoCheck-") {
                 logs.append("\(k)=\(v)")

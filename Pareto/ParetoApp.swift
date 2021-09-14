@@ -24,6 +24,19 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
     }
 
+    #if !DEBUG
+        func applicationWillFinishLaunching(_: Notification) {
+            if !Bundle.main.path.string.hasPrefix("/Applications/") {
+                let alert = NSAlert()
+                alert.messageText = "Please install application by moving it into the Applications folder."
+                alert.alertStyle = NSAlert.Style.critical
+                alert.addButton(withTitle: "Close")
+                alert.runModal()
+                NSApplication.shared.terminate(self)
+            }
+        }
+    #endif
+
     func applicationDidFinishLaunching(_: Notification) {
         statusBar = StatusBarController()
         statusBar?.configureChecks()
@@ -111,7 +124,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     @objc func reportBug() {
         NSWorkspace.shared.open(AppInfo.bugReportURL())
     }
-
 }
 
 @main
