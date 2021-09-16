@@ -47,7 +47,7 @@ class StatusBarController: NSObject, NSMenuDelegate {
         statusItem.menu = statusItemMenu
         if Defaults[.firstLaunch] {
             if let button = statusItem.button {
-                _ = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false) { _ in
+                _ = Timer.scheduledTimer(withTimeInterval: 2.0, repeats: false) { _ in
                     button.performClick(nil)
                 }
             }

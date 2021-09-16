@@ -52,7 +52,16 @@ struct AboutSettingsView: View {
                 VStack(alignment: .leading, spacing: 0) {
                     Text("Version: \(AppInfo.appVersion) - \(AppInfo.buildVersion)")
                     HStack {
-                        Text(status.rawValue)
+                        if status == UpdateStates.Failed {
+                            HStack(spacing: 0) {
+                                Text("Failed to update, ")
+                                Link("download manualy",
+                                     destination: URL(string: "https://github.com/ParetoSecurity/pareto-mac/releases/latest/download/ParetoSecurity.dmg")!)
+                            }
+                        } else {
+                            Text(status.rawValue)
+                        }
+
                         if self.isLoading {
                             ProgressView().frame(width: 5.0, height: 5.0)
                                 .scaleEffect(x: 0.5, y: 0.5, anchor: .center)

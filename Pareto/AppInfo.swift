@@ -68,24 +68,26 @@ enum AppInfo {
                 logs.append("\(k)=\(v)")
             }
         }
-        logs.append("\nLogs:")
-        do {
-            if #available(macOS 12.0, *) {
-                let logStore = try OSLogStore(scope: .currentProcessIdentifier)
-                let enumerator = try logStore.__entriesEnumerator(position: nil, predicate: nil)
-                let allEntries = Array(enumerator)
-                let osLogEntryObjects = allEntries.compactMap { $0 as? OSLogEntry }
-                let osLogEntryLogObjects = osLogEntryObjects.compactMap { $0 as? OSLogEntryLog }
-                let subsystem = Bundle.main.bundleIdentifier!
-                for entry in osLogEntryLogObjects where entry.subsystem == subsystem {
-                    logs.append(entry.category + ": " + entry.composedMessage)
-                }
-            } else {
-                logs.append("Please copy the logs from the Konsole.app with the ParetoSecurity filter.")
-            }
-        } catch {
-            logs.append("logEntries: \(error)")
-        }
+        // Disabled due to apple pulling SDK 12
+        // https://www.reddit.com/r/SwiftUI/comments/pocuh6/xcode_13_rc_they_have_temporarly_removed_macos_12/?utm_source=amp&utm_medium=
+        // logs.append("\nLogs:")
+        // do {
+        //     if #available(macOS 12.0, *) {
+        //         let logStore = try OSLogStore(scope: .currentProcessIdentifier)
+        //         let enumerator = try logStore.__entriesEnumerator(position: nil, predicate: nil)
+        //         let allEntries = Array(enumerator)
+        //         let osLogEntryObjects = allEntries.compactMap { $0 as? OSLogEntry }
+        //         let osLogEntryLogObjects = osLogEntryObjects.compactMap { $0 as? OSLogEntryLog }
+        //         let subsystem = Bundle.main.bundleIdentifier!
+        //         for entry in osLogEntryLogObjects where entry.subsystem == subsystem {
+        //             logs.append(entry.category + ": " + entry.composedMessage)
+        //         }
+        //     } else {
+        //         logs.append("Please copy the logs from the Konsole.app with the ParetoSecurity filter.")
+        //     }
+        // } catch {
+        //     logs.append("logEntries: \(error)")
+        // }
         return logs
     }
 
