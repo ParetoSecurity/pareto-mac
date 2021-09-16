@@ -5,9 +5,11 @@
 //  Created by Janez Troha on 14/09/2021.
 //
 
+import Combine
 import Foundation
+import os.log
 
-struct DNSResponse: Codable {
+private struct DNSResponse: Codable {
     let status: Int
 
     struct Answer: Codable {
@@ -29,15 +31,27 @@ struct DNSResponse: Codable {
     }
 }
 
-struct Flags: Decodable {
-    var personalLicense: Bool = false
-}
+class FlagsUpdater: ObservableObject {
+    @Published var personalLicenseSharing: Bool = false
+    @Published var teamAPI: Bool = false
 
-func getLatestFlags() throws -> String? {
-    guard Bundle.main.executableURL != nil else {
-        throw Error.bundleExecutableURL
+    func update() {
+        do {
+            let url = URL(string: "https://dns.google/resolve?name=flags.paretosecurity.app&type=txt")!
+            let data = try Data(contentsOf: url)
+            let flags = try JSONDecoder().decode(DNSResponse.self, from: data).answer.first?.data
+            for flag in flags!.split(separator: ",") {
+                let kv = flag.split(separator: "=")
+                os_log("Flag: \(kv)")
+                switch kv[0] {
+                case "personalLicenseSharing":
+                    personalLicenseSharing = (kv[1] as NSString).boolValue
+                default:
+                    os_log("Unknwon flag: \(kv[0])")
+                }
+            }
+        } catch {
+            os_log("Flags cannot be updated")
+        }
     }
-    let url = URL(string: "https://dns.google/resolve?name=flags.paretosecurity.app&type=txt")!
-    let data = try Data(contentsOf: url)
-    return try JSONDecoder().decode(DNSResponse.self, from: data).answer.first?.data
 }

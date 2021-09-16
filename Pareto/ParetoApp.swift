@@ -43,18 +43,43 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                     Defaults[.userEmail] = license.subject.value
                     Defaults[.userID] = license.uuid
                     AppInfo.Licensed = true
+                    Defaults[.reportingRole] = .personal
+
                     let alert = NSAlert()
                     alert.messageText = "Pareto Security is now licensed."
                     alert.alertStyle = NSAlert.Style.informational
                     alert.addButton(withTitle: "OK")
                     alert.runModal()
                 } catch {
-                    Defaults[.license] = ""
-                    Defaults[.userEmail] = ""
-                    Defaults[.userID] = ""
-                    AppInfo.Licensed = false
+                    Defaults.toFree()
                     let alert = NSAlert()
                     alert.messageText = "License is not valid. Please email support@paretosecurity.app."
+                    alert.alertStyle = NSAlert.Style.informational
+                    alert.addButton(withTitle: "OK")
+                    alert.runModal()
+                }
+            case "enrollTeam":
+                let jwt = url.queryParams()["token"] ?? ""
+                do {
+                    let ticket = try VerifyTeamTicket(withTicket: jwt)
+                    enrolledHandler = true
+                    Defaults[.license] = jwt
+                    Defaults[.userID] = ""
+                    Defaults[.deviceID] = ticket.deviceUUID
+                    Defaults[.teamID] = ticket.teamUUID
+                    AppInfo.Licensed = true
+                    Defaults[.reportingRole] = .team
+                    Defaults[.teamAPI] = url.queryParams()["api"] ?? Team.defaultAPI
+                    _ = try Team.link(withDevice: ReportingDevice.current())
+                    let alert = NSAlert()
+                    alert.messageText = "Pareto Security is linked to your team account."
+                    alert.alertStyle = NSAlert.Style.informational
+                    alert.addButton(withTitle: "OK")
+                    alert.runModal()
+                } catch {
+                    Defaults.toFree()
+                    let alert = NSAlert()
+                    alert.messageText = "Team ticket is not valid. Please email support@paretosecurity.app."
                     alert.alertStyle = NSAlert.Style.informational
                     alert.addButton(withTitle: "OK")
                     alert.runModal()
@@ -87,15 +112,18 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationDidFinishLaunching(_: Notification) {
         // Verify license
         do {
-            let license = try VerifyLicense(withLicense: Defaults[.license])
-            Defaults[.userEmail] = license.subject.value
-            Defaults[.userID] = license.uuid
-            AppInfo.Licensed = true
+            switch Defaults[.reportingRole] {
+            case .personal:
+                _ = try VerifyLicense(withLicense: Defaults[.license])
+                AppInfo.Licensed = true
+            case .team:
+                _ = try VerifyTeamTicket(withTicket: Defaults[.license])
+                AppInfo.Licensed = true
+            default:
+                Defaults.toFree()
+            }
         } catch {
-            Defaults[.userEmail] = ""
-            Defaults[.userID] = ""
-            AppInfo.Licensed = false
-            Defaults[.license] = ""
+            Defaults.toFree()
         }
 
         statusBar = StatusBarController()
@@ -157,6 +185,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                     self.checkForRelease()
                     Defaults.doneUpdateCheck()
                 }
+            }
+            completion(.finished)
+        }
+
+        NSBackgroundActivityScheduler.repeating(withName: "FlagsRunner", withInterval: 60 * 5) { (completion: NSBackgroundActivityScheduler.CompletionHandler) in
+            DispatchQueue.main.async {
+                AppInfo.Flags.update()
             }
             completion(.finished)
         }

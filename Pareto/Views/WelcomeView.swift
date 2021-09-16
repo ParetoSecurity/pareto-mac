@@ -8,35 +8,29 @@
 import Defaults
 import SwiftUI
 
-struct TitleView: View {
-    var body: some View {
-        VStack {
-            Image("Logo")
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(minHeight: 180, alignment: .center)
-                .accessibility(hidden: true)
-
-            Text("Welcome to")
-                .fontWeight(.black)
-                .font(.system(size: 36))
-
-            Text("Pareto Security")
-                .fontWeight(.black)
-                .font(.system(size: 36))
-                .foregroundColor(.mainColor)
-        }
-    }
-}
-
 struct WelcomeView: View {
-    @State private var showDetail = true
+    @State var showDetail = false
     @Default(.lastCheck) var lastCheck
     @Default(.checksPassed) var checksPassed
     var body: some View {
-        if showDetail {
+        if !showDetail {
             VStack {
-                TitleView()
+                VStack {
+                    Image("Logo")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(minHeight: 180, alignment: .center)
+                        .accessibility(hidden: true)
+
+                    Text("Welcome to")
+                        .fontWeight(.black)
+                        .font(.system(size: 36))
+
+                    Text("Pareto Security")
+                        .fontWeight(.black)
+                        .font(.system(size: 36))
+                        .foregroundColor(.mainColor)
+                }
                 Spacer(minLength: 30)
                 if lastCheck > 0 {
                     Text("Done! The checks will be performed in the background from now on.").font(.headline)

@@ -20,10 +20,13 @@
 		4F24A09226EB73980036F748 /* AboutSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F24A09126EB73980036F748 /* AboutSettingsView.swift */; };
 		4F24A09426EB73C80036F748 /* ChecksSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F24A09326EB73C80036F748 /* ChecksSettingsView.swift */; };
 		4F24A09626EB73F30036F748 /* GeneralSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F24A09526EB73F30036F748 /* GeneralSettingsView.swift */; };
+		4F343A5F26F7A3D4007D2F7D /* Teams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F343A5E26F7A3D4007D2F7D /* Teams.swift */; };
 		4F35395526E8AD4C008F5DD3 /* RemoteManagment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F35395426E8AD4B008F5DD3 /* RemoteManagment.swift */; };
 		4F35395726E8AE02008F5DD3 /* RemoteLogin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F35395626E8AE02008F5DD3 /* RemoteLogin.swift */; };
 		4F3EF24326CA859500841375 /* Claim.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F3EF24226CA859500841375 /* Claim.swift */; };
-		4F47221026B08A0E0071CE2A /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F47220F26B08A0E0071CE2A /* Settings.swift */; };
+		4F47221026B08A0E0071CE2A /* Defaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F47220F26B08A0E0071CE2A /* Defaults.swift */; };
+		4F57135326F8A6AC004B4359 /* LicenseTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F57135226F8A6AC004B4359 /* LicenseTest.swift */; };
+		4F57135526F8ACCC004B4359 /* WelcomeTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F57135426F8ACCC004B4359 /* WelcomeTest.swift */; };
 		4F5E888026A053A9005271FB /* ParetoCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F5E887F26A053A9005271FB /* ParetoCheck.swift */; };
 		4F6A0E0E26CE484A003B00A3 /* PrinterSharingCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F6A0E0D26CE484A003B00A3 /* PrinterSharingCheck.swift */; };
 		4F6A0E1026CE4868003B00A3 /* FileSharingCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F6A0E0F26CE4868003B00A3 /* FileSharingCheck.swift */; };
@@ -59,6 +62,7 @@
 		4FF13D9726DCCB9900E4084E /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FF13D9626DCCB9900E4084E /* Utils.swift */; };
 		4FF13D9D26DE235700E4084E /* UpdaterTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FF13D9C26DE235700E4084E /* UpdaterTest.swift */; };
 		4FF22A6526F0CFA500500213 /* Flags.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FF22A6426F0CFA500500213 /* Flags.swift */; };
+		4FF515C126F7B362008D135E /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 4FF515C026F7B362008D135E /* Alamofire */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -88,10 +92,14 @@
 		4F24A09126EB73980036F748 /* AboutSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutSettingsView.swift; sourceTree = "<group>"; };
 		4F24A09326EB73C80036F748 /* ChecksSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChecksSettingsView.swift; sourceTree = "<group>"; };
 		4F24A09526EB73F30036F748 /* GeneralSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralSettingsView.swift; sourceTree = "<group>"; };
+		4F343A5D26F7A3C8007D2F7D /* API.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = API.playground; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		4F343A5E26F7A3D4007D2F7D /* Teams.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Teams.swift; sourceTree = "<group>"; };
 		4F35395426E8AD4B008F5DD3 /* RemoteManagment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteManagment.swift; sourceTree = "<group>"; };
 		4F35395626E8AE02008F5DD3 /* RemoteLogin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteLogin.swift; sourceTree = "<group>"; };
 		4F3EF24226CA859500841375 /* Claim.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Claim.swift; sourceTree = "<group>"; };
-		4F47220F26B08A0E0071CE2A /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
+		4F47220F26B08A0E0071CE2A /* Defaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Defaults.swift; sourceTree = "<group>"; };
+		4F57135226F8A6AC004B4359 /* LicenseTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LicenseTest.swift; sourceTree = "<group>"; };
+		4F57135426F8ACCC004B4359 /* WelcomeTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeTest.swift; sourceTree = "<group>"; };
 		4F5E887F26A053A9005271FB /* ParetoCheck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParetoCheck.swift; sourceTree = "<group>"; };
 		4F6A0E0D26CE484A003B00A3 /* PrinterSharingCheck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrinterSharingCheck.swift; sourceTree = "<group>"; };
 		4F6A0E0F26CE4868003B00A3 /* FileSharingCheck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileSharingCheck.swift; sourceTree = "<group>"; };
@@ -155,6 +163,7 @@
 				4FD50F2326F4F0A900C73682 /* JWTKit in Frameworks */,
 				4F14487726D8EB2E00A5BA34 /* Version in Frameworks */,
 				4F14487A26D8EB7A00A5BA34 /* Path in Frameworks */,
+				4FF515C126F7B362008D135E /* Alamofire in Frameworks */,
 				4F6A0E1326CE608C003B00A3 /* Defaults in Frameworks */,
 				4F103012269F1C65008C1E86 /* LaunchAtLogin in Frameworks */,
 			);
@@ -244,6 +253,8 @@
 				4FC81A4B26C41DC8006EABA8 /* ParetoSecurityTests.swift */,
 				4F84A94326CBBA6900A1579D /* SettingsTests.swift */,
 				4FF13D9C26DE235700E4084E /* UpdaterTest.swift */,
+				4F57135226F8A6AC004B4359 /* LicenseTest.swift */,
+				4F57135426F8ACCC004B4359 /* WelcomeTest.swift */,
 			);
 			path = ParetoSecurityTests;
 			sourceTree = "<group>";
@@ -251,6 +262,7 @@
 		4FEBA2E5269CD48F009B2469 = {
 			isa = PBXGroup;
 			children = (
+				4F343A5D26F7A3C8007D2F7D /* API.playground */,
 				4FEBA2F0269CD48F009B2469 /* Pareto */,
 				4FC81A4A26C41DC8006EABA8 /* ParetoSecurityTests */,
 				4F6A92F026C555C6006C2F2D /* ParetoSecurityUITests */,
@@ -281,8 +293,9 @@
 				4FEBA2FA269CD48F009B2469 /* Info.plist */,
 				4FEBA2FB269CD48F009B2469 /* Pareto.entitlements */,
 				4FEBA2F1269CD48F009B2469 /* ParetoApp.swift */,
+				4F343A5E26F7A3D4007D2F7D /* Teams.swift */,
 				4FB7C67C26AFF1AB00FB1C41 /* Log.swift */,
-				4F47220F26B08A0E0071CE2A /* Settings.swift */,
+				4F47220F26B08A0E0071CE2A /* Defaults.swift */,
 				4F6A92E926C54AB7006C2F2D /* AppInfo.swift */,
 				4FF13D9626DCCB9900E4084E /* Utils.swift */,
 				4F14487326D8EA5E00A5BA34 /* Updater.swift */,
@@ -363,6 +376,7 @@
 				4F14487626D8EB2E00A5BA34 /* Version */,
 				4F14487926D8EB7A00A5BA34 /* Path */,
 				4FD50F2226F4F0A900C73682 /* JWTKit */,
+				4FF515C026F7B362008D135E /* Alamofire */,
 			);
 			productName = Pareto;
 			productReference = 4FEBA2EE269CD48F009B2469 /* Pareto Security.app */;
@@ -406,6 +420,7 @@
 				4F14487526D8EB2E00A5BA34 /* XCRemoteSwiftPackageReference "Version" */,
 				4F14487826D8EB7A00A5BA34 /* XCRemoteSwiftPackageReference "Path.swift" */,
 				4FD50F2126F4F0A900C73682 /* XCRemoteSwiftPackageReference "jwt-kit" */,
+				4FF515BF26F7B362008D135E /* XCRemoteSwiftPackageReference "Alamofire" */,
 			);
 			productRefGroup = 4FEBA2EF269CD48F009B2469 /* Products */;
 			projectDirPath = "";
@@ -497,6 +512,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				4F84A94426CBBA6900A1579D /* SettingsTests.swift in Sources */,
+				4F57135326F8A6AC004B4359 /* LicenseTest.swift in Sources */,
+				4F57135526F8ACCC004B4359 /* WelcomeTest.swift in Sources */,
 				4FF13D9D26DE235700E4084E /* UpdaterTest.swift in Sources */,
 				4F080D1D26C50D2800686786 /* ParetoSecurityTests.swift in Sources */,
 				4F6A92E626C521BE006C2F2D /* CheckIntegrationTest.swift in Sources */,
@@ -523,8 +540,9 @@
 				4F24A08E26EB734A0036F748 /* LicenseSettingsView.swift in Sources */,
 				4F35395526E8AD4C008F5DD3 /* RemoteManagment.swift in Sources */,
 				4FB7C68126AFF25300FB1C41 /* Date.swift in Sources */,
+				4F343A5F26F7A3D4007D2F7D /* Teams.swift in Sources */,
 				4FB405EF26A6FC4800267D5D /* ScreensaverPassword.swift in Sources */,
-				4F47221026B08A0E0071CE2A /* Settings.swift in Sources */,
+				4F47221026B08A0E0071CE2A /* Defaults.swift in Sources */,
 				4F868DD126A5C51C005B876E /* Autologin.swift in Sources */,
 				4FEBA2F2269CD48F009B2469 /* ParetoApp.swift in Sources */,
 				4FF22A6526F0CFA500500213 /* Flags.swift in Sources */,
@@ -934,6 +952,14 @@
 				minimumVersion = 4.2.0;
 			};
 		};
+		4FF515BF26F7B362008D135E /* XCRemoteSwiftPackageReference "Alamofire" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Alamofire/Alamofire";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -966,6 +992,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 4FD50F2126F4F0A900C73682 /* XCRemoteSwiftPackageReference "jwt-kit" */;
 			productName = JWTKit;
+		};
+		4FF515C026F7B362008D135E /* Alamofire */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4FF515BF26F7B362008D135E /* XCRemoteSwiftPackageReference "Alamofire" */;
+			productName = Alamofire;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

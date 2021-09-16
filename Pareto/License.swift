@@ -9,7 +9,7 @@ import Foundation
 import JWTKit
 import SwiftUI
 
-private let rsaPublicKey = """
+let rsaPublicKey = """
 -----BEGIN PUBLIC KEY-----
 MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAwGh64DK49GOq1KX+ojyg
 Y9JSAZ4cfm5apavetQ42D2gTjfhDu1kivrDRwhjqj7huUWRI2ExMdMHp8CzrJI3P
@@ -53,8 +53,43 @@ struct LicensePayload: JWTPayload, Equatable {
     }
 }
 
-func VerifyLicense(withLicense data: String) throws -> LicensePayload {
+func VerifyLicense(withLicense data: String, publicKey: String = rsaPublicKey) throws -> LicensePayload {
     let signers = JWTSigners()
-    try signers.use(.rs512(key: .public(pem: rsaPublicKey)))
+    try signers.use(.rs512(key: .public(pem: publicKey)))
     return try signers.verify(data, as: LicensePayload.self)
+}
+
+struct TeamTicketPayload: JWTPayload, Equatable {
+    // Maps the longer Swift property names to the
+    // shortened keys used in the JWT payload.
+    enum CodingKeys: String, CodingKey {
+        case subject = "sub"
+        case issuedAt = "iat"
+        case teamUUID = "teamID"
+        case deviceUUID = "deviceID"
+        case role
+    }
+
+    // The "sub" (subject) claim identifies the principal that is the
+    // subject of the JWT.
+    var subject: SubjectClaim
+
+    // The "exp" (expiration time) claim identifies the expiration time on
+    // or after which the JWT MUST NOT be accepted for processing.
+    var issuedAt: IssuedAtClaim
+
+    // Custom data.
+    var teamUUID: String
+    var deviceUUID: String
+    var role: AudienceClaim
+
+    func verify(using _: JWTSigner) throws {
+        try role.verifyIntendedAudience(includes: "team")
+    }
+}
+
+func VerifyTeamTicket(withTicket data: String, publicKey: String = rsaPublicKey) throws -> TeamTicketPayload {
+    let signers = JWTSigners()
+    try signers.use(.rs512(key: .public(pem: publicKey)))
+    return try signers.verify(data, as: TeamTicketPayload.self)
 }
