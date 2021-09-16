@@ -114,6 +114,12 @@ class StatusBarController: NSObject, NSMenuDelegate {
             self.isRunnig = false
             self.updateMenu()
             Defaults[.checksPassed] = self.claimsPassed
+
+            if Defaults[.reportingRole] == .team {
+                let report = Report.now()
+                _ = try? Team.update(withReport: report)
+            }
+
             os_log("Checks finished running", log: Log.app)
         }
 
@@ -168,11 +174,11 @@ class StatusBarController: NSObject, NSMenuDelegate {
 
     func addApplicationItems() {
         if Defaults[.snoozeTime] == 0 {
-            let lastItem = NSMenuItem(title: "Last check \(Date().fromTimeStamp(timeStamp: Defaults[.lastCheck]).timeAgoDisplay())", action: nil, keyEquivalent: "")
+            let lastItem = NSMenuItem(title: "Last check \(Date.fromTimeStamp(timeStamp: Defaults[.lastCheck]).timeAgoDisplay())", action: nil, keyEquivalent: "")
             lastItem.target = NSApp.delegate
             statusItemMenu.addItem(lastItem)
         } else {
-            let lastItem = NSMenuItem(title: "Resumes \(Date().fromTimeStamp(timeStamp: snoozeTime).timeAgoDisplay())", action: nil, keyEquivalent: "")
+            let lastItem = NSMenuItem(title: "Resumes \(Date.fromTimeStamp(timeStamp: snoozeTime).timeAgoDisplay())", action: nil, keyEquivalent: "")
             lastItem.target = NSApp.delegate
             statusItemMenu.addItem(lastItem)
         }

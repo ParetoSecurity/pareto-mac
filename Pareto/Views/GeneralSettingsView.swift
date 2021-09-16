@@ -36,6 +36,9 @@ struct GeneralSettingsView: View {
                     Button("Show Welcome") {
                         NSApp.sendAction(#selector(AppDelegate.showWelcome), to: nil, from: nil)
                     }
+                    Button("Update Flags") {
+                        AppInfo.Flags.update()
+                    }
                 }
             }
         }

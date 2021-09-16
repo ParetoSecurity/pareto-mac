@@ -8,7 +8,7 @@ extension Date {
         return Int(timeIntervalSince1970 * 1000)
     }
 
-    func fromTimeStamp(timeStamp: Int) -> Date {
+    static func fromTimeStamp(timeStamp: Int) -> Date {
         return NSDate(timeIntervalSince1970: TimeInterval(timeStamp / 1000)) as Date
     }
 
@@ -16,5 +16,14 @@ extension Date {
         let formatter = RelativeDateTimeFormatter()
         formatter.unitsStyle = .full
         return formatter.localizedString(for: self, relativeTo: Date())
+    }
+
+    func as3339String() -> String {
+        let RFC3339DateFormatter = DateFormatter()
+        RFC3339DateFormatter.locale = Locale(identifier: "en_US_POSIX")
+        RFC3339DateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZZZZZ"
+        RFC3339DateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
+
+        return RFC3339DateFormatter.string(from: self)
     }
 }
