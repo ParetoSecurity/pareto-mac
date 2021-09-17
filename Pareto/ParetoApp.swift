@@ -14,6 +14,7 @@ import SwiftUI
 class AppDelegate: NSObject, NSApplicationDelegate {
     var statusBar: StatusBarController?
     var updater: AppUpdater?
+    var welcomeWindow: NSWindow?
 
     #if !DEBUG
         func applicationWillFinishLaunching(_: Notification) {
@@ -33,6 +34,15 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             switch url.host {
             case "reset":
                 resetSettings()
+                NSApplication.shared.terminate(self)
+            case "showMenu":
+                NSApp.sendAction(#selector(showMenu), to: nil, from: nil)
+                NSApp.activate(ignoringOtherApps: true)
+            case "welcome":
+                NSApp.sendAction(#selector(showWelcome), to: nil, from: nil)
+                NSApp.activate(ignoringOtherApps: true)
+            case "update":
+                checkForRelease()
             default:
                 os_log("Unknown command \(url)")
             }
@@ -51,10 +61,16 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             Defaults.removeAll()
             UserDefaults.standard.removeAll()
             UserDefaults.standard.synchronize()
-            Defaults[.firstLaunch] = true
             return
         }
-        statusBar?.runChecks()
+
+        if Defaults.firstLaunch() {
+            NSApp.sendAction(#selector(showWelcome), to: nil, from: nil)
+            NSApp.activate(ignoringOtherApps: true)
+            Timer.scheduledTimer(timeInterval: 2.0, target: self, selector: #selector(runChecks), userInfo: nil, repeats: false)
+        } else {
+            Timer.scheduledTimer(timeInterval: 2.0, target: self, selector: #selector(runChecks), userInfo: nil, repeats: false)
+        }
 
         // schedule update on startup
         if Defaults.shouldDoUpdateCheck() {
@@ -79,7 +95,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         // Schedule hourly claim updates
         NSBackgroundActivityScheduler.repeating(withName: "ClaimRunner", withInterval: 60 * 60) { (completion: NSBackgroundActivityScheduler.CompletionHandler) in
             os_log("Running checks")
-            self.statusBar?.runChecks()
+            DispatchQueue.main.async {
+                self.statusBar?.runChecks()
+            }
             completion(.finished)
         }
 
@@ -129,19 +147,49 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     @objc func runChecks() {
-        statusBar?.runChecks()
+        DispatchQueue.main.async {
+            self.statusBar?.runChecks()
+        }
+    }
+
+    @objc func showMenu() {
+        statusBar?.showMenu()
     }
 
     @objc func reportBug() {
         NSWorkspace.shared.open(AppInfo.bugReportURL())
     }
 
+    @objc func showWelcome() {
+        if welcomeWindow == nil {
+            let welcome = WelcomeView()
+            // Create the preferences window and set content
+            welcomeWindow = NSWindow(
+                contentRect: NSRect(x: 0, y: 0, width: 640, height: 480),
+                styleMask: [.closable, .titled],
+                backing: .buffered,
+                defer: false
+            )
+            welcomeWindow!.titlebarAppearsTransparent = true
+            welcomeWindow!.center()
+            welcomeWindow!.setFrameAutosaveName("welcomeView")
+            welcomeWindow!.isReleasedWhenClosed = false
+            let hosting = NSHostingView(rootView: welcome)
+            hosting.autoresizingMask = [NSView.AutoresizingMask.width, NSView.AutoresizingMask.height]
+            welcomeWindow!.contentView = hosting
+        }
+
+        welcomeWindow!.makeKeyAndOrderFront(nil)
+    }
+
     func resetSettings() {
         Defaults.removeAll()
         UserDefaults.standard.removeAll()
         UserDefaults.standard.synchronize()
-        Defaults[.firstLaunch] = true
-        NSApplication.shared.terminate(self)
+    }
+
+    @objc func resetSettingsClick() {
+        resetSettings()
     }
 }
 
