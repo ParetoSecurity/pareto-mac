@@ -15,6 +15,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var statusBar: StatusBarController?
     var updater: AppUpdater?
     var welcomeWindow: NSWindow?
+    var enrolledHandler = false
 
     #if !DEBUG
         func applicationWillFinishLaunching(_: Notification) {
@@ -36,6 +37,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 let jwt = url.queryParams()["token"] ?? ""
                 do {
                     let license = try VerifyLicense(withLicense: jwt)
+                    enrolledHandler = true
                     Defaults[.license] = jwt
                     Defaults[.userEmail] = license.subject.value
                     Defaults[.userID] = license.uuid
@@ -64,6 +66,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 NSApp.activate(ignoringOtherApps: true)
             case "welcome":
                 NSApp.sendAction(#selector(showWelcome), to: nil, from: nil)
+                NSApp.activate(ignoringOtherApps: true)
+            case "runChecks":
+                NSApp.sendAction(#selector(runChecks), to: nil, from: nil)
+                NSApp.activate(ignoringOtherApps: true)
+            case "showPrefs":
+                NSApp.sendAction(#selector(showPrefs), to: nil, from: nil)
                 NSApp.activate(ignoringOtherApps: true)
             case "update":
                 checkForRelease()
@@ -186,7 +194,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     @objc func runChecks() {
-        if !AppInfo.Licensed {
+        if !Defaults.firstLaunch(), !AppInfo.Licensed, !enrolledHandler {
             let alert = NSAlert()
             alert.messageText = "You are running the free version of the app. Please consider purchasing the Personal lifetime license for unlimited devices."
             alert.alertStyle = NSAlert.Style.informational
@@ -196,7 +204,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             case NSApplication.ModalResponse.alertFirstButtonReturn:
                 NSWorkspace.shared.open(URL(string: "https://paretosecurity.app/pricing")!)
             case NSApplication.ModalResponse.alertSecondButtonReturn:
-                statusBar?.runChecks()
+                DispatchQueue.main.async {
+                    self.statusBar?.runChecks()
+                }
             default:
                 os_log("Unknown")
             }
