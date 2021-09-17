@@ -65,6 +65,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             case "welcome":
                 NSApp.sendAction(#selector(showWelcome), to: nil, from: nil)
                 NSApp.activate(ignoringOtherApps: true)
+            case "runChecks":
+                NSApp.sendAction(#selector(runChecks), to: nil, from: nil)
+                NSApp.activate(ignoringOtherApps: true)
+            case "showPrefs":
+                NSApp.sendAction(#selector(showPrefs), to: nil, from: nil)
+                NSApp.activate(ignoringOtherApps: true)
             case "update":
                 checkForRelease()
             default:
@@ -186,7 +192,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     @objc func runChecks() {
-        if !AppInfo.Licensed {
+        if !Defaults.firstLaunch(), !AppInfo.Licensed {
             let alert = NSAlert()
             alert.messageText = "You are running the free version of the app. Please consider purchasing the Personal lifetime license for unlimited devices."
             alert.alertStyle = NSAlert.Style.informational
@@ -196,7 +202,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             case NSApplication.ModalResponse.alertFirstButtonReturn:
                 NSWorkspace.shared.open(URL(string: "https://paretosecurity.app/pricing")!)
             case NSApplication.ModalResponse.alertSecondButtonReturn:
-                statusBar?.runChecks()
+                DispatchQueue.main.async {
+                    self.statusBar?.runChecks()
+                }
             default:
                 os_log("Unknown")
             }
