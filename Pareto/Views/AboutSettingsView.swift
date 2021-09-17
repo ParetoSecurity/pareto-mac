@@ -28,7 +28,7 @@ struct AboutSettingsView: View {
                 .aspectRatio(contentMode: .fit).onTapGesture {
                     if !showBeta {
                         konami += 1
-                        if konami >= 7 {
+                        if konami == 3 {
                             showBeta = true
                             konami = 0
                             let alert = NSAlert()
@@ -37,6 +37,7 @@ struct AboutSettingsView: View {
                             alert.addButton(withTitle: "Let me in")
                             alert.runModal()
                         }
+
                     } else {
                         konami += 1
                         if konami >= 3 {

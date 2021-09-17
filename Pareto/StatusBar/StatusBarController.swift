@@ -43,15 +43,10 @@ class StatusBarController: NSObject, NSMenuDelegate {
         button.imageScaling = .scaleProportionallyDown
         button.title = "ParetoSecurity"
         button.isEnabled = true
-
         statusItem.menu = statusItemMenu
-        if Defaults[.firstLaunch] {
-            if let button = statusItem.button {
-                _ = Timer.scheduledTimer(withTimeInterval: 2.0, repeats: false) { _ in
-                    button.performClick(nil)
-                }
-            }
-            Defaults[.firstLaunch] = false
+
+        if Defaults.firstLaunch(), AppInfo.isRunningTests {
+            showMenu()
         }
     }
 
@@ -61,6 +56,14 @@ class StatusBarController: NSObject, NSMenuDelegate {
             passed = passed && claim.checkPassed
         }
         return passed
+    }
+
+    func showMenu() {
+        if let button = statusItem.button {
+            _ = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false) { _ in
+                button.performClick(nil)
+            }
+        }
     }
 
     func updateMenu() {
@@ -110,6 +113,7 @@ class StatusBarController: NSObject, NSMenuDelegate {
         workItem?.notify(queue: .main) {
             self.isRunnig = false
             self.updateMenu()
+            Defaults[.checksPassed] = self.claimsPassed
             os_log("Checks finished running", log: Log.app)
         }
 
@@ -130,10 +134,6 @@ class StatusBarController: NSObject, NSMenuDelegate {
 
     func menuDidClose(_: NSMenu) {
         updateMenu()
-        if Defaults[.internalRunChecks] {
-            Defaults[.internalRunChecks] = false
-            runChecks()
-        }
     }
 
     func menuWillOpen(_: NSMenu) {
