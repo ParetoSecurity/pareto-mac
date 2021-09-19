@@ -7,6 +7,7 @@
 
 import Defaults
 import Foundation
+import LaunchAtLogin
 import os.log
 import OSLog
 import SwiftUI
@@ -110,6 +111,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
 
         if Defaults.firstLaunch() {
+            #if !DEBUG
+                LaunchAtLogin.isEnabled = true
+            #endif
             NSApp.sendAction(#selector(showWelcome), to: nil, from: nil)
             NSApp.activate(ignoringOtherApps: true)
             Timer.scheduledTimer(timeInterval: 2.0, target: self, selector: #selector(runChecks), userInfo: nil, repeats: false)
