@@ -29,8 +29,13 @@ struct GeneralSettingsView: View {
                             Toggle("Update app to pre-release builds", isOn: $betaChannel)
                         }
                 }
-                Button("Reset Settings") {
-                    NSApp.sendAction(#selector(AppDelegate.resetSettingsClick), to: nil, from: nil)
+                HStack {
+                    Button("Reset Settings") {
+                        NSApp.sendAction(#selector(AppDelegate.resetSettingsClick), to: nil, from: nil)
+                    }
+                    Button("Show Welcome") {
+                        NSApp.sendAction(#selector(AppDelegate.showWelcome), to: nil, from: nil)
+                    }
                 }
             }
         }

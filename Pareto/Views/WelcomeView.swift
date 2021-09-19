@@ -8,65 +8,6 @@
 import Defaults
 import SwiftUI
 
-private extension AnyTransition {
-    static var moveAndFade: AnyTransition {
-        AnyTransition.slide
-    }
-}
-
-struct GrayButton: ButtonStyle {
-    func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-            .foregroundColor(.white)
-            .font(.headline)
-            .padding()
-            .frame(minWidth: 0, maxWidth: .infinity, alignment: .center)
-            .background(RoundedRectangle(cornerRadius: 15, style: .continuous)
-                .fill(Color.gray))
-            .padding(.bottom)
-    }
-}
-
-struct BlueButton: ButtonStyle {
-    func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-            .foregroundColor(.white)
-            .font(.headline)
-            .padding()
-            .frame(minWidth: 0, maxWidth: .infinity, alignment: .center)
-            .background(RoundedRectangle(cornerRadius: 15, style: .continuous)
-                .fill(Color.blue))
-            .padding(.bottom)
-    }
-}
-
-private extension Text {
-    func customTitleText() -> Text {
-        fontWeight(.black)
-            .font(.system(size: 36))
-    }
-}
-
-private extension Color {
-    init(red: Int, green: Int, blue: Int) {
-        assert(red >= 0 && red <= 255, "Invalid red component")
-        assert(green >= 0 && green <= 255, "Invalid green component")
-        assert(blue >= 0 && blue <= 255, "Invalid blue component")
-
-        self.init(red: Double(CGFloat(red)) / 255.0, green: Double(CGFloat(green)) / 255.0, blue: Double(CGFloat(blue)) / 255.0)
-    }
-
-    init(rgb: Int) {
-        self.init(
-            red: (rgb >> 16) & 0xFF,
-            green: (rgb >> 8) & 0xFF,
-            blue: rgb & 0xFF
-        )
-    }
-
-    static var mainColor = Color(rgb: 0x4C84E2)
-}
-
 struct TitleView: View {
     var body: some View {
         VStack {
@@ -77,10 +18,12 @@ struct TitleView: View {
                 .accessibility(hidden: true)
 
             Text("Welcome to")
-                .customTitleText()
+                .fontWeight(.black)
+                .font(.system(size: 36))
 
             Text("Pareto Security")
-                .customTitleText()
+                .fontWeight(.black)
+                .font(.system(size: 36))
                 .foregroundColor(.mainColor)
         }
     }
@@ -100,17 +43,18 @@ struct WelcomeView: View {
                     Spacer(minLength: 30)
                     Button("Continue") {
                         showDetail.toggle()
-                    }.buttonStyle(BlueButton())
+                    }.buttonStyle(HighlightButtonStyle(color: .mainColor))
 
                 } else {
                     Text("Pareto Security is checking your computer's security for the first time.").font(.headline)
                     Spacer(minLength: 30)
                     ProgressView()
                     Spacer(minLength: 20)
-                    Button("Please wait a few seconds") {}.buttonStyle(GrayButton())
+                    Button("Please wait a few seconds") {}
+                        .buttonStyle(HighlightButtonStyle(color: .gray, font: .headline))
                 }
 
-            }.frame(width: 320, alignment: .center).padding(20).transition(.moveAndFade)
+            }.frame(width: 320, alignment: .center).padding(20)
 
         } else {
             VStack {
@@ -139,8 +83,8 @@ struct WelcomeView: View {
                 Button("Show me") {
                     NSApp.sendAction(#selector(AppDelegate.showMenu), to: nil, from: nil)
                     NSApplication.shared.keyWindow?.close()
-                }.buttonStyle(BlueButton())
-            }.frame(width: 320, height: 320, alignment: .center).padding(20).transition(.moveAndFade)
+                }.buttonStyle(HighlightButtonStyle(color: .mainColor, font: .headline))
+            }.frame(width: 320, height: 320, alignment: .center).padding(20)
         }
     }
 }

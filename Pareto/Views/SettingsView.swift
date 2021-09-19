@@ -35,7 +35,7 @@ struct SettingsView: View {
                 .tag(Tabs.checks)
             LicenseSettingsView()
                 .tabItem {
-                    Label("License", systemImage: "person.text.rectangle")
+                    Label("License", systemImage: "rectangle.badge.person.crop")
                 }
                 .tag(Tabs.license)
             AboutSettingsView()

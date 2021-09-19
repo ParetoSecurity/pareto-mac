@@ -73,6 +73,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             case "showPrefs":
                 NSApp.sendAction(#selector(showPrefs), to: nil, from: nil)
                 NSApp.activate(ignoringOtherApps: true)
+            case "showBeta":
+                Defaults[.showBeta] = true
             case "update":
                 checkForRelease()
             default:
@@ -251,6 +253,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     @objc func resetSettingsClick() {
         resetSettings()
+        Defaults[.showBeta] = true
     }
 }
 

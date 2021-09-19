@@ -10,15 +10,31 @@ import SwiftUI
 
 struct LicenseSettingsView: View {
     @Default(.userEmail) var userEmail
+    @Default(.license) var license
 
     var body: some View {
         if AppInfo.Licensed {
-            VStack {
-                Text("Thanks for purchasing the Personal license!")
-                Spacer()
-                Text("Licensed to: \(userEmail)")
+            if !Defaults[.teamID].isEmpty {
+                VStack(alignment: .leading) {
+                    Spacer()
+                    Text("The app is licensed under the Teams account.")
+                    Spacer()
+                }.frame(width: 350, height: 50).padding(5)
+            } else {
+                VStack(alignment: .leading) {
+                    Text("Thanks for purchasing the Personal license. The app is licensed to \(userEmail).")
+                    Spacer()
+                    Text("To share your license, click the button below and email it to your friends or family.")
+                    Spacer()
+                    Button("Share my license") {
+                        let pasteboard = NSPasteboard.general
+                        pasteboard.clearContents()
+                        pasteboard.setString("Hey,\n\nto use my license for the Pareto Security app, copy the below link and paste it into your browser address bar. There will be a prompt where you’ll need to confirm open.\n\nparetosecurity://enrollSingle/?token=\(license)", forType: .string)
+                    }
 
-            }.frame(width: 350, height: 50).padding(5)
+                }.frame(width: 350, height: 120).padding(5)
+            }
+
         } else {
             VStack {
                 Text("You are running the free version of the app. Please consider purchasing the Personal lifetime license for unlimited devices!")
