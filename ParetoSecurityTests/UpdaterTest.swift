@@ -9,6 +9,12 @@
 import XCTest
 
 class UpdaterTest: XCTestCase {
+    override class func setUp() {
+        super.setUp()
+        UserDefaults.standard.removeAll()
+        UserDefaults.standard.synchronize()
+    }
+
     func testFetching() throws {
         let updater = AppUpdater(owner: "ParetoSecurity", repo: "pareto-mac")
         if let release = try? updater.getLatestRelease() {

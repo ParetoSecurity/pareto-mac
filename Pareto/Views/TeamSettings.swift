@@ -10,16 +10,26 @@ import SwiftUI
 
 struct TeamSettingsView: View {
     @Default(.teamID) var teamID
-    @Default(.userID) var userID
+    @Default(.deviceID) var deviceID
     @Default(.machineUUID) var machineUUID
+
+    func copy() {
+        NSPasteboard.general.clearContents()
+        NSPasteboard.general.setString("Team ID: \(teamID)\nDevice ID: \(deviceID)\nMachine UUID: \(machineUUID)", forType: .string)
+    }
 
     var body: some View {
         VStack {
             if !teamID.isEmpty {
-                Text("Team ID: \(teamID)")
-                Text("User ID: \(userID)")
-                Text("Device ID: \(machineUUID)")
-                Spacer()
+                Text("\(teamID)").contextMenu(ContextMenu(menuItems: {
+                    Button("Copy", action: copy)
+                }))
+                Text("\(deviceID)").contextMenu(ContextMenu(menuItems: {
+                    Button("Copy", action: copy)
+                }))
+                Text("\(machineUUID)").contextMenu(ContextMenu(menuItems: {
+                    Button("Copy", action: copy)
+                }))
                 Button("Unlink this device from the Teams account") {
                     _ = try? Team.unlink(withDevice: ReportingDevice.current())
                     Defaults.toFree()

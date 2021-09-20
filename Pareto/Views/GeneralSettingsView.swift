@@ -22,6 +22,7 @@ struct GeneralSettingsView: View {
                         Toggle("Start at Login", isOn: $atLogin.isEnabled)
                     }
             }
+
             if showBeta {
                 Section(
                     footer: Text("Latest features but potentially bugs to report.")) {
@@ -29,17 +30,19 @@ struct GeneralSettingsView: View {
                             Toggle("Update app to pre-release builds", isOn: $betaChannel)
                         }
                 }
-                HStack {
-                    Button("Reset Settings") {
-                        NSApp.sendAction(#selector(AppDelegate.resetSettingsClick), to: nil, from: nil)
+                #if !DEBUG
+                    HStack {
+                        Button("Reset Settings") {
+                            NSApp.sendAction(#selector(AppDelegate.resetSettingsClick), to: nil, from: nil)
+                        }
+                        Button("Show Welcome") {
+                            NSApp.sendAction(#selector(AppDelegate.showWelcome), to: nil, from: nil)
+                        }
+                        Button("Update Flags") {
+                            AppInfo.Flags.update()
+                        }
                     }
-                    Button("Show Welcome") {
-                        NSApp.sendAction(#selector(AppDelegate.showWelcome), to: nil, from: nil)
-                    }
-                    Button("Update Flags") {
-                        AppInfo.Flags.update()
-                    }
-                }
+                #endif
             }
         }
 

@@ -8,6 +8,7 @@
 import Alamofire
 import Defaults
 import Foundation
+import os.log
 
 struct ReportingDevice: Encodable {
     let id: String
@@ -27,7 +28,7 @@ struct Report: Encodable {
     let disabledCount: Int
     let device: ReportingDevice
     let version: String
-    let lastChecked: String
+    let lastCheck: String
 
     static func now() -> Report {
         var passed = 0
@@ -54,7 +55,7 @@ struct Report: Encodable {
             disabledCount: disabled,
             device: ReportingDevice.current(),
             version: AppInfo.appVersion,
-            lastChecked: Date.fromTimeStamp(timeStamp: Defaults[.lastCheck]).as3339String()
+            lastCheck: Date.fromTimeStamp(timeStamp: Defaults[.lastCheck]).as3339String()
         )
     }
 }
@@ -69,10 +70,10 @@ enum Team {
             method: .put,
             parameters: device,
             encoder: JSONParameterEncoder.default
-        ).cURLDescription { description in
-            print(description)
+        ).cURLDescription { cmd in
+            debugPrint(cmd)
         }.validate().responseJSON { response in
-            debugPrint("Response: \(response)")
+            os_log("Response: %{public}s", log: Log.api, response.description)
         }
     }
 
@@ -82,10 +83,10 @@ enum Team {
             method: .delete,
             parameters: device,
             encoder: JSONParameterEncoder.default
-        ).cURLDescription { description in
-            print(description)
+        ).cURLDescription { cmd in
+            debugPrint(cmd)
         }.validate().responseJSON { response in
-            debugPrint("Response: \(response)")
+            os_log("Response: %{public}s", log: Log.api, response.description)
         }
     }
 
@@ -95,10 +96,10 @@ enum Team {
             method: .post,
             parameters: report,
             encoder: JSONParameterEncoder.default
-        ).cURLDescription { description in
-            print(description)
+        ).cURLDescription { cmd in
+            debugPrint(cmd)
         }.validate().responseJSON { response in
-            debugPrint("Response: \(response)")
+            os_log("Response: %{public}s", log: Log.api, response.description)
         }
     }
 }
