@@ -11,7 +11,7 @@ import SwiftUI
 struct LicenseSettingsView: View {
     @Default(.userEmail) var userEmail
     @Default(.license) var license
-    @StateObject var flags = AppInfo.Flags
+    @Default(.showBeta) var showBeta
 
     var body: some View {
         if AppInfo.Licensed {
@@ -25,7 +25,7 @@ struct LicenseSettingsView: View {
                 VStack(alignment: .leading) {
                     Text("Thanks for purchasing the Personal license. The app is licensed to \(userEmail).")
                     Spacer()
-                    if flags.personalLicenseSharing {
+                    if showBeta {
                         Text("To copy the license to your other devices, click the button below, and paste the URL into your web browser address bar on the new device.")
                         Spacer()
                         Button("Copy license") {
@@ -34,7 +34,7 @@ struct LicenseSettingsView: View {
                             pasteboard.setString("paretosecurity://enrollSingle/?token=\(license)", forType: .string)
                         }
                     }
-                }.frame(width: 350, height: flags.personalLicenseSharing ? 120 : 50).padding(5)
+                }.frame(width: 350, height: showBeta ? 120 : 50).padding(5)
             }
 
         } else {

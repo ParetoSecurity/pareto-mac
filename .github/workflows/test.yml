@@ -22,7 +22,7 @@ jobs:
   test:
     name: Unit Tests
     runs-on: macos-11
-    timeout-minutes: 18    
+    timeout-minutes: 8    
     permissions:
       issues: write 
       pull-requests: write
