@@ -24,12 +24,12 @@ struct LicenseSettingsView: View {
                 VStack(alignment: .leading) {
                     Text("Thanks for purchasing the Personal license. The app is licensed to \(userEmail).")
                     Spacer()
-                    Text("To share your license, click the button below and email it to your friends or family.")
+                    Text("To copy the license to your other devices, click the button below, and paste the URL into your address bar on the new device.")
                     Spacer()
-                    Button("Share my license") {
+                    Button("Copy license") {
                         let pasteboard = NSPasteboard.general
                         pasteboard.clearContents()
-                        pasteboard.setString("Hey,\n\nto use my license for the Pareto Security app, copy the below link and paste it into your browser address bar. There will be a prompt where you’ll need to confirm open.\n\nparetosecurity://enrollSingle/?token=\(license)", forType: .string)
+                        pasteboard.setString("paretosecurity://enrollSingle/?token=\(license)", forType: .string)
                     }
 
                 }.frame(width: 350, height: 120).padding(5)
