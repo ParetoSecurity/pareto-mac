@@ -27,6 +27,9 @@
 		4F47221026B08A0E0071CE2A /* Defaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F47220F26B08A0E0071CE2A /* Defaults.swift */; };
 		4F57135326F8A6AC004B4359 /* LicenseTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F57135226F8A6AC004B4359 /* LicenseTest.swift */; };
 		4F57135526F8ACCC004B4359 /* WelcomeTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F57135426F8ACCC004B4359 /* WelcomeTest.swift */; };
+		4F57135726F8BF84004B4359 /* ParetoAppTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F57135626F8BF84004B4359 /* ParetoAppTest.swift */; };
+		4F57135B26F8C5D7004B4359 /* AppHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F57135A26F8C5D7004B4359 /* AppHandlers.swift */; };
+		4F57135D26F8C921004B4359 /* TeamsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F57135C26F8C921004B4359 /* TeamsTest.swift */; };
 		4F5E888026A053A9005271FB /* ParetoCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F5E887F26A053A9005271FB /* ParetoCheck.swift */; };
 		4F6A0E0E26CE484A003B00A3 /* PrinterSharingCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F6A0E0D26CE484A003B00A3 /* PrinterSharingCheck.swift */; };
 		4F6A0E1026CE4868003B00A3 /* FileSharingCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F6A0E0F26CE4868003B00A3 /* FileSharingCheck.swift */; };
@@ -100,6 +103,9 @@
 		4F47220F26B08A0E0071CE2A /* Defaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Defaults.swift; sourceTree = "<group>"; };
 		4F57135226F8A6AC004B4359 /* LicenseTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LicenseTest.swift; sourceTree = "<group>"; };
 		4F57135426F8ACCC004B4359 /* WelcomeTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeTest.swift; sourceTree = "<group>"; };
+		4F57135626F8BF84004B4359 /* ParetoAppTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParetoAppTest.swift; sourceTree = "<group>"; };
+		4F57135A26F8C5D7004B4359 /* AppHandlers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppHandlers.swift; sourceTree = "<group>"; };
+		4F57135C26F8C921004B4359 /* TeamsTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeamsTest.swift; sourceTree = "<group>"; };
 		4F5E887F26A053A9005271FB /* ParetoCheck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParetoCheck.swift; sourceTree = "<group>"; };
 		4F6A0E0D26CE484A003B00A3 /* PrinterSharingCheck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrinterSharingCheck.swift; sourceTree = "<group>"; };
 		4F6A0E0F26CE4868003B00A3 /* FileSharingCheck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileSharingCheck.swift; sourceTree = "<group>"; };
@@ -255,6 +261,8 @@
 				4FF13D9C26DE235700E4084E /* UpdaterTest.swift */,
 				4F57135226F8A6AC004B4359 /* LicenseTest.swift */,
 				4F57135426F8ACCC004B4359 /* WelcomeTest.swift */,
+				4F57135626F8BF84004B4359 /* ParetoAppTest.swift */,
+				4F57135C26F8C921004B4359 /* TeamsTest.swift */,
 			);
 			path = ParetoSecurityTests;
 			sourceTree = "<group>";
@@ -301,6 +309,7 @@
 				4F14487326D8EA5E00A5BA34 /* Updater.swift */,
 				4FF22A6426F0CFA500500213 /* Flags.swift */,
 				4FDAD88E26EB784A00F64E61 /* License.swift */,
+				4F57135A26F8C5D7004B4359 /* AppHandlers.swift */,
 			);
 			path = Pareto;
 			sourceTree = "<group>";
@@ -514,6 +523,8 @@
 				4F84A94426CBBA6900A1579D /* SettingsTests.swift in Sources */,
 				4F57135326F8A6AC004B4359 /* LicenseTest.swift in Sources */,
 				4F57135526F8ACCC004B4359 /* WelcomeTest.swift in Sources */,
+				4F57135726F8BF84004B4359 /* ParetoAppTest.swift in Sources */,
+				4F57135D26F8C921004B4359 /* TeamsTest.swift in Sources */,
 				4FF13D9D26DE235700E4084E /* UpdaterTest.swift in Sources */,
 				4F080D1D26C50D2800686786 /* ParetoSecurityTests.swift in Sources */,
 				4F6A92E626C521BE006C2F2D /* CheckIntegrationTest.swift in Sources */,
@@ -560,6 +571,7 @@
 				4F84531226D638C0007C3B04 /* NSBackgroundActivityScheduler.swift in Sources */,
 				4FD0A24126A024440070BED4 /* Gatekeeper.swift in Sources */,
 				4F24A09626EB73F30036F748 /* GeneralSettingsView.swift in Sources */,
+				4F57135B26F8C5D7004B4359 /* AppHandlers.swift in Sources */,
 				4F84531026D634E5007C3B04 /* NSWorkspace.swift in Sources */,
 				4FB7C68726AFF29A00FB1C41 /* NSImage.swift in Sources */,
 				4F6A92EA26C54AB7006C2F2D /* AppInfo.swift in Sources */,

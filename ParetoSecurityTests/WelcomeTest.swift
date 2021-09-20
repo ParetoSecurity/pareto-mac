@@ -10,6 +10,12 @@ import ViewInspector
 import XCTest
 
 class WelcomeTest: XCTestCase {
+    override class func setUp() {
+        super.setUp()
+        UserDefaults.standard.removeAll()
+        UserDefaults.standard.synchronize()
+    }
+
     func testWelcomeView() throws {
         let subject = WelcomeView()
         let one = try subject.inspect().vStack()[2].text(0).string()

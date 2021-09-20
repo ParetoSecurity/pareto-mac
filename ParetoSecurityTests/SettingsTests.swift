@@ -16,6 +16,12 @@ class SettingsViewTests: XCTestCase {
         UserDefaults.standard.synchronize()
     }
 
+    func testSettingsView() throws {
+        let subject = SettingsView()
+        let sub = try subject.inspect().tabView().count
+        XCTAssertEqual(sub, 5)
+    }
+
     func testAbout() throws {
         let subject = AboutSettingsView()
         let text = try subject.inspect().hStack()[1].vStack()[3]
@@ -53,3 +59,4 @@ extension GeneralSettingsView: Inspectable {}
 extension TeamSettingsView: Inspectable {}
 extension ChecksSettingsView: Inspectable {}
 extension LicenseSettingsView: Inspectable {}
+extension SettingsView: Inspectable {}
