@@ -24,7 +24,7 @@ struct LicenseSettingsView: View {
                 VStack(alignment: .leading) {
                     Text("Thanks for purchasing the Personal license. The app is licensed to \(userEmail).")
                     Spacer()
-                    Text("To copy the license to your other devices, click the button below, and paste the URL into your address bar on the new device.")
+                    Text("To copy the license to your other devices, click the button below, and paste the URL into your web browser address bar on the new device.")
                     Spacer()
                     Button("Copy license") {
                         let pasteboard = NSPasteboard.general
