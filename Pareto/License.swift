@@ -66,6 +66,7 @@ struct TeamTicketPayload: JWTPayload, Equatable {
         case subject = "sub"
         case issuedAt = "iat"
         case teamUUID = "teamID"
+        case teamName
         case deviceUUID = "deviceID"
         case role
     }
@@ -80,6 +81,7 @@ struct TeamTicketPayload: JWTPayload, Equatable {
 
     // Custom data.
     var teamUUID: String
+    var teamName: String
     var deviceUUID: String
     var role: AudienceClaim
 

@@ -15,6 +15,9 @@
 		4F14487726D8EB2E00A5BA34 /* Version in Frameworks */ = {isa = PBXBuildFile; productRef = 4F14487626D8EB2E00A5BA34 /* Version */; };
 		4F14487A26D8EB7A00A5BA34 /* Path in Frameworks */ = {isa = PBXBuildFile; productRef = 4F14487926D8EB7A00A5BA34 /* Path */; };
 		4F14487C26D8EDB000A5BA34 /* Bundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F14487B26D8EDB000A5BA34 /* Bundle.swift */; };
+		4F1AE88B26F9FC150084A381 /* SwiftSocket in Frameworks */ = {isa = PBXBuildFile; productRef = 4F1AE88A26F9FC150084A381 /* SwiftSocket */; };
+		4F1AE89026F9FFA60084A381 /* MediaShare.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F1AE88F26F9FFA60084A381 /* MediaShare.swift */; };
+		4F1AE89226FA026D0084A381 /* AirPlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F1AE89126FA026D0084A381 /* AirPlay.swift */; };
 		4F24A08E26EB734A0036F748 /* LicenseSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F24A08D26EB734A0036F748 /* LicenseSettingsView.swift */; };
 		4F24A09026EB735F0036F748 /* TeamSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F24A08F26EB735F0036F748 /* TeamSettings.swift */; };
 		4F24A09226EB73980036F748 /* AboutSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F24A09126EB73980036F748 /* AboutSettingsView.swift */; };
@@ -90,6 +93,8 @@
 		4F103007269EE135008C1E86 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		4F14487326D8EA5E00A5BA34 /* Updater.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Updater.swift; sourceTree = "<group>"; };
 		4F14487B26D8EDB000A5BA34 /* Bundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bundle.swift; sourceTree = "<group>"; };
+		4F1AE88F26F9FFA60084A381 /* MediaShare.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaShare.swift; sourceTree = "<group>"; };
+		4F1AE89126FA026D0084A381 /* AirPlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AirPlay.swift; sourceTree = "<group>"; };
 		4F24A08D26EB734A0036F748 /* LicenseSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LicenseSettingsView.swift; sourceTree = "<group>"; };
 		4F24A08F26EB735F0036F748 /* TeamSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeamSettings.swift; sourceTree = "<group>"; };
 		4F24A09126EB73980036F748 /* AboutSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutSettingsView.swift; sourceTree = "<group>"; };
@@ -171,6 +176,7 @@
 				4F14487A26D8EB7A00A5BA34 /* Path in Frameworks */,
 				4FF515C126F7B362008D135E /* Alamofire in Frameworks */,
 				4F6A0E1326CE608C003B00A3 /* Defaults in Frameworks */,
+				4F1AE88B26F9FC150084A381 /* SwiftSocket in Frameworks */,
 				4F103012269F1C65008C1E86 /* LaunchAtLogin in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -203,23 +209,49 @@
 		4F10300A269F0568008C1E86 /* Checks */ = {
 			isa = PBXGroup;
 			children = (
+				4F1AE88E26F9FF630084A381 /* System Integrity */,
+				4F1AE88D26F9FF440084A381 /* Firewall and Sharing */,
+				4F1AE88C26F9FEA60084A381 /* Access Security */,
 				4F3EF24226CA859500841375 /* Claim.swift */,
 				4F5E887F26A053A9005271FB /* ParetoCheck.swift */,
 				4F6A92E726C52210006C2F2D /* IntegrationCheck.swift */,
-				4F868DD226A5C751005B876E /* Screensaver.swift */,
-				4FD0A24026A024440070BED4 /* Gatekeeper.swift */,
-				4F868DCE26A591E6005B876E /* Firewall.swift */,
-				4F868DD026A5C51C005B876E /* Autologin.swift */,
-				4FB405EE26A6FC4800267D5D /* ScreensaverPassword.swift */,
-				4FB7C68C26AFFD2600FB1C41 /* FileVault.swift */,
-				4F84A94826CBE21300A1579D /* PasswordFromLock.swift */,
-				4F0371BB26CD00B700B35E43 /* Boot.swift */,
-				4F6A0E0D26CE484A003B00A3 /* PrinterSharingCheck.swift */,
-				4F6A0E0F26CE4868003B00A3 /* FileSharingCheck.swift */,
-				4F35395426E8AD4B008F5DD3 /* RemoteManagment.swift */,
-				4F35395626E8AE02008F5DD3 /* RemoteLogin.swift */,
 			);
 			path = Checks;
+			sourceTree = "<group>";
+		};
+		4F1AE88C26F9FEA60084A381 /* Access Security */ = {
+			isa = PBXGroup;
+			children = (
+				4F868DD026A5C51C005B876E /* Autologin.swift */,
+				4FB405EE26A6FC4800267D5D /* ScreensaverPassword.swift */,
+				4F868DD226A5C751005B876E /* Screensaver.swift */,
+				4F84A94826CBE21300A1579D /* PasswordFromLock.swift */,
+			);
+			path = "Access Security";
+			sourceTree = "<group>";
+		};
+		4F1AE88D26F9FF440084A381 /* Firewall and Sharing */ = {
+			isa = PBXGroup;
+			children = (
+				4F35395426E8AD4B008F5DD3 /* RemoteManagment.swift */,
+				4F35395626E8AE02008F5DD3 /* RemoteLogin.swift */,
+				4F6A0E0D26CE484A003B00A3 /* PrinterSharingCheck.swift */,
+				4F6A0E0F26CE4868003B00A3 /* FileSharingCheck.swift */,
+				4F868DCE26A591E6005B876E /* Firewall.swift */,
+				4F1AE88F26F9FFA60084A381 /* MediaShare.swift */,
+				4F1AE89126FA026D0084A381 /* AirPlay.swift */,
+			);
+			path = "Firewall and Sharing";
+			sourceTree = "<group>";
+		};
+		4F1AE88E26F9FF630084A381 /* System Integrity */ = {
+			isa = PBXGroup;
+			children = (
+				4F0371BB26CD00B700B35E43 /* Boot.swift */,
+				4FB7C68C26AFFD2600FB1C41 /* FileVault.swift */,
+				4FD0A24026A024440070BED4 /* Gatekeeper.swift */,
+			);
+			path = "System Integrity";
 			sourceTree = "<group>";
 		};
 		4F6A92F026C555C6006C2F2D /* ParetoSecurityUITests */ = {
@@ -301,6 +333,7 @@
 				4FEBA2FA269CD48F009B2469 /* Info.plist */,
 				4FEBA2FB269CD48F009B2469 /* Pareto.entitlements */,
 				4FEBA2F1269CD48F009B2469 /* ParetoApp.swift */,
+				4F57135A26F8C5D7004B4359 /* AppHandlers.swift */,
 				4F343A5E26F7A3D4007D2F7D /* Teams.swift */,
 				4FB7C67C26AFF1AB00FB1C41 /* Log.swift */,
 				4F47220F26B08A0E0071CE2A /* Defaults.swift */,
@@ -309,7 +342,6 @@
 				4F14487326D8EA5E00A5BA34 /* Updater.swift */,
 				4FF22A6426F0CFA500500213 /* Flags.swift */,
 				4FDAD88E26EB784A00F64E61 /* License.swift */,
-				4F57135A26F8C5D7004B4359 /* AppHandlers.swift */,
 			);
 			path = Pareto;
 			sourceTree = "<group>";
@@ -386,6 +418,7 @@
 				4F14487926D8EB7A00A5BA34 /* Path */,
 				4FD50F2226F4F0A900C73682 /* JWTKit */,
 				4FF515C026F7B362008D135E /* Alamofire */,
+				4F1AE88A26F9FC150084A381 /* SwiftSocket */,
 			);
 			productName = Pareto;
 			productReference = 4FEBA2EE269CD48F009B2469 /* Pareto Security.app */;
@@ -430,6 +463,7 @@
 				4F14487826D8EB7A00A5BA34 /* XCRemoteSwiftPackageReference "Path.swift" */,
 				4FD50F2126F4F0A900C73682 /* XCRemoteSwiftPackageReference "jwt-kit" */,
 				4FF515BF26F7B362008D135E /* XCRemoteSwiftPackageReference "Alamofire" */,
+				4F1AE88926F9FC150084A381 /* XCRemoteSwiftPackageReference "SwiftSocket" */,
 			);
 			productRefGroup = 4FEBA2EF269CD48F009B2469 /* Products */;
 			projectDirPath = "";
@@ -555,6 +589,7 @@
 				4FB405EF26A6FC4800267D5D /* ScreensaverPassword.swift in Sources */,
 				4F47221026B08A0E0071CE2A /* Defaults.swift in Sources */,
 				4F868DD126A5C51C005B876E /* Autologin.swift in Sources */,
+				4F1AE89026F9FFA60084A381 /* MediaShare.swift in Sources */,
 				4FEBA2F2269CD48F009B2469 /* ParetoApp.swift in Sources */,
 				4FF22A6526F0CFA500500213 /* Flags.swift in Sources */,
 				4F84A94926CBE21300A1579D /* PasswordFromLock.swift in Sources */,
@@ -567,6 +602,7 @@
 				4F24A09226EB73980036F748 /* AboutSettingsView.swift in Sources */,
 				4FB7C68D26AFFD2600FB1C41 /* FileVault.swift in Sources */,
 				4F103008269EE136008C1E86 /* SettingsView.swift in Sources */,
+				4F1AE89226FA026D0084A381 /* AirPlay.swift in Sources */,
 				4F868DD326A5C751005B876E /* Screensaver.swift in Sources */,
 				4F84531226D638C0007C3B04 /* NSBackgroundActivityScheduler.swift in Sources */,
 				4FD0A24126A024440070BED4 /* Gatekeeper.swift in Sources */,
@@ -940,6 +976,14 @@
 				minimumVersion = 1.0.0;
 			};
 		};
+		4F1AE88926F9FC150084A381 /* XCRemoteSwiftPackageReference "SwiftSocket" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ParetoSecurity/SwiftSocket";
+			requirement = {
+				branch = spm;
+				kind = branch;
+			};
+		};
 		4F6A0E1126CE608C003B00A3 /* XCRemoteSwiftPackageReference "Defaults" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/sindresorhus/Defaults";
@@ -989,6 +1033,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 4F14487826D8EB7A00A5BA34 /* XCRemoteSwiftPackageReference "Path.swift" */;
 			productName = Path;
+		};
+		4F1AE88A26F9FC150084A381 /* SwiftSocket */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4F1AE88926F9FC150084A381 /* XCRemoteSwiftPackageReference "SwiftSocket" */;
+			productName = SwiftSocket;
 		};
 		4F6A0E1226CE608C003B00A3 /* Defaults */ = {
 			isa = XCSwiftPackageProductDependency;

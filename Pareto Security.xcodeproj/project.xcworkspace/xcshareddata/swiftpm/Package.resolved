@@ -56,6 +56,15 @@
         }
       },
       {
+        "package": "SwiftSocket",
+        "repositoryURL": "https://github.com/ParetoSecurity/SwiftSocket",
+        "state": {
+          "branch": "spm",
+          "revision": "471a78f22bbd9e37e405f876ef45117216c5c377",
+          "version": null
+        }
+      },
+      {
         "package": "Version",
         "repositoryURL": "https://github.com/mxcl/Version.git",
         "state": {

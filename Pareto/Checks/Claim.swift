@@ -25,7 +25,7 @@ class Claim: Hashable {
 
     init(withTitle title: String, withChecks checks: [ParetoCheck]) {
         self.title = title
-        self.checks = AppInfo.inSandbox ? checks.filter { $0.canRunInSandbox } : checks
+        self.checks = checks
     }
 
     var checkPassed: Bool { checks.allSatisfy { $0.isActive ? $0.checkPassed : true } }

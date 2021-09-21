@@ -21,7 +21,6 @@ enum AppInfo {
     static let appVersion: String = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as! String
     static let buildVersion: String = Bundle.main.infoDictionary?["CFBundleVersion"] as! String
     static let osVersion = ProcessInfo.processInfo.operatingSystemVersionString
-    static let inSandbox = ProcessInfo.processInfo.environment["APP_SANDBOX_CONTAINER_ID"] != nil
     static let isRunningTests = ProcessInfo.processInfo.arguments.contains("isRunningTests")
     static var Licensed = false
     static let Flags = FlagsUpdater()

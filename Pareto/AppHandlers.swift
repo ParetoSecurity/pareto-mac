@@ -221,8 +221,15 @@ class AppHandlers: NSObject {
                 Defaults[.reportingRole] = .team
                 Defaults[.teamAPI] = url.queryParams()["api"] ?? Team.defaultAPI
                 _ = try Team.link(withDevice: ReportingDevice.current())
+
+                if !Defaults.firstLaunch() {
+                    DispatchQueue.main.async {
+                        self.statusBar?.runChecks()
+                    }
+                }
+
                 let alert = NSAlert()
-                alert.messageText = "Pareto Security is linked to your team account."
+                alert.messageText = "Pareto Security is linked to your team \(ticket.teamName)."
                 alert.alertStyle = NSAlert.Style.informational
                 alert.addButton(withTitle: "OK")
                 #if !DEBUG

@@ -30,7 +30,7 @@ struct GeneralSettingsView: View {
                             Toggle("Update app to pre-release builds", isOn: $betaChannel)
                         }
                 }
-                #if !DEBUG
+                #if DEBUG
                     HStack {
                         Button("Reset Settings") {
                             NSApp.sendAction(#selector(AppDelegate.resetSettingsClick), to: nil, from: nil)
