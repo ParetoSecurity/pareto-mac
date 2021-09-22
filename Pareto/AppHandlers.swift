@@ -95,6 +95,7 @@ class AppHandlers: NSObject {
                             #if !DEBUG
                                 if alert.runModal() == NSApplication.ModalResponse.alertFirstButtonReturn {
                                     NSWorkspace.shared.open(dmgURL.browser_download_url)
+                                    NSApplication.shared.terminate(self)
                                 }
                             #endif
                         }
