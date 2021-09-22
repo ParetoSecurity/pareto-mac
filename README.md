@@ -40,7 +40,7 @@
 
 
 <p align="center">
-  <img height="300" src="https://github.com/ParetoSecurity/pareto-mac/blob/main/assets/screenshot.jpg?raw=true" />
+  <img height="300" src="https://github.com/ParetoSecurity/pareto-mac/blob/main/assets/screenshot.png?raw=true" />
 </p>
 
 All of the above are easily preventable. The Pareto Security app regularly checks such common security fails and reminds you to take care of them.
