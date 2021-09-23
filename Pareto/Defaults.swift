@@ -25,6 +25,7 @@ extension Defaults.Keys {
     static let license = Key<String>("license", default: "")
     static let reportingRole = Key<ReportingRoles>("reportingRole", default: .free)
     static let teamAPI = Key<String>("teamAPI", default: Team.defaultAPI)
+    static let lastTeamUpdate = Key<Int>("lastTeamUpdate", default: 0)
 
     // Updates
     static let updateNag = Key<Bool>("updateNag", default: false)
@@ -50,6 +51,14 @@ public extension Defaults {
     static func doneUpdateCheck() {
         Defaults[.lastUpdateCheck] = Date().currentTimeMillis()
         Defaults[.updateNag] = false
+    }
+
+    static func shouldDoTeamUpdate() -> Bool {
+        return Defaults[.lastTeamUpdate] + (AppInfo.Flags.slowerTeamUpdate ? Date.HourInMilis * 8 : Date.HourInMilis) < Date().currentTimeMillis()
+    }
+
+    static func doneTeamUpdate() {
+        Defaults[.lastTeamUpdate] = Date().currentTimeMillis()
     }
 
     static func toFree() {

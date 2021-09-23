@@ -84,7 +84,7 @@ class StatusBarController: NSObject, NSMenuDelegate {
         }
     }
 
-    func runChecks() {
+    func runChecks(isIteractive interactive: Bool = true) {
         if isRunnig {
             return
         }
@@ -115,9 +115,11 @@ class StatusBarController: NSObject, NSMenuDelegate {
             self.updateMenu()
             Defaults[.checksPassed] = self.claimsPassed
 
-            if Defaults[.reportingRole] == .team {
-                let report = Report.now()
-                _ = try? Team.update(withReport: report)
+            if Defaults[.reportingRole] == .team, AppInfo.Flags.teamAPI {
+                if Defaults.shouldDoTeamUpdate() || interactive {
+                    let report = Report.now()
+                    _ = try? Team.update(withReport: report)
+                }
             }
 
             os_log("Checks finished running", log: Log.app)

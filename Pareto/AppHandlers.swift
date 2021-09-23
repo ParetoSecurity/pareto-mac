@@ -54,7 +54,7 @@ class AppHandlers: NSObject {
         NSBackgroundActivityScheduler.repeating(withName: "ClaimRunner", withInterval: 60 * 60) { (completion: NSBackgroundActivityScheduler.CompletionHandler) in
             os_log("Running checks")
             DispatchQueue.main.async {
-                self.statusBar?.runChecks()
+                self.statusBar?.runChecks(isIteractive: false)
             }
             completion(.finished)
         }
@@ -100,6 +100,7 @@ class AppHandlers: NSObject {
     }
 
     @objc func showPrefs() {
+        Defaults[.updateNag] = false
         NSApp.sendAction(Selector(("showPreferencesWindow:")), to: nil, from: nil)
         NSApp.activate(ignoringOtherApps: true)
     }

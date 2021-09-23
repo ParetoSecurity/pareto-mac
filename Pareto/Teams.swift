@@ -73,7 +73,7 @@ enum Team {
         ).cURLDescription { cmd in
             debugPrint(cmd)
         }.validate().responseJSON { response in
-            os_log("Response: %{public}s", log: Log.api, response.description)
+            os_log("Team.Link response: %{public}s", log: Log.api, response.description)
         }
     }
 
@@ -86,7 +86,7 @@ enum Team {
         ).cURLDescription { cmd in
             debugPrint(cmd)
         }.validate().responseJSON { response in
-            os_log("Response: %{public}s", log: Log.api, response.description)
+            os_log("Team.Unlink response: %{public}s", log: Log.api, response.description)
         }
     }
 
@@ -99,7 +99,7 @@ enum Team {
         ).cURLDescription { cmd in
             debugPrint(cmd)
         }.validate().responseJSON { response in
-            os_log("Response: %{public}s", log: Log.api, response.description)
+            os_log("Team.Update response: %{public}s", log: Log.api, response.description)
         }
     }
 }

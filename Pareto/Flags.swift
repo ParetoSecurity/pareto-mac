@@ -32,9 +32,9 @@ private struct DNSResponse: Codable {
 }
 
 class FlagsUpdater: ObservableObject {
-    @Published var personalLicenseSharing: Bool = false
-    @Published var teamAPI: Bool = false
-
+    @Published var personalLicenseSharing: Bool = true
+    @Published var teamAPI: Bool = true
+    @Published var slowerTeamUpdate: Bool = false
     func update() {
         do {
             let url = URL(string: "https://dns.google/resolve?name=flags.paretosecurity.app&type=txt")!
@@ -46,6 +46,10 @@ class FlagsUpdater: ObservableObject {
                 switch kv[0] {
                 case "personalLicenseSharing":
                     personalLicenseSharing = (kv[1] as NSString).boolValue
+                case "teamAPI":
+                    teamAPI = (kv[1] as NSString).boolValue
+                case "slowerTeamUpdate":
+                    slowerTeamUpdate = (kv[1] as NSString).boolValue
                 default:
                     os_log("Unknwon flag: \(kv[0])")
                 }
