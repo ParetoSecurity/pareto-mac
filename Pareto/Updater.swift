@@ -63,9 +63,9 @@ struct Release: Decodable {
     let assets: [Asset]
 }
 
-private extension Array where Element == Release {
+extension Array where Element == Release {
     func findViableUpdate(prerelease: Bool) throws -> Release? {
-        let suitableReleases = !prerelease ? self : filter { $0.prerelease }
+        let suitableReleases = !prerelease ? filter { $0.prerelease == false } : filter { $0.prerelease == true }
         guard let latestRelease = suitableReleases.sorted(by: {
             $0.version < $1.version
         }).filter({ $0.assets.count > 0 }).last else { return nil }
