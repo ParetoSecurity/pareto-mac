@@ -72,6 +72,7 @@ class AppHandlers: NSObject {
 
         NSBackgroundActivityScheduler.repeating(withName: "FlagsRunner", withInterval: 60 * 5) { (completion: NSBackgroundActivityScheduler.CompletionHandler) in
             DispatchQueue.main.async {
+                os_log("Running flags update")
                 AppInfo.Flags.update()
             }
             completion(.finished)
@@ -86,23 +87,16 @@ class AppHandlers: NSObject {
                     let done = updater!.downloadAndUpdate(withAsset: zipURL)
                     // Failed to update
                     if !done {
-                        if let dmgURL = release.assets.filter({ $0.browser_download_url.path.hasSuffix(".dmg") }).first {
-                            let alert = NSAlert()
-                            alert.messageText = "New version of Pareto Security \(release.version) is available"
-                            alert.informativeText = release.body
-                            alert.alertStyle = NSAlert.Style.informational
-                            alert.addButton(withTitle: "Download")
-                            #if !DEBUG
-                                if alert.runModal() == NSApplication.ModalResponse.alertFirstButtonReturn {
-                                    NSWorkspace.shared.open(dmgURL.browser_download_url)
-                                    NSApplication.shared.terminate(self)
-                                }
-                            #endif
-                        }
+                        Defaults[.updateNag] = true
                     }
                 }
             }
         }
+    }
+
+    @objc func doUpdate() {
+        NSApp.sendAction(Selector(("showPreferencesWindow:")), to: nil, from: nil)
+        NSApp.activate(ignoringOtherApps: true)
     }
 
     @objc func showPrefs() {

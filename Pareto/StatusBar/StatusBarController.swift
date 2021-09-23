@@ -207,6 +207,12 @@ class StatusBarController: NSObject, NSMenuDelegate {
         preferencesItem.target = NSApp.delegate
         statusItemMenu.addItem(preferencesItem)
 
+        if Defaults[.updateNag] {
+            let updateItem = NSMenuItem(title: "Update to latest version", action: #selector(AppDelegate.doUpdate), keyEquivalent: "u")
+            updateItem.target = NSApp.delegate
+            statusItemMenu.addItem(updateItem)
+        }
+
         let reportItem = NSMenuItem(title: "Report bug", action: #selector(AppDelegate.reportBug), keyEquivalent: "b")
         reportItem.target = NSApp.delegate
         statusItemMenu.addItem(reportItem)

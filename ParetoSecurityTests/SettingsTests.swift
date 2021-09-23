@@ -17,7 +17,7 @@ class SettingsViewTests: XCTestCase {
     }
 
     func testSettingsView() throws {
-        let subject = SettingsView()
+        let subject = SettingsView(selected: SettingsView.Tabs.general)
         let sub = try subject.inspect().tabView().count
         XCTAssertEqual(sub, 5)
     }

@@ -10,14 +10,14 @@ import Defaults
 import SwiftUI
 
 struct SettingsView: View {
-    @Default(.showBeta) var showBeta
+    @State var selected: Tabs
 
-    private enum Tabs: Hashable {
+    enum Tabs: Hashable {
         case general, about, teams, checks, license
     }
 
     var body: some View {
-        TabView {
+        TabView(selection: $selected) {
             GeneralSettingsView()
                 .tabItem {
                     Label("General", systemImage: "gear")
@@ -44,14 +44,20 @@ struct SettingsView: View {
                 }
                 .tag(Tabs.about)
         }
-        .padding(20)
+        .padding(20).onAppear(perform: decideTab)
+    }
+
+    private func decideTab() {
+        if Defaults[.updateNag] {
+            selected = .about
+        }
     }
 }
 
 struct SettingsView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            SettingsView()
+            SettingsView(selected: SettingsView.Tabs.general)
         }
     }
 }

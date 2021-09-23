@@ -39,6 +39,7 @@ struct Release: Decodable {
     struct Asset: Decodable {
         let name: String
         let browser_download_url: URL
+        let size: Int
         enum ContentType: Decodable {
             init(from decoder: Decoder) throws {
                 switch try decoder.singleValueContainer().decode(String.self) {
@@ -75,7 +76,6 @@ private extension Array where Element == Release {
 public class AppUpdater {
     let owner: String
     let repo: String
-    let tmpdir: URL
 
     var slug: String {
         return "\(owner)/\(repo)"
@@ -84,11 +84,6 @@ public class AppUpdater {
     public init(owner: String, repo: String) {
         self.owner = owner
         self.repo = repo
-        self.tmpdir = try! FileManager.default.url(for: .itemReplacementDirectory, in: .userDomainMask, appropriateFor: Bundle.main.bundleURL, create: true)
-    }
-
-    deinit {
-        try? FileManager.default.removeItem(at: tmpdir)
     }
 
     func validate(_ b1: Bundle, _ b2: Bundle) -> Bool {
@@ -98,34 +93,52 @@ public class AppUpdater {
     func downloadAndUpdate(withAsset asset: Release.Asset) -> Bool {
         let lock = DispatchSemaphore(value: 0)
         var state = false
+        let tmpdir = try! FileManager.default.url(for: .itemReplacementDirectory, in: .userDomainMask, appropriateFor: Bundle.main.bundleURL, create: true)
         URLSession.shared.downloadTask(with: asset.browser_download_url) { tempLocalUrl, response, error in
-            if let tempLocalUrl = tempLocalUrl, error == nil {
+            if error != nil {
+                os_log("Error took place while downloading a file: \(error!.localizedDescription)")
+                lock.signal()
+                return
+            }
+
+            if let tempLocalUrl = tempLocalUrl {
                 // Success
                 if let statusCode = (response as? HTTPURLResponse)?.statusCode {
-                    os_log("Successfully downloaded. Status code: \(statusCode)")
-                }
-                let downloadPath = self.tmpdir.appendingPathComponent("download")
-                do {
-                    try FileManager.default.copyItem(at: tempLocalUrl, to: downloadPath)
-                } catch let writeError {
-                    os_log("Error creating a file \(downloadPath) : \(writeError.localizedDescription)")
-                    lock.signal()
-                }
-                do {
-                    try self.update(withApp: downloadPath, withAsset: asset)
-                    state = true
-                    lock.signal()
-                } catch let writeError {
-                    os_log("Error creating a file \(downloadPath) : \(writeError.localizedDescription)")
-                    lock.signal()
-                }
+                    if statusCode != 200 {
+                        os_log("Failed to downlaod \(asset.browser_download_url). Status code: \(statusCode)")
+                        lock.signal()
+                        return
+                    }
 
+                    os_log("Successfully downloaded \(asset.browser_download_url). Status code: \(statusCode)")
+                    let downloadPath = tmpdir.appendingPathComponent("download")
+                    do {
+                        try FileManager.default.copyItem(at: tempLocalUrl, to: downloadPath)
+                    } catch let writeError {
+                        os_log("Error moving a file \(tempLocalUrl) to \(downloadPath): \(writeError.localizedDescription)")
+                        lock.signal()
+                    }
+
+                    os_log("Doing update from \(tempLocalUrl)")
+                    do {
+                        try self.update(withApp: downloadPath, withAsset: asset)
+                        state = true
+                        lock.signal()
+                    } catch let writeError {
+                        os_log("Error updating with file \(downloadPath) : \(writeError.localizedDescription)")
+                        lock.signal()
+                    }
+                } else {
+                    os_log("Could not parse resposne of \(asset.browser_download_url)")
+                    lock.signal()
+                }
             } else {
-                os_log("Error took place while downloading a file.")
+                os_log("Error updating from \(asset.browser_download_url), missing local file")
                 lock.signal()
             }
         }.resume()
         lock.wait()
+        try? FileManager.default.removeItem(at: tmpdir)
         return state
     }
 
@@ -143,7 +156,7 @@ public class AppUpdater {
                 os_log("Delete installedAppBundle: \(installedAppBundle)")
                 try downloadedAppBundle.path.move(to: installedAppBundle.path)
                 os_log("Move new app to installedAppBundle: \(installedAppBundle)")
-                // runOSA(appleScript: "delay 3\n activate application \"Pareto Security\"")
+                // runOSA(appleScript: "activate application \"Pareto Security\"")
 
                 let proc = Process()
                 if #available(OSX 10.13, *) {

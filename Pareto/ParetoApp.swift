@@ -71,7 +71,7 @@ struct Pareto: App {
 
     var body: some Scene {
         Settings {
-            SettingsView()
+            SettingsView(selected: SettingsView.Tabs.general)
         }
     }
 }

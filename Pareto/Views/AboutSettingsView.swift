@@ -48,14 +48,14 @@ struct AboutSettingsView: View {
                 }
             VStack(alignment: .leading) {
                 Link("Pareto Security",
-                     destination: URL(string: "https://paretosecurity.app")!)
+                     destination: URL(string: "https://paretosecurity.app")!).font(.title)
 
                 VStack(alignment: .leading, spacing: 0) {
                     Text("Version: \(AppInfo.appVersion) - \(AppInfo.buildVersion)")
-                    HStack {
+                    HStack(spacing: 10) {
                         if status == UpdateStates.Failed {
                             HStack(spacing: 0) {
-                                Text("Failed to update, ")
+                                Text("Failed to update ")
                                 Link("download manualy",
                                      destination: URL(string: "https://github.com/ParetoSecurity/pareto-mac/releases/latest/download/ParetoSecurity.dmg")!)
                             }
