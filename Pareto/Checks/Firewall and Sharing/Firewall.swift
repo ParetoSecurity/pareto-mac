@@ -6,6 +6,7 @@
 //
 
 class FirewallCheck: ParetoCheck {
+    static let sharedInstance = FirewallCheck()
     override var UUID: String {
         "2e46c89a-5461-4865-a92e-3b799c12034a"
     }

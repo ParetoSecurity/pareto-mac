@@ -8,8 +8,9 @@
 import Foundation
 
 class AirPlayCheck: ParetoCheck {
+    static let sharedInstance = AirPlayCheck()
     override var UUID: String {
-        "0cd3ad3c-c41f-4291-82f8-c05dd23c0a9a"
+        "0cd3ad3c-c41f-4291-82f8-c05dd23c0a9b"
     }
 
     override var TitleON: String {

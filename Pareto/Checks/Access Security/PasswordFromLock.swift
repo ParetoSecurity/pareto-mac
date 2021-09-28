@@ -6,6 +6,7 @@
 //
 
 class RequirePasswordToUnlock: ParetoCheck {
+    static let sharedInstance = RequirePasswordToUnlock()
     override var UUID: String {
         "f962c423-fdf5-428a-a57a-816abc9b252d"
     }

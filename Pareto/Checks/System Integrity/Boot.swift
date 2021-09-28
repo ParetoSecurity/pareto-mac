@@ -9,6 +9,7 @@ import Foundation
 import IOKit
 
 class BootCheck: ParetoCheck {
+    static let sharedInstance = BootCheck()
     override var UUID: String {
         "b96524e0-850b-4bb9-abc7-517051b6c14e"
     }

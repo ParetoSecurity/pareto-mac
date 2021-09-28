@@ -8,6 +8,8 @@
 import Foundation
 
 class RemoteManagmentCheck: ParetoCheck {
+    static let sharedInstance = RemoteManagmentCheck()
+
     override var UUID: String {
         "05423213-50e7-4535-ac88-60cc21626378"
     }

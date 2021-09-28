@@ -8,6 +8,7 @@ import Foundation
 import os.log
 
 class GatekeeperCheck: ParetoCheck {
+    static let sharedInstance = GatekeeperCheck()
     override var UUID: String {
         "b59e172e-6a2d-4309-94ed-11e8722836b3"
     }

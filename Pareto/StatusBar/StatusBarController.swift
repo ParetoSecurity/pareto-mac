@@ -52,7 +52,7 @@ class StatusBarController: NSObject, NSMenuDelegate {
 
     var claimsPassed: Bool {
         var passed = true
-        for claim in AppInfo.claims where claim.isActive && Defaults[.snoozeTime] == 0 {
+        for claim in AppInfo.claims {
             passed = passed && claim.checkPassed
         }
         return passed
@@ -119,6 +119,7 @@ class StatusBarController: NSObject, NSMenuDelegate {
                 if Defaults.shouldDoTeamUpdate() || interactive {
                     let report = Report.now()
                     _ = try? Team.update(withReport: report)
+                    Defaults.doneTeamUpdate()
                 }
             }
 

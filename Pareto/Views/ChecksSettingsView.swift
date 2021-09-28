@@ -42,7 +42,7 @@ struct ChecksSettingsView: View {
                 Text(".")
             }
         }
-        .frame(width: 350, height: 480).padding(5)
+        .frame(width: 350).padding(5)
     }
 }
 

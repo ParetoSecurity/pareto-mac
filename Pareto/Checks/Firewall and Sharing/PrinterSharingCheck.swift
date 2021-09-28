@@ -6,6 +6,7 @@
 //
 
 class PrinterSharingCheck: ParetoCheck {
+    static let sharedInstance = PrinterSharingCheck()
     override var UUID: String {
         "b96524e0-150b-4bb8-abc7-517051b6c14e"
     }

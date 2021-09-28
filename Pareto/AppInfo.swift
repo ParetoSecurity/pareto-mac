@@ -12,15 +12,33 @@ import SwiftUI
 
 enum AppInfo {
     static let claims = [
-        Claim(withTitle: "Access Security", withChecks: [AutologinCheck(), RequirePasswordToUnlock(), ScreensaverPasswordCheck(), ScreensaverCheck()]),
-        Claim(withTitle: "Firewall & Sharing", withChecks: [FirewallCheck(), FileSharingCheck(), PrinterSharingCheck(), RemoteManagmentCheck(), RemoteLoginCheck()]),
-        Claim(withTitle: "System Integrity", withChecks: [GatekeeperCheck(), FileVaultCheck(), BootCheck()])
+        Claim(withTitle: "Access Security", withChecks: [
+            AutologinCheck.sharedInstance,
+            RequirePasswordToUnlock.sharedInstance,
+            ScreensaverPasswordCheck.sharedInstance,
+            ScreensaverCheck.sharedInstance
+        ]),
+        Claim(withTitle: "Firewall & Sharing", withChecks: [
+            FirewallCheck.sharedInstance,
+            FileSharingCheck.sharedInstance,
+            PrinterSharingCheck.sharedInstance,
+            RemoteManagmentCheck.sharedInstance,
+            RemoteLoginCheck.sharedInstance,
+            AirPlayCheck.sharedInstance,
+            MediaShareCheck.sharedInstance
+        ]),
+        Claim(withTitle: "System Integrity", withChecks: [
+            GatekeeperCheck.sharedInstance,
+            FileVaultCheck.sharedInstance,
+            BootCheck.sharedInstance
+        ])
         // Claim(withTitle: "Apps are up-to-date", withChecks: [IntegrationCheck(), IntegrationCheck()])
     ]
 
     static let appVersion: String = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as! String
     static let buildVersion: String = Bundle.main.infoDictionary?["CFBundleVersion"] as! String
-    static let osVersion = ProcessInfo.processInfo.operatingSystemVersionString
+    static let version = ProcessInfo.processInfo.operatingSystemVersion
+    static let versionString = "\(version.majorVersion).\(version.minorVersion).\(version.patchVersion)"
     static let isRunningTests = ProcessInfo.processInfo.arguments.contains("isRunningTests")
     static var Licensed = false
     static let Flags = FlagsUpdater()
@@ -93,7 +111,7 @@ enum AppInfo {
     }
 
     static let getVersions = { () -> String in
-        "HW: \(AppInfo.hwModel())\nmacOS: \(AppInfo.osVersion)\nApp Version: \(AppInfo.appVersion)\nBuild: \(AppInfo.buildVersion)"
+        "HW: \(AppInfo.hwModel())\nmacOS: \(AppInfo.versionString)\nApp Version: \(AppInfo.appVersion)\nBuild: \(AppInfo.buildVersion)"
     }
 
     public static func getSystemUUID() -> String? {

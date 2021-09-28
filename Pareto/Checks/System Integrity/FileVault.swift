@@ -6,6 +6,7 @@
 //
 
 class FileVaultCheck: ParetoCheck {
+    static let sharedInstance = FileVaultCheck()
     override var UUID: String {
         "c3aee29a-f16d-4573-a861-b3ba0d860067"
     }

@@ -6,6 +6,7 @@
 //
 
 class AutologinCheck: ParetoCheck {
+    static let sharedInstance = AutologinCheck()
     override var UUID: String {
         "f962c423-fdf5-428a-a57a-816abc9b253e"
     }

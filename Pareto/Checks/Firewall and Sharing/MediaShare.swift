@@ -8,6 +8,7 @@
 import Foundation
 
 class MediaShareCheck: ParetoCheck {
+    static let sharedInstance = MediaShareCheck()
     override var UUID: String {
         "0cd3ad3c-c41f-4291-82f8-c05dd23c0a9a"
     }

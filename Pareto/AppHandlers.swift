@@ -8,21 +8,26 @@
 import Defaults
 import Foundation
 import LaunchAtLogin
+import Network
 import os.log
 import OSLog
 import SwiftUI
 
-class AppHandlers: NSObject {
+class AppHandlers: NSObject, NetworkHandlerObserver {
     var statusBar: StatusBarController?
     var updater: AppUpdater?
     var welcomeWindow: NSWindow?
     var enrolledHandler = false
+    var networkHandler = NetworkHandler.sharedInstance()
+    var timer: Timer?
 
     func runApp() {
-        #if !DEBUG
-            LaunchAtLogin.isEnabled = true
-        #endif
+        networkHandler.addObserver(observer: self)
+
         if Defaults.firstLaunch() {
+            #if !DEBUG
+                LaunchAtLogin.isEnabled = true
+            #endif
             NSApp.sendAction(#selector(showWelcome), to: nil, from: nil)
             NSApp.activate(ignoringOtherApps: true)
             Timer.scheduledTimer(timeInterval: 2.0, target: self, selector: #selector(runChecks), userInfo: nil, repeats: false)
@@ -34,7 +39,17 @@ class AppHandlers: NSObject {
         if Defaults.shouldDoUpdateCheck() {
             os_log("Running update check from startup")
             DispatchQueue.main.async {
-                self.checkForRelease()
+                if Defaults.shouldDoUpdateCheck() {
+                    if self.networkHandler.currentStatus == .satisfied {
+                        os_log("Running update check from startup")
+                        DispatchQueue.main.async {
+                            self.checkForRelease()
+                            Defaults.doneUpdateCheck()
+                        }
+                    } else {
+                        os_log("Skipping update check from startup, no connection")
+                    }
+                }
                 Defaults.doneUpdateCheck()
             }
         }
@@ -42,10 +57,14 @@ class AppHandlers: NSObject {
         NSWorkspace.onWakeup { _ in
             self.statusBar?.runChecks()
             if Defaults.shouldDoUpdateCheck() {
-                os_log("Running update check from wakeup")
-                DispatchQueue.main.async {
-                    self.checkForRelease()
-                    Defaults.doneUpdateCheck()
+                if self.networkHandler.currentStatus == .satisfied {
+                    os_log("Running update check from wakeup")
+                    DispatchQueue.main.async {
+                        self.checkForRelease()
+                        Defaults.doneUpdateCheck()
+                    }
+                } else {
+                    os_log("Skipping update check from wakeup, no connection")
                 }
             }
         }
@@ -61,10 +80,14 @@ class AppHandlers: NSObject {
 
         NSBackgroundActivityScheduler.repeating(withName: "UpdateRunner", withInterval: 60 * 60) { (completion: NSBackgroundActivityScheduler.CompletionHandler) in
             if Defaults.shouldDoUpdateCheck() {
-                os_log("Running update check")
-                DispatchQueue.main.async {
-                    self.checkForRelease()
-                    Defaults.doneUpdateCheck()
+                if self.networkHandler.currentStatus == .satisfied {
+                    os_log("Running update check")
+                    DispatchQueue.main.async {
+                        self.checkForRelease()
+                        Defaults.doneUpdateCheck()
+                    }
+                } else {
+                    os_log("Skipping update check, no connection")
                 }
             }
             completion(.finished)
@@ -72,10 +95,25 @@ class AppHandlers: NSObject {
 
         NSBackgroundActivityScheduler.repeating(withName: "FlagsRunner", withInterval: 60 * 5) { (completion: NSBackgroundActivityScheduler.CompletionHandler) in
             DispatchQueue.main.async {
-                os_log("Running flags update")
-                AppInfo.Flags.update()
+                if self.networkHandler.currentStatus == .satisfied {
+                    os_log("Running flags update")
+                    AppInfo.Flags.update()
+                } else {
+                    os_log("Skipping flags update, no connection")
+                }
             }
             completion(.finished)
+        }
+    }
+
+    func statusDidChange(status: NWPath.Status) {
+        if status == .satisfied {
+            os_log("network condtions changed to: connected")
+            // wait 5 second of stable conenction before running checks
+            timer = Timer.scheduledTimer(timeInterval: 5.0, target: self, selector: #selector(runChecks), userInfo: nil, repeats: false)
+        } else {
+            os_log("network condtions changed to: disconnected")
+            timer?.invalidate()
         }
     }
 

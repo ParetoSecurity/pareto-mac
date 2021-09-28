@@ -6,6 +6,7 @@
 //
 
 class FileSharingCheck: ParetoCheck {
+    static let sharedInstance = FileSharingCheck()
     override var UUID: String {
         "b96524e0-850b-4bb8-abc7-517051b6c14e"
     }

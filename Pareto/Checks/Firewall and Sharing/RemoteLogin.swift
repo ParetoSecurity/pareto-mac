@@ -8,6 +8,7 @@
 import Foundation
 
 class RemoteLoginCheck: ParetoCheck {
+    static let sharedInstance = RemoteLoginCheck()
     override var UUID: String {
         "4ced961d-7cfc-4e7b-8f80-195f6379446e"
     }

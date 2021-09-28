@@ -6,6 +6,7 @@
 //
 
 class ScreensaverCheck: ParetoCheck {
+    static let sharedInstance = ScreensaverCheck()
     override var UUID: String {
         "13e4dbf1-f87f-4bd9-8a82-f62044f002f4"
     }
