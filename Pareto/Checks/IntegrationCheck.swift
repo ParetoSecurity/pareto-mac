@@ -25,3 +25,21 @@ class IntegrationCheck: ParetoCheck {
         return true
     }
 }
+
+class IntegrationCheckFails: ParetoCheck {
+    override var UUID: String {
+        "aaaaaaaa-bbbb-cccc-dddd-abcdef000002"
+    }
+
+    override var TitleON: String {
+        "Unit test mock fails ON"
+    }
+
+    override var TitleOFF: String {
+        "Unit test mock fails OFF"
+    }
+
+    override func checkPasses() -> Bool {
+        return false
+    }
+}

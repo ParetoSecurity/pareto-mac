@@ -28,6 +28,17 @@ class CheckIntegrationTest: XCTestCase {
 
     func testCheckPasses() throws {
         let check = IntegrationCheck()
-        XCTAssert(check.checkPasses())
+        XCTAssertTrue(check.checkPasses())
+    }
+
+    func testClaimLogic() throws {
+        let claim = Claim(withTitle: "Test", withChecks: [IntegrationCheck(), IntegrationCheckFails()])
+        claim.configure()
+        claim.run()
+        XCTAssertEqual(claim.checks.count, 2)
+        XCTAssertFalse(claim.checkPassed)
+        XCTAssertTrue(claim.isActive)
+        XCTAssertFalse(claim.isDisabled)
+        XCTAssertNotEqual(claim.menu(), nil)
     }
 }
