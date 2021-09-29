@@ -17,6 +17,7 @@ class CheckIntegrationTest: XCTestCase {
 
     func testInit() throws {
         let check = IntegrationCheck()
+        check.configure()
         XCTAssertEqual(check.UUID, "aaaaaaaa-bbbb-cccc-dddd-abcdef123456")
         XCTAssertEqual(check.Title, "Unit test mock OFF")
 

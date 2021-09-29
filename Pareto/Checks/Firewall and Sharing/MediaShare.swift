@@ -14,11 +14,11 @@ class MediaShareCheck: ParetoCheck {
     }
 
     override var TitleON: String {
-        "Media Share is off"
+        "Sharing media is off"
     }
 
     override var TitleOFF: String {
-        "Media Share is on"
+        "Sharing media is on"
     }
 
     override func checkPasses() -> Bool {

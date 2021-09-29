@@ -6,9 +6,19 @@
 //
 
 import Alamofire
+import CryptoKit
 import Defaults
 import Foundation
 import os.log
+
+private extension Digest {
+    var bytes: [UInt8] { Array(makeIterator()) }
+    var data: Data { Data(bytes) }
+
+    var hexStr: String {
+        bytes.map { String(format: "%02X", $0) }.joined()
+    }
+}
 
 struct ReportingDevice: Encodable {
     let id: String
@@ -29,11 +39,14 @@ struct Report: Encodable {
     let device: ReportingDevice
     let version: String
     let lastCheck: String
+    let significantChange: String
 
     static func now() -> Report {
         var passed = 0
         var failed = 0
         var disabled = 0
+        var disabledSeed = "\(Defaults[.deviceID])"
+        var failedSeed = "\(Defaults[.deviceID])"
 
         for claim in AppInfo.claims {
             for check in claim.checks {
@@ -42,9 +55,11 @@ struct Report: Encodable {
                         passed += 1
                     } else {
                         failed += 1
+                        failedSeed.append(contentsOf: check.UUID)
                     }
                 } else {
                     disabled += 1
+                    disabledSeed.append(contentsOf: check.UUID)
                 }
             }
         }
@@ -55,7 +70,8 @@ struct Report: Encodable {
             disabledCount: disabled,
             device: ReportingDevice.current(),
             version: AppInfo.appVersion,
-            lastCheck: Date.fromTimeStamp(timeStamp: Defaults[.lastCheck]).as3339String()
+            lastCheck: Date.fromTimeStamp(timeStamp: Defaults[.lastCheck]).as3339String(),
+            significantChange: SHA256.hash(data: "\(disabledSeed).\(failedSeed)".data(using: .utf8)!).hexStr
         )
     }
 }

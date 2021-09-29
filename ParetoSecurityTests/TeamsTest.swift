@@ -40,8 +40,7 @@ class TeamsTest: XCTestCase {
         Defaults[.teamID] = "fd4e6814-440c-46d2-b240-4e0d2f786fbc"
         Defaults[.teamAPI] = "http://localhost"
 
-        let device = ReportingDevice(id: "302f10ab-90e9-485d-a1fb-3ae5735a2193", machineUUID: "5d486371-7841-4e4d-95c4-78c71cdaa44c")
-        let report = Report(passedCount: 1, failedCount: 2, disabledCount: 3, device: device, version: AppInfo.appVersion, lastCheck: Date().as3339String())
+        let report = Report.now()
 
         _ = try? Team.update(withReport: report)
     }
