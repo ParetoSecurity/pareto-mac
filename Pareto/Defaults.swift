@@ -37,6 +37,7 @@ extension Defaults.Keys {
     static let snoozeTime = Key<Int>("snoozeTime", default: 0)
     static let lastCheck = Key<Int>("lastCheck", default: 0)
     static let checksPassed = Key<Bool>("checksPassed", default: false)
+    static let lastNagShown = Key<Int>("lastNagShown", default: Date().currentTimeMillis())
 }
 
 public extension Defaults {
@@ -59,6 +60,14 @@ public extension Defaults {
 
     static func doneTeamUpdate() {
         Defaults[.lastTeamUpdate] = Date().currentTimeMillis()
+    }
+
+    static func shouldShowNag() -> Bool {
+        return Defaults[.lastNagShown] + (Date.HourInMilis * 24 * AppInfo.Flags.nagScreenDelayDays) < Date().currentTimeMillis()
+    }
+
+    static func shownNag() {
+        Defaults[.lastNagShown] = Date().currentTimeMillis()
     }
 
     static func toFree() {

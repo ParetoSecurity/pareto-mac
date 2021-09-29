@@ -152,7 +152,8 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
     }
 
     @objc func runChecks() {
-        if !Defaults.firstLaunch(), !AppInfo.Licensed, !enrolledHandler {
+        if !Defaults.firstLaunch(), !AppInfo.Licensed, !enrolledHandler, Defaults.shouldShowNag() {
+            Defaults.shownNag()
             let alert = NSAlert()
             alert.messageText = "You are running the free version of the app. Please consider purchasing the Personal lifetime license for unlimited devices."
             alert.alertStyle = NSAlert.Style.informational

@@ -33,6 +33,14 @@ class AppDelegate: AppHandlers, NSApplicationDelegate {
     }
 
     func applicationDidFinishLaunching(_: Notification) {
+        // Terminate any older versions of process if not running tests
+        if !AppInfo.isRunningTests {
+            let procs = NSRunningApplication.runningApplications(withBundleIdentifier: Bundle.main.bundleIdentifier!)
+            if procs.count > 1 {
+                procs.first?.forceTerminate()
+            }
+        }
+
         // Verify license
         do {
             switch Defaults[.reportingRole] {
