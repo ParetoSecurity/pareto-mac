@@ -183,7 +183,7 @@ public class AppUpdater {
         guard Bundle.main.executableURL != nil else {
             throw Error.bundleExecutableURL
         }
-        let url = URL(string: "https://paretosecurity.app/api/updates?uuid=\(Defaults[.machineUUID])&version=\(AppInfo.appVersion)")!
+        let url = URL(string: "https://paretosecurity.com/api/updates?uuid=\(Defaults[.machineUUID])&version=\(AppInfo.appVersion)")!
         let data = try Data(contentsOf: url)
         let releases = try JSONDecoder().decode([Release].self, from: data)
         let release = try releases.findViableUpdate(prerelease: Defaults[.betaChannel])

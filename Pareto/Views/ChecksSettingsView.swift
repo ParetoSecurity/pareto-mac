@@ -38,7 +38,7 @@ struct ChecksSettingsView: View {
                 Text("Learn more about the security checks on ")
 
                 Link("our website",
-                     destination: URL(string: "https://paretosecurity.app/security-checks?utm_source=app")!)
+                     destination: URL(string: "https://paretosecurity.com/security-checks?utm_source=app")!)
                 Text(".")
             }
         }

@@ -77,7 +77,7 @@ struct Report: Encodable {
 }
 
 enum Team {
-    public static let defaultAPI = "https://dash.paretosecurity.app/api/v1/team"
+    public static let defaultAPI = "https://dash.paretosecurity.com/api/v1/team"
     private static let base = Defaults[.teamAPI]
 
     static func link(withDevice device: ReportingDevice) throws -> Request {

@@ -1,6 +1,6 @@
 # Security checklist app for your Mac
 
-[Pareto Security](https://paretosecurity.app/) helps you with basic security hygiene on your Mac. It gently nudges you to take care of 20% of security tasks that prevent 80% of problems.
+[Pareto Security](https://paretosecurity.com/) helps you with basic security hygiene on your Mac. It gently nudges you to take care of 20% of security tasks that prevent 80% of problems.
 
 <p align="center">
   <img height="200" src="https://github.com/ParetoSecurity/pareto-mac/blob/main/assets/icon.png?raw=true" />
@@ -45,13 +45,13 @@
 
 All of the above are easily preventable. The Pareto Security app regularly checks such common security fails and reminds you to take care of them.
 
-[See all security checks on our website »](https://paretosecurity.app/security-checks)
+[See all security checks on our website »](https://paretosecurity.com/security-checks)
 
 
 ## More info
 
 Any other checks that you want? Let us know on [GitHub discussions](https://github.com/ParetoSecurity/pareto-mac/discussions/3).
 
-[Contact us through the form](https://paretosecurity.app/contact) on our website.
+[Contact us through the form](https://paretosecurity.com/contact) on our website.
 
 Read more about the company behind the app: [niteo.co](https://niteo.co/)

@@ -48,7 +48,7 @@ struct AboutSettingsView: View {
                 }
             VStack(alignment: .leading) {
                 Link("Pareto Security",
-                     destination: URL(string: "https://paretosecurity.app")!).font(.title)
+                     destination: URL(string: "https://paretosecurity.com")!).font(.title)
 
                 VStack(alignment: .leading, spacing: 0) {
                     Text("Version: \(AppInfo.appVersion) - \(AppInfo.buildVersion)")
@@ -73,7 +73,7 @@ struct AboutSettingsView: View {
                 HStack(spacing: 0) {
                     Text("We’d love to ")
                     Link("hear from you!",
-                         destination: URL(string: "https://paretosecurity.app/contact")!)
+                         destination: URL(string: "https://paretosecurity.com/contact")!)
                 }
 
                 Text("Made with ❤️ at Niteo")

@@ -32,7 +32,7 @@ class FlagsUpdater: ObservableObject {
         }
 
         do {
-            let url = URL(string: "https://dns.google/resolve?name=flags.paretosecurity.app&type=txt")!
+            let url = URL(string: "https://dns.google/resolve?name=flags.paretosecurity.com&type=txt")!
             let data = try Data(contentsOf: url)
             let flags = try JSONDecoder().decode(DNSResponse.self, from: data).answer.first?.data
             for flag in flags!.components(separatedBy: ",") {

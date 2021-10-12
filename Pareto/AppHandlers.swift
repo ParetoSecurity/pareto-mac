@@ -161,7 +161,7 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
             alert.addButton(withTitle: "Later")
             switch alert.runModal() {
             case NSApplication.ModalResponse.alertFirstButtonReturn:
-                NSWorkspace.shared.open(URL(string: "https://paretosecurity.app/pricing")!)
+                NSWorkspace.shared.open(URL(string: "https://paretosecurity.com/pricing")!)
             case NSApplication.ModalResponse.alertSecondButtonReturn:
                 DispatchQueue.main.async {
                     self.statusBar?.runChecks()
@@ -236,7 +236,7 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
             } catch {
                 Defaults.toFree()
                 let alert = NSAlert()
-                alert.messageText = "License is not valid. Please email support@paretosecurity.app."
+                alert.messageText = "License is not valid. Please email support@paretosecurity.com."
                 alert.alertStyle = NSAlert.Style.informational
                 alert.addButton(withTitle: "OK")
                 #if !DEBUG
@@ -272,7 +272,7 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
             } catch {
                 Defaults.toFree()
                 let alert = NSAlert()
-                alert.messageText = "Team ticket is not valid. Please email support@paretosecurity.app."
+                alert.messageText = "Team ticket is not valid. Please email support@paretosecurity.com."
                 alert.alertStyle = NSAlert.Style.informational
                 alert.addButton(withTitle: "OK")
                 #if !DEBUG
