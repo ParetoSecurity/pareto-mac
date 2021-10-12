@@ -37,7 +37,7 @@ class SettingsViewTests: XCTestCase {
 
     func testTeam() throws {
         let subject = TeamSettingsView()
-        let one = try subject.inspect().vStack()[0].text().string()
+        let one = try subject.inspect().form()[0].text().string()
         XCTAssertEqual(one, "The Teams subscription will give you a web dashboard for an overview of the company’s devices.")
     }
 

@@ -15,6 +15,7 @@
 		4F14487726D8EB2E00A5BA34 /* Version in Frameworks */ = {isa = PBXBuildFile; productRef = 4F14487626D8EB2E00A5BA34 /* Version */; };
 		4F14487A26D8EB7A00A5BA34 /* Path in Frameworks */ = {isa = PBXBuildFile; productRef = 4F14487926D8EB7A00A5BA34 /* Path */; };
 		4F14487C26D8EDB000A5BA34 /* Bundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F14487B26D8EDB000A5BA34 /* Bundle.swift */; };
+		4F196CD62714B51900A2A7B8 /* JWTDecode in Frameworks */ = {isa = PBXBuildFile; productRef = 4F196CD52714B51900A2A7B8 /* JWTDecode */; };
 		4F1AE88B26F9FC150084A381 /* SwiftSocket in Frameworks */ = {isa = PBXBuildFile; productRef = 4F1AE88A26F9FC150084A381 /* SwiftSocket */; };
 		4F1AE89026F9FFA60084A381 /* MediaShare.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F1AE88F26F9FFA60084A381 /* MediaShare.swift */; };
 		4F1AE89226FA026D0084A381 /* AirPlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F1AE89126FA026D0084A381 /* AirPlay.swift */; };
@@ -61,7 +62,6 @@
 		4FB7C68726AFF29A00FB1C41 /* NSImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB7C68626AFF29A00FB1C41 /* NSImage.swift */; };
 		4FB7C68D26AFFD2600FB1C41 /* FileVault.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB7C68C26AFFD2600FB1C41 /* FileVault.swift */; };
 		4FD0A24126A024440070BED4 /* Gatekeeper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FD0A24026A024440070BED4 /* Gatekeeper.swift */; };
-		4FD50F2326F4F0A900C73682 /* JWTKit in Frameworks */ = {isa = PBXBuildFile; productRef = 4FD50F2226F4F0A900C73682 /* JWTKit */; };
 		4FDAD88F26EB784A00F64E61 /* License.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FDAD88E26EB784A00F64E61 /* License.swift */; };
 		4FEBA2F2269CD48F009B2469 /* ParetoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEBA2F1269CD48F009B2469 /* ParetoApp.swift */; };
 		4FEBA2F6269CD48F009B2469 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4FEBA2F5269CD48F009B2469 /* Assets.xcassets */; };
@@ -95,6 +95,7 @@
 		4F103007269EE135008C1E86 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		4F14487326D8EA5E00A5BA34 /* Updater.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Updater.swift; sourceTree = "<group>"; };
 		4F14487B26D8EDB000A5BA34 /* Bundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bundle.swift; sourceTree = "<group>"; };
+		4F196CD72714C1C600A2A7B8 /* JWT.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = JWT.playground; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		4F1AE88F26F9FFA60084A381 /* MediaShare.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaShare.swift; sourceTree = "<group>"; };
 		4F1AE89126FA026D0084A381 /* AirPlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AirPlay.swift; sourceTree = "<group>"; };
 		4F24A08D26EB734A0036F748 /* LicenseSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LicenseSettingsView.swift; sourceTree = "<group>"; };
@@ -175,13 +176,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4FD50F2326F4F0A900C73682 /* JWTKit in Frameworks */,
 				4F14487726D8EB2E00A5BA34 /* Version in Frameworks */,
 				4F14487A26D8EB7A00A5BA34 /* Path in Frameworks */,
 				4FF515C126F7B362008D135E /* Alamofire in Frameworks */,
 				4F6A0E1326CE608C003B00A3 /* Defaults in Frameworks */,
 				4F1AE88B26F9FC150084A381 /* SwiftSocket in Frameworks */,
 				4F103012269F1C65008C1E86 /* LaunchAtLogin in Frameworks */,
+				4F196CD62714B51900A2A7B8 /* JWTDecode in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -308,6 +309,7 @@
 		4FEBA2E5269CD48F009B2469 = {
 			isa = PBXGroup;
 			children = (
+				4F196CD72714C1C600A2A7B8 /* JWT.playground */,
 				4F343A5D26F7A3C8007D2F7D /* API.playground */,
 				4FEBA2F0269CD48F009B2469 /* Pareto */,
 				4FC81A4A26C41DC8006EABA8 /* ParetoSecurityTests */,
@@ -422,9 +424,9 @@
 				4F6A0E1226CE608C003B00A3 /* Defaults */,
 				4F14487626D8EB2E00A5BA34 /* Version */,
 				4F14487926D8EB7A00A5BA34 /* Path */,
-				4FD50F2226F4F0A900C73682 /* JWTKit */,
 				4FF515C026F7B362008D135E /* Alamofire */,
 				4F1AE88A26F9FC150084A381 /* SwiftSocket */,
+				4F196CD52714B51900A2A7B8 /* JWTDecode */,
 			);
 			productName = Pareto;
 			productReference = 4FEBA2EE269CD48F009B2469 /* Pareto Security.app */;
@@ -467,9 +469,9 @@
 				4F6A0E1126CE608C003B00A3 /* XCRemoteSwiftPackageReference "Defaults" */,
 				4F14487526D8EB2E00A5BA34 /* XCRemoteSwiftPackageReference "Version" */,
 				4F14487826D8EB7A00A5BA34 /* XCRemoteSwiftPackageReference "Path.swift" */,
-				4FD50F2126F4F0A900C73682 /* XCRemoteSwiftPackageReference "jwt-kit" */,
 				4FF515BF26F7B362008D135E /* XCRemoteSwiftPackageReference "Alamofire" */,
 				4F1AE88926F9FC150084A381 /* XCRemoteSwiftPackageReference "SwiftSocket" */,
+				4F196CD42714B51900A2A7B8 /* XCRemoteSwiftPackageReference "JWTDecode.swift" */,
 			);
 			productRefGroup = 4FEBA2EF269CD48F009B2469 /* Products */;
 			projectDirPath = "";
@@ -984,6 +986,14 @@
 				minimumVersion = 1.0.0;
 			};
 		};
+		4F196CD42714B51900A2A7B8 /* XCRemoteSwiftPackageReference "JWTDecode.swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/auth0/JWTDecode.swift.git";
+			requirement = {
+				kind = upToNextMinorVersion;
+				minimumVersion = 2.6.0;
+			};
+		};
 		4F1AE88926F9FC150084A381 /* XCRemoteSwiftPackageReference "SwiftSocket" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/ParetoSecurity/SwiftSocket";
@@ -1006,14 +1016,6 @@
 			requirement = {
 				branch = master;
 				kind = branch;
-			};
-		};
-		4FD50F2126F4F0A900C73682 /* XCRemoteSwiftPackageReference "jwt-kit" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/vapor/jwt-kit";
-			requirement = {
-				kind = upToNextMinorVersion;
-				minimumVersion = 4.2.0;
 			};
 		};
 		4FF515BF26F7B362008D135E /* XCRemoteSwiftPackageReference "Alamofire" */ = {
@@ -1042,6 +1044,11 @@
 			package = 4F14487826D8EB7A00A5BA34 /* XCRemoteSwiftPackageReference "Path.swift" */;
 			productName = Path;
 		};
+		4F196CD52714B51900A2A7B8 /* JWTDecode */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4F196CD42714B51900A2A7B8 /* XCRemoteSwiftPackageReference "JWTDecode.swift" */;
+			productName = JWTDecode;
+		};
 		4F1AE88A26F9FC150084A381 /* SwiftSocket */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 4F1AE88926F9FC150084A381 /* XCRemoteSwiftPackageReference "SwiftSocket" */;
@@ -1056,11 +1063,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 4F84A94A26CBE4AE00A1579D /* XCRemoteSwiftPackageReference "ViewInspector" */;
 			productName = ViewInspector;
-		};
-		4FD50F2226F4F0A900C73682 /* JWTKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 4FD50F2126F4F0A900C73682 /* XCRemoteSwiftPackageReference "jwt-kit" */;
-			productName = JWTKit;
 		};
 		4FF515C026F7B362008D135E /* Alamofire */ = {
 			isa = XCSwiftPackageProductDependency;

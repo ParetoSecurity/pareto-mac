@@ -21,13 +21,13 @@ private extension Digest {
 }
 
 struct ReportingDevice: Encodable {
-    let id: String
     let machineUUID: String
+    let deviceName: String
 
     static func current() -> ReportingDevice {
         return ReportingDevice(
-            id: Defaults[.deviceID],
-            machineUUID: Defaults[.machineUUID]
+            machineUUID: Defaults[.machineUUID],
+            deviceName: Defaults[.deviceName]
         )
     }
 }
@@ -45,8 +45,8 @@ struct Report: Encodable {
         var passed = 0
         var failed = 0
         var disabled = 0
-        var disabledSeed = "\(Defaults[.deviceID])"
-        var failedSeed = "\(Defaults[.deviceID])"
+        var disabledSeed = "\(Defaults[.machineUUID])"
+        var failedSeed = "\(Defaults[.machineUUID])"
 
         for claim in AppInfo.claims {
             for check in claim.checks {
@@ -90,19 +90,6 @@ enum Team {
             debugPrint(cmd)
         }.validate().responseJSON { response in
             os_log("Team.Link response: %{public}s", log: Log.api, response.description)
-        }
-    }
-
-    static func unlink(withDevice device: ReportingDevice) throws -> Request {
-        AF.request(
-            base + "/\(Defaults[.teamID])/device",
-            method: .delete,
-            parameters: device,
-            encoder: JSONParameterEncoder.default
-        ).cURLDescription { cmd in
-            debugPrint(cmd)
-        }.validate().responseJSON { response in
-            os_log("Team.Unlink response: %{public}s", log: Log.api, response.description)
         }
     }
 

@@ -18,10 +18,13 @@ enum ReportingRoles: String, Defaults.Serializable {
 extension Defaults.Keys {
     // Teams
     static let userID = Key<String>("userID", default: "")
-    static let teamID = Key<String>("teamID", default: "")
-    static let deviceID = Key<String>("deviceID", default: "")
     static let userEmail = Key<String>("userEmail", default: "")
+
+    static let teamID = Key<String>("teamID", default: "")
+    static let deviceName = Key<String>("deviceName", default: Host.current().localizedName!)
     static let machineUUID = Key<String>("machineUUID", default: AppInfo.getSystemUUID() ?? UUID().uuidString)
+
+    // License
     static let license = Key<String>("license", default: "")
     static let reportingRole = Key<ReportingRoles>("reportingRole", default: .free)
     static let teamAPI = Key<String>("teamAPI", default: Team.defaultAPI)
@@ -75,7 +78,6 @@ public extension Defaults {
         Defaults[.userEmail] = ""
         Defaults[.userID] = ""
         Defaults[.teamID] = ""
-        Defaults[.deviceID] = ""
         AppInfo.Licensed = false
         Defaults[.reportingRole] = .free
     }

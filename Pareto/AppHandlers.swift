@@ -221,7 +221,7 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
                 let license = try VerifyLicense(withLicense: jwt)
                 enrolledHandler = true
                 Defaults[.license] = jwt
-                Defaults[.userEmail] = license.subject.value
+                Defaults[.userEmail] = license.subject
                 Defaults[.userID] = license.uuid
                 AppInfo.Licensed = true
                 Defaults[.reportingRole] = .personal
@@ -250,7 +250,6 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
                 enrolledHandler = true
                 Defaults[.license] = jwt
                 Defaults[.userID] = ""
-                Defaults[.deviceID] = ticket.deviceUUID
                 Defaults[.teamID] = ticket.teamUUID
                 AppInfo.Licensed = true
                 Defaults[.reportingRole] = .team
@@ -264,7 +263,7 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
                 }
 
                 let alert = NSAlert()
-                alert.messageText = "Pareto Security is linked to your team \(ticket.teamName)."
+                alert.messageText = "Pareto Security is linked to your team."
                 alert.alertStyle = NSAlert.Style.informational
                 alert.addButton(withTitle: "OK")
                 #if !DEBUG

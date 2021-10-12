@@ -20,12 +20,12 @@
         }
       },
       {
-        "package": "jwt-kit",
-        "repositoryURL": "https://github.com/vapor/jwt-kit",
+        "package": "JWTDecode",
+        "repositoryURL": "https://github.com/auth0/JWTDecode.swift.git",
         "state": {
           "branch": null,
-          "revision": "7a9a04df93e71de10fa2e8d6e9430dd0a7924643",
-          "version": "4.2.4"
+          "revision": "3cd207fb9e943b6168a117baa3936c823204c2dc",
+          "version": "2.6.3"
         }
       },
       {
@@ -44,15 +44,6 @@
           "branch": null,
           "revision": "9c6f807b0a76be0e27aecc908bc6f173400d839e",
           "version": "1.4.0"
-        }
-      },
-      {
-        "package": "swift-crypto",
-        "repositoryURL": "https://github.com/apple/swift-crypto.git",
-        "state": {
-          "branch": null,
-          "revision": "3bea268b223651c4ab7b7b9ad62ef9b2d4143eb6",
-          "version": "1.1.6"
         }
       },
       {

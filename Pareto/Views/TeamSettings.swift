@@ -10,28 +10,40 @@ import SwiftUI
 
 struct TeamSettingsView: View {
     @Default(.teamID) var teamID
-    @Default(.deviceID) var deviceID
     @Default(.machineUUID) var machineUUID
+    @Default(.deviceName) var deviceName
 
     func copy() {
         NSPasteboard.general.clearContents()
-        NSPasteboard.general.setString("Team ID: \(teamID)\nDevice ID: \(deviceID)\nMachine UUID: \(machineUUID)", forType: .string)
+        NSPasteboard.general.setString("Team ID: \(teamID)\nMachine UUID: \(machineUUID)", forType: .string)
+    }
+
+    func help() {
+        NSWorkspace.shared.open(URL(string: "https://support.apple.com/en-ie/guide/mac-help/mchlp2322/mac#mchl8c79215b")!)
     }
 
     var body: some View {
-        VStack {
+        Form {
             if !teamID.isEmpty {
-                Text("\(teamID)").contextMenu(ContextMenu(menuItems: {
-                    Button("Copy", action: copy)
-                }))
-                Text("\(deviceID)").contextMenu(ContextMenu(menuItems: {
-                    Button("Copy", action: copy)
-                }))
-                Text("\(machineUUID)").contextMenu(ContextMenu(menuItems: {
-                    Button("Copy", action: copy)
-                }))
+                Section(
+                    footer: Text("Device Name")) {
+                        VStack(alignment: .leading) {
+                            Text("\(deviceName)").contextMenu(ContextMenu(menuItems: {
+                                Button("How to change", action: help)
+                            }))
+                        }
+                }
+                Spacer(minLength: 10)
+                Section(
+                    footer: Text("Device ID")) {
+                        VStack(alignment: .leading) {
+                            Text("\(machineUUID)").contextMenu(ContextMenu(menuItems: {
+                                Button("Copy", action: copy)
+                            }))
+                        }
+                }
+                Spacer(minLength: 10)
                 Button("Unlink this device from the Teams account") {
-                    _ = try? Team.unlink(withDevice: ReportingDevice.current())
                     Defaults.toFree()
                 }
             } else {

@@ -6,11 +6,11 @@
 //
 
 import Foundation
-import JWTKit
+import JWTDecode
+import Security
 import SwiftUI
 
 let rsaPublicKey = """
------BEGIN PUBLIC KEY-----
 MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAwGh64DK49GOq1KX+ojyg
 Y9JSAZ4cfm5apavetQ42D2gTjfhDu1kivrDRwhjqj7huUWRI2ExMdMHp8CzrJI3P
 zpzutEUXTEHloe0vVMZqPoP/r2f1cl4bmDkFZyHr6XTgiYPE4GgMjxUc04J2ksqU
@@ -23,75 +23,148 @@ FyK51WJI80PKvp3B7ZB7XpH5B24wr/OhMRh5YZOcrpuBykfHaMozkDCudgaj/V+x
 K79CqMF/BcSxCSBktWQmabYCM164utpmJaCSpZyDtKA4bYVv9iRCGTqFQT7jX+/h
 Z37gmg/+TlIdTAeB5TG2ffHxLnRhT4AAhUgYmk+QP3a1hxP5xj2otaSTZ3DxQd6F
 ZaoGJg3y8zjrxYBQDC8gF6sCAwEAAQ==
------END PUBLIC KEY-----
 """
 
-struct LicensePayload: JWTPayload, Equatable {
-    // Maps the longer Swift property names to the
-    // shortened keys used in the JWT payload.
-    enum CodingKeys: String, CodingKey {
-        case subject = "sub"
-        case issuedAt = "iat"
-        case role
-        case uuid
+private extension JWT {
+    var uuid: String? {
+        return claim(name: "uuid").string
     }
 
+    var role: String? {
+        return claim(name: "role").string
+    }
+
+    var teamUUID: String? {
+        return claim(name: "teamID").string
+    }
+}
+
+private extension Data {
+    init?(base64URLEncodedString: String, options: Data.Base64DecodingOptions) {
+        let input = NSMutableString(string: base64URLEncodedString)
+        input.replaceOccurrences(of: "-", with: "+",
+                                 options: [.literal],
+                                 range: NSRange(location: 0, length: input.length))
+        input.replaceOccurrences(of: "_", with: "/",
+                                 options: [.literal],
+                                 range: NSRange(location: 0, length: input.length))
+        switch input.length % 4 {
+        case 0:
+            break
+        case 1:
+            input.append("===")
+        case 2:
+            input.append("==")
+        case 3:
+            input.append("=")
+        default:
+            fatalError("unreachable")
+        }
+        if let decoded = Data(base64Encoded: input as String, options: options) {
+            self = decoded
+        } else {
+            return nil
+        }
+    }
+}
+
+enum License {
+    public enum Part {
+        case header
+        case payload
+        case signature
+    }
+
+    public indirect enum Error: Swift.Error {
+        case badTokenStructure
+        case cannotDecodeBase64Part(License.Part, String)
+        case invalidJSON(License.Part, Swift.Error)
+        case invalidJSONStructure(License.Part)
+        case typeIsNotAJSONWebToken
+        case invalidSignatureAlgorithm(String)
+        case missingSignatureAlgorithm
+        case invalidSignature
+        case invalidLicense
+        case badPublicKeyConversion
+    }
+
+    public static func verify(jwt token: String, withKey key: String) throws -> Bool {
+        let parts = token.components(separatedBy: ".")
+        guard parts.count == 3 else {
+            throw Error.badTokenStructure
+        }
+
+        let base64Parts: (header: String, payload: String, signature: String)
+        base64Parts = (parts[0], parts[1], parts[2])
+
+        guard Data(base64URLEncodedString: base64Parts.header, options: []) != nil else {
+            throw Error.cannotDecodeBase64Part(.header, base64Parts.header)
+        }
+        guard Data(base64URLEncodedString: base64Parts.payload, options: []) != nil else {
+            throw Error.cannotDecodeBase64Part(.payload, base64Parts.payload)
+        }
+        guard let signatureData = Data(base64URLEncodedString: base64Parts.signature, options: []) else {
+            throw Error.cannotDecodeBase64Part(.signature, base64Parts.signature)
+        }
+        guard let input = (base64Parts.header + "." + base64Parts.payload).data(using: String.Encoding.utf8) else {
+            throw Error.badTokenStructure
+        }
+        guard let pubKeyData = Data(base64Encoded: key.replacingOccurrences(of: "\n", with: ""), options: .ignoreUnknownCharacters)! as CFData? else {
+            throw Error.badPublicKeyConversion
+        }
+        var error: Unmanaged<CFError>?
+        let attributes: [String: Any] = [
+            kSecAttrKeyType as String: kSecAttrKeyTypeRSA,
+            kSecAttrKeyClass as String: kSecAttrKeyClassPublic
+        ]
+        guard let publicKey = SecKeyCreateFromData(attributes as CFDictionary, pubKeyData, &error) else {
+            throw Error.badPublicKeyConversion
+        }
+
+        return SecKeyVerifySignature(publicKey, .rsaSignatureMessagePKCS1v15SHA512, input as CFData, signatureData as CFData, nil)
+    }
+}
+
+struct LicensePayload: Decodable, Equatable {
     // The "sub" (subject) claim identifies the principal that is the
     // subject of the JWT.
-    var subject: SubjectClaim
+    var subject: String
 
     // The "exp" (expiration time) claim identifies the expiration time on
     // or after which the JWT MUST NOT be accepted for processing.
-    var issuedAt: IssuedAtClaim
+    var issuedAt: Date
 
     // Custom data.
     var uuid: String
-    var role: AudienceClaim
-
-    func verify(using _: JWTSigner) throws {
-        try role.verifyIntendedAudience(includes: "single")
-    }
+    var role: String
 }
 
 func VerifyLicense(withLicense data: String, publicKey: String = rsaPublicKey) throws -> LicensePayload {
-    let signers = JWTSigners()
-    try signers.use(.rs512(key: .public(pem: publicKey)))
-    return try signers.verify(data, as: LicensePayload.self)
+    if try License.verify(jwt: data, withKey: publicKey) {
+        let jwt = try decode(jwt: data)
+        return LicensePayload(subject: jwt.subject!, issuedAt: jwt.issuedAt!, uuid: jwt.uuid!, role: jwt.role!)
+    }
+    throw License.Error.invalidLicense
 }
 
-struct TeamTicketPayload: JWTPayload, Equatable {
-    // Maps the longer Swift property names to the
-    // shortened keys used in the JWT payload.
-    enum CodingKeys: String, CodingKey {
-        case subject = "sub"
-        case issuedAt = "iat"
-        case teamUUID = "teamID"
-        case teamName
-        case deviceUUID = "deviceID"
-        case role
-    }
-
+struct TeamTicketPayload: Decodable, Equatable {
     // The "sub" (subject) claim identifies the principal that is the
     // subject of the JWT.
-    var subject: SubjectClaim
+    var subject: String
 
     // The "exp" (expiration time) claim identifies the expiration time on
     // or after which the JWT MUST NOT be accepted for processing.
-    var issuedAt: IssuedAtClaim
+    var issuedAt: Date
 
     // Custom data.
     var teamUUID: String
-    var teamName: String
-    var deviceUUID: String
-    var role: AudienceClaim
-
-    func verify(using _: JWTSigner) throws {
-        try role.verifyIntendedAudience(includes: "team")
-    }
+    var role: String
 }
 
-func VerifyTeamTicket(withTicket data: String, publicKey: String = rsaPublicKey) throws -> TeamTicketPayload {
-    let signers = JWTSigners()
-    try signers.use(.rs512(key: .public(pem: publicKey)))
-    return try signers.verify(data, as: TeamTicketPayload.self)
+func VerifyTeamTicket(withTicket data: String, publicKey key: String = rsaPublicKey) throws -> TeamTicketPayload {
+    if try License.verify(jwt: data, withKey: key) {
+        let jwt = try decode(jwt: data)
+        return TeamTicketPayload(subject: jwt.subject!, issuedAt: jwt.issuedAt!, teamUUID: jwt.teamUUID!, role: jwt.role!)
+    }
+    throw License.Error.invalidLicense
 }
