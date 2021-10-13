@@ -38,39 +38,42 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
         } else {
             Timer.scheduledTimer(timeInterval: 2.0, target: self, selector: #selector(runChecks), userInfo: nil, repeats: false)
         }
-
-        // schedule update on startup
-        if Defaults.shouldDoUpdateCheck() {
-            os_log("Running update check from startup")
-            DispatchQueue.main.async {
+        #if !SETAPP_ENABLED
+            // schedule update on startup
+            if Defaults.shouldDoUpdateCheck() {
+                os_log("Running update check from startup")
+                DispatchQueue.main.async {
+                    if Defaults.shouldDoUpdateCheck() {
+                        if self.networkHandler.currentStatus == .satisfied {
+                            os_log("Running update check from startup")
+                            DispatchQueue.main.async {
+                                self.checkForRelease()
+                                Defaults.doneUpdateCheck()
+                            }
+                        } else {
+                            os_log("Skipping update check from startup, no connection")
+                        }
+                    }
+                    Defaults.doneUpdateCheck()
+                }
+            }
+        #endif
+        // Update when waking up from sleep
+        NSWorkspace.onWakeup { _ in
+            self.statusBar?.runChecks()
+            #if !SETAPP_ENABLED
                 if Defaults.shouldDoUpdateCheck() {
                     if self.networkHandler.currentStatus == .satisfied {
-                        os_log("Running update check from startup")
+                        os_log("Running update check from wakeup")
                         DispatchQueue.main.async {
                             self.checkForRelease()
                             Defaults.doneUpdateCheck()
                         }
                     } else {
-                        os_log("Skipping update check from startup, no connection")
+                        os_log("Skipping update check from wakeup, no connection")
                     }
                 }
-                Defaults.doneUpdateCheck()
-            }
-        }
-        // Update when waking up from sleep
-        NSWorkspace.onWakeup { _ in
-            self.statusBar?.runChecks()
-            if Defaults.shouldDoUpdateCheck() {
-                if self.networkHandler.currentStatus == .satisfied {
-                    os_log("Running update check from wakeup")
-                    DispatchQueue.main.async {
-                        self.checkForRelease()
-                        Defaults.doneUpdateCheck()
-                    }
-                } else {
-                    os_log("Skipping update check from wakeup, no connection")
-                }
-            }
+            #endif
         }
 
         // Schedule hourly claim updates
@@ -81,21 +84,22 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
             }
             completion(.finished)
         }
-
-        NSBackgroundActivityScheduler.repeating(withName: "UpdateRunner", withInterval: 60 * 60) { (completion: NSBackgroundActivityScheduler.CompletionHandler) in
-            if Defaults.shouldDoUpdateCheck() {
-                if self.networkHandler.currentStatus == .satisfied {
-                    os_log("Running update check")
-                    DispatchQueue.main.async {
-                        self.checkForRelease()
-                        Defaults.doneUpdateCheck()
+        #if !SETAPP_ENABLED
+            NSBackgroundActivityScheduler.repeating(withName: "UpdateRunner", withInterval: 60 * 60) { (completion: NSBackgroundActivityScheduler.CompletionHandler) in
+                if Defaults.shouldDoUpdateCheck() {
+                    if self.networkHandler.currentStatus == .satisfied {
+                        os_log("Running update check")
+                        DispatchQueue.main.async {
+                            self.checkForRelease()
+                            Defaults.doneUpdateCheck()
+                        }
+                    } else {
+                        os_log("Skipping update check, no connection")
                     }
-                } else {
-                    os_log("Skipping update check, no connection")
                 }
+                completion(.finished)
             }
-            completion(.finished)
-        }
+        #endif
 
         NSBackgroundActivityScheduler.repeating(withName: "FlagsRunner", withInterval: 60 * 5) { (completion: NSBackgroundActivityScheduler.CompletionHandler) in
             DispatchQueue.main.async {
@@ -219,34 +223,36 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
 
     func processAction(_ url: URL) {
         switch url.host {
-        case "enrollSingle":
-            let jwt = url.queryParams()["token"] ?? ""
-            do {
-                let license = try VerifyLicense(withLicense: jwt)
-                enrolledHandler = true
-                Defaults[.license] = jwt
-                Defaults[.userEmail] = license.subject
-                Defaults[.userID] = license.uuid
-                AppInfo.Licensed = true
-                Defaults[.reportingRole] = .personal
+        #if !SETAPP_ENABLED
+            case "enrollSingle":
+                let jwt = url.queryParams()["token"] ?? ""
+                do {
+                    let license = try VerifyLicense(withLicense: jwt)
+                    enrolledHandler = true
+                    Defaults[.license] = jwt
+                    Defaults[.userEmail] = license.subject
+                    Defaults[.userID] = license.uuid
+                    AppInfo.Licensed = true
+                    Defaults[.reportingRole] = .personal
 
-                let alert = NSAlert()
-                alert.messageText = "Pareto Security is now licensed."
-                alert.alertStyle = NSAlert.Style.informational
-                alert.addButton(withTitle: "OK")
-                #if !DEBUG
-                    alert.runModal()
-                #endif
-            } catch {
-                Defaults.toFree()
-                let alert = NSAlert()
-                alert.messageText = "License is not valid. Please email support@paretosecurity.com."
-                alert.alertStyle = NSAlert.Style.informational
-                alert.addButton(withTitle: "OK")
-                #if !DEBUG
-                    alert.runModal()
-                #endif
-            }
+                    let alert = NSAlert()
+                    alert.messageText = "Pareto Security is now licensed."
+                    alert.alertStyle = NSAlert.Style.informational
+                    alert.addButton(withTitle: "OK")
+                    #if !DEBUG
+                        alert.runModal()
+                    #endif
+                } catch {
+                    Defaults.toFree()
+                    let alert = NSAlert()
+                    alert.messageText = "License is not valid. Please email support@paretosecurity.com."
+                    alert.alertStyle = NSAlert.Style.informational
+                    alert.addButton(withTitle: "OK")
+                    #if !DEBUG
+                        alert.runModal()
+                    #endif
+                }
+        #endif
         case "enrollTeam":
             let jwt = url.queryParams()["token"] ?? ""
             do {
@@ -316,8 +322,10 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
             NSApp.activate(ignoringOtherApps: true)
         case "showBeta":
             Defaults[.showBeta] = true
-        case "update":
-            checkForRelease()
+        #if !SETAPP_ENABLED
+            case "update":
+                checkForRelease()
+        #endif
         default:
             os_log("Unknown command \(url)")
         }

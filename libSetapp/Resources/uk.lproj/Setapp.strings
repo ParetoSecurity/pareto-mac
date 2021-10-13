@@ -1,0 +1,29 @@
+/* Release notes window title format */
+"Welcome to %@ %@" = "Вітаємо у %@ %@";
+
+/* Email sharing dialog title format */
+"Let’s stay in touch!" = "Залишаймося на зв'язку!";
+
+/* Email sharing dialog description format */
+"%@ invites you to receive its newsletters and offers." = "%@ запрошує вас до своєї розсилки новин.";
+
+/* Email sharing dialog additional info format */
+"Setapp will share your %@ email with the developers of %@." = "Setapp поділиться вашою електронною адресою %@ з розробниками %@.";
+
+/* Email sharing dialog allow button title */
+"Sure, I’m In" = "Я з вами";
+
+/* Email sharing dialog forbid button title */
+"No, Thanks" = "Ні, дякую";
+
+/* Alert message text */
+"This copy of %@ requires an active Setapp account installed on your Mac." = "Ця копія %@ потребує активної підписки Setapp на вашому Mac.";
+
+/* Alert informative text */
+"Download and install Setapp to use %@ and discover even more awesome applications." = "Завантажте та встановіть Setapp, щоб користуватись %@ та іншими чудовими програмами.";
+
+/* Button caption */
+"Learn More…" = "Дізнатись більше…";
+
+/* Button caption */
+"Quit" = "Завершити";
