@@ -33,11 +33,13 @@ struct SettingsView: View {
                     Label("Checks", systemImage: "checkmark.seal")
                 }
                 .tag(Tabs.checks)
-            LicenseSettingsView()
-                .tabItem {
-                    Label("License", systemImage: "rectangle.badge.person.crop")
-                }
-                .tag(Tabs.license)
+            #if !SETAPP_ENABLED
+                LicenseSettingsView()
+                    .tabItem {
+                        Label("License", systemImage: "rectangle.badge.person.crop")
+                    }
+                    .tag(Tabs.license)
+            #endif
             AboutSettingsView()
                 .tabItem {
                     Label("About", systemImage: "info")

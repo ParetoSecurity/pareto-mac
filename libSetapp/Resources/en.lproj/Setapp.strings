@@ -1,0 +1,29 @@
+/* Release notes window title format */
+"Welcome to %@ %@" = "Welcome to %@ %@";
+
+/* Email sharing dialog title format */
+"Let’s stay in touch!" = "Let’s stay in touch!";
+
+/* Email sharing dialog description format */
+"%@ invites you to receive its newsletters and offers." = "%@ invites you to receive its newsletters and offers.";
+
+/* Email sharing dialog additional info format */
+"Setapp will share your %@ email with the developers of %@." = "Setapp will share your %@ email with the developers of %@.";
+
+/* Email sharing dialog allow button title */
+"Sure, I’m In" = "Sure, I’m In";
+
+/* Email sharing dialog forbid button title */
+"No, Thanks" = "No, Thanks";
+
+/* Alert message text */
+"This copy of %@ requires an active Setapp account installed on your Mac." = "This copy of %@ requires an active Setapp account installed on your Mac.";
+
+/* Alert informative text */
+"Download and install Setapp to use %@ and discover even more awesome applications." = "Download and install Setapp to use %@ and discover even more awesome applications.";
+
+/* Button caption */
+"Learn More…" = "Learn More…";
+
+/* Button caption */
+"Quit" = "Quit";

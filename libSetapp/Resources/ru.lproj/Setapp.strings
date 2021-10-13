@@ -1,0 +1,30 @@
+/* Email sharing dialog description format */
+"%@ invites you to receive its newsletters and offers." = "%@ приглашает вас подписаться на новости и предложения.";
+
+/* Alert informative text */
+"Download and install Setapp to use %@ and discover even more awesome applications." = "Загрузите и установите Setapp чтобы пользоваться «%@» и открыть для себя еще больше программ.";
+
+/* Button caption */
+"Learn More…" = "Подробнее…";
+
+/* Email sharing dialog title format */
+"Let’s stay in touch!" = "Давайте будем на связи!";
+
+/* Email sharing dialog forbid button title */
+"No, Thanks" = "Нет, спасибо";
+
+/* Button caption */
+"Quit" = "Завершить";
+
+/* Email sharing dialog additional info format */
+"Setapp will share your %@ email with the developers of %@." = "Setapp поделится вашим адресом email %@ с разработчиками %@.";
+
+/* Email sharing dialog allow button title */
+"Sure, I’m In" = "Да, хочу!";
+
+/* Alert message text */
+"This copy of %@ requires an active Setapp account installed on your Mac." = "Этой копии «%@» для работы необходима активная учетная запись Setapp.";
+
+/* Release notes window title format */
+"Welcome to %@ %@" = "Приветствуем в %@ %@";
+

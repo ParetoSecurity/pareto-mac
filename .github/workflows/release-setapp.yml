@@ -1,0 +1,75 @@
+name: Release SetApp
+
+on:
+  push:
+    tags:
+      - "*"
+
+jobs:
+  release-setapp:
+    name: Release and Archive
+    runs-on: macos-11
+    timeout-minutes: 30
+    permissions:
+      issues: write
+      contents: write
+      deployments: write
+    steps:
+      - uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: "13.0"
+      - name: "Import Certificate: Development"
+        uses: devbotsxyz/xcode-import-certificate@master
+        with:
+          certificate-data: ${{ secrets.DEVELOPMENT_CERTIFICATE_DATA }}
+          certificate-passphrase: ${{ secrets.DEVELOPMENT_CERTIFICATE_PASSPHRASE }}
+          keychain-password: ${{ secrets.KEYCHAIN_PASSWORD }}
+      - name: "Import Certificate: Release"
+        uses: devbotsxyz/xcode-import-certificate@master
+        with:
+          certificate-data: ${{ secrets.RELEASE_CERTIFICATE_DATA }}
+          certificate-passphrase: ${{ secrets.RELEASE_CERTIFICATE_PASSPHRASE }}
+          keychain-password: ${{ secrets.KEYCHAIN_PASSWORD }}
+      - name: "Import Certificate: Developer ID Application"
+        uses: devbotsxyz/xcode-import-certificate@master
+        with:
+          certificate-data: ${{ secrets.APPLICATION_CERTIFICATE_DATA }}
+          certificate-passphrase: ${{ secrets.APPLICATION_CERTIFICATE_PASSPHRASE }}
+          keychain-password: ${{ secrets.KEYCHAIN_PASSWORD }}
+      - name: Repository checkout
+        uses: actions/checkout@v2
+      - name: Expose release info to actions
+        id: release
+        run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
+      - name: Cache SPM modules
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-spm
+        with:
+          path: SourcePackages
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('Pareto Security.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+
+      - name: Patch version from release
+        run: |
+          sed -E -i '' 's/MARKETING_VERSION = .*;/MARKETING_VERSION = ${{ steps.release.outputs.tag }};/g' Pareto\ Security.xcodeproj/project.pbxproj
+      - name: "Archive for dist"
+        run: make archive-release-setapp | xcpretty -tc && exit ${PIPESTATUS[0]}
+
+      - name: Compress app for storage
+        run: ditto -V -c -k --keepParent SetAppExport/Pareto\ Security.app ParetoSecuritySetApp.app.zip
+
+      - name: "Notarize Release Build"
+        run: xcrun notarytool submit ParetoSecuritySetApp.app.zip --password ${{ secrets.NOTARIZATION_PASSWORD }} --apple-id ${{ secrets.NOTARIZATION_USERNAME }} --team-id PM784W7B8X --progress --wait
+
+      - name: "Staple Release Zip"
+        run: for i in {1..3}; do xcrun stapler staple ParetoSecuritySetApp.app.zip && break || sleep 15; done
+
+      - name: Upload App to Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: ParetoSecuritySetApp.app
+          path: ParetoSecuritySetApp.app.zip

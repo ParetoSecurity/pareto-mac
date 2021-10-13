@@ -42,20 +42,24 @@ class AppDelegate: AppHandlers, NSApplicationDelegate {
         }
 
         // Verify license
-        do {
-            switch Defaults[.reportingRole] {
-            case .personal:
-                _ = try VerifyLicense(withLicense: Defaults[.license])
-                AppInfo.Licensed = true
-            case .team:
-                _ = try VerifyTeamTicket(withTicket: Defaults[.license])
-                AppInfo.Licensed = true
-            default:
+        #if !SETAPP_ENABLED
+            do {
+                switch Defaults[.reportingRole] {
+                case .personal:
+                    _ = try VerifyLicense(withLicense: Defaults[.license])
+                    AppInfo.Licensed = true
+                case .team:
+                    _ = try VerifyTeamTicket(withTicket: Defaults[.license])
+                    AppInfo.Licensed = true
+                default:
+                    Defaults.toFree()
+                }
+            } catch {
                 Defaults.toFree()
             }
-        } catch {
-            Defaults.toFree()
-        }
+        #else
+            AppInfo.Licensed = true
+        #endif
 
         statusBar = StatusBarController()
         statusBar?.configureChecks()

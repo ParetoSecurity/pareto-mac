@@ -1,0 +1,29 @@
+/* Release notes window title format */
+"Welcome to %@ %@" = "%@%@へようこそ";
+
+/* Email sharing dialog title format */
+"Let’s stay in touch!" = "最新情報をどうぞ！";
+
+/* Email sharing dialog description format */
+"%@ invites you to receive its newsletters and offers." = "%@からのニュースレターと特別オファーを受け取る。";
+
+/* Email sharing dialog additional info format */
+"Setapp will share your %@ email with the developers of %@." = "Setappはあなたのメールアドレス\"%1$@\"を%2$@の開発者と共有します。";
+
+/* Email sharing dialog allow button title */
+"Sure, I’m In" = "了解する";
+
+/* Email sharing dialog forbid button title */
+"No, Thanks" = "いいえ、結構です";
+
+/* Alert message text */
+"This copy of %@ requires an active Setapp account installed on your Mac." = "%@のバージョンを使用するには、お使いのMacに現在有効なSetappアカウントがインストールされている必要があります。";
+
+/* Alert informative text */
+"Download and install Setapp to use %@ and discover even more awesome applications." = "%@を使用するには、Setappをダウンロードしてインストールしてください。Setappでは他にもすばらしいアプリケーションをご用意しています。";
+
+/* Button caption */
+"Learn More…" = "詳しい情報…";
+
+/* Button caption */
+"Quit" = "終了";

@@ -1,0 +1,29 @@
+/* Release notes window title format */
+"Welcome to %@ %@" = "欢迎使用 %@ %@";
+
+/* Email sharing dialog title format */
+"Let’s stay in touch!" = "保持联系！";
+
+/* Email sharing dialog description format */
+"%@ invites you to receive its newsletters and offers." = "%@ 邀请您接收时事通讯和最新优惠信息。";
+
+/* Email sharing dialog additional info format */
+"Setapp will share your %@ email with the developers of %@." = "Setapp 将您的 %@ 电子邮件与 %@ 的开发者共享。";
+
+/* Email sharing dialog allow button title */
+"Sure, I’m In" = "当然，我在";
+
+/* Email sharing dialog forbid button title */
+"No, Thanks" = "不，谢谢";
+
+/* Alert message text */
+"This copy of %@ requires an active Setapp account installed on your Mac." = "此 %@ 副本需要在您的 Mac 上安装有效的 Setapp 帐户。";
+
+/* Alert informative text */
+"Download and install Setapp to use %@ and discover even more awesome applications." = "下载并安装 Setapp 以使用 %@ 以及探索更多实用的应用程序。";
+
+/* Button caption */
+"Learn More…" = "了解更多…";
+
+/* Button caption */
+"Quit" = "关闭";

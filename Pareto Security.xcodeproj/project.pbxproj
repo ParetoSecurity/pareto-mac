@@ -27,6 +27,60 @@
 		4F343A5F26F7A3D4007D2F7D /* Teams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F343A5E26F7A3D4007D2F7D /* Teams.swift */; };
 		4F35395526E8AD4C008F5DD3 /* RemoteManagment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F35395426E8AD4B008F5DD3 /* RemoteManagment.swift */; };
 		4F35395726E8AE02008F5DD3 /* RemoteLogin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F35395626E8AE02008F5DD3 /* RemoteLogin.swift */; };
+		4F37E70A2718122E00A2B254 /* ButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB0416026F71CC0003657BE /* ButtonStyle.swift */; };
+		4F37E70B2718122E00A2B254 /* ParetoCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F5E887F26A053A9005271FB /* ParetoCheck.swift */; };
+		4F37E70C2718122E00A2B254 /* RemoteLogin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F35395626E8AE02008F5DD3 /* RemoteLogin.swift */; };
+		4F37E70D2718122E00A2B254 /* StatusBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEBA303269CD4E0009B2469 /* StatusBarController.swift */; };
+		4F37E70E2718122E00A2B254 /* PrinterSharingCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F6A0E0D26CE484A003B00A3 /* PrinterSharingCheck.swift */; };
+		4F37E70F2718122E00A2B254 /* FileSharingCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F6A0E0F26CE4868003B00A3 /* FileSharingCheck.swift */; };
+		4F37E7102718122E00A2B254 /* TeamSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F24A08F26EB735F0036F748 /* TeamSettings.swift */; };
+		4F37E7112718122E00A2B254 /* URL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F81C10726EB5D270065F548 /* URL.swift */; };
+		4F37E7122718122E00A2B254 /* NetworkHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F5B20C2270316DB0015642A /* NetworkHandler.swift */; };
+		4F37E7132718122E00A2B254 /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB7C67C26AFF1AB00FB1C41 /* Log.swift */; };
+		4F37E7142718122E00A2B254 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FF13D9626DCCB9900E4084E /* Utils.swift */; };
+		4F37E7152718122E00A2B254 /* Updater.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F14487326D8EA5E00A5BA34 /* Updater.swift */; };
+		4F37E7162718122E00A2B254 /* Firewall.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F868DCE26A591E6005B876E /* Firewall.swift */; };
+		4F37E7172718122E00A2B254 /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F9791C026F5DB4F00E668F4 /* Color.swift */; };
+		4F37E7182718122E00A2B254 /* LicenseSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F24A08D26EB734A0036F748 /* LicenseSettingsView.swift */; };
+		4F37E7192718122E00A2B254 /* RemoteManagment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F35395426E8AD4B008F5DD3 /* RemoteManagment.swift */; };
+		4F37E71A2718122E00A2B254 /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB7C68026AFF25300FB1C41 /* Date.swift */; };
+		4F37E71B2718122E00A2B254 /* Teams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F343A5E26F7A3D4007D2F7D /* Teams.swift */; };
+		4F37E71C2718122E00A2B254 /* ScreensaverPassword.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB405EE26A6FC4800267D5D /* ScreensaverPassword.swift */; };
+		4F37E71D2718122E00A2B254 /* Defaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F47220F26B08A0E0071CE2A /* Defaults.swift */; };
+		4F37E71E2718122E00A2B254 /* Autologin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F868DD026A5C51C005B876E /* Autologin.swift */; };
+		4F37E71F2718122E00A2B254 /* MediaShare.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F1AE88F26F9FFA60084A381 /* MediaShare.swift */; };
+		4F37E7202718122E00A2B254 /* ParetoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEBA2F1269CD48F009B2469 /* ParetoApp.swift */; };
+		4F37E7212718122E00A2B254 /* Flags.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FF22A6426F0CFA500500213 /* Flags.swift */; };
+		4F37E7222718122E00A2B254 /* PasswordFromLock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F84A94826CBE21300A1579D /* PasswordFromLock.swift */; };
+		4F37E7232718122E00A2B254 /* Bundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F14487B26D8EDB000A5BA34 /* Bundle.swift */; };
+		4F37E7242718122E00A2B254 /* WelcomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F8B01B126F4A6CB00EDE14B /* WelcomeView.swift */; };
+		4F37E7252718122E00A2B254 /* OpenWiFi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F5B20C027030BEB0015642A /* OpenWiFi.swift */; };
+		4F37E7262718122E00A2B254 /* IntegrationCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F6A92E726C52210006C2F2D /* IntegrationCheck.swift */; };
+		4F37E7272718122E00A2B254 /* Boot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F0371BB26CD00B700B35E43 /* Boot.swift */; };
+		4F37E7282718122E00A2B254 /* Claim.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F3EF24226CA859500841375 /* Claim.swift */; };
+		4F37E7292718122E00A2B254 /* ChecksSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F24A09326EB73C80036F748 /* ChecksSettingsView.swift */; };
+		4F37E72A2718122E00A2B254 /* AboutSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F24A09126EB73980036F748 /* AboutSettingsView.swift */; };
+		4F37E72B2718122E00A2B254 /* FileVault.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB7C68C26AFFD2600FB1C41 /* FileVault.swift */; };
+		4F37E72C2718122E00A2B254 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F103007269EE135008C1E86 /* SettingsView.swift */; };
+		4F37E72D2718122E00A2B254 /* AirPlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F1AE89126FA026D0084A381 /* AirPlay.swift */; };
+		4F37E72E2718122E00A2B254 /* Screensaver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F868DD226A5C751005B876E /* Screensaver.swift */; };
+		4F37E72F2718122E00A2B254 /* NSBackgroundActivityScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F84531126D638C0007C3B04 /* NSBackgroundActivityScheduler.swift */; };
+		4F37E7302718122E00A2B254 /* Gatekeeper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FD0A24026A024440070BED4 /* Gatekeeper.swift */; };
+		4F37E7312718122E00A2B254 /* GeneralSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F24A09526EB73F30036F748 /* GeneralSettingsView.swift */; };
+		4F37E7322718122E00A2B254 /* AppHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F57135A26F8C5D7004B4359 /* AppHandlers.swift */; };
+		4F37E7332718122E00A2B254 /* NSWorkspace.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F84530F26D634E5007C3B04 /* NSWorkspace.swift */; };
+		4F37E7342718122E00A2B254 /* NSImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB7C68626AFF29A00FB1C41 /* NSImage.swift */; };
+		4F37E7352718122E00A2B254 /* AppInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F6A92E926C54AB7006C2F2D /* AppInfo.swift */; };
+		4F37E7362718122E00A2B254 /* License.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FDAD88E26EB784A00F64E61 /* License.swift */; };
+		4F37E7382718122E00A2B254 /* Version in Frameworks */ = {isa = PBXBuildFile; productRef = 4F37E6FF2718122E00A2B254 /* Version */; };
+		4F37E7392718122E00A2B254 /* Path in Frameworks */ = {isa = PBXBuildFile; productRef = 4F37E7012718122E00A2B254 /* Path */; };
+		4F37E73A2718122E00A2B254 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 4F37E7032718122E00A2B254 /* Alamofire */; };
+		4F37E73B2718122E00A2B254 /* Defaults in Frameworks */ = {isa = PBXBuildFile; productRef = 4F37E6FD2718122E00A2B254 /* Defaults */; };
+		4F37E73C2718122E00A2B254 /* SwiftSocket in Frameworks */ = {isa = PBXBuildFile; productRef = 4F37E7052718122E00A2B254 /* SwiftSocket */; };
+		4F37E73D2718122E00A2B254 /* LaunchAtLogin in Frameworks */ = {isa = PBXBuildFile; productRef = 4F37E6FB2718122E00A2B254 /* LaunchAtLogin */; };
+		4F37E73E2718122E00A2B254 /* JWTDecode in Frameworks */ = {isa = PBXBuildFile; productRef = 4F37E7072718122E00A2B254 /* JWTDecode */; };
+		4F37E7402718122E00A2B254 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4FEBA2F8269CD48F009B2469 /* Preview Assets.xcassets */; };
+		4F37E7412718122E00A2B254 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4FEBA2F5269CD48F009B2469 /* Assets.xcassets */; };
 		4F3EF24326CA859500841375 /* Claim.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F3EF24226CA859500841375 /* Claim.swift */; };
 		4F47221026B08A0E0071CE2A /* Defaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F47220F26B08A0E0071CE2A /* Defaults.swift */; };
 		4F57135326F8A6AC004B4359 /* LicenseTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F57135226F8A6AC004B4359 /* LicenseTest.swift */; };
@@ -107,6 +161,7 @@
 		4F343A5E26F7A3D4007D2F7D /* Teams.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Teams.swift; sourceTree = "<group>"; };
 		4F35395426E8AD4B008F5DD3 /* RemoteManagment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteManagment.swift; sourceTree = "<group>"; };
 		4F35395626E8AE02008F5DD3 /* RemoteLogin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteLogin.swift; sourceTree = "<group>"; };
+		4F37E7472718122E00A2B254 /* Pareto Security SetApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Pareto Security SetApp.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4F3EF24226CA859500841375 /* Claim.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Claim.swift; sourceTree = "<group>"; };
 		4F47220F26B08A0E0071CE2A /* Defaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Defaults.swift; sourceTree = "<group>"; };
 		4F57135226F8A6AC004B4359 /* LicenseTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LicenseTest.swift; sourceTree = "<group>"; };
@@ -157,6 +212,20 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		4F37E7372718122E00A2B254 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4F37E7382718122E00A2B254 /* Version in Frameworks */,
+				4F37E7392718122E00A2B254 /* Path in Frameworks */,
+				4F37E73A2718122E00A2B254 /* Alamofire in Frameworks */,
+				4F37E73B2718122E00A2B254 /* Defaults in Frameworks */,
+				4F37E73C2718122E00A2B254 /* SwiftSocket in Frameworks */,
+				4F37E73D2718122E00A2B254 /* LaunchAtLogin in Frameworks */,
+				4F37E73E2718122E00A2B254 /* JWTDecode in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		4F6A92EC26C555C6006C2F2D /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -325,6 +394,7 @@
 				4FEBA2EE269CD48F009B2469 /* Pareto Security.app */,
 				4FC81A4926C41DC8006EABA8 /* ParetoSecurityTests.xctest */,
 				4F6A92EF26C555C6006C2F2D /* ParetoSecurityUITests.xctest */,
+				4F37E7472718122E00A2B254 /* Pareto Security SetApp.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -365,6 +435,34 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		4F37E6FA2718122E00A2B254 /* Pareto Security SetApp */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4F37E7442718122E00A2B254 /* Build configuration list for PBXNativeTarget "Pareto Security SetApp" */;
+			buildPhases = (
+				4F37E7092718122E00A2B254 /* Sources */,
+				4F37E7372718122E00A2B254 /* Frameworks */,
+				4F37E73F2718122E00A2B254 /* Resources */,
+				4F37E7422718122E00A2B254 /* Bundle run at login */,
+				4F37E7432718122E00A2B254 /* + build number */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Pareto Security SetApp";
+			packageProductDependencies = (
+				4F37E6FB2718122E00A2B254 /* LaunchAtLogin */,
+				4F37E6FD2718122E00A2B254 /* Defaults */,
+				4F37E6FF2718122E00A2B254 /* Version */,
+				4F37E7012718122E00A2B254 /* Path */,
+				4F37E7032718122E00A2B254 /* Alamofire */,
+				4F37E7052718122E00A2B254 /* SwiftSocket */,
+				4F37E7072718122E00A2B254 /* JWTDecode */,
+			);
+			productName = Pareto;
+			productReference = 4F37E7472718122E00A2B254 /* Pareto Security SetApp.app */;
+			productType = "com.apple.product-type.application";
+		};
 		4F6A92EE26C555C6006C2F2D /* ParetoSecurityUITests */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 4F6A92F526C555C6006C2F2D /* Build configuration list for PBXNativeTarget "ParetoSecurityUITests" */;
@@ -480,11 +578,21 @@
 				4FEBA2ED269CD48F009B2469 /* Pareto Security */,
 				4FC81A4826C41DC8006EABA8 /* ParetoSecurityTests */,
 				4F6A92EE26C555C6006C2F2D /* ParetoSecurityUITests */,
+				4F37E6FA2718122E00A2B254 /* Pareto Security SetApp */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		4F37E73F2718122E00A2B254 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4F37E7402718122E00A2B254 /* Preview Assets.xcassets in Resources */,
+				4F37E7412718122E00A2B254 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		4F6A92ED26C555C6006C2F2D /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -547,9 +655,97 @@
 			shellPath = /bin/sh;
 			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nbuildNumber=$(/usr/libexec/PlistBuddy -c \"Print CFBundleVersion\" \"${PROJECT_DIR}/${INFOPLIST_FILE}\")\nbuildNumber=$(($buildNumber + 1))\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $buildNumber\" \"${PROJECT_DIR}/${INFOPLIST_FILE}\"\n";
 		};
+		4F37E7422718122E00A2B254 /* Bundle run at login */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Bundle run at login";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\"${BUILT_PRODUCTS_DIR}/LaunchAtLogin_LaunchAtLogin.bundle/Contents/Resources/copy-helper-swiftpm.sh\"\n";
+		};
+		4F37E7432718122E00A2B254 /* + build number */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "+ build number";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nbuildNumber=$(/usr/libexec/PlistBuddy -c \"Print CFBundleVersion\" \"${PROJECT_DIR}/${INFOPLIST_FILE}\")\nbuildNumber=$(($buildNumber + 1))\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $buildNumber\" \"${PROJECT_DIR}/${INFOPLIST_FILE}\"\n";
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		4F37E7092718122E00A2B254 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4F37E70A2718122E00A2B254 /* ButtonStyle.swift in Sources */,
+				4F37E70B2718122E00A2B254 /* ParetoCheck.swift in Sources */,
+				4F37E70C2718122E00A2B254 /* RemoteLogin.swift in Sources */,
+				4F37E70D2718122E00A2B254 /* StatusBarController.swift in Sources */,
+				4F37E70E2718122E00A2B254 /* PrinterSharingCheck.swift in Sources */,
+				4F37E70F2718122E00A2B254 /* FileSharingCheck.swift in Sources */,
+				4F37E7102718122E00A2B254 /* TeamSettings.swift in Sources */,
+				4F37E7112718122E00A2B254 /* URL.swift in Sources */,
+				4F37E7122718122E00A2B254 /* NetworkHandler.swift in Sources */,
+				4F37E7132718122E00A2B254 /* Log.swift in Sources */,
+				4F37E7142718122E00A2B254 /* Utils.swift in Sources */,
+				4F37E7152718122E00A2B254 /* Updater.swift in Sources */,
+				4F37E7162718122E00A2B254 /* Firewall.swift in Sources */,
+				4F37E7172718122E00A2B254 /* Color.swift in Sources */,
+				4F37E7182718122E00A2B254 /* LicenseSettingsView.swift in Sources */,
+				4F37E7192718122E00A2B254 /* RemoteManagment.swift in Sources */,
+				4F37E71A2718122E00A2B254 /* Date.swift in Sources */,
+				4F37E71B2718122E00A2B254 /* Teams.swift in Sources */,
+				4F37E71C2718122E00A2B254 /* ScreensaverPassword.swift in Sources */,
+				4F37E71D2718122E00A2B254 /* Defaults.swift in Sources */,
+				4F37E71E2718122E00A2B254 /* Autologin.swift in Sources */,
+				4F37E71F2718122E00A2B254 /* MediaShare.swift in Sources */,
+				4F37E7202718122E00A2B254 /* ParetoApp.swift in Sources */,
+				4F37E7212718122E00A2B254 /* Flags.swift in Sources */,
+				4F37E7222718122E00A2B254 /* PasswordFromLock.swift in Sources */,
+				4F37E7232718122E00A2B254 /* Bundle.swift in Sources */,
+				4F37E7242718122E00A2B254 /* WelcomeView.swift in Sources */,
+				4F37E7252718122E00A2B254 /* OpenWiFi.swift in Sources */,
+				4F37E7262718122E00A2B254 /* IntegrationCheck.swift in Sources */,
+				4F37E7272718122E00A2B254 /* Boot.swift in Sources */,
+				4F37E7282718122E00A2B254 /* Claim.swift in Sources */,
+				4F37E7292718122E00A2B254 /* ChecksSettingsView.swift in Sources */,
+				4F37E72A2718122E00A2B254 /* AboutSettingsView.swift in Sources */,
+				4F37E72B2718122E00A2B254 /* FileVault.swift in Sources */,
+				4F37E72C2718122E00A2B254 /* SettingsView.swift in Sources */,
+				4F37E72D2718122E00A2B254 /* AirPlay.swift in Sources */,
+				4F37E72E2718122E00A2B254 /* Screensaver.swift in Sources */,
+				4F37E72F2718122E00A2B254 /* NSBackgroundActivityScheduler.swift in Sources */,
+				4F37E7302718122E00A2B254 /* Gatekeeper.swift in Sources */,
+				4F37E7312718122E00A2B254 /* GeneralSettingsView.swift in Sources */,
+				4F37E7322718122E00A2B254 /* AppHandlers.swift in Sources */,
+				4F37E7332718122E00A2B254 /* NSWorkspace.swift in Sources */,
+				4F37E7342718122E00A2B254 /* NSImage.swift in Sources */,
+				4F37E7352718122E00A2B254 /* AppInfo.swift in Sources */,
+				4F37E7362718122E00A2B254 /* License.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		4F6A92EB26C555C6006C2F2D /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -641,6 +837,97 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		4F37E7452718122E00A2B254 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
+				CLANG_USE_OPTIMIZATION_PROFILE = YES;
+				CODE_SIGN_ENTITLEMENTS = Pareto/Pareto.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_ASSET_PATHS = "\"Pareto/Preview Content\"";
+				DEVELOPMENT_TEAM = PM784W7B8X;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"SETAPP_ENABLED=1",
+					"DEBUG=1",
+				);
+				INFOPLIST_FILE = Pareto/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 11.0;
+				MARKETING_VERSION = 0.0.17;
+				OTHER_LDFLAGS = (
+					"-force_load",
+					"\"$(PROJECT_DIR)/libSetapp/libSetapp.a\"",
+					"-framework",
+					Security,
+					"-framework",
+					IOKit,
+					"-framework",
+					QuartzCore,
+					"-framework",
+					Cocoa,
+					"-fprofile-instr-generate",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "niteo.co.Pareto-setapp";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "SETAPP_ENABLED DEBUG";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		4F37E7462718122E00A2B254 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
+				CLANG_USE_OPTIMIZATION_PROFILE = YES;
+				CODE_SIGN_ENTITLEMENTS = Pareto/Pareto.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_ASSET_PATHS = "\"Pareto/Preview Content\"";
+				DEVELOPMENT_TEAM = PM784W7B8X;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = "SETAPP_ENABLED=1";
+				INFOPLIST_FILE = Pareto/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 11.0;
+				MARKETING_VERSION = 0.0.17;
+				OTHER_LDFLAGS = (
+					"-force_load",
+					"\"$(PROJECT_DIR)/libSetapp/libSetapp.a\"",
+					"-framework",
+					Security,
+					"-framework",
+					IOKit,
+					"-framework",
+					QuartzCore,
+					"-framework",
+					Cocoa,
+					"-fprofile-instr-generate",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "niteo.co.Pareto-setapp";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = SETAPP_ENABLED;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
 		4F6A92F626C555C6006C2F2D /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -877,6 +1164,10 @@
 				DEVELOPMENT_TEAM = PM784W7B8X;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"SETAPP_ENABLED=0",
+					"DEBUG=1",
+				);
 				INFOPLIST_FILE = Pareto/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -906,6 +1197,7 @@
 				DEVELOPMENT_TEAM = PM784W7B8X;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = "SETAPP_ENABLED=0";
 				INFOPLIST_FILE = Pareto/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -923,6 +1215,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		4F37E7442718122E00A2B254 /* Build configuration list for PBXNativeTarget "Pareto Security SetApp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4F37E7452718122E00A2B254 /* Debug */,
+				4F37E7462718122E00A2B254 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		4F6A92F526C555C6006C2F2D /* Build configuration list for PBXNativeTarget "ParetoSecurityUITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -1002,6 +1303,62 @@
 				kind = branch;
 			};
 		};
+		4F37E6FC2718122E00A2B254 /* XCRemoteSwiftPackageReference "LaunchAtLogin" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sindresorhus/LaunchAtLogin";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+		4F37E6FE2718122E00A2B254 /* XCRemoteSwiftPackageReference "Defaults" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sindresorhus/Defaults";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.0;
+			};
+		};
+		4F37E7002718122E00A2B254 /* XCRemoteSwiftPackageReference "Version" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/mxcl/Version.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.0;
+			};
+		};
+		4F37E7022718122E00A2B254 /* XCRemoteSwiftPackageReference "Path.swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/mxcl/Path.swift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
+		4F37E7042718122E00A2B254 /* XCRemoteSwiftPackageReference "Alamofire" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Alamofire/Alamofire";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.0;
+			};
+		};
+		4F37E7062718122E00A2B254 /* XCRemoteSwiftPackageReference "SwiftSocket" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ParetoSecurity/SwiftSocket";
+			requirement = {
+				branch = spm;
+				kind = branch;
+			};
+		};
+		4F37E7082718122E00A2B254 /* XCRemoteSwiftPackageReference "JWTDecode.swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/auth0/JWTDecode.swift.git";
+			requirement = {
+				kind = upToNextMinorVersion;
+				minimumVersion = 2.6.0;
+			};
+		};
 		4F6A0E1126CE608C003B00A3 /* XCRemoteSwiftPackageReference "Defaults" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/sindresorhus/Defaults";
@@ -1053,6 +1410,41 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 4F1AE88926F9FC150084A381 /* XCRemoteSwiftPackageReference "SwiftSocket" */;
 			productName = SwiftSocket;
+		};
+		4F37E6FB2718122E00A2B254 /* LaunchAtLogin */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4F37E6FC2718122E00A2B254 /* XCRemoteSwiftPackageReference "LaunchAtLogin" */;
+			productName = LaunchAtLogin;
+		};
+		4F37E6FD2718122E00A2B254 /* Defaults */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4F37E6FE2718122E00A2B254 /* XCRemoteSwiftPackageReference "Defaults" */;
+			productName = Defaults;
+		};
+		4F37E6FF2718122E00A2B254 /* Version */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4F37E7002718122E00A2B254 /* XCRemoteSwiftPackageReference "Version" */;
+			productName = Version;
+		};
+		4F37E7012718122E00A2B254 /* Path */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4F37E7022718122E00A2B254 /* XCRemoteSwiftPackageReference "Path.swift" */;
+			productName = Path;
+		};
+		4F37E7032718122E00A2B254 /* Alamofire */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4F37E7042718122E00A2B254 /* XCRemoteSwiftPackageReference "Alamofire" */;
+			productName = Alamofire;
+		};
+		4F37E7052718122E00A2B254 /* SwiftSocket */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4F37E7062718122E00A2B254 /* XCRemoteSwiftPackageReference "SwiftSocket" */;
+			productName = SwiftSocket;
+		};
+		4F37E7072718122E00A2B254 /* JWTDecode */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4F37E7082718122E00A2B254 /* XCRemoteSwiftPackageReference "JWTDecode.swift" */;
+			productName = JWTDecode;
 		};
 		4F6A0E1226CE608C003B00A3 /* Defaults */ = {
 			isa = XCSwiftPackageProductDependency;
