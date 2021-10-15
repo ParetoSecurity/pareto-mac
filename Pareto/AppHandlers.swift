@@ -21,6 +21,10 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
     var networkHandler = NetworkHandler.sharedInstance()
     var timer: Timer?
 
+    public indirect enum Error: Swift.Error {
+        case teamLinkinFailed
+    }
+
     func runApp() {
         networkHandler.addObserver(observer: self)
 
@@ -250,25 +254,39 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
                 enrolledHandler = true
                 Defaults[.license] = jwt
                 Defaults[.userID] = ""
+                Defaults[.teamAuth] = ticket.teamAuth
                 Defaults[.teamID] = ticket.teamUUID
                 AppInfo.Licensed = true
                 Defaults[.reportingRole] = .team
-                Defaults[.teamAPI] = url.queryParams()["api"] ?? Team.defaultAPI
-                _ = try Team.link(withDevice: ReportingDevice.current())
 
-                if !Defaults.firstLaunch() {
-                    DispatchQueue.main.async {
-                        self.statusBar?.runChecks()
+                Team.link(withDevice: ReportingDevice.current()).responseJSON { response in
+                    debugPrint(response.result)
+                    switch response.result {
+                    case .success:
+                        let alert = NSAlert()
+                        alert.messageText = "Pareto Security is linked to your team."
+                        alert.alertStyle = NSAlert.Style.informational
+                        alert.addButton(withTitle: "OK")
+                        #if !DEBUG
+                            alert.runModal()
+                        #endif
+                        if !Defaults.firstLaunch() {
+                            DispatchQueue.main.async {
+                                self.statusBar?.runChecks()
+                            }
+                        }
+                    case .failure:
+                        Defaults.toFree()
+                        let alert = NSAlert()
+                        alert.messageText = "Device has been linked already! Please unlink the device from team and try again!"
+                        alert.alertStyle = NSAlert.Style.critical
+                        alert.addButton(withTitle: "OK")
+                        #if !DEBUG
+                            alert.runModal()
+                        #endif
                     }
                 }
 
-                let alert = NSAlert()
-                alert.messageText = "Pareto Security is linked to your team."
-                alert.alertStyle = NSAlert.Style.informational
-                alert.addButton(withTitle: "OK")
-                #if !DEBUG
-                    alert.runModal()
-                #endif
             } catch {
                 Defaults.toFree()
                 let alert = NSAlert()
@@ -305,3 +323,4 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
         }
     }
 }
+
