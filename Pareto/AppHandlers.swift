@@ -250,10 +250,11 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
                 enrolledHandler = true
                 Defaults[.license] = jwt
                 Defaults[.userID] = ""
+                Defaults[.teamAuth] = ticket.teamAuth
                 Defaults[.teamID] = ticket.teamUUID
                 AppInfo.Licensed = true
                 Defaults[.reportingRole] = .team
-                Defaults[.teamAPI] = url.queryParams()["api"] ?? Team.defaultAPI
+
                 _ = try Team.link(withDevice: ReportingDevice.current())
 
                 if !Defaults.firstLaunch() {

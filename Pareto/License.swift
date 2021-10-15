@@ -33,10 +33,6 @@ private extension JWT {
     var role: String? {
         return claim(name: "role").string
     }
-
-    var teamUUID: String? {
-        return claim(name: "teamID").string
-    }
 }
 
 private extension Data {
@@ -143,28 +139,6 @@ func VerifyLicense(withLicense data: String, publicKey: String = rsaPublicKey) t
     if try License.verify(jwt: data, withKey: publicKey) {
         let jwt = try decode(jwt: data)
         return LicensePayload(subject: jwt.subject!, issuedAt: jwt.issuedAt!, uuid: jwt.uuid!, role: jwt.role!)
-    }
-    throw License.Error.invalidLicense
-}
-
-struct TeamTicketPayload: Decodable, Equatable {
-    // The "sub" (subject) claim identifies the principal that is the
-    // subject of the JWT.
-    var subject: String
-
-    // The "exp" (expiration time) claim identifies the expiration time on
-    // or after which the JWT MUST NOT be accepted for processing.
-    var issuedAt: Date
-
-    // Custom data.
-    var teamUUID: String
-    var role: String
-}
-
-func VerifyTeamTicket(withTicket data: String, publicKey key: String = rsaPublicKey) throws -> TeamTicketPayload {
-    if try License.verify(jwt: data, withKey: key) {
-        let jwt = try decode(jwt: data)
-        return TeamTicketPayload(subject: jwt.subject!, issuedAt: jwt.issuedAt!, teamUUID: jwt.teamUUID!, role: jwt.role!)
     }
     throw License.Error.invalidLicense
 }

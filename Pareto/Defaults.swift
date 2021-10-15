@@ -21,7 +21,8 @@ extension Defaults.Keys {
     static let userEmail = Key<String>("userEmail", default: "")
 
     static let teamID = Key<String>("teamID", default: "")
-    static let deviceName = Key<String>("deviceName", default: Host.current().localizedName!)
+    static let teamAuth = Key<String>("teamAuth", default: "")
+    static let machineName = Key<String>("machineName", default: Host.current().localizedName!)
     static let machineUUID = Key<String>("machineUUID", default: AppInfo.getSystemUUID() ?? UUID().uuidString)
 
     // License
