@@ -118,7 +118,15 @@ class StatusBarController: NSObject, NSMenuDelegate {
             if Defaults[.reportingRole] == .team, AppInfo.Flags.teamAPI {
                 if Defaults.shouldDoTeamUpdate() || interactive {
                     let report = Report.now()
-                    _ = try? Team.update(withReport: report)
+                    Team.update(withReport: report).responseJSON { response in
+                        debugPrint(response.result)
+                        switch response.result {
+                        case .success:
+                            os_log("Check status was updated", log: Log.app)
+                        case let .failure(err):
+                            os_log("Check status update failed: %s", log: Log.app, err.localizedDescription)
+                        }
+                    }
                     Defaults.doneTeamUpdate()
                 }
             }
