@@ -25,8 +25,11 @@ class SettingsViewTests: XCTestCase {
     func testAbout() throws {
         let subject = AboutSettingsView()
         let text = try subject.inspect().hStack()[1].vStack()[3]
-            .text().string()
-        XCTAssertEqual(text, "Made with ❤️ at Niteo")
+            .hStack()[0].text().string()
+        let link = try subject.inspect().hStack()[1].vStack()[3]
+            .hStack()[1].link().labelView().text().string()
+        
+        XCTAssertEqual(text + link, "Made with ❤️ at Niteo")
     }
 
     func testGeneral() throws {
