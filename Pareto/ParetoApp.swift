@@ -11,7 +11,9 @@ import Foundation
 import LaunchAtLogin
 import os.log
 import OSLog
+#if !DEBUG
 import Sentry
+#endif
 import SwiftUI
 
 class AppDelegate: AppHandlers, NSApplicationDelegate {

@@ -21,7 +21,7 @@ class TeamsTest: XCTestCase {
         Defaults[.teamAPI] = "http://localhost"
 
         let device = ReportingDevice(machineUUID: "5d486371-7841-4e4d-95c4-78c71cdaa44c", machineName: "Foo Device")
-        _ = try? Team.link(withDevice: device)
+        _ = Team.link(withDevice: device)
     }
 
     func testReport() throws {
@@ -30,6 +30,6 @@ class TeamsTest: XCTestCase {
 
         let report = Report.now()
 
-        _ = try? Team.update(withReport: report)
+        _ = Team.update(withReport: report)
     }
 }
