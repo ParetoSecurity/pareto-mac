@@ -98,6 +98,8 @@
 		4F6A92E826C52210006C2F2D /* IntegrationCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F6A92E726C52210006C2F2D /* IntegrationCheck.swift */; };
 		4F6A92EA26C54AB7006C2F2D /* AppInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F6A92E926C54AB7006C2F2D /* AppInfo.swift */; };
 		4F6A92F226C555C6006C2F2D /* ParetoSecurityUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F6A92F126C555C6006C2F2D /* ParetoSecurityUITests.swift */; };
+		4F7739F4271EB3AD008B1584 /* Sentry in Frameworks */ = {isa = PBXBuildFile; productRef = 4F7739F3271EB3AD008B1584 /* Sentry */; };
+		4F7739F7271EBC2F008B1584 /* Sentry in Frameworks */ = {isa = PBXBuildFile; productRef = 4F7739F6271EBC2F008B1584 /* Sentry */; };
 		4F81C10826EB5D270065F548 /* URL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F81C10726EB5D270065F548 /* URL.swift */; };
 		4F84531026D634E5007C3B04 /* NSWorkspace.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F84530F26D634E5007C3B04 /* NSWorkspace.swift */; };
 		4F84531226D638C0007C3B04 /* NSBackgroundActivityScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F84531126D638C0007C3B04 /* NSBackgroundActivityScheduler.swift */; };
@@ -219,6 +221,7 @@
 				4F37E7382718122E00A2B254 /* Version in Frameworks */,
 				4F37E7392718122E00A2B254 /* Path in Frameworks */,
 				4F37E73A2718122E00A2B254 /* Alamofire in Frameworks */,
+				4F7739F7271EBC2F008B1584 /* Sentry in Frameworks */,
 				4F37E73B2718122E00A2B254 /* Defaults in Frameworks */,
 				4F37E73C2718122E00A2B254 /* SwiftSocket in Frameworks */,
 				4F37E73D2718122E00A2B254 /* LaunchAtLogin in Frameworks */,
@@ -248,6 +251,7 @@
 				4F14487726D8EB2E00A5BA34 /* Version in Frameworks */,
 				4F14487A26D8EB7A00A5BA34 /* Path in Frameworks */,
 				4FF515C126F7B362008D135E /* Alamofire in Frameworks */,
+				4F7739F4271EB3AD008B1584 /* Sentry in Frameworks */,
 				4F6A0E1326CE608C003B00A3 /* Defaults in Frameworks */,
 				4F1AE88B26F9FC150084A381 /* SwiftSocket in Frameworks */,
 				4F103012269F1C65008C1E86 /* LaunchAtLogin in Frameworks */,
@@ -261,8 +265,8 @@
 		4F103006269EDB82008C1E86 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				4F103007269EE135008C1E86 /* SettingsView.swift */,
 				4F24A08D26EB734A0036F748 /* LicenseSettingsView.swift */,
+				4F103007269EE135008C1E86 /* SettingsView.swift */,
 				4F24A08F26EB735F0036F748 /* TeamSettings.swift */,
 				4F24A09126EB73980036F748 /* AboutSettingsView.swift */,
 				4F24A09326EB73C80036F748 /* ChecksSettingsView.swift */,
@@ -458,6 +462,7 @@
 				4F37E7032718122E00A2B254 /* Alamofire */,
 				4F37E7052718122E00A2B254 /* SwiftSocket */,
 				4F37E7072718122E00A2B254 /* JWTDecode */,
+				4F7739F6271EBC2F008B1584 /* Sentry */,
 			);
 			productName = Pareto;
 			productReference = 4F37E7472718122E00A2B254 /* Pareto Security SetApp.app */;
@@ -525,6 +530,7 @@
 				4FF515C026F7B362008D135E /* Alamofire */,
 				4F1AE88A26F9FC150084A381 /* SwiftSocket */,
 				4F196CD52714B51900A2A7B8 /* JWTDecode */,
+				4F7739F3271EB3AD008B1584 /* Sentry */,
 			);
 			productName = Pareto;
 			productReference = 4FEBA2EE269CD48F009B2469 /* Pareto Security.app */;
@@ -570,6 +576,7 @@
 				4FF515BF26F7B362008D135E /* XCRemoteSwiftPackageReference "Alamofire" */,
 				4F1AE88926F9FC150084A381 /* XCRemoteSwiftPackageReference "SwiftSocket" */,
 				4F196CD42714B51900A2A7B8 /* XCRemoteSwiftPackageReference "JWTDecode.swift" */,
+				4F7739F2271EB3AD008B1584 /* XCRemoteSwiftPackageReference "sentry-cocoa" */,
 			);
 			productRefGroup = 4FEBA2EF269CD48F009B2469 /* Products */;
 			projectDirPath = "";
@@ -1367,6 +1374,14 @@
 				minimumVersion = 5.0.0;
 			};
 		};
+		4F7739F2271EB3AD008B1584 /* XCRemoteSwiftPackageReference "sentry-cocoa" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/getsentry/sentry-cocoa";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 7.0.0;
+			};
+		};
 		4F84A94A26CBE4AE00A1579D /* XCRemoteSwiftPackageReference "ViewInspector" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/nalexn/ViewInspector";
@@ -1450,6 +1465,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 4F6A0E1126CE608C003B00A3 /* XCRemoteSwiftPackageReference "Defaults" */;
 			productName = Defaults;
+		};
+		4F7739F3271EB3AD008B1584 /* Sentry */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4F7739F2271EB3AD008B1584 /* XCRemoteSwiftPackageReference "sentry-cocoa" */;
+			productName = Sentry;
+		};
+		4F7739F6271EBC2F008B1584 /* Sentry */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4F7739F2271EB3AD008B1584 /* XCRemoteSwiftPackageReference "sentry-cocoa" */;
+			productName = Sentry;
 		};
 		4F84A94B26CBE4AE00A1579D /* ViewInspector */ = {
 			isa = XCSwiftPackageProductDependency;

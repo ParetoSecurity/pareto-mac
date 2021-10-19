@@ -5,11 +5,13 @@
 //  Created by Janez Troha on 12/07/2021.
 //
 
+import Cocoa
 import Defaults
 import Foundation
 import LaunchAtLogin
 import os.log
 import OSLog
+import Sentry
 import SwiftUI
 
 class AppDelegate: AppHandlers, NSApplicationDelegate {
@@ -34,12 +36,17 @@ class AppDelegate: AppHandlers, NSApplicationDelegate {
 
     func applicationDidFinishLaunching(_: Notification) {
         // Terminate any older versions of process if not running tests
-        if !AppInfo.isRunningTests {
-            let procs = NSRunningApplication.runningApplications(withBundleIdentifier: Bundle.main.bundleIdentifier!)
-            if procs.count > 1 {
-                procs.first?.forceTerminate()
+        #if !DEBUG
+            if !AppInfo.isRunningTests {
+                SentrySDK.start { options in
+                    options.dsn = "https://9caf590fe06b4f5b940adfb59623d457@o32789.ingest.sentry.io/6013471"
+                }
+                let procs = NSRunningApplication.runningApplications(withBundleIdentifier: Bundle.main.bundleIdentifier!)
+                if procs.count > 1 {
+                    procs.first?.forceTerminate()
+                }
             }
-        }
+        #endif
 
         // Verify license
         #if !SETAPP_ENABLED

@@ -46,3 +46,6 @@ clean:
 	rm -rf libSetapp
 	rm -rf Export
 	rm -rf SetAppExport
+
+sentry-debug-upload:
+	sentry-cli --auth-token ${SENTRY_AUTH_TOKEN} upload-dif app.xcarchive --org niteoweb --project pareto-mac

@@ -47,6 +47,15 @@
         }
       },
       {
+        "package": "Sentry",
+        "repositoryURL": "https://github.com/getsentry/sentry-cocoa",
+        "state": {
+          "branch": null,
+          "revision": "d6e3fd7c6180507e2dea8c470edd7fffe975a0cd",
+          "version": "7.4.6"
+        }
+      },
+      {
         "package": "SwiftSocket",
         "repositoryURL": "https://github.com/ParetoSecurity/SwiftSocket",
         "state": {

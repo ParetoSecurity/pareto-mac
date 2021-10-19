@@ -26,7 +26,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>2699</string>
+	<string>2706</string>
 	<key>LSApplicationCategoryType</key>
 	<string>public.app-category.utilities</string>
 	<key>LSMinimumSystemVersion</key>
@@ -37,6 +37,10 @@
 	<true/>
 	<key>NSAppleEventsUsageDescription</key>
 	<string>Pareto needs access to your System Events to run some checks</string>
+	<key>NSSupportsAutomaticTermination</key>
+	<true/>
+	<key>NSSupportsSuddenTermination</key>
+	<true/>
 	<key>WKRunsIndependentlyOfCompanionApp</key>
 	<false/>
 </dict>
