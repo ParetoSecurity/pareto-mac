@@ -38,11 +38,13 @@ private extension Digest {
 struct ReportingDevice: Encodable {
     let machineUUID: String
     let machineName: String
+    let auth: String
 
     static func current() -> ReportingDevice {
         return ReportingDevice(
             machineUUID: Defaults[.machineUUID],
-            machineName: Defaults[.machineName]
+            machineName: Defaults[.machineName],
+            auth: Defaults[.teamAuth]
         )
     }
 }
