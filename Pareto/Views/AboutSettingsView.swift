@@ -83,7 +83,6 @@ struct AboutSettingsView: View {
                     Link("Niteo",
                          destination: URL(string: "https://paretosecurity.com/about")!)
                 }
-
             }
 
         }.frame(width: 350, height: 100).padding(5).onAppear(perform: fetch)
