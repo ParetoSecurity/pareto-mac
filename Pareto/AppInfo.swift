@@ -37,6 +37,7 @@ enum AppInfo {
 
     static let appVersion: String = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as! String
     static let buildVersion: String = Bundle.main.infoDictionary?["CFBundleVersion"] as! String
+    static let machineName: String = Host.current().localizedName!
     static let version = ProcessInfo.processInfo.operatingSystemVersion
     static let versionString = "\(version.majorVersion).\(version.minorVersion).\(version.patchVersion)"
     static let isRunningTests = ProcessInfo.processInfo.arguments.contains("isRunningTests")

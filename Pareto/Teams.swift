@@ -43,7 +43,7 @@ struct ReportingDevice: Encodable {
     static func current() -> ReportingDevice {
         return ReportingDevice(
             machineUUID: Defaults[.machineUUID],
-            machineName: Defaults[.machineName],
+            machineName: AppInfo.machineName,
             auth: Defaults[.teamAuth]
         )
     }

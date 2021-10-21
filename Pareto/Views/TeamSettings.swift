@@ -11,7 +11,6 @@ import SwiftUI
 struct TeamSettingsView: View {
     @Default(.teamID) var teamID
     @Default(.machineUUID) var machineUUID
-    @Default(.machineName) var machineName
 
     func copy() {
         NSPasteboard.general.clearContents()
@@ -28,7 +27,7 @@ struct TeamSettingsView: View {
                 Section(
                     footer: Text("Device Name")) {
                         VStack(alignment: .leading) {
-                            Text("\(machineName)").contextMenu(ContextMenu(menuItems: {
+                            Text("\(AppInfo.machineName)").contextMenu(ContextMenu(menuItems: {
                                 Button("How to change", action: help)
                             }))
                         }
