@@ -24,10 +24,22 @@ archive-release:
 
 
 archive-release-setapp: libSetapp
+	rm -rf SetAppExport
 	xcodebuild -project "Pareto Security.xcodeproj" -clonedSourcePackagesDirPath SourcePackages -scheme "Pareto Security SetApp" -destination platform=macOS archive -archivePath setapp.xcarchive -configuration Release -allowProvisioningUpdates
 	xcodebuild -exportArchive -archivePath setapp.xcarchive -exportPath SetAppExport -exportOptionsPlist exportOptions.plist
 	mv SetAppExport/Pareto\ Security\ SetApp.app SetAppExport/Pareto\ Security.app
-	
+
+build-release-setapp:
+	# rm -f ParetoSecuritySetApp.app.zip
+	# rm -rf SetAppExport/Release
+	# mkdir -p SetAppExport/Release
+	# cp assets/Mac_512pt@2x.png SetAppExport/Release/AppIcon.png
+	# cp -vr SetAppExport/Pareto\ Security.app SetAppExport/Release/Pareto\ Security.app
+	# cd SetAppExport; ditto -c -k --sequesterRsrc --keepParent Release ../ParetoSecuritySetApp.app.zip
+	cp -f assets/Mac_512pt@2x.png AppIcon.png
+	zip -u ParetoSecuritySetApp.app.zip AppIcon.png
+	rm -f AppIcon.png
+
 dmg:
 	create-dmg --overwrite Export/Pareto\ Security.app Export && mv Export/*.dmg ParetoSecurity.dmg
 
@@ -43,7 +55,6 @@ notarize:
 
 clean:
 	rm -rf SourcePackages
-	rm -rf libSetapp
 	rm -rf Export
 	rm -rf SetAppExport
 

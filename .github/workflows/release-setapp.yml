@@ -68,6 +68,9 @@ jobs:
       - name: "Staple Release Zip"
         run: for i in {1..3}; do xcrun stapler staple ParetoSecuritySetApp.app.zip && break || sleep 15; done
 
+      - name: "Attach AppIcon for SetApp"
+        run: make build-release-setapp
+
       - name: Upload App to Artifacts
         uses: actions/upload-artifact@v2
         with:
