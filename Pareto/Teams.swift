@@ -133,18 +133,28 @@ struct TeamTicketPayload: Decodable, Equatable {
     var teamUUID: String
     var teamAuth: String
     var role: String
+
+    func isValid() -> Bool {
+        return teamAuth != "" && teamUUID != "" && subject != "" && role == "team"
+    }
 }
 
 func VerifyTeamTicket(withTicket data: String, publicKey key: String = rsaPublicKey) throws -> TeamTicketPayload {
     if try License.verify(jwt: data, withKey: key) {
         let jwt = try decode(jwt: data)
-        return TeamTicketPayload(
-            subject: jwt.subject!,
-            issuedAt: jwt.issuedAt!,
-            teamUUID: jwt.teamUUID!,
-            teamAuth: jwt.teamAuth!,
-            role: jwt.role!
+
+        let ticket = TeamTicketPayload(
+            subject: jwt.subject ?? "",
+            issuedAt: jwt.issuedAt ?? Date(),
+            teamUUID: jwt.teamUUID ?? "",
+            teamAuth: jwt.teamAuth ?? "",
+            role: jwt.role ?? ""
         )
+
+        if !ticket.isValid() {
+            throw License.Error.invalidLicense
+        }
+        return ticket
     }
     throw License.Error.invalidLicense
 }

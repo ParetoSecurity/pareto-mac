@@ -12,7 +12,9 @@ import Network
 import os.log
 import OSLog
 import SwiftUI
-
+#if !DEBUG
+    import Sentry
+#endif
 class AppHandlers: NSObject, NetworkHandlerObserver {
     var statusBar: StatusBarController?
     var updater: AppUpdater?
@@ -222,6 +224,13 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
     }
 
     func processAction(_ url: URL) {
+        #if !DEBUG
+            let crumb = Breadcrumb()
+            crumb.level = SentryLevel.info
+            crumb.category = "processAction"
+            crumb.message = url.debugDescription
+            SentrySDK.addBreadcrumb(crumb: crumb)
+        #endif
         switch url.host {
         #if !SETAPP_ENABLED
             case "enrollSingle":
