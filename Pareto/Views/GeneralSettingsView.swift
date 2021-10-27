@@ -21,7 +21,7 @@ struct GeneralSettingsView: View {
                     VStack(alignment: .leading) {
                         Toggle("Start at Login", isOn: $atLogin.isEnabled)
                     }
-            }
+                }
 
             if showBeta {
                 Section(
@@ -29,7 +29,7 @@ struct GeneralSettingsView: View {
                         VStack(alignment: .leading) {
                             Toggle("Update app to pre-release builds", isOn: $betaChannel)
                         }
-                }
+                    }
                 #if DEBUG
                     HStack {
                         Button("Reset Settings") {

@@ -31,7 +31,7 @@ struct TeamSettingsView: View {
                                 Button("How to change", action: help)
                             }))
                         }
-                }
+                    }
                 Spacer(minLength: 10)
                 Section(
                     footer: Text("Device ID")) {
@@ -40,7 +40,7 @@ struct TeamSettingsView: View {
                                 Button("Copy", action: copy)
                             }))
                         }
-                }
+                    }
                 Spacer(minLength: 10)
                 Button("Unlink this device from the Teams account") {
                     Defaults.toFree()

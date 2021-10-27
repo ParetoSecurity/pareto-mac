@@ -23,7 +23,7 @@ jobs:
         repo-token-user-login: 'github-actions[bot]'
     - uses: maxim-lobanov/setup-xcode@v1
       with:
-        xcode-version: '13.0'
+        xcode-version: '13.1'
     - name: "Import Certificate: Development"
       uses: devbotsxyz/xcode-import-certificate@master
       with:
