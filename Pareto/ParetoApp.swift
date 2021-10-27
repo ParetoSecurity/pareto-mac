@@ -17,18 +17,20 @@ import OSLog
 import SwiftUI
 
 class AppDelegate: AppHandlers, NSApplicationDelegate {
-    #if !DEBUG
-        func applicationWillFinishLaunching(_: Notification) {
-            if !Bundle.main.path.string.hasPrefix("/Applications/") {
-                let alert = NSAlert()
-                alert.messageText = "Please install application by moving it into the Applications folder."
-                alert.alertStyle = NSAlert.Style.critical
-                alert.addButton(withTitle: "Close")
-                alert.runModal()
-                NSApplication.shared.terminate(self)
-            }
-        }
-    #endif
+    func applicationWillFinishLaunching(_: Notification) {
+        #if !DEBUG
+            #if !SETAPP_ENABLED
+                if !Bundle.main.path.string.hasPrefix("/Applications/") {
+                    let alert = NSAlert()
+                    alert.messageText = "Please install application by moving it into the Applications folder."
+                    alert.alertStyle = NSAlert.Style.critical
+                    alert.addButton(withTitle: "Close")
+                    alert.runModal()
+                    NSApplication.shared.terminate(self)
+                }
+            #endif
+        #endif
+    }
 
     func application(_: NSApplication, open urls: [URL]) {
         for url in urls {

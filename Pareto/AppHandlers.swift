@@ -12,9 +12,11 @@ import Network
 import os.log
 import OSLog
 import SwiftUI
+
 #if !DEBUG
     import Sentry
 #endif
+
 class AppHandlers: NSObject, NetworkHandlerObserver {
     var statusBar: StatusBarController?
     var updater: AppUpdater?

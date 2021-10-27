@@ -5,6 +5,10 @@ disabled_rules: # rule identifiers turned on by default to exclude from running
   - force_cast
   - nesting
   - force_try
+  - function_body_length
+  - type_body_length
+  - switch_case_alignment
+  - cyclomatic_complexity
 
 excluded:
   - SourcePackages
