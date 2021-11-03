@@ -59,14 +59,17 @@ jobs:
       - name: "Archive for dist"
         run: make archive-release-setapp | xcpretty -tc && exit ${PIPESTATUS[0]}
 
-      - name: Compress app for storage
-        run: ditto -V -c -k --keepParent SetAppExport/Pareto\ Security.app ParetoSecuritySetApp.app.zip
+      - name: Compress app for notarization
+        run: ditto -V -c -k --keepParent SetAppExport/Pareto\ Security.app ParetoSecurity.app.zip
 
       - name: "Notarize Release Build"
-        run: xcrun notarytool submit ParetoSecuritySetApp.app.zip --password ${{ secrets.NOTARIZATION_PASSWORD }} --apple-id ${{ secrets.NOTARIZATION_USERNAME }} --team-id PM784W7B8X --progress --wait
+        run: xcrun notarytool submit ParetoSecurity.app.zip --password ${{ secrets.NOTARIZATION_PASSWORD }} --apple-id ${{ secrets.NOTARIZATION_USERNAME }} --team-id PM784W7B8X --progress --wait
 
-      - name: "Staple Release Zip"
-        run: for i in {1..3}; do xcrun stapler staple ParetoSecuritySetApp.app.zip && break || sleep 15; done
+      - name: "Staple Release App"
+        run: for i in {1..3}; do xcrun stapler staple SetAppExport/Pareto\ Security.app && break || sleep 15; done
+
+      - name: Compress app for storage
+        run: ditto -V -c -k --keepParent SetAppExport/Pareto\ Security.app ParetoSecuritySetApp.app.zip
 
       - name: "Attach AppIcon for SetApp"
         run: make build-release-setapp

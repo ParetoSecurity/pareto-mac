@@ -16,11 +16,11 @@ class OpenWiFiCheck: ParetoCheck {
     }
 
     override var TitleON: String {
-        "WiFi connection is secured"
+        "WiFi connection is secure"
     }
 
     override var TitleOFF: String {
-        "WiFi connection is not secured"
+        "WiFi connection is not secure"
     }
 
     var isWiFiActive: Bool {

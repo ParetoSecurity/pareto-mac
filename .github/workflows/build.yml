@@ -2,9 +2,9 @@ name: Build
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   build:
@@ -12,56 +12,63 @@ jobs:
     runs-on: macos-11
     timeout-minutes: 5
     permissions:
-      issues: write 
+      issues: write
       pull-requests: write
     steps:
-    - uses: mshick/add-pr-comment@v1
-      with:
-        message: |
-          You can find the built app under the Artifacts at https://github.com/ParetoSecurity/pareto-mac/actions/runs/${{ github.run_id }}
-        repo-token: ${{ secrets.GITHUB_TOKEN }}
-        repo-token-user-login: 'github-actions[bot]'
-    - uses: maxim-lobanov/setup-xcode@v1
-      with:
-        xcode-version: '13.1'
-    - name: "Import Certificate: Development"
-      uses: devbotsxyz/xcode-import-certificate@master
-      with:
-        certificate-data: ${{ secrets.DEVELOPMENT_CERTIFICATE_DATA }}
-        certificate-passphrase: ${{ secrets.DEVELOPMENT_CERTIFICATE_PASSPHRASE }}
-        keychain-password: ${{ secrets.KEYCHAIN_PASSWORD }}
-    - name: "Import Certificate: Developer ID Application"
-      uses: devbotsxyz/xcode-import-certificate@master
-      with:
-        certificate-data: ${{ secrets.APPLICATION_CERTIFICATE_DATA }}
-        certificate-passphrase: ${{ secrets.APPLICATION_CERTIFICATE_PASSPHRASE }}
-        keychain-password: ${{ secrets.KEYCHAIN_PASSWORD }}
-    - name: Repository checkout
-      uses: actions/checkout@v2
-    - name: Cache SPM modules
-      uses: actions/cache@v2
-      env:
-        cache-name: cache-spm
-      with:
-        path: SourcePackages
-        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('Pareto Security.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved') }}
-        restore-keys: |
-          ${{ runner.os }}-build-${{ env.cache-name }}-
-          ${{ runner.os }}-build-
-          ${{ runner.os }}-
-    - name: Build
-      run: make archive-debug | xcpretty && exit ${PIPESTATUS[0]}
-    - name: Compress app for storage
-      run: ditto -V -c -k --keepParent Export/Pareto\ Security.app ParetoSecurity.app.zip
-    - name: Upload App to Artifacts
-      uses: actions/upload-artifact@v2
-      with:
-        name: ParetoSecurity.app
-        path: ParetoSecurity.app.zip
-    - name: Build dmg for storage
-      run: npm install --global create-dmg && make dmg
-    - name: Upload DMG to Artifacts
-      uses: actions/upload-artifact@v2
-      with:
-        name: ParetoSecurity.dmg
-        path: ParetoSecurity.dmg
+      - uses: mshick/add-pr-comment@v1
+        with:
+          message: |
+            You can find the built app under the Artifacts at https://github.com/ParetoSecurity/pareto-mac/actions/runs/${{ github.run_id }}
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          repo-token-user-login: "github-actions[bot]"
+      - uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: "13.1"
+      - name: "Import Certificate: Development"
+        uses: devbotsxyz/xcode-import-certificate@master
+        with:
+          certificate-data: ${{ secrets.DEVELOPMENT_CERTIFICATE_DATA }}
+          certificate-passphrase: ${{ secrets.DEVELOPMENT_CERTIFICATE_PASSPHRASE }}
+          keychain-password: ${{ secrets.KEYCHAIN_PASSWORD }}
+      - name: "Import Certificate: Developer ID Application"
+        uses: devbotsxyz/xcode-import-certificate@master
+        with:
+          certificate-data: ${{ secrets.APPLICATION_CERTIFICATE_DATA }}
+          certificate-passphrase: ${{ secrets.APPLICATION_CERTIFICATE_PASSPHRASE }}
+          keychain-password: ${{ secrets.KEYCHAIN_PASSWORD }}
+      - name: Repository checkout
+        uses: actions/checkout@v2
+      - name: Cache SPM modules
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-spm
+        with:
+          path: SourcePackages
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('Pareto Security.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+      - name: Build
+        run: make archive-debug | xcpretty && exit ${PIPESTATUS[0]}
+      - name: Compress app for storage
+        run: ditto -V -c -k --keepParent Export/Pareto\ Security.app ParetoSecurity.app.zip
+      - name: Upload App to Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: ParetoSecurity.app
+          path: ParetoSecurity.app.zip
+      - name: Build dmg for storage
+        run: npm install --global create-dmg && make dmg
+      - name: Upload DMG to Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: ParetoSecurity.dmg
+          path: ParetoSecurity.dmg
+      - name: Generate checks info
+        run: Export/Pareto\ Security.app/Contents/MacOS/Pareto\ Security -export > checks.json
+      - name: Uplaod checks info
+        uses: actions/upload-artifact@v2
+        with:
+          name: checks.json
+          path: checks.json

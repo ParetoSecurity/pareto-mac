@@ -325,10 +325,10 @@
 		4F1AE88E26F9FF630084A381 /* System Integrity */ = {
 			isa = PBXGroup;
 			children = (
-				4F5B20C027030BEB0015642A /* OpenWiFi.swift */,
 				4F0371BB26CD00B700B35E43 /* Boot.swift */,
 				4FB7C68C26AFFD2600FB1C41 /* FileVault.swift */,
 				4FD0A24026A024440070BED4 /* Gatekeeper.swift */,
+				4F5B20C027030BEB0015642A /* OpenWiFi.swift */,
 			);
 			path = "System Integrity";
 			sourceTree = "<group>";

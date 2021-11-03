@@ -18,6 +18,22 @@ import SwiftUI
 
 class AppDelegate: AppHandlers, NSApplicationDelegate {
     func applicationWillFinishLaunching(_: Notification) {
+        if CommandLine.arguments.contains("-export") {
+            var chekcs: [String: [String]] = [:]
+
+            for claim in AppInfo.claims {
+                for check in claim.checks {
+                    chekcs[check.UUID] = [check.TitleON, check.TitleOFF]
+                }
+            }
+
+            let jsonEncoder = JSONEncoder()
+            let jsonData = try! jsonEncoder.encode(chekcs)
+            let json = String(data: jsonData, encoding: String.Encoding.utf8)
+            print(json! as String)
+            exit(0)
+        }
+
         #if !DEBUG
             #if !SETAPP_ENABLED
                 if !Bundle.main.path.string.hasPrefix("/Applications/") {
