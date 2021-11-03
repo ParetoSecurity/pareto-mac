@@ -57,6 +57,7 @@ struct Report: Encodable {
     let version: String
     let lastCheck: String
     let significantChange: String
+    let state: [String: Int]
 
     static func now() -> Report {
         var passed = 0
@@ -64,19 +65,23 @@ struct Report: Encodable {
         var disabled = 0
         var disabledSeed = "\(Defaults[.machineUUID])"
         var failedSeed = "\(Defaults[.machineUUID])"
+        var checkStates: [String: Int] = [:]
 
         for claim in AppInfo.claims {
             for check in claim.checks {
                 if check.isActive {
                     if check.checkPassed {
                         passed += 1
+                        checkStates[check.UUID] = 1
                     } else {
                         failed += 1
                         failedSeed.append(contentsOf: check.UUID)
+                        checkStates[check.UUID] = 0
                     }
                 } else {
                     disabled += 1
                     disabledSeed.append(contentsOf: check.UUID)
+                    checkStates[check.UUID] = -1
                 }
             }
         }
@@ -88,7 +93,8 @@ struct Report: Encodable {
             device: ReportingDevice.current(),
             version: AppInfo.appVersion,
             lastCheck: Date.fromTimeStamp(timeStamp: Defaults[.lastCheck]).as3339String(),
-            significantChange: SHA256.hash(data: "\(disabledSeed).\(failedSeed)".data(using: .utf8)!).hexStr
+            significantChange: SHA256.hash(data: "\(disabledSeed).\(failedSeed)".data(using: .utf8)!).hexStr,
+            state: checkStates
         )
     }
 }
