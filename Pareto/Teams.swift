@@ -49,7 +49,14 @@ struct ReportingDevice: Encodable {
     }
 }
 
+
+
 struct Report: Encodable {
+    
+    public enum CheckStatus: String {
+        case Disabled = "off", Passing = "pass", Failing = "fail"
+    }
+
     let passedCount: Int
     let failedCount: Int
     let disabledCount: Int
@@ -57,7 +64,7 @@ struct Report: Encodable {
     let version: String
     let lastCheck: String
     let significantChange: String
-    let state: [String: Int]
+    let state: [String: String]
 
     static func now() -> Report {
         var passed = 0
@@ -65,23 +72,23 @@ struct Report: Encodable {
         var disabled = 0
         var disabledSeed = "\(Defaults[.machineUUID])"
         var failedSeed = "\(Defaults[.machineUUID])"
-        var checkStates: [String: Int] = [:]
+        var checkStates: [String: String] = [:]
 
         for claim in AppInfo.claims {
             for check in claim.checks {
                 if check.isActive {
                     if check.checkPassed {
                         passed += 1
-                        checkStates[check.UUID] = 1
+                        checkStates[check.UUID] = CheckStatus.Passing.rawValue
                     } else {
                         failed += 1
                         failedSeed.append(contentsOf: check.UUID)
-                        checkStates[check.UUID] = 0
+                        checkStates[check.UUID] = CheckStatus.Failing.rawValue
                     }
                 } else {
                     disabled += 1
                     disabledSeed.append(contentsOf: check.UUID)
-                    checkStates[check.UUID] = -1
+                    checkStates[check.UUID] = CheckStatus.Disabled.rawValue
                 }
             }
         }

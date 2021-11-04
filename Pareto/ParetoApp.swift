@@ -19,16 +19,18 @@ import SwiftUI
 class AppDelegate: AppHandlers, NSApplicationDelegate {
     func applicationWillFinishLaunching(_: Notification) {
         if CommandLine.arguments.contains("-export") {
-            var chekcs: [String: [String]] = [:]
+            var export: [String: [String: [String]]] = [:]
 
             for claim in AppInfo.claims {
+                var claimExport: [String: [String]] = [:]
                 for check in claim.checks {
-                    chekcs[check.UUID] = [check.TitleON, check.TitleOFF]
+                    claimExport[check.UUID] = [check.TitleON, check.TitleOFF]
                 }
+                export[claim.title] = claimExport
             }
 
             let jsonEncoder = JSONEncoder()
-            let jsonData = try! jsonEncoder.encode(chekcs)
+            let jsonData = try! jsonEncoder.encode(export)
             let json = String(data: jsonData, encoding: String.Encoding.utf8)
             print(json! as String)
             exit(0)
