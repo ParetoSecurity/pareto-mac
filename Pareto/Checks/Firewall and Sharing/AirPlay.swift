@@ -22,6 +22,6 @@ class AirPlayCheck: ParetoCheck {
     }
 
     override func checkPasses() -> Bool {
-        return isNotListening(withPort: 5000) && isNotListening(withPort: 7000)
+        return isNotListening(withCommand: "ControlCenter", withPort: 5000) && isNotListening(withCommand: "ControlCenter", withPort: 7000)
     }
 }

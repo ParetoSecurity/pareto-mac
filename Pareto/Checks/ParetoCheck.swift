@@ -140,4 +140,8 @@ extension ParetoCheck {
             return true
         }
     }
+
+    func isNotListening(withCommand cmd: String, withPort port: Int) -> Bool {
+        return !lsof(withCommand: cmd, withPort: port)
+    }
 }

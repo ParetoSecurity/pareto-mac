@@ -37,3 +37,13 @@ func runOSA(appleScript: String) -> String? {
 
     return nil
 }
+
+func lsof(withCommand cmd: String, withPort port: Int) -> Bool {
+    let out = runCMD(app: "/usr/sbin/lsof", args: ["-i", "TCP:\(port)", "-P", "+L", "-O", "-T", "+c", "0", "-nPM"])
+    for line in out.components(separatedBy: "\n") {
+        if line.hasPrefix(cmd), line.hasSuffix("*:\(port)") {
+            return true
+        }
+    }
+    return false
+}

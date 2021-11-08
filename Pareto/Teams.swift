@@ -49,10 +49,7 @@ struct ReportingDevice: Encodable {
     }
 }
 
-
-
 struct Report: Encodable {
-    
     public enum CheckStatus: String {
         case Disabled = "off", Passing = "pass", Failing = "fail"
     }
