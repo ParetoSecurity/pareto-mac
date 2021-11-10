@@ -100,4 +100,27 @@ class ParetoSecurityUITests: XCTestCase {
     func testAppRuns() throws {
         takeScreenshot(screenshot: app.screenshot(), name: "App")
     }
+
+    func testKonamiWindow() throws {
+        // XCTExpectFailure("Fails with in xcode 13 env, working on a fix")
+
+        let menuBarsQuery = app.menuBars
+        waitUntilMenu()
+
+        menuBarsQuery.menuItems["showPrefs"].click()
+        app.windows.firstMatch.toolbars.buttons["General"].click()
+        takeScreenshot(screenshot: app.windows.firstMatch.screenshot(), name: "Settings General")
+
+        menuBarsQuery.statusItems["ParetoSecurity"].click()
+        menuBarsQuery/*@START_MENU_TOKEN@*/ .menuItems["showPrefs"]/*[[".statusItems[\"ParetoSecurity\"]",".menus",".menuItems[\"Preferences\"]",".menuItems[\"showPrefs\"]"],[[[-1,3],[-1,2],[-1,1,2],[-1,0,1]],[[-1,3],[-1,2],[-1,1,2]],[[-1,3],[-1,2]]],[0]]@END_MENU_TOKEN@*/ .click()
+
+        let generalWindow = app.windows["General"]
+        generalWindow.toolbars.buttons["About"].click()
+
+        let aboutWindow = app.windows["About"]
+        let logoImage = aboutWindow.images["Logo"]
+        logoImage.click()
+        logoImage.click()
+        logoImage.click()
+    }
 }

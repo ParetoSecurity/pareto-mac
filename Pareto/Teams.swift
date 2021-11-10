@@ -24,6 +24,10 @@ private extension JWT {
     var teamUUID: String? {
         return claim(name: "teamID").string
     }
+    
+    var isTeamOwner: Bool? {
+        return claim(name: "isTeamOwner").boolean
+    }
 }
 
 private extension Digest {
@@ -39,12 +43,14 @@ struct ReportingDevice: Encodable {
     let machineUUID: String
     let machineName: String
     let auth: String
+    let macOSVersion: String
 
     static func current() -> ReportingDevice {
         return ReportingDevice(
             machineUUID: Defaults[.machineUUID],
             machineName: AppInfo.machineName,
-            auth: Defaults[.teamAuth]
+            auth: Defaults[.teamAuth],
+            macOSVersion: AppInfo.macOSVersionString
         )
     }
 }
@@ -143,6 +149,7 @@ struct TeamTicketPayload: Decodable, Equatable {
     var teamUUID: String
     var teamAuth: String
     var role: String
+    var isTeamOwner: Bool
 
     func isValid() -> Bool {
         return teamAuth != "" && teamUUID != "" && subject != "" && role == "team"
@@ -158,7 +165,8 @@ func VerifyTeamTicket(withTicket data: String, publicKey key: String = rsaPublic
             issuedAt: jwt.issuedAt ?? Date(),
             teamUUID: jwt.teamUUID ?? "",
             teamAuth: jwt.teamAuth ?? "",
-            role: jwt.role ?? ""
+            role: jwt.role ?? "",
+            isTeamOwner: jwt.isTeamOwner ?? false
         )
 
         if !ticket.isValid() {

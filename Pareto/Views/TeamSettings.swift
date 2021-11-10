@@ -42,7 +42,7 @@ struct TeamSettingsView: View {
                         }
                     }
                 Spacer(minLength: 10)
-                Button("Unlink this device from the Teams account") {
+                Button("Unlink this device") {
                     Defaults.toFree()
                 }
             } else {
