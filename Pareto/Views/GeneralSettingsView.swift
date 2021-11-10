@@ -17,19 +17,20 @@ struct GeneralSettingsView: View {
     var body: some View {
         Form {
             Section(
-                footer: Text("Automatically opens the app when you start your Mac.")) {
+                footer: Text("To enable continuous monitoring and reporting.").font(.footnote)) {
                     VStack(alignment: .leading) {
-                        Toggle("Start at Login", isOn: $atLogin.isEnabled)
+                        Toggle("Automatically launch on system startup", isOn: $atLogin.isEnabled)
                     }
                 }
 
             if showBeta {
                 Section(
-                    footer: Text("Latest features but potentially bugs to report.")) {
+                    footer: Text("Latest features but potentially bugs to report.").font(.footnote)) {
                         VStack(alignment: .leading) {
                             Toggle("Update app to pre-release builds", isOn: $betaChannel)
                         }
                     }
+
                 #if DEBUG
                     HStack {
                         Button("Reset Settings") {

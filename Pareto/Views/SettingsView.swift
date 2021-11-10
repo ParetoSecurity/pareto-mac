@@ -11,6 +11,7 @@ import SwiftUI
 
 struct SettingsView: View {
     @State var selected: Tabs
+    @Default(.teamID) var teamID
 
     enum Tabs: Hashable {
         case general, about, teams, checks, license
@@ -34,11 +35,13 @@ struct SettingsView: View {
                 }
                 .tag(Tabs.checks)
             #if !SETAPP_ENABLED
-                LicenseSettingsView()
-                    .tabItem {
-                        Label("License", systemImage: "rectangle.badge.person.crop")
-                    }
-                    .tag(Tabs.license)
+                if teamID.isEmpty {
+                    LicenseSettingsView()
+                        .tabItem {
+                            Label("License", systemImage: "rectangle.badge.person.crop")
+                        }
+                        .tag(Tabs.license)
+                }
             #endif
             AboutSettingsView()
                 .tabItem {

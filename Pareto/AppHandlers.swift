@@ -38,9 +38,8 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
             #endif
             NSApp.sendAction(#selector(showWelcome), to: nil, from: nil)
             NSApp.activate(ignoringOtherApps: true)
-            Timer.scheduledTimer(timeInterval: 2.0, target: self, selector: #selector(runChecks), userInfo: nil, repeats: false)
         } else {
-            Timer.scheduledTimer(timeInterval: 2.0, target: self, selector: #selector(runChecks), userInfo: nil, repeats: false)
+            Timer.scheduledTimer(timeInterval: 30.0, target: self, selector: #selector(runChecks), userInfo: nil, repeats: false)
         }
         #if !SETAPP_ENABLED
             // schedule update on startup
@@ -163,6 +162,10 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
         statusBar?.showMenu()
     }
 
+    @objc func runChecksDelayed() {
+        Timer.scheduledTimer(timeInterval: 2.00, target: self, selector: #selector(runChecks), userInfo: nil, repeats: false)
+    }
+
     @objc func runChecks() {
         if !Defaults.firstLaunch(), !AppInfo.Licensed, !enrolledHandler, Defaults.shouldShowNag() {
             Defaults.shownNag()
@@ -189,6 +192,10 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
     }
 
     @objc func reportBug() {
+        NSWorkspace.shared.open(AppInfo.bugReportURL())
+    }
+
+    @objc func teamsDasboard() {
         NSWorkspace.shared.open(AppInfo.bugReportURL())
     }
 

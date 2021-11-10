@@ -6,24 +6,37 @@
 //
 
 @testable import Pareto_Security
+import SwiftUI
 import ViewInspector
 import XCTest
 
 class WelcomeTest: XCTestCase {
+    @State var step = Steps.Welcome
+
     override class func setUp() {
         super.setUp()
         UserDefaults.standard.removeAll()
         UserDefaults.standard.synchronize()
     }
 
-    func testWelcomeView() throws {
-        let subject = WelcomeView()
-        let one = try subject.inspect().vStack()[2].text(0).string()
-        XCTAssertEqual(one, "Pareto Security is checking your computer's security for the first time.")
+    func testWelcomeViewShow() throws {
+        _ = WelcomeView()
     }
 
-    func testWelcomeViewShow() throws {
-        _ = WelcomeView(showDetail: true)
+    func testIntroViewShow() throws {
+        _ = IntroView(step: $step)
+    }
+
+    func testPermissionsViewShow() throws {
+        _ = PermissionsView(step: $step)
+    }
+
+    func testChecksViewShow() throws {
+        _ = ChecksView(step: $step)
+    }
+
+    func testEndViewShow() throws {
+        _ = EndView()
     }
 }
 

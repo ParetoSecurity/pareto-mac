@@ -11,6 +11,8 @@ import os.log
 
 class FlagsUpdater: ObservableObject {
     @Published var personalLicenseSharing: Bool = true
+    @Published var dashboardMenu: Bool = true
+    @Published var dashboardMenuAll: Bool = true
     @Published var teamAPI: Bool = true
     @Published var slowerTeamUpdate: Bool = false
     @Published var nagScreenDelayDays: Int = 7
@@ -47,6 +49,10 @@ class FlagsUpdater: ObservableObject {
                     slowerTeamUpdate = (kv[1] as NSString).boolValue
                 case "nagScreenDelayDays":
                     nagScreenDelayDays = (kv[1] as NSString).integerValue
+                case "dashboardMenuAll":
+                    dashboardMenuAll = (kv[1] as NSString).boolValue
+                case "dashboardMenu":
+                    dashboardMenu = (kv[1] as NSString).boolValue
                 default:
                     os_log("Unknwon flag: \(kv[0])")
                 }

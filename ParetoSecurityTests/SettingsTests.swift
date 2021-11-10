@@ -35,7 +35,7 @@ class SettingsViewTests: XCTestCase {
     func testGeneral() throws {
         let subject = GeneralSettingsView()
         let one = try subject.inspect().form()[0].section().footer().text().string()
-        XCTAssertEqual(one, "Automatically opens the app when you start your Mac.")
+        XCTAssertEqual(one, "To enable continuous monitoring and reporting.")
     }
 
     func testTeam() throws {

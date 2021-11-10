@@ -17,6 +17,7 @@ class StatusBarController: NSObject, NSMenuDelegate {
     let imageWarning = NSImage(named: "IconOrange")
     var isRunnig = false
     var workItem: DispatchWorkItem?
+    let updating = DispatchSemaphore(value: 1)
 
     private enum Snooze {
         static let oneHour = 3600 * 1000
@@ -67,6 +68,7 @@ class StatusBarController: NSObject, NSMenuDelegate {
     }
 
     func updateMenu() {
+        updating.wait()
         statusItemMenu.removeAllItems()
         addChecksMenuItems()
         addApplicationItems()
@@ -76,6 +78,7 @@ class StatusBarController: NSObject, NSMenuDelegate {
         } else {
             statusItem.button?.image = imageWarning
         }
+        updating.signal()
     }
 
     func configureChecks() {
@@ -150,7 +153,11 @@ class StatusBarController: NSObject, NSMenuDelegate {
     }
 
     func menuDidClose(_: NSMenu) {
-        updateMenu()
+        if claimsPassed {
+            statusItem.button?.image = imageDefault
+        } else {
+            statusItem.button?.image = imageWarning
+        }
     }
 
     func menuWillOpen(_: NSMenu) {
@@ -196,7 +203,7 @@ class StatusBarController: NSObject, NSMenuDelegate {
         statusItemMenu.addItem(NSMenuItem.separator())
 
         if Defaults[.snoozeTime] == 0 {
-            let runItem = NSMenuItem(title: "Run checks", action: #selector(AppDelegate.runChecks), keyEquivalent: "r")
+            let runItem = NSMenuItem(title: "Run Checks", action: #selector(AppDelegate.runChecks), keyEquivalent: "r")
             runItem.target = NSApp.delegate
             statusItemMenu.addItem(runItem)
 
@@ -214,6 +221,14 @@ class StatusBarController: NSObject, NSMenuDelegate {
             statusItemMenu.addItem(unsnoozeItem)
         }
 
+        statusItemMenu.addItem(NSMenuItem.separator())
+
+        if !Defaults[.teamID].isEmpty, AppInfo.Flags.dashboardMenu {
+            let teamsItem = NSMenuItem(title: "Team Dashboard", action: #selector(AppDelegate.teamsDasboard), keyEquivalent: "t")
+            teamsItem.target = NSApp.delegate
+            statusItemMenu.addItem(teamsItem)
+        }
+
         let preferencesItem = NSMenuItem(title: "Preferences", action: #selector(AppDelegate.showPrefs), keyEquivalent: "p")
         preferencesItem.target = NSApp.delegate
         statusItemMenu.addItem(preferencesItem)
@@ -224,7 +239,7 @@ class StatusBarController: NSObject, NSMenuDelegate {
             statusItemMenu.addItem(updateItem)
         }
 
-        let reportItem = NSMenuItem(title: "Report bug", action: #selector(AppDelegate.reportBug), keyEquivalent: "b")
+        let reportItem = NSMenuItem(title: "Report Bug", action: #selector(AppDelegate.reportBug), keyEquivalent: "b")
         reportItem.target = NSApp.delegate
         statusItemMenu.addItem(reportItem)
 

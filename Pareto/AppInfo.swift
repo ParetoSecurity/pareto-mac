@@ -56,6 +56,11 @@ enum AppInfo {
         return modelIdentifier!
     }
 
+    static let teamsURL = { () -> URL in
+        let baseURL = "https://dash.paretosecurity.com/?utm_source=app"
+        return URL(string: baseURL)!
+    }
+
     static let bugReportURL = { () -> URL in
         let baseURL = "https://github.com/ParetoSecurity/pareto-mac/issues/new?labels=bug%2Ctriage&template=report_bug.yml&title=%5BBug%5D%3A+"
         if #available(macOS 12.0, *) {
