@@ -1,0 +1,27 @@
+//
+//  $safename.swift
+//  Pareto Security
+//
+//  Created by Janez Troha on 11/11/2021.
+//
+
+class $safenameclass: ParetoCheck {
+    
+    static let sharedInstance = $safenameclass()
+    
+    override var UUID: String {
+        "$uuid"
+    }
+
+    override var TitleON: String {
+       "$app is up-to-date"
+    }
+
+    override var TitleOFF: String {
+        "$app has an available update"
+    }
+
+    override func checkPasses() -> Bool {
+        return appVersion(app: "$app") >= ""
+    }
+}

@@ -112,7 +112,7 @@ jobs:
       - name: Generate checks info
         run: Export/Pareto\ Security.app/Contents/MacOS/Pareto\ Security -export > checks.json
 
-      - name: Uplaod checks info
+      - name: Upload checks info
         uses: softprops/action-gh-release@v1
         with:
           files: checks.json

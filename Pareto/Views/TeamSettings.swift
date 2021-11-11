@@ -46,7 +46,7 @@ struct TeamSettingsView: View {
                     Button("Unlink this device") {
                         Defaults.toFree()
                     }
-                    Link("Team Dasboard »",
+                    Link("Team Dashboard »",
                          destination: URL(string: "https://dash.paretosecurity.com/?utm_source=app&utm_medium=teams-link")!)
                 }
 

@@ -11,6 +11,21 @@
 		4F080D1D26C50D2800686786 /* ParetoSecurityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FC81A4B26C41DC8006EABA8 /* ParetoSecurityTests.swift */; };
 		4F103008269EE136008C1E86 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F103007269EE135008C1E86 /* SettingsView.swift */; };
 		4F103012269F1C65008C1E86 /* LaunchAtLogin in Frameworks */ = {isa = PBXBuildFile; productRef = 4F103011269F1C65008C1E86 /* LaunchAtLogin */; };
+		4F103B35273D802800F9E9B6 /* ResilioSync.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F103B26273D802800F9E9B6 /* ResilioSync.swift */; };
+		4F103B36273D802800F9E9B6 /* Slack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F103B27273D802800F9E9B6 /* Slack.swift */; };
+		4F103B37273D802800F9E9B6 /* GitHubDesktop.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F103B28273D802800F9E9B6 /* GitHubDesktop.swift */; };
+		4F103B38273D802800F9E9B6 /* Dropbox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F103B29273D802800F9E9B6 /* Dropbox.swift */; };
+		4F103B39273D802800F9E9B6 /* zoomus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F103B2A273D802800F9E9B6 /* zoomus.swift */; };
+		4F103B3A273D802800F9E9B6 /* Safari.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F103B2B273D802800F9E9B6 /* Safari.swift */; };
+		4F103B3B273D802800F9E9B6 /* LibreOffice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F103B2C273D802800F9E9B6 /* LibreOffice.swift */; };
+		4F103B3C273D802800F9E9B6 /* SublimeText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F103B2D273D802800F9E9B6 /* SublimeText.swift */; };
+		4F103B3D273D802800F9E9B6 /* NordLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F103B2E273D802800F9E9B6 /* NordLayer.swift */; };
+		4F103B3E273D802800F9E9B6 /* GoogleChrome.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F103B2F273D802800F9E9B6 /* GoogleChrome.swift */; };
+		4F103B3F273D802800F9E9B6 /* 1Password7.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F103B30273D802800F9E9B6 /* 1Password7.swift */; };
+		4F103B40273D802800F9E9B6 /* Docker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F103B31273D802800F9E9B6 /* Docker.swift */; };
+		4F103B41273D802800F9E9B6 /* VisualStudioCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F103B32273D802800F9E9B6 /* VisualStudioCode.swift */; };
+		4F103B42273D802800F9E9B6 /* Signal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F103B33273D802800F9E9B6 /* Signal.swift */; };
+		4F103B43273D802800F9E9B6 /* Firefox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F103B34273D802800F9E9B6 /* Firefox.swift */; };
 		4F14487426D8EA5E00A5BA34 /* Updater.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F14487326D8EA5E00A5BA34 /* Updater.swift */; };
 		4F14487726D8EB2E00A5BA34 /* Version in Frameworks */ = {isa = PBXBuildFile; productRef = 4F14487626D8EB2E00A5BA34 /* Version */; };
 		4F14487A26D8EB7A00A5BA34 /* Path in Frameworks */ = {isa = PBXBuildFile; productRef = 4F14487926D8EB7A00A5BA34 /* Path */; };
@@ -157,6 +172,21 @@
 /* Begin PBXFileReference section */
 		4F0371BB26CD00B700B35E43 /* Boot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Boot.swift; sourceTree = "<group>"; };
 		4F103007269EE135008C1E86 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		4F103B26273D802800F9E9B6 /* ResilioSync.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResilioSync.swift; sourceTree = "<group>"; };
+		4F103B27273D802800F9E9B6 /* Slack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Slack.swift; sourceTree = "<group>"; };
+		4F103B28273D802800F9E9B6 /* GitHubDesktop.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GitHubDesktop.swift; sourceTree = "<group>"; };
+		4F103B29273D802800F9E9B6 /* Dropbox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Dropbox.swift; sourceTree = "<group>"; };
+		4F103B2A273D802800F9E9B6 /* zoomus.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = zoomus.swift; sourceTree = "<group>"; };
+		4F103B2B273D802800F9E9B6 /* Safari.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Safari.swift; sourceTree = "<group>"; };
+		4F103B2C273D802800F9E9B6 /* LibreOffice.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LibreOffice.swift; sourceTree = "<group>"; };
+		4F103B2D273D802800F9E9B6 /* SublimeText.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SublimeText.swift; sourceTree = "<group>"; };
+		4F103B2E273D802800F9E9B6 /* NordLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NordLayer.swift; sourceTree = "<group>"; };
+		4F103B2F273D802800F9E9B6 /* GoogleChrome.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GoogleChrome.swift; sourceTree = "<group>"; };
+		4F103B30273D802800F9E9B6 /* 1Password7.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = 1Password7.swift; sourceTree = "<group>"; };
+		4F103B31273D802800F9E9B6 /* Docker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Docker.swift; sourceTree = "<group>"; };
+		4F103B32273D802800F9E9B6 /* VisualStudioCode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VisualStudioCode.swift; sourceTree = "<group>"; };
+		4F103B33273D802800F9E9B6 /* Signal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Signal.swift; sourceTree = "<group>"; };
+		4F103B34273D802800F9E9B6 /* Firefox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Firefox.swift; sourceTree = "<group>"; };
 		4F14487326D8EA5E00A5BA34 /* Updater.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Updater.swift; sourceTree = "<group>"; };
 		4F14487B26D8EDB000A5BA34 /* Bundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bundle.swift; sourceTree = "<group>"; };
 		4F196CD72714C1C600A2A7B8 /* JWT.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = JWT.playground; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
@@ -299,6 +329,7 @@
 		4F10300A269F0568008C1E86 /* Checks */ = {
 			isa = PBXGroup;
 			children = (
+				4FA17429273D2AFB00F9C817 /* Software Updates */,
 				4F1AE88E26F9FF630084A381 /* System Integrity */,
 				4F1AE88D26F9FF440084A381 /* Firewall and Sharing */,
 				4F1AE88C26F9FEA60084A381 /* Access Security */,
@@ -363,6 +394,28 @@
 				4F6A92F126C555C6006C2F2D /* ParetoSecurityUITests.swift */,
 			);
 			path = ParetoSecurityUITests;
+			sourceTree = "<group>";
+		};
+		4FA17429273D2AFB00F9C817 /* Software Updates */ = {
+			isa = PBXGroup;
+			children = (
+				4F103B30273D802800F9E9B6 /* 1Password7.swift */,
+				4F103B31273D802800F9E9B6 /* Docker.swift */,
+				4F103B29273D802800F9E9B6 /* Dropbox.swift */,
+				4F103B34273D802800F9E9B6 /* Firefox.swift */,
+				4F103B28273D802800F9E9B6 /* GitHubDesktop.swift */,
+				4F103B2F273D802800F9E9B6 /* GoogleChrome.swift */,
+				4F103B2C273D802800F9E9B6 /* LibreOffice.swift */,
+				4F103B2E273D802800F9E9B6 /* NordLayer.swift */,
+				4F103B26273D802800F9E9B6 /* ResilioSync.swift */,
+				4F103B2B273D802800F9E9B6 /* Safari.swift */,
+				4F103B33273D802800F9E9B6 /* Signal.swift */,
+				4F103B27273D802800F9E9B6 /* Slack.swift */,
+				4F103B2D273D802800F9E9B6 /* SublimeText.swift */,
+				4F103B32273D802800F9E9B6 /* VisualStudioCode.swift */,
+				4F103B2A273D802800F9E9B6 /* zoomus.swift */,
+			);
+			path = "Software Updates";
 			sourceTree = "<group>";
 		};
 		4FB7C67F26AFF22C00FB1C41 /* Extensions */ = {
@@ -810,33 +863,46 @@
 			files = (
 				4FB0416126F71CC0003657BE /* ButtonStyle.swift in Sources */,
 				4F5E888026A053A9005271FB /* ParetoCheck.swift in Sources */,
+				4F103B3D273D802800F9E9B6 /* NordLayer.swift in Sources */,
 				4F35395726E8AE02008F5DD3 /* RemoteLogin.swift in Sources */,
 				4FEBA304269CD4E0009B2469 /* StatusBarController.swift in Sources */,
+				4F103B39273D802800F9E9B6 /* zoomus.swift in Sources */,
 				4F6A0E0E26CE484A003B00A3 /* PrinterSharingCheck.swift in Sources */,
+				4F103B3E273D802800F9E9B6 /* GoogleChrome.swift in Sources */,
+				4F103B41273D802800F9E9B6 /* VisualStudioCode.swift in Sources */,
 				4F6A0E1026CE4868003B00A3 /* FileSharingCheck.swift in Sources */,
 				4F24A09026EB735F0036F748 /* TeamSettings.swift in Sources */,
 				4F81C10826EB5D270065F548 /* URL.swift in Sources */,
+				4F103B38273D802800F9E9B6 /* Dropbox.swift in Sources */,
+				4F103B40273D802800F9E9B6 /* Docker.swift in Sources */,
 				4F38D8CB273AC5F200671756 /* PermissionsView.swift in Sources */,
 				4F5B20C3270316DB0015642A /* NetworkHandler.swift in Sources */,
 				4FB7C67D26AFF1AB00FB1C41 /* Log.swift in Sources */,
 				4FF13D9726DCCB9900E4084E /* Utils.swift in Sources */,
+				4F103B3A273D802800F9E9B6 /* Safari.swift in Sources */,
 				4F14487426D8EA5E00A5BA34 /* Updater.swift in Sources */,
+				4F103B3F273D802800F9E9B6 /* 1Password7.swift in Sources */,
 				4F868DCF26A591E6005B876E /* Firewall.swift in Sources */,
+				4F103B42273D802800F9E9B6 /* Signal.swift in Sources */,
 				4F9791C126F5DB4F00E668F4 /* Color.swift in Sources */,
 				4F79F78D273BF6300082A5EB /* ChecksView.swift in Sources */,
 				4F24A08E26EB734A0036F748 /* LicenseSettingsView.swift in Sources */,
 				4F35395526E8AD4C008F5DD3 /* RemoteManagment.swift in Sources */,
 				4FB7C68126AFF25300FB1C41 /* Date.swift in Sources */,
+				4F103B37273D802800F9E9B6 /* GitHubDesktop.swift in Sources */,
 				4F343A5F26F7A3D4007D2F7D /* Teams.swift in Sources */,
 				4FB405EF26A6FC4800267D5D /* ScreensaverPassword.swift in Sources */,
 				4F38D8C8273AC5AE00671756 /* IntroView.swift in Sources */,
 				4F47221026B08A0E0071CE2A /* Defaults.swift in Sources */,
 				4F868DD126A5C51C005B876E /* Autologin.swift in Sources */,
+				4F103B35273D802800F9E9B6 /* ResilioSync.swift in Sources */,
 				4F38D8CE273AC62500671756 /* EndView.swift in Sources */,
+				4F103B3B273D802800F9E9B6 /* LibreOffice.swift in Sources */,
 				4F1AE89026F9FFA60084A381 /* MediaShare.swift in Sources */,
 				4FEBA2F2269CD48F009B2469 /* ParetoApp.swift in Sources */,
 				4FF22A6526F0CFA500500213 /* Flags.swift in Sources */,
 				4F84A94926CBE21300A1579D /* PasswordFromLock.swift in Sources */,
+				4F103B3C273D802800F9E9B6 /* SublimeText.swift in Sources */,
 				4F14487C26D8EDB000A5BA34 /* Bundle.swift in Sources */,
 				4F8B01B226F4A6CB00EDE14B /* WelcomeView.swift in Sources */,
 				4F5B20C127030BEB0015642A /* OpenWiFi.swift in Sources */,
@@ -844,6 +910,7 @@
 				4F0371BC26CD00B700B35E43 /* Boot.swift in Sources */,
 				4F3EF24326CA859500841375 /* Claim.swift in Sources */,
 				4F24A09426EB73C80036F748 /* ChecksSettingsView.swift in Sources */,
+				4F103B36273D802800F9E9B6 /* Slack.swift in Sources */,
 				4F24A09226EB73980036F748 /* AboutSettingsView.swift in Sources */,
 				4FB7C68D26AFFD2600FB1C41 /* FileVault.swift in Sources */,
 				4F103008269EE136008C1E86 /* SettingsView.swift in Sources */,
@@ -853,6 +920,7 @@
 				4FD0A24126A024440070BED4 /* Gatekeeper.swift in Sources */,
 				4F24A09626EB73F30036F748 /* GeneralSettingsView.swift in Sources */,
 				4F57135B26F8C5D7004B4359 /* AppHandlers.swift in Sources */,
+				4F103B43273D802800F9E9B6 /* Firefox.swift in Sources */,
 				4F84531026D634E5007C3B04 /* NSWorkspace.swift in Sources */,
 				4FB7C68726AFF29A00FB1C41 /* NSImage.swift in Sources */,
 				4F6A92EA26C54AB7006C2F2D /* AppInfo.swift in Sources */,
