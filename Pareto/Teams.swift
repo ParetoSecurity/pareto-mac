@@ -24,7 +24,7 @@ private extension JWT {
     var teamUUID: String? {
         return claim(name: "teamID").string
     }
-    
+
     var isTeamOwner: Bool? {
         return claim(name: "isTeamOwner").boolean
     }

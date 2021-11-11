@@ -40,7 +40,7 @@ struct PermissionsView: View {
                 }.buttonStyle(HighlightButtonStyle(h: 4, v: 4, color: !osaAuthorized ? .mainColor : .systemGray)).frame(width: 80, alignment: .center).disabled(osaAuthorized)
             }.frame(width: 350, alignment: .center)
 
-            if false {
+            if AppInfo.secExp {
                 HStack {
                     VStack(alignment: .leading) {
                         Text("Admin Permissions").font(.title2)

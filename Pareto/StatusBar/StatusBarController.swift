@@ -221,9 +221,8 @@ class StatusBarController: NSObject, NSMenuDelegate {
             statusItemMenu.addItem(unsnoozeItem)
         }
 
-        statusItemMenu.addItem(NSMenuItem.separator())
-
-        if !Defaults[.teamID].isEmpty, AppInfo.Flags.dashboardMenu {
+        if (!Defaults[.teamID].isEmpty && AppInfo.Flags.dashboardMenu) || Defaults[.isTeamOwner] {
+            statusItemMenu.addItem(NSMenuItem.separator())
             let teamsItem = NSMenuItem(title: "Team Dashboard", action: #selector(AppDelegate.teamsDasboard), keyEquivalent: "t")
             teamsItem.target = NSApp.delegate
             statusItemMenu.addItem(teamsItem)
