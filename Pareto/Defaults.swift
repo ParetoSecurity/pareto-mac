@@ -19,7 +19,7 @@ extension Defaults.Keys {
     // Teams
     static let userID = Key<String>("userID", default: "")
     static let userEmail = Key<String>("userEmail", default: "")
-
+    static let isTeamOwner = Key<Bool>("isTeamOwner", default: false)
     static let teamID = Key<String>("teamID", default: "")
     static let teamAuth = Key<String>("teamAuth", default: "")
     static let machineUUID = Key<String>("machineUUID", default: AppInfo.getSystemUUID() ?? UUID().uuidString)

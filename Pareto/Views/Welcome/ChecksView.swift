@@ -54,10 +54,10 @@ struct ChecksView: View {
             ChecksView(step: $step)
         }
     }
-#endif
 
-struct ChecksView_Previews: PreviewProvider {
-    static var previews: some View {
-        ChecksViewPreviewsBinding()
+    struct ChecksView_Previews: PreviewProvider {
+        static var previews: some View {
+            ChecksViewPreviewsBinding()
+        }
     }
-}
+#endif

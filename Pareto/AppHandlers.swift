@@ -282,6 +282,7 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
                 Defaults[.teamID] = ticket.teamUUID
                 AppInfo.Licensed = true
                 Defaults[.reportingRole] = .team
+                Defaults[.isTeamOwner] = ticket.isTeamOwner
 
                 Team.link(withDevice: ReportingDevice.current()).responseJSON { response in
                     debugPrint(response.result)

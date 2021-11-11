@@ -42,9 +42,14 @@ struct TeamSettingsView: View {
                         }
                     }
                 Spacer(minLength: 10)
-                Button("Unlink this device") {
-                    Defaults.toFree()
+                HStack {
+                    Button("Unlink this device") {
+                        Defaults.toFree()
+                    }
+                    Link("Team Dasboard »",
+                         destination: URL(string: "https://dash.paretosecurity.com/?utm_source=app&utm_medium=teams-link")!)
                 }
+
             } else {
                 Text("The Teams subscription will give you a web dashboard for an overview of the company’s devices.")
                 Link("Learn more »",

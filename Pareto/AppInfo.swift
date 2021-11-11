@@ -42,6 +42,7 @@ enum AppInfo {
     static let macOSVersionString = "\(macOSVersion.majorVersion).\(macOSVersion.minorVersion).\(macOSVersion.patchVersion)"
     static let isRunningTests = ProcessInfo.processInfo.arguments.contains("isRunningTests")
     static var Licensed = false
+    static var secExp = false
     static let Flags = FlagsUpdater()
 
     static let hwModel = { () -> String in

@@ -55,10 +55,10 @@ struct IntroView: View {
             IntroView(step: $step)
         }
     }
-#endif
 
-struct IntroView_Previews: PreviewProvider {
-    static var previews: some View {
-        IntroViewPreviewsBinding()
+    struct IntroView_Previews: PreviewProvider {
+        static var previews: some View {
+            IntroViewPreviewsBinding()
+        }
     }
-}
+#endif
