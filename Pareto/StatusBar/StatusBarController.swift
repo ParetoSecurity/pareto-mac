@@ -78,6 +78,11 @@ class StatusBarController: NSObject, NSMenuDelegate {
         } else {
             statusItem.button?.image = imageWarning
         }
+
+        #if SETAPP_ENABLED
+            SCReportUsageEvent("user-interaction", nil)
+        #endif
+
         updating.signal()
     }
 

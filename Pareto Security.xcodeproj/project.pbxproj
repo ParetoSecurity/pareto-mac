@@ -156,6 +156,7 @@
 
 /* Begin PBXFileReference section */
 		4F0371BB26CD00B700B35E43 /* Boot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Boot.swift; sourceTree = "<group>"; };
+		4F04C278273E9CC400AD635F /* setapp-bridge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "setapp-bridge.h"; path = "libSetapp/setapp-bridge.h"; sourceTree = SOURCE_ROOT; };
 		4F103007269EE135008C1E86 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		4F14487326D8EA5E00A5BA34 /* Updater.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Updater.swift; sourceTree = "<group>"; };
 		4F14487B26D8EDB000A5BA34 /* Bundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bundle.swift; sourceTree = "<group>"; };
@@ -448,6 +449,7 @@
 				4F14487326D8EA5E00A5BA34 /* Updater.swift */,
 				4FF22A6426F0CFA500500213 /* Flags.swift */,
 				4FDAD88E26EB784A00F64E61 /* License.swift */,
+				4F04C278273E9CC400AD635F /* setapp-bridge.h */,
 			);
 			path = Pareto;
 			sourceTree = "<group>";
@@ -919,6 +921,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "SETAPP_ENABLED DEBUG";
+				SWIFT_OBJC_BRIDGING_HEADER = "libSetapp/setapp-bridge.h";
 				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
@@ -963,6 +966,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = SETAPP_ENABLED;
+				SWIFT_OBJC_BRIDGING_HEADER = "libSetapp/setapp-bridge.h";
 				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
