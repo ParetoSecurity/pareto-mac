@@ -233,7 +233,7 @@ class StatusBarController: NSObject, NSMenuDelegate {
             statusItemMenu.addItem(teamsItem)
         }
 
-        let preferencesItem = NSMenuItem(title: "Preferences", action: #selector(AppDelegate.showPrefs), keyEquivalent: "p")
+        let preferencesItem = NSMenuItem(title: "Preferences", action: #selector(AppDelegate.showPrefs), keyEquivalent: ",")
         preferencesItem.target = NSApp.delegate
         statusItemMenu.addItem(preferencesItem)
 
