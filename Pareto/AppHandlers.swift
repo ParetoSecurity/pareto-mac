@@ -41,6 +41,7 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
         } else {
             Timer.scheduledTimer(timeInterval: 30.0, target: self, selector: #selector(runChecks), userInfo: nil, repeats: false)
         }
+
         #if !SETAPP_ENABLED
             // schedule update on startup
             if Defaults.shouldDoUpdateCheck() {
@@ -63,7 +64,7 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
         #endif
         // Update when waking up from sleep
         NSWorkspace.onWakeup { _ in
-            self.statusBar?.runChecks()
+            Timer.scheduledTimer(timeInterval: 30.0, target: self, selector: #selector(self.runChecks), userInfo: nil, repeats: false)
             #if !SETAPP_ENABLED
                 if Defaults.shouldDoUpdateCheck() {
                     if self.networkHandler.currentStatus == .satisfied {

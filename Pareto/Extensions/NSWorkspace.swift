@@ -15,4 +15,11 @@ extension NSWorkspace {
                                                           queue: nil,
                                                           using: fn)
     }
+
+    static func onSleep(_ fn: @escaping (Notification) -> Void) {
+        NSWorkspace.shared.notificationCenter.addObserver(forName: NSWorkspace.willSleepNotification,
+                                                          object: nil,
+                                                          queue: nil,
+                                                          using: fn)
+    }
 }
