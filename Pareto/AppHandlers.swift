@@ -200,7 +200,7 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
     }
 
     @objc func teamsDasboard() {
-        NSWorkspace.shared.open(AppInfo.bugReportURL())
+        NSWorkspace.shared.open(AppInfo.teamsURL())
     }
 
     @objc func showWelcome() {
