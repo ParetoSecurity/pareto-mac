@@ -47,7 +47,7 @@ struct TeamSettingsView: View {
                         Defaults.toFree()
                     }
                     Link("Team Dashboard »",
-                         destination: URL(string: "https://dash.paretosecurity.com/?utm_source=app&utm_medium=teams-link")!)
+                         destination: AppInfo.teamsURL())
                 }
 
             } else {
