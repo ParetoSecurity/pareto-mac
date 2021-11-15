@@ -119,13 +119,16 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
     }
 
     func statusDidChange(status: NWPath.Status) {
+        timer?.invalidate()
         if status == .satisfied {
             os_log("network condtions changed to: connected")
-            // wait 5 second of stable conenction before running checks
-            timer = Timer.scheduledTimer(timeInterval: 5.0, target: self, selector: #selector(runChecks), userInfo: nil, repeats: false)
+            // wait 30 second of stable conenction before running checks
+            DispatchQueue.main.async {
+                self.timer = Timer.scheduledTimer(timeInterval: 30.0, target: self, selector: #selector(self.runChecks), userInfo: nil, repeats: false)
+            }
+
         } else {
             os_log("network condtions changed to: disconnected")
-            timer?.invalidate()
         }
     }
 
