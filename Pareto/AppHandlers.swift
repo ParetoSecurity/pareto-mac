@@ -11,6 +11,8 @@ import LaunchAtLogin
 import Network
 import os.log
 import OSLog
+import ParetoHelper
+import ServiceManagement
 import SwiftUI
 
 #if !DEBUG
@@ -24,6 +26,14 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
     var enrolledHandler = false
     var networkHandler = NetworkHandler.sharedInstance()
     var timer: Timer?
+
+    private var currentHelperConnection: NSXPCConnection?
+
+    @objc private dynamic var currentHelperAuthData: NSData?
+    private let currentHelperAuthDataKeyPath: String
+
+    @objc private dynamic var helperIsInstalled = false
+    private let helperIsInstalledKeyPath: String
 
     public indirect enum Error: Swift.Error {
         case teamLinkinFailed
@@ -358,5 +368,31 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
         default:
             os_log("Unknown command \(url)")
         }
+    }
+
+    override init() {
+        currentHelperAuthDataKeyPath = NSStringFromSelector(#selector(getter: currentHelperAuthData))
+        helperIsInstalledKeyPath = NSStringFromSelector(#selector(getter: helperIsInstalled))
+        super.init()
+    }
+
+    func helperInstall() throws -> Bool {
+        // Install and activate the helper inside our application bundle to disk.
+        var cfError: Unmanaged<CFError>?
+        var authItem = AuthorizationItem(name: kSMRightBlessPrivilegedHelper, valueLength: 0, value: UnsafeMutableRawPointer(bitPattern: 0), flags: 0)
+        var authRights = AuthorizationRights(count: 1, items: &authItem)
+
+        guard
+            let authRef = try HelperAuthorization.authorizationRef(&authRights, nil, [.interactionAllowed, .extendRights, .preAuthorize]),
+            SMJobBless(kSMDomainSystemLaunchd, HelperConstants.machServiceName as CFString, authRef, &cfError)
+        else {
+            if let error = cfError?.takeRetainedValue() { throw error }
+            return false
+        }
+
+        currentHelperConnection?.invalidate()
+        currentHelperConnection = nil
+
+        return true
     }
 }
