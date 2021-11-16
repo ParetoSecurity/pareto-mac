@@ -35,6 +35,41 @@ class AppDelegate: AppHandlers, NSApplicationDelegate {
             print(json! as String)
             exit(0)
         }
+        if CommandLine.arguments.contains("-mdmTeam") {
+            let token = CommandLine.arguments.last ?? ""
+            do {
+                let ticket = try VerifyTeamTicket(withTicket: token)
+                enrolledHandler = true
+                Defaults[.license] = token
+                Defaults[.userID] = ""
+                Defaults[.teamAuth] = ticket.teamAuth
+                Defaults[.teamID] = ticket.teamUUID
+                AppInfo.Licensed = true
+                Defaults[.reportingRole] = .team
+                Defaults[.isTeamOwner] = ticket.isTeamOwner
+                LaunchAtLogin.isEnabled = true
+                
+                print("Team ticket subscribing")
+                Team.link(withDevice: ReportingDevice.current()).responseJSON { response in
+                    print(response.result)
+                    switch response.result {
+                    case .success:
+                        print("Team ticket is linked")
+                        Defaults[.lastCheck] = 1
+                        exit(0)
+                    case .failure:
+                        print("Team ticket could not be linked")
+                        Defaults.toFree()
+                        exit(1)
+                    }
+                    exit(0)
+                }
+            } catch {
+                print("Team ticket is not valid")
+                Defaults.toFree()
+                exit(1)
+            }
+        }
 
         #if !DEBUG
             #if !SETAPP_ENABLED
