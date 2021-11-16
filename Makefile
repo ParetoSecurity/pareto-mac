@@ -60,3 +60,6 @@ clean:
 
 sentry-debug-upload:
 	sentry-cli --auth-token ${SENTRY_AUTH_TOKEN} upload-dif app.xcarchive --org niteoweb --project pareto-mac
+
+sentry-debug-upload-setapp:
+	sentry-cli --auth-token ${SENTRY_AUTH_TOKEN} upload-dif setapp.xcarchive --org niteoweb --project pareto-mac

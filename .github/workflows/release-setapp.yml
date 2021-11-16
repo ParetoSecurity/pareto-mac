@@ -59,6 +59,11 @@ jobs:
       - name: "Archive for dist"
         run: make archive-release-setapp | xcpretty -tc && exit ${PIPESTATUS[0]}
 
+      - name: "Upload debug symbols"
+        run: make sentry-debug-upload-setapp
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+
       - name: Compress app for notarization
         run: ditto -V -c -k --keepParent SetAppExport/Pareto\ Security.app ParetoSecurity.app.zip
 
