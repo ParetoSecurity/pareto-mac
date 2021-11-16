@@ -18,6 +18,8 @@ jobs:
       - uses: maxim-lobanov/setup-xcode@v1
         with:
           xcode-version: "13.1"
+      - name: Install sentry-cli
+        run: brew install getsentry/tools/sentry-cli
       - name: "Import Certificate: Development"
         uses: devbotsxyz/xcode-import-certificate@master
         with:
