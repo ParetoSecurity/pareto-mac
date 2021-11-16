@@ -17,8 +17,7 @@ class StatusBarController: NSObject, NSMenuDelegate {
     let imageWarning = NSImage(named: "IconOrange")
     var isRunnig = false
     var workItem: DispatchWorkItem?
-    let updating = DispatchSemaphore(value: 1)
-
+    
     private enum Snooze {
         static let oneHour = 3600 * 1000
         static let oneDay = oneHour * 24
@@ -68,22 +67,21 @@ class StatusBarController: NSObject, NSMenuDelegate {
     }
 
     func updateMenu() {
-        updating.wait()
-        statusItemMenu.removeAllItems()
-        addChecksMenuItems()
-        addApplicationItems()
+        DispatchQueue.main.async {
+            self.statusItemMenu.removeAllItems()
+            self.addChecksMenuItems()
+            self.addApplicationItems()
 
-        if claimsPassed {
-            statusItem.button?.image = imageDefault
-        } else {
-            statusItem.button?.image = imageWarning
+            if self.claimsPassed {
+                self.statusItem.button?.image = self.imageDefault
+            } else {
+                self.statusItem.button?.image = self.imageWarning
+            }
+
+            #if SETAPP_ENABLED
+                SCReportUsageEvent("user-interaction", nil)
+            #endif
         }
-
-        #if SETAPP_ENABLED
-            SCReportUsageEvent("user-interaction", nil)
-        #endif
-
-        updating.signal()
     }
 
     func configureChecks() {
@@ -126,13 +124,15 @@ class StatusBarController: NSObject, NSMenuDelegate {
             if Defaults[.reportingRole] == .team, AppInfo.Flags.teamAPI {
                 if Defaults.shouldDoTeamUpdate() || interactive {
                     let report = Report.now()
-                    Team.update(withReport: report).responseJSON { response in
-                        debugPrint(response.result)
-                        switch response.result {
-                        case .success:
-                            os_log("Check status was updated", log: Log.app)
-                        case let .failure(err):
-                            os_log("Check status update failed: %s", log: Log.app, err.localizedDescription)
+                    DispatchQueue.global(qos: .utility).async {
+                        Team.update(withReport: report).responseJSON { response in
+                            debugPrint(response.result)
+                            switch response.result {
+                            case .success:
+                                os_log("Check status was updated", log: Log.app)
+                            case let .failure(err):
+                                os_log("Check status update failed: %s", log: Log.app, err.localizedDescription)
+                            }
                         }
                     }
                     Defaults.doneTeamUpdate()
