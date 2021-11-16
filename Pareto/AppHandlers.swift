@@ -39,7 +39,9 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
             NSApp.sendAction(#selector(showWelcome), to: nil, from: nil)
             NSApp.activate(ignoringOtherApps: true)
         } else {
-            Timer.scheduledTimer(timeInterval: 30.0, target: self, selector: #selector(runChecks), userInfo: nil, repeats: false)
+            DispatchQueue.main.async {
+                Timer.scheduledTimer(timeInterval: 30.0, target: self, selector: #selector(self.runChecks), userInfo: nil, repeats: false)
+            }
         }
 
         #if !SETAPP_ENABLED
@@ -64,7 +66,9 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
         #endif
         // Update when waking up from sleep
         NSWorkspace.onWakeup { _ in
-            Timer.scheduledTimer(timeInterval: 30.0, target: self, selector: #selector(self.runChecks), userInfo: nil, repeats: false)
+            DispatchQueue.main.async {
+                Timer.scheduledTimer(timeInterval: 30.0, target: self, selector: #selector(self.runChecks), userInfo: nil, repeats: false)
+            }
             #if !SETAPP_ENABLED
                 if Defaults.shouldDoUpdateCheck() {
                     if self.networkHandler.currentStatus == .satisfied {
@@ -167,7 +171,9 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
     }
 
     @objc func runChecksDelayed() {
-        Timer.scheduledTimer(timeInterval: 2.00, target: self, selector: #selector(runChecks), userInfo: nil, repeats: false)
+        DispatchQueue.main.async {
+            Timer.scheduledTimer(timeInterval: 2.00, target: self, selector: #selector(self.runChecks), userInfo: nil, repeats: false)
+        }
     }
 
     @objc func runChecks() {
