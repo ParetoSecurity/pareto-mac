@@ -17,7 +17,7 @@ class StatusBarController: NSObject, NSMenuDelegate {
     let imageWarning = NSImage(named: "IconOrange")
     var isRunnig = false
     var workItem: DispatchWorkItem?
-    
+
     private enum Snooze {
         static let oneHour = 3600 * 1000
         static let oneDay = oneHour * 24
@@ -105,6 +105,12 @@ class StatusBarController: NSObject, NSMenuDelegate {
             Defaults[.snoozeTime] = 0
         }
 
+        // dont run chekcs if not in interactive mode and it was ran less than 5 mintues ago
+        if (Defaults[.lastCheck] + (60 * 1000 * 5)) >= Date().currentTimeMillis(), !interactive {
+            os_log("Debounce detected, last check %sms ago", log: Log.app, String(Date().currentTimeMillis() - Defaults[.lastCheck]))
+            return
+        }
+
         Defaults[.lastCheck] = Date().currentTimeMillis()
 
         statusItem.button?.image = imageDefault
@@ -143,11 +149,10 @@ class StatusBarController: NSObject, NSMenuDelegate {
         }
 
         // guard to prevent long running tasks
-        DispatchQueue.global().asyncAfter(deadline: .now() + .seconds(30)) {
+        DispatchQueue.global().asyncAfter(deadline: .now() + 30) {
             // checks are still running kill them
             if self.isRunnig {
                 self.workItem?.cancel()
-                self.updateMenu()
                 os_log("Checks took more than 30s to finish canceling", log: Log.app)
             }
         }

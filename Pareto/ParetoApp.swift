@@ -48,7 +48,7 @@ class AppDelegate: AppHandlers, NSApplicationDelegate {
                 Defaults[.reportingRole] = .team
                 Defaults[.isTeamOwner] = ticket.isTeamOwner
                 LaunchAtLogin.isEnabled = true
-                
+
                 print("Team ticket subscribing")
                 Team.link(withDevice: ReportingDevice.current()).responseJSON { response in
                     print(response.result)

@@ -25,7 +25,6 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
     var welcomeWindow: NSWindow?
     var enrolledHandler = false
     var networkHandler = NetworkHandler.sharedInstance()
-    var timer: Timer?
 
     private var currentHelperConnection: NSXPCConnection?
 
@@ -49,8 +48,8 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
             NSApp.sendAction(#selector(showWelcome), to: nil, from: nil)
             NSApp.activate(ignoringOtherApps: true)
         } else {
-            DispatchQueue.main.async {
-                Timer.scheduledTimer(timeInterval: 30.0, target: self, selector: #selector(self.runChecks), userInfo: nil, repeats: false)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 30) {
+                self.statusBar?.runChecks(isIteractive: false)
             }
         }
 
@@ -76,8 +75,8 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
         #endif
         // Update when waking up from sleep
         NSWorkspace.onWakeup { _ in
-            DispatchQueue.main.async {
-                Timer.scheduledTimer(timeInterval: 30.0, target: self, selector: #selector(self.runChecks), userInfo: nil, repeats: false)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 30) {
+                self.statusBar?.runChecks(isIteractive: false)
             }
             #if !SETAPP_ENABLED
                 if Defaults.shouldDoUpdateCheck() {
@@ -133,14 +132,12 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
     }
 
     func statusDidChange(status: NWPath.Status) {
-        timer?.invalidate()
         if status == .satisfied {
             os_log("network condtions changed to: connected")
             // wait 30 second of stable conenction before running checks
-            DispatchQueue.main.async {
-                self.timer = Timer.scheduledTimer(timeInterval: 30.0, target: self, selector: #selector(self.runChecks), userInfo: nil, repeats: false)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 30) {
+                self.statusBar?.runChecks(isIteractive: false)
             }
-
         } else {
             os_log("network condtions changed to: disconnected")
         }
@@ -181,8 +178,8 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
     }
 
     @objc func runChecksDelayed() {
-        DispatchQueue.main.async {
-            Timer.scheduledTimer(timeInterval: 2.00, target: self, selector: #selector(self.runChecks), userInfo: nil, repeats: false)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            self.statusBar?.runChecks(isIteractive: false)
         }
     }
 
