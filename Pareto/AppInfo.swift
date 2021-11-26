@@ -31,8 +31,20 @@ enum AppInfo {
             GatekeeperCheck.sharedInstance,
             FileVaultCheck.sharedInstance,
             BootCheck.sharedInstance
+        ]),
+        Claim(withTitle: "Software Updates", withChecks: [
+            App1Password7Check.sharedInstance,
+            AppBitwardenCheck.sharedInstance,
+            AppCyberduckCheck.sharedInstance,
+            AppDashlaneCheck.sharedInstance,
+            AppEnpassCheck.sharedInstance,
+            AppHushCheck.sharedInstance,
+            AppMuzzleCheck.sharedInstance,
+            AppNordLayerCheck.sharedInstance,
+            AppSlackCheck.sharedInstance,
+            AppTailscaleCheck.sharedInstance,
+            AppWireGuardCheck.sharedInstance
         ])
-        // Claim(withTitle: "Apps are up-to-date", withChecks: [IntegrationCheck(), IntegrationCheck()])
     ]
 
     static let appVersion: String = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as! String

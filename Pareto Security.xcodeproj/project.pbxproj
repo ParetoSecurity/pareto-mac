@@ -87,6 +87,26 @@
 		4F38D8CC273AC5F200671756 /* PermissionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F38D8CA273AC5F200671756 /* PermissionsView.swift */; };
 		4F38D8CE273AC62500671756 /* EndView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F38D8CD273AC62500671756 /* EndView.swift */; };
 		4F38D8CF273AC62500671756 /* EndView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F38D8CD273AC62500671756 /* EndView.swift */; };
+		4F3DCFCE274FD1AE00F1CB55 /* AppCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F3DCFCD274FD1AE00F1CB55 /* AppCheck.swift */; };
+		4F3DCFCF274FD1AE00F1CB55 /* AppCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F3DCFCD274FD1AE00F1CB55 /* AppCheck.swift */; };
+		4F3DCFDB274FE4E000F1CB55 /* Slack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F3DCFD5274FE4E000F1CB55 /* Slack.swift */; };
+		4F3DCFDC274FE4E000F1CB55 /* Slack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F3DCFD5274FE4E000F1CB55 /* Slack.swift */; };
+		4F3DCFDD274FE4E000F1CB55 /* Bitwarden.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F3DCFD6274FE4E000F1CB55 /* Bitwarden.swift */; };
+		4F3DCFDE274FE4E000F1CB55 /* Bitwarden.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F3DCFD6274FE4E000F1CB55 /* Bitwarden.swift */; };
+		4F3DCFDF274FE4E000F1CB55 /* Tailscale.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F3DCFD7274FE4E000F1CB55 /* Tailscale.swift */; };
+		4F3DCFE0274FE4E000F1CB55 /* Tailscale.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F3DCFD7274FE4E000F1CB55 /* Tailscale.swift */; };
+		4F3DCFE1274FE4E000F1CB55 /* 1Password7.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F3DCFD8274FE4E000F1CB55 /* 1Password7.swift */; };
+		4F3DCFE2274FE4E000F1CB55 /* 1Password7.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F3DCFD8274FE4E000F1CB55 /* 1Password7.swift */; };
+		4F3DCFE3274FE4E000F1CB55 /* Cyberduck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F3DCFD9274FE4E000F1CB55 /* Cyberduck.swift */; };
+		4F3DCFE4274FE4E000F1CB55 /* Cyberduck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F3DCFD9274FE4E000F1CB55 /* Cyberduck.swift */; };
+		4F3DCFE5274FE4E000F1CB55 /* NordLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F3DCFDA274FE4E000F1CB55 /* NordLayer.swift */; };
+		4F3DCFE6274FE4E000F1CB55 /* NordLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F3DCFDA274FE4E000F1CB55 /* NordLayer.swift */; };
+		4F3DCFE9274FE61200F1CB55 /* Muzzle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F3DCFE7274FE61200F1CB55 /* Muzzle.swift */; };
+		4F3DCFEA274FE61200F1CB55 /* Muzzle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F3DCFE7274FE61200F1CB55 /* Muzzle.swift */; };
+		4F3DCFEB274FE61200F1CB55 /* Hush.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F3DCFE8274FE61200F1CB55 /* Hush.swift */; };
+		4F3DCFEC274FE61200F1CB55 /* Hush.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F3DCFE8274FE61200F1CB55 /* Hush.swift */; };
+		4F3DCFEE274FE73600F1CB55 /* WireGuard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F3DCFED274FE73600F1CB55 /* WireGuard.swift */; };
+		4F3DCFEF274FE73600F1CB55 /* WireGuard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F3DCFED274FE73600F1CB55 /* WireGuard.swift */; };
 		4F3EF24326CA859500841375 /* Claim.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F3EF24226CA859500841375 /* Claim.swift */; };
 		4F47221026B08A0E0071CE2A /* Defaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F47220F26B08A0E0071CE2A /* Defaults.swift */; };
 		4F57135326F8A6AC004B4359 /* LicenseTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F57135226F8A6AC004B4359 /* LicenseTest.swift */; };
@@ -104,6 +124,12 @@
 		4F6A92E826C52210006C2F2D /* IntegrationCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F6A92E726C52210006C2F2D /* IntegrationCheck.swift */; };
 		4F6A92EA26C54AB7006C2F2D /* AppInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F6A92E926C54AB7006C2F2D /* AppInfo.swift */; };
 		4F6A92F226C555C6006C2F2D /* ParetoSecurityUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F6A92F126C555C6006C2F2D /* ParetoSecurityUITests.swift */; };
+		4F74B7D6275114EA00F1FC11 /* Dashlane.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F74B7D4275114EA00F1FC11 /* Dashlane.swift */; };
+		4F74B7D7275114EA00F1FC11 /* Dashlane.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F74B7D4275114EA00F1FC11 /* Dashlane.swift */; };
+		4F74B7D8275114EA00F1FC11 /* Enpass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F74B7D5275114EA00F1FC11 /* Enpass.swift */; };
+		4F74B7D9275114EA00F1FC11 /* Enpass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F74B7D5275114EA00F1FC11 /* Enpass.swift */; };
+		4F74B7DF2751174500F1FC11 /* SwiftyJSON in Frameworks */ = {isa = PBXBuildFile; productRef = 4F74B7DE2751174500F1FC11 /* SwiftyJSON */; };
+		4F74B7E92751312800F1FC11 /* SwiftyJSON in Frameworks */ = {isa = PBXBuildFile; productRef = 4F74B7E82751312800F1FC11 /* SwiftyJSON */; };
 		4F7739F4271EB3AD008B1584 /* Sentry in Frameworks */ = {isa = PBXBuildFile; productRef = 4F7739F3271EB3AD008B1584 /* Sentry */; };
 		4F7739F7271EBC2F008B1584 /* Sentry in Frameworks */ = {isa = PBXBuildFile; productRef = 4F7739F6271EBC2F008B1584 /* Sentry */; };
 		4F79F78D273BF6300082A5EB /* ChecksView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F79F78C273BF6300082A5EB /* ChecksView.swift */; };
@@ -234,6 +260,16 @@
 		4F38D8C7273AC5AE00671756 /* IntroView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntroView.swift; sourceTree = "<group>"; };
 		4F38D8CA273AC5F200671756 /* PermissionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionsView.swift; sourceTree = "<group>"; };
 		4F38D8CD273AC62500671756 /* EndView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndView.swift; sourceTree = "<group>"; };
+		4F3DCFCD274FD1AE00F1CB55 /* AppCheck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCheck.swift; sourceTree = "<group>"; };
+		4F3DCFD5274FE4E000F1CB55 /* Slack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Slack.swift; path = "Software Updates/Slack.swift"; sourceTree = "<group>"; };
+		4F3DCFD6274FE4E000F1CB55 /* Bitwarden.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Bitwarden.swift; path = "Software Updates/Bitwarden.swift"; sourceTree = "<group>"; };
+		4F3DCFD7274FE4E000F1CB55 /* Tailscale.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Tailscale.swift; path = "Software Updates/Tailscale.swift"; sourceTree = "<group>"; };
+		4F3DCFD8274FE4E000F1CB55 /* 1Password7.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = 1Password7.swift; path = "Software Updates/1Password7.swift"; sourceTree = "<group>"; };
+		4F3DCFD9274FE4E000F1CB55 /* Cyberduck.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Cyberduck.swift; path = "Software Updates/Cyberduck.swift"; sourceTree = "<group>"; };
+		4F3DCFDA274FE4E000F1CB55 /* NordLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NordLayer.swift; path = "Software Updates/NordLayer.swift"; sourceTree = "<group>"; };
+		4F3DCFE7274FE61200F1CB55 /* Muzzle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Muzzle.swift; path = "Software Updates/Muzzle.swift"; sourceTree = "<group>"; };
+		4F3DCFE8274FE61200F1CB55 /* Hush.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Hush.swift; path = "Software Updates/Hush.swift"; sourceTree = "<group>"; };
+		4F3DCFED274FE73600F1CB55 /* WireGuard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WireGuard.swift; path = "Software Updates/WireGuard.swift"; sourceTree = "<group>"; };
 		4F3EF24226CA859500841375 /* Claim.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Claim.swift; sourceTree = "<group>"; };
 		4F47220F26B08A0E0071CE2A /* Defaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Defaults.swift; sourceTree = "<group>"; };
 		4F57135226F8A6AC004B4359 /* LicenseTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LicenseTest.swift; sourceTree = "<group>"; };
@@ -251,6 +287,8 @@
 		4F6A92E926C54AB7006C2F2D /* AppInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppInfo.swift; sourceTree = "<group>"; };
 		4F6A92EF26C555C6006C2F2D /* ParetoSecurityUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ParetoSecurityUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4F6A92F126C555C6006C2F2D /* ParetoSecurityUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParetoSecurityUITests.swift; sourceTree = "<group>"; };
+		4F74B7D4275114EA00F1FC11 /* Dashlane.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Dashlane.swift; path = "Software Updates/Dashlane.swift"; sourceTree = "<group>"; };
+		4F74B7D5275114EA00F1FC11 /* Enpass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Enpass.swift; path = "Software Updates/Enpass.swift"; sourceTree = "<group>"; };
 		4F79F78C273BF6300082A5EB /* ChecksView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChecksView.swift; sourceTree = "<group>"; };
 		4F81C10726EB5D270065F548 /* URL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URL.swift; sourceTree = "<group>"; };
 		4F84530F26D634E5007C3B04 /* NSWorkspace.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSWorkspace.swift; sourceTree = "<group>"; };
@@ -305,6 +343,7 @@
 				4F37E73B2718122E00A2B254 /* Defaults in Frameworks */,
 				4F37E73C2718122E00A2B254 /* SwiftSocket in Frameworks */,
 				4F37E73D2718122E00A2B254 /* LaunchAtLogin in Frameworks */,
+				4F74B7E92751312800F1FC11 /* SwiftyJSON in Frameworks */,
 				4F37E73E2718122E00A2B254 /* JWTDecode in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -342,6 +381,7 @@
 				4F6A0E1326CE608C003B00A3 /* Defaults in Frameworks */,
 				4F1AE88B26F9FC150084A381 /* SwiftSocket in Frameworks */,
 				4F103012269F1C65008C1E86 /* LaunchAtLogin in Frameworks */,
+				4F74B7DF2751174500F1FC11 /* SwiftyJSON in Frameworks */,
 				4F196CD62714B51900A2A7B8 /* JWTDecode in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -374,12 +414,14 @@
 		4F10300A269F0568008C1E86 /* Checks */ = {
 			isa = PBXGroup;
 			children = (
+				4F3DCFD4274FE4C900F1CB55 /* Software Updates */,
 				4F1AE88E26F9FF630084A381 /* System Integrity */,
 				4F1AE88D26F9FF440084A381 /* Firewall and Sharing */,
 				4F1AE88C26F9FEA60084A381 /* Access Security */,
 				4F3EF24226CA859500841375 /* Claim.swift */,
 				4F5E887F26A053A9005271FB /* ParetoCheck.swift */,
 				4F6A92E726C52210006C2F2D /* IntegrationCheck.swift */,
+				4F3DCFCD274FD1AE00F1CB55 /* AppCheck.swift */,
 			);
 			path = Checks;
 			sourceTree = "<group>";
@@ -430,6 +472,24 @@
 				4F79F78C273BF6300082A5EB /* ChecksView.swift */,
 			);
 			path = Welcome;
+			sourceTree = "<group>";
+		};
+		4F3DCFD4274FE4C900F1CB55 /* Software Updates */ = {
+			isa = PBXGroup;
+			children = (
+				4F74B7D4275114EA00F1FC11 /* Dashlane.swift */,
+				4F74B7D5275114EA00F1FC11 /* Enpass.swift */,
+				4F3DCFD8274FE4E000F1CB55 /* 1Password7.swift */,
+				4F3DCFD6274FE4E000F1CB55 /* Bitwarden.swift */,
+				4F3DCFD9274FE4E000F1CB55 /* Cyberduck.swift */,
+				4F3DCFE8274FE61200F1CB55 /* Hush.swift */,
+				4F3DCFE7274FE61200F1CB55 /* Muzzle.swift */,
+				4F3DCFDA274FE4E000F1CB55 /* NordLayer.swift */,
+				4F3DCFD5274FE4E000F1CB55 /* Slack.swift */,
+				4F3DCFD7274FE4E000F1CB55 /* Tailscale.swift */,
+				4F3DCFED274FE73600F1CB55 /* WireGuard.swift */,
+			);
+			name = "Software Updates";
 			sourceTree = "<group>";
 		};
 		4F6A92F026C555C6006C2F2D /* ParetoSecurityUITests */ = {
@@ -582,6 +642,7 @@
 				4F37E7052718122E00A2B254 /* SwiftSocket */,
 				4F37E7072718122E00A2B254 /* JWTDecode */,
 				4F7739F6271EBC2F008B1584 /* Sentry */,
+				4F74B7E82751312800F1FC11 /* SwiftyJSON */,
 			);
 			productName = Pareto;
 			productReference = 4F37E7472718122E00A2B254 /* Pareto Security SetApp.app */;
@@ -669,6 +730,7 @@
 				4F1AE88A26F9FC150084A381 /* SwiftSocket */,
 				4F196CD52714B51900A2A7B8 /* JWTDecode */,
 				4F7739F3271EB3AD008B1584 /* Sentry */,
+				4F74B7DE2751174500F1FC11 /* SwiftyJSON */,
 			);
 			productName = Pareto;
 			productReference = 4FEBA2EE269CD48F009B2469 /* Pareto Security.app */;
@@ -719,6 +781,7 @@
 				4F1AE88926F9FC150084A381 /* XCRemoteSwiftPackageReference "SwiftSocket" */,
 				4F196CD42714B51900A2A7B8 /* XCRemoteSwiftPackageReference "JWTDecode.swift" */,
 				4F7739F2271EB3AD008B1584 /* XCRemoteSwiftPackageReference "sentry-cocoa" */,
+				4F74B7DD2751174500F1FC11 /* XCRemoteSwiftPackageReference "SwiftyJSON" */,
 			);
 			productRefGroup = 4FEBA2EF269CD48F009B2469 /* Products */;
 			projectDirPath = "";
@@ -859,6 +922,8 @@
 				4F37E70A2718122E00A2B254 /* ButtonStyle.swift in Sources */,
 				4F37E70B2718122E00A2B254 /* ParetoCheck.swift in Sources */,
 				4F37E70C2718122E00A2B254 /* RemoteLogin.swift in Sources */,
+				4F3DCFCF274FD1AE00F1CB55 /* AppCheck.swift in Sources */,
+				4F3DCFEA274FE61200F1CB55 /* Muzzle.swift in Sources */,
 				4F37E70D2718122E00A2B254 /* StatusBarController.swift in Sources */,
 				4F37E70E2718122E00A2B254 /* PrinterSharingCheck.swift in Sources */,
 				4F37E70F2718122E00A2B254 /* FileSharingCheck.swift in Sources */,
@@ -876,7 +941,11 @@
 				4F37E7192718122E00A2B254 /* RemoteManagment.swift in Sources */,
 				4F37E71A2718122E00A2B254 /* Date.swift in Sources */,
 				4F37E71B2718122E00A2B254 /* Teams.swift in Sources */,
+				4F3DCFEC274FE61200F1CB55 /* Hush.swift in Sources */,
+				4F74B7D7275114EA00F1FC11 /* Dashlane.swift in Sources */,
 				4F37E71C2718122E00A2B254 /* ScreensaverPassword.swift in Sources */,
+				4F74B7D9275114EA00F1FC11 /* Enpass.swift in Sources */,
+				4F3DCFE4274FE4E000F1CB55 /* Cyberduck.swift in Sources */,
 				4F38D8C9273AC5AE00671756 /* IntroView.swift in Sources */,
 				4F37E71D2718122E00A2B254 /* Defaults.swift in Sources */,
 				4F37E71E2718122E00A2B254 /* Autologin.swift in Sources */,
@@ -888,25 +957,31 @@
 				4F37E7212718122E00A2B254 /* Flags.swift in Sources */,
 				4F37E7222718122E00A2B254 /* PasswordFromLock.swift in Sources */,
 				4F37E7232718122E00A2B254 /* Bundle.swift in Sources */,
+				4F3DCFE6274FE4E000F1CB55 /* NordLayer.swift in Sources */,
 				4F37E7242718122E00A2B254 /* WelcomeView.swift in Sources */,
 				4F37E7252718122E00A2B254 /* OpenWiFi.swift in Sources */,
 				4F37E7262718122E00A2B254 /* IntegrationCheck.swift in Sources */,
+				4F3DCFDC274FE4E000F1CB55 /* Slack.swift in Sources */,
 				4F37E7272718122E00A2B254 /* Boot.swift in Sources */,
 				4FB11913274261A700B89634 /* AppProtocol.swift in Sources */,
 				4F37E7282718122E00A2B254 /* Claim.swift in Sources */,
 				4F37E7292718122E00A2B254 /* ChecksSettingsView.swift in Sources */,
 				4F37E72A2718122E00A2B254 /* AboutSettingsView.swift in Sources */,
+				4F3DCFE0274FE4E000F1CB55 /* Tailscale.swift in Sources */,
 				4F37E72B2718122E00A2B254 /* FileVault.swift in Sources */,
 				4F37E72C2718122E00A2B254 /* SettingsView.swift in Sources */,
 				4F37E72D2718122E00A2B254 /* AirPlay.swift in Sources */,
 				4F37E72E2718122E00A2B254 /* Screensaver.swift in Sources */,
 				4F37E72F2718122E00A2B254 /* NSBackgroundActivityScheduler.swift in Sources */,
+				4F3DCFEF274FE73600F1CB55 /* WireGuard.swift in Sources */,
+				4F3DCFE2274FE4E000F1CB55 /* 1Password7.swift in Sources */,
 				4F37E7302718122E00A2B254 /* Gatekeeper.swift in Sources */,
 				4F37E7312718122E00A2B254 /* GeneralSettingsView.swift in Sources */,
 				4F37E7322718122E00A2B254 /* AppHandlers.swift in Sources */,
 				4F37E7332718122E00A2B254 /* NSWorkspace.swift in Sources */,
 				4F37E7342718122E00A2B254 /* NSImage.swift in Sources */,
 				4FB11914274261D700B89634 /* CodeSignCheck.swift in Sources */,
+				4F3DCFDE274FE4E000F1CB55 /* Bitwarden.swift in Sources */,
 				4F37E7352718122E00A2B254 /* AppInfo.swift in Sources */,
 				4F37E7362718122E00A2B254 /* License.swift in Sources */,
 				4FB1190B2742614D00B89634 /* HelperAuth.swift in Sources */,
@@ -956,6 +1031,8 @@
 				4FB0416126F71CC0003657BE /* ButtonStyle.swift in Sources */,
 				4F5E888026A053A9005271FB /* ParetoCheck.swift in Sources */,
 				4F35395726E8AE02008F5DD3 /* RemoteLogin.swift in Sources */,
+				4F3DCFCE274FD1AE00F1CB55 /* AppCheck.swift in Sources */,
+				4F3DCFE9274FE61200F1CB55 /* Muzzle.swift in Sources */,
 				4FEBA304269CD4E0009B2469 /* StatusBarController.swift in Sources */,
 				4F6A0E0E26CE484A003B00A3 /* PrinterSharingCheck.swift in Sources */,
 				4F6A0E1026CE4868003B00A3 /* FileSharingCheck.swift in Sources */,
@@ -973,7 +1050,11 @@
 				4F35395526E8AD4C008F5DD3 /* RemoteManagment.swift in Sources */,
 				4FB7C68126AFF25300FB1C41 /* Date.swift in Sources */,
 				4F343A5F26F7A3D4007D2F7D /* Teams.swift in Sources */,
+				4F3DCFEB274FE61200F1CB55 /* Hush.swift in Sources */,
+				4F74B7D6275114EA00F1FC11 /* Dashlane.swift in Sources */,
 				4FB405EF26A6FC4800267D5D /* ScreensaverPassword.swift in Sources */,
+				4F74B7D8275114EA00F1FC11 /* Enpass.swift in Sources */,
+				4F3DCFE3274FE4E000F1CB55 /* Cyberduck.swift in Sources */,
 				4F38D8C8273AC5AE00671756 /* IntroView.swift in Sources */,
 				4F47221026B08A0E0071CE2A /* Defaults.swift in Sources */,
 				4F868DD126A5C51C005B876E /* Autologin.swift in Sources */,
@@ -985,25 +1066,31 @@
 				4FF22A6526F0CFA500500213 /* Flags.swift in Sources */,
 				4F84A94926CBE21300A1579D /* PasswordFromLock.swift in Sources */,
 				4F14487C26D8EDB000A5BA34 /* Bundle.swift in Sources */,
+				4F3DCFE5274FE4E000F1CB55 /* NordLayer.swift in Sources */,
 				4F8B01B226F4A6CB00EDE14B /* WelcomeView.swift in Sources */,
 				4F5B20C127030BEB0015642A /* OpenWiFi.swift in Sources */,
 				4F6A92E826C52210006C2F2D /* IntegrationCheck.swift in Sources */,
+				4F3DCFDB274FE4E000F1CB55 /* Slack.swift in Sources */,
 				4F0371BC26CD00B700B35E43 /* Boot.swift in Sources */,
 				4FB11912274261A500B89634 /* AppProtocol.swift in Sources */,
 				4F3EF24326CA859500841375 /* Claim.swift in Sources */,
 				4F24A09426EB73C80036F748 /* ChecksSettingsView.swift in Sources */,
 				4F24A09226EB73980036F748 /* AboutSettingsView.swift in Sources */,
+				4F3DCFDF274FE4E000F1CB55 /* Tailscale.swift in Sources */,
 				4FB7C68D26AFFD2600FB1C41 /* FileVault.swift in Sources */,
 				4F103008269EE136008C1E86 /* SettingsView.swift in Sources */,
 				4F1AE89226FA026D0084A381 /* AirPlay.swift in Sources */,
 				4F868DD326A5C751005B876E /* Screensaver.swift in Sources */,
 				4F84531226D638C0007C3B04 /* NSBackgroundActivityScheduler.swift in Sources */,
+				4F3DCFEE274FE73600F1CB55 /* WireGuard.swift in Sources */,
+				4F3DCFE1274FE4E000F1CB55 /* 1Password7.swift in Sources */,
 				4FD0A24126A024440070BED4 /* Gatekeeper.swift in Sources */,
 				4F24A09626EB73F30036F748 /* GeneralSettingsView.swift in Sources */,
 				4F57135B26F8C5D7004B4359 /* AppHandlers.swift in Sources */,
 				4F84531026D634E5007C3B04 /* NSWorkspace.swift in Sources */,
 				4FB7C68726AFF29A00FB1C41 /* NSImage.swift in Sources */,
 				4FB11915274261D800B89634 /* CodeSignCheck.swift in Sources */,
+				4F3DCFDD274FE4E000F1CB55 /* Bitwarden.swift in Sources */,
 				4F6A92EA26C54AB7006C2F2D /* AppInfo.swift in Sources */,
 				4FDAD88F26EB784A00F64E61 /* License.swift in Sources */,
 				4FB1190A2742614900B89634 /* HelperAuth.swift in Sources */,
@@ -1642,6 +1729,14 @@
 				minimumVersion = 5.0.0;
 			};
 		};
+		4F74B7DD2751174500F1FC11 /* XCRemoteSwiftPackageReference "SwiftyJSON" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SwiftyJSON/SwiftyJSON.git";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
 		4F7739F2271EB3AD008B1584 /* XCRemoteSwiftPackageReference "sentry-cocoa" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/getsentry/sentry-cocoa";
@@ -1733,6 +1828,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 4F6A0E1126CE608C003B00A3 /* XCRemoteSwiftPackageReference "Defaults" */;
 			productName = Defaults;
+		};
+		4F74B7DE2751174500F1FC11 /* SwiftyJSON */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4F74B7DD2751174500F1FC11 /* XCRemoteSwiftPackageReference "SwiftyJSON" */;
+			productName = SwiftyJSON;
+		};
+		4F74B7E82751312800F1FC11 /* SwiftyJSON */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4F74B7DD2751174500F1FC11 /* XCRemoteSwiftPackageReference "SwiftyJSON" */;
+			productName = SwiftyJSON;
 		};
 		4F7739F3271EB3AD008B1584 /* Sentry */ = {
 			isa = XCSwiftPackageProductDependency;

@@ -47,6 +47,10 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
         set { UserDefaults.standard.set(newValue, forKey: EnabledKey) }
     }
 
+    public var isRunnable: Bool {
+        return isActive
+    }
+
     var checkTimestamp: Int {
         get { UserDefaults.standard.integer(forKey: TimestampKey) }
         set { UserDefaults.standard.set(newValue, forKey: TimestampKey) }
@@ -64,7 +68,7 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
     func menu() -> NSMenuItem {
         let item = NSMenuItem(title: Title, action: #selector(moreInfo), keyEquivalent: "")
         item.target = self
-        if isActive {
+        if isRunnable {
             if Defaults[.snoozeTime] > 0 {
                 item.image = NSImage.SF(name: "seal.fill").tint(color: .systemGray)
             } else {
@@ -90,8 +94,8 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
     }
 
     func run() {
-        if !isActive {
-            os_log("Disabled for %{public}s - %{public}s", log: Log.app, UUID, Title)
+        if !isRunnable {
+            os_log("Disabled check %{public}s - %{public}s", log: Log.app, UUID, Title)
             return
         }
 
