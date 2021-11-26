@@ -79,7 +79,7 @@ struct Report: Encodable {
 
         for claim in AppInfo.claims {
             for check in claim.checks {
-                if check.isActive {
+                if check.isRunnable {
                     if check.checkPassed {
                         passed += 1
                         checkStates[check.UUID] = CheckStatus.Passing.rawValue
@@ -112,6 +112,7 @@ struct Report: Encodable {
 enum Team {
     public static let defaultAPI = "https://dash.paretosecurity.com/api/v1/team"
     private static let base = Defaults[.teamAPI]
+    private static let queue = DispatchQueue(label: "co.pareto.api", qos: .utility, attributes: .concurrent)
 
     static func link(withDevice device: ReportingDevice) -> DataRequest {
         AF.request(
@@ -121,6 +122,8 @@ enum Team {
             encoder: JSONParameterEncoder.default
         ).validate().cURLDescription { cmd in
             debugPrint(cmd)
+        }.response(queue: queue) { data in
+            debugPrint(data)
         }
     }
 
@@ -132,7 +135,9 @@ enum Team {
             encoder: JSONParameterEncoder.default
         ).cURLDescription { cmd in
             debugPrint(cmd)
-        }.validate()
+        }.validate().response(queue: queue) { data in
+            debugPrint(data)
+        }
     }
 }
 

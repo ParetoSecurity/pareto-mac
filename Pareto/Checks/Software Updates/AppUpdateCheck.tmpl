@@ -1,0 +1,29 @@
+//
+//  $safename.swift
+//  Pareto Security
+//
+//  Created by Janez Troha on 11/11/2021.
+//
+
+class $safenameclass: AppCheck {
+
+    static let sharedInstance = $safenameclass()
+    
+    override var appName: String { "$app" }
+    override var appMarketingName: String { "$app_name" }
+    override var appBundle: String { "$bundle" }
+    override var sparkleURL: String { "$SUFeedURL" }
+
+    override var UUID: String {
+        "$uuid"
+    }
+
+    override var TitleON: String {
+       "$app is up-to-date"
+    }
+
+    override var TitleOFF: String {
+        "$app has an available update"
+    }
+
+}
