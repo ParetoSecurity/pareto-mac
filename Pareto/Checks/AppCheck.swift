@@ -6,6 +6,8 @@
 //
 
 import Alamofire
+import AppKit
+import Combine
 import Foundation
 import os.log
 import OSLog
@@ -97,7 +99,7 @@ class AppCheck: ParetoCheck, AppCheckProtocol {
         _ = isApplicationPresent()
 
         if NetworkHandler.sharedInstance().currentStatus != .satisfied {
-            return true
+            return checkPassed
         }
 
         getLatestVersion { version in
@@ -106,5 +108,11 @@ class AppCheck: ParetoCheck, AppCheckProtocol {
         }
         lock.wait()
         return Version(appVersion(app: appName) ?? "0.0.0") ?? Version(0, 0, 0) >= Version(latestVersion) ?? Version(0, 0, 0)
+    }
+
+    @objc override func moreInfo() {
+        if let url = URL(string: "https://paretosecurity.com/check/software-updates?utm_source=app&utm_content=" + appBundle) {
+            NSWorkspace.shared.open(url)
+        }
     }
 }

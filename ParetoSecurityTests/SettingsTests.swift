@@ -44,12 +44,6 @@ class SettingsViewTests: XCTestCase {
         XCTAssertEqual(one, "The Teams subscription will give you a web dashboard for an overview of the company’s devices.")
     }
 
-    func testChecks() throws {
-        let subject = ChecksSettingsView()
-        let one = try subject.inspect().vStack()[0].text().string()
-        XCTAssertEqual(one, "Deselect the checks you don't want the app to run.")
-    }
-
     func testLicense() throws {
         let subject = LicenseSettingsView()
         let one = try subject.inspect().vStack()[0].text().string()
