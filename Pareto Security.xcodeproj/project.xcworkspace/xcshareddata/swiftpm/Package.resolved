@@ -6,8 +6,8 @@
         "repositoryURL": "https://github.com/Alamofire/Alamofire",
         "state": {
           "branch": null,
-          "revision": "f96b619bcb2383b43d898402283924b80e2c4bae",
-          "version": "5.4.3"
+          "revision": "d120af1e8638c7da36c8481fd61a66c0c08dc4fc",
+          "version": "5.4.4"
         }
       },
       {
@@ -33,7 +33,7 @@
         "repositoryURL": "https://github.com/sindresorhus/LaunchAtLogin",
         "state": {
           "branch": "main",
-          "revision": "c34d3c71713b76e5052cfdddfc67765c22350daa",
+          "revision": "e8171b3e38a2816f579f58f3dac1522aa39efe41",
           "version": null
         }
       },
@@ -51,8 +51,8 @@
         "repositoryURL": "https://github.com/getsentry/sentry-cocoa",
         "state": {
           "branch": null,
-          "revision": "d6e3fd7c6180507e2dea8c470edd7fffe975a0cd",
-          "version": "7.4.6"
+          "revision": "d7f02ac0ebd9f8f3ddb1f9a2176a5399c5021e12",
+          "version": "7.5.3"
         }
       },
       {
@@ -87,7 +87,7 @@
         "repositoryURL": "https://github.com/nalexn/ViewInspector",
         "state": {
           "branch": "master",
-          "revision": "5a429838f90779043e3f63bf8ed84d39478f0487",
+          "revision": "c766db3be0eff8994bcdc92718dfc7fc19baf3ca",
           "version": null
         }
       }
