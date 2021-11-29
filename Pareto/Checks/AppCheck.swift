@@ -30,6 +30,7 @@ class AppCheck: ParetoCheck, AppCheckProtocol {
     private var isApplicationPresentCached: Bool = false
     private var applicationPresentCached: Bool = false
     private static let queue = DispatchQueue(label: "co.pareto.check_versions", qos: .utility, attributes: .concurrent)
+    private var latestVersion = Version(0, 0, 0)
 
     func isApplicationPresent() -> Bool {
         if isApplicationPresentCached {
@@ -51,6 +52,10 @@ class AppCheck: ParetoCheck, AppCheckProtocol {
 
     override public var showSettings: Bool {
         return isApplicationPresent()
+    }
+
+    private var currentVersion: Version {
+        Version(appVersion(app: appName) ?? "0.0.0") ?? Version(0, 0, 0)
     }
 
     func getLatestVersion(completion: @escaping (String) -> Void) {
@@ -92,7 +97,6 @@ class AppCheck: ParetoCheck, AppCheckProtocol {
 
     override func checkPasses() -> Bool {
         let lock = DispatchSemaphore(value: 0)
-        var latestVersion = "0.0.0"
 
         // Invalidate presence cache (liek after we install app and run checks)
         isApplicationPresentCached = false
@@ -103,15 +107,16 @@ class AppCheck: ParetoCheck, AppCheckProtocol {
         }
 
         getLatestVersion { version in
-            latestVersion = version
+            self.latestVersion = Version(version) ?? self.latestVersion
             lock.signal()
         }
         lock.wait()
-        return Version(appVersion(app: appName) ?? "0.0.0") ?? Version(0, 0, 0) >= Version(latestVersion) ?? Version(0, 0, 0)
+
+        return currentVersion >= latestVersion
     }
 
     @objc override func moreInfo() {
-        if let url = URL(string: "https://paretosecurity.com/check/software-updates?utm_source=app&utm_content=" + appBundle) {
+        if let url = URL(string: "https://paretosecurity.com/security-checks/software-updates?utm_source=app&appName=\(appName.replacingOccurrences(of: " ", with: "%20"))&latestVersion=\(latestVersion)&currentVersion=\(currentVersion)&appBundle=\(appBundle)") {
             NSWorkspace.shared.open(url)
         }
     }
