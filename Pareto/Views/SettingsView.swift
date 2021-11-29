@@ -48,8 +48,7 @@ struct SettingsView: View {
                     Label("About", systemImage: "info")
                 }
                 .tag(Tabs.about)
-        }
-        .padding(20).onAppear(perform: decideTab)
+        }.onAppear(perform: decideTab)
     }
 
     private func decideTab() {

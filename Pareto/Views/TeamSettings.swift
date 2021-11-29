@@ -55,7 +55,7 @@ struct TeamSettingsView: View {
                 Link("Learn more »",
                      destination: URL(string: "https://paretosecurity.com/pricing?utm_source=app&utm_medium=teams-link")!)
             }
-        }.frame(width: 350, height: 100).padding(5)
+        }.frame(width: 350, height: 100).padding(25)
     }
 }
 

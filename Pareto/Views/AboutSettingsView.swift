@@ -85,7 +85,7 @@ struct AboutSettingsView: View {
                 }
             }
 
-        }.frame(width: 350, height: 100).padding(5).onAppear(perform: fetch)
+        }.frame(width: 350, height: 100).padding(25).onAppear(perform: fetch)
     }
 
     private func fetch() {

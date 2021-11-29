@@ -51,6 +51,10 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
         return isActive
     }
 
+    public var showSettings: Bool {
+        return true
+    }
+
     var checkTimestamp: Int {
         get { UserDefaults.standard.integer(forKey: TimestampKey) }
         set { UserDefaults.standard.set(newValue, forKey: TimestampKey) }

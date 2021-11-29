@@ -33,7 +33,7 @@ struct LicenseSettingsView: View {
                             NSPasteboard.general.setString("paretosecurity://enrollSingle/?token=\(license)", forType: .string)
                         }
                     }
-                }.frame(width: 350, height: showBeta ? 120 : 50).padding(5)
+                }.frame(width: 350, height: showBeta ? 120 : 50).padding(25)
             }
 
         } else {
@@ -41,7 +41,7 @@ struct LicenseSettingsView: View {
                 Text("You are running the free version of the app. Please consider purchasing the Personal lifetime license for unlimited devices!")
                 Link("Learn more »",
                      destination: URL(string: "https://paretosecurity.com/pricing?utm_source=app&utm_medium=license-link")!)
-            }.frame(width: 350, height: 100).padding(5)
+            }.frame(width: 350, height: 100).padding(25)
         }
     }
 }
