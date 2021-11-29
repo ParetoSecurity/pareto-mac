@@ -30,7 +30,8 @@ enum AppInfo {
         Claim(withTitle: "System Integrity", withChecks: [
             GatekeeperCheck.sharedInstance,
             FileVaultCheck.sharedInstance,
-            BootCheck.sharedInstance
+            BootCheck.sharedInstance,
+            OpenWiFiCheck.sharedInstance
         ]),
         Claim(withTitle: "Software Updates", withChecks: [
             App1Password7Check.sharedInstance,
@@ -39,7 +40,6 @@ enum AppInfo {
             AppDashlaneCheck.sharedInstance,
             AppEnpassCheck.sharedInstance,
             AppHushCheck.sharedInstance,
-            AppMuzzleCheck.sharedInstance,
             AppNordLayerCheck.sharedInstance,
             AppSlackCheck.sharedInstance,
             AppTailscaleCheck.sharedInstance,
