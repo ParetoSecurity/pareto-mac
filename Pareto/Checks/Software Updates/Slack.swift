@@ -11,7 +11,6 @@ class AppSlackCheck: AppCheck {
     override var appName: String { "Slack" }
     override var appMarketingName: String { "Slack" }
     override var appBundle: String { "com.tinyspeck.slackmacgap" }
-    override var sparkleURL: String { "" }
 
     override var UUID: String {
         "9894a05b-964d-5c19-bef7-53112207d271"

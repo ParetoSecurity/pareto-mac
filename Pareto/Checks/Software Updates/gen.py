@@ -23,7 +23,6 @@ apps = set([
     "Firefox",
     "GitHub Desktop",
     "Google Chrome",
-    "Hush",
     "iTerm",
     "LibreOffice",
     "Muzzle",

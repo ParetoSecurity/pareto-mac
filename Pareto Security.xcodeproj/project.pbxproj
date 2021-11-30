@@ -24,8 +24,6 @@
 		4F24A09226EB73980036F748 /* AboutSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F24A09126EB73980036F748 /* AboutSettingsView.swift */; };
 		4F24A09426EB73C80036F748 /* ChecksSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F24A09326EB73C80036F748 /* ChecksSettingsView.swift */; };
 		4F24A09626EB73F30036F748 /* GeneralSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F24A09526EB73F30036F748 /* GeneralSettingsView.swift */; };
-		4F28A97727563CF200E34F7B /* iTerm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F28A97627563CF200E34F7B /* iTerm.swift */; };
-		4F28A97827563CF200E34F7B /* iTerm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F28A97627563CF200E34F7B /* iTerm.swift */; };
 		4F28A97A2756445900E34F7B /* GoogleChrome.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F28A9792756445900E34F7B /* GoogleChrome.swift */; };
 		4F28A97B2756445900E34F7B /* GoogleChrome.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F28A9792756445900E34F7B /* GoogleChrome.swift */; };
 		4F28A97D27566D8500E34F7B /* Firefox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F28A97C27566D8500E34F7B /* Firefox.swift */; };
@@ -109,8 +107,6 @@
 		4F3DCFE6274FE4E000F1CB55 /* NordLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F3DCFDA274FE4E000F1CB55 /* NordLayer.swift */; };
 		4F3DCFE9274FE61200F1CB55 /* Muzzle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F3DCFE7274FE61200F1CB55 /* Muzzle.swift */; };
 		4F3DCFEA274FE61200F1CB55 /* Muzzle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F3DCFE7274FE61200F1CB55 /* Muzzle.swift */; };
-		4F3DCFEB274FE61200F1CB55 /* Hush.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F3DCFE8274FE61200F1CB55 /* Hush.swift */; };
-		4F3DCFEC274FE61200F1CB55 /* Hush.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F3DCFE8274FE61200F1CB55 /* Hush.swift */; };
 		4F3DCFEE274FE73600F1CB55 /* WireGuard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F3DCFED274FE73600F1CB55 /* WireGuard.swift */; };
 		4F3DCFEF274FE73600F1CB55 /* WireGuard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F3DCFED274FE73600F1CB55 /* WireGuard.swift */; };
 		4F3EF24326CA859500841375 /* Claim.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F3EF24226CA859500841375 /* Claim.swift */; };
@@ -150,6 +146,12 @@
 		4F868DD126A5C51C005B876E /* Autologin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F868DD026A5C51C005B876E /* Autologin.swift */; };
 		4F868DD326A5C751005B876E /* Screensaver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F868DD226A5C751005B876E /* Screensaver.swift */; };
 		4F8B01B226F4A6CB00EDE14B /* WelcomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F8B01B126F4A6CB00EDE14B /* WelcomeView.swift */; };
+		4F923CED2756918E00070551 /* Cache in Frameworks */ = {isa = PBXBuildFile; productRef = 4F923CEC2756918E00070551 /* Cache */; };
+		4F923CEF275691A700070551 /* Docker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F923CEE275691A700070551 /* Docker.swift */; };
+		4F923CF0275691A700070551 /* Docker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F923CEE275691A700070551 /* Docker.swift */; };
+		4F923CF22756920C00070551 /* iTerm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F923CF12756920C00070551 /* iTerm.swift */; };
+		4F923CF32756920C00070551 /* iTerm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F923CF12756920C00070551 /* iTerm.swift */; };
+		4F923CF527569E6300070551 /* Cache in Frameworks */ = {isa = PBXBuildFile; productRef = 4F923CF427569E6300070551 /* Cache */; };
 		4F9791C126F5DB4F00E668F4 /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F9791C026F5DB4F00E668F4 /* Color.swift */; };
 		4FB0416126F71CC0003657BE /* ButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB0416026F71CC0003657BE /* ButtonStyle.swift */; };
 		4FB118EF27424F8900B89634 /* ParetoHelper.xpc in Embed XPC Services */ = {isa = PBXBuildFile; fileRef = 4FB118E427424F8900B89634 /* ParetoHelper.xpc */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -258,7 +260,6 @@
 		4F24A09126EB73980036F748 /* AboutSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutSettingsView.swift; sourceTree = "<group>"; };
 		4F24A09326EB73C80036F748 /* ChecksSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChecksSettingsView.swift; sourceTree = "<group>"; };
 		4F24A09526EB73F30036F748 /* GeneralSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralSettingsView.swift; sourceTree = "<group>"; };
-		4F28A97627563CF200E34F7B /* iTerm.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = iTerm.swift; path = "Software Updates/iTerm.swift"; sourceTree = "<group>"; };
 		4F28A9792756445900E34F7B /* GoogleChrome.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleChrome.swift; sourceTree = "<group>"; };
 		4F28A97C27566D8500E34F7B /* Firefox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Firefox.swift; sourceTree = "<group>"; };
 		4F343A5D26F7A3C8007D2F7D /* API.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = API.playground; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
@@ -277,7 +278,6 @@
 		4F3DCFD9274FE4E000F1CB55 /* Cyberduck.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Cyberduck.swift; path = "Software Updates/Cyberduck.swift"; sourceTree = "<group>"; };
 		4F3DCFDA274FE4E000F1CB55 /* NordLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NordLayer.swift; path = "Software Updates/NordLayer.swift"; sourceTree = "<group>"; };
 		4F3DCFE7274FE61200F1CB55 /* Muzzle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Muzzle.swift; path = "Software Updates/Muzzle.swift"; sourceTree = "<group>"; };
-		4F3DCFE8274FE61200F1CB55 /* Hush.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Hush.swift; path = "Software Updates/Hush.swift"; sourceTree = "<group>"; };
 		4F3DCFED274FE73600F1CB55 /* WireGuard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WireGuard.swift; path = "Software Updates/WireGuard.swift"; sourceTree = "<group>"; };
 		4F3EF24226CA859500841375 /* Claim.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Claim.swift; sourceTree = "<group>"; };
 		4F47220F26B08A0E0071CE2A /* Defaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Defaults.swift; sourceTree = "<group>"; };
@@ -308,6 +308,8 @@
 		4F868DD026A5C51C005B876E /* Autologin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Autologin.swift; sourceTree = "<group>"; };
 		4F868DD226A5C751005B876E /* Screensaver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Screensaver.swift; sourceTree = "<group>"; };
 		4F8B01B126F4A6CB00EDE14B /* WelcomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeView.swift; sourceTree = "<group>"; };
+		4F923CEE275691A700070551 /* Docker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Docker.swift; path = "Software Updates/Docker.swift"; sourceTree = "<group>"; };
+		4F923CF12756920C00070551 /* iTerm.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = iTerm.swift; path = "Software Updates/iTerm.swift"; sourceTree = "<group>"; };
 		4F9791C026F5DB4F00E668F4 /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
 		4FB0416026F71CC0003657BE /* ButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonStyle.swift; sourceTree = "<group>"; };
 		4FB118E427424F8900B89634 /* ParetoHelper.xpc */ = {isa = PBXFileReference; explicitFileType = "wrapper.xpc-service"; includeInIndex = 0; path = ParetoHelper.xpc; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -354,6 +356,7 @@
 				4F37E73D2718122E00A2B254 /* LaunchAtLogin in Frameworks */,
 				4F74B7E92751312800F1FC11 /* SwiftyJSON in Frameworks */,
 				4F37E73E2718122E00A2B254 /* JWTDecode in Frameworks */,
+				4F923CF527569E6300070551 /* Cache in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -392,6 +395,7 @@
 				4F103012269F1C65008C1E86 /* LaunchAtLogin in Frameworks */,
 				4F74B7DF2751174500F1FC11 /* SwiftyJSON in Frameworks */,
 				4F196CD62714B51900A2A7B8 /* JWTDecode in Frameworks */,
+				4F923CED2756918E00070551 /* Cache in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -486,13 +490,13 @@
 		4F3DCFD4274FE4C900F1CB55 /* Software Updates */ = {
 			isa = PBXGroup;
 			children = (
-				4F28A97627563CF200E34F7B /* iTerm.swift */,
+				4F923CF12756920C00070551 /* iTerm.swift */,
+				4F923CEE275691A700070551 /* Docker.swift */,
 				4F74B7D4275114EA00F1FC11 /* Dashlane.swift */,
 				4F74B7D5275114EA00F1FC11 /* Enpass.swift */,
 				4F3DCFD8274FE4E000F1CB55 /* 1Password7.swift */,
 				4F3DCFD6274FE4E000F1CB55 /* Bitwarden.swift */,
 				4F3DCFD9274FE4E000F1CB55 /* Cyberduck.swift */,
-				4F3DCFE8274FE61200F1CB55 /* Hush.swift */,
 				4F3DCFE7274FE61200F1CB55 /* Muzzle.swift */,
 				4F3DCFDA274FE4E000F1CB55 /* NordLayer.swift */,
 				4F3DCFD5274FE4E000F1CB55 /* Slack.swift */,
@@ -655,6 +659,7 @@
 				4F37E7072718122E00A2B254 /* JWTDecode */,
 				4F7739F6271EBC2F008B1584 /* Sentry */,
 				4F74B7E82751312800F1FC11 /* SwiftyJSON */,
+				4F923CF427569E6300070551 /* Cache */,
 			);
 			productName = Pareto;
 			productReference = 4F37E7472718122E00A2B254 /* Pareto Security SetApp.app */;
@@ -743,6 +748,7 @@
 				4F196CD52714B51900A2A7B8 /* JWTDecode */,
 				4F7739F3271EB3AD008B1584 /* Sentry */,
 				4F74B7DE2751174500F1FC11 /* SwiftyJSON */,
+				4F923CEC2756918E00070551 /* Cache */,
 			);
 			productName = Pareto;
 			productReference = 4FEBA2EE269CD48F009B2469 /* Pareto Security.app */;
@@ -795,6 +801,7 @@
 				4F196CD42714B51900A2A7B8 /* XCRemoteSwiftPackageReference "JWTDecode.swift" */,
 				4F7739F2271EB3AD008B1584 /* XCRemoteSwiftPackageReference "sentry-cocoa" */,
 				4F74B7DD2751174500F1FC11 /* XCRemoteSwiftPackageReference "SwiftyJSON" */,
+				4F923CEB2756918E00070551 /* XCRemoteSwiftPackageReference "Cache" */,
 			);
 			productRefGroup = 4FEBA2EF269CD48F009B2469 /* Products */;
 			projectDirPath = "";
@@ -932,6 +939,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4F923CF32756920C00070551 /* iTerm.swift in Sources */,
 				4F37E70A2718122E00A2B254 /* ButtonStyle.swift in Sources */,
 				4F37E70B2718122E00A2B254 /* ParetoCheck.swift in Sources */,
 				4F28A97E27566D8500E34F7B /* Firefox.swift in Sources */,
@@ -953,10 +961,8 @@
 				4F79F78E273BF6300082A5EB /* ChecksView.swift in Sources */,
 				4F37E7182718122E00A2B254 /* LicenseSettingsView.swift in Sources */,
 				4F37E7192718122E00A2B254 /* RemoteManagment.swift in Sources */,
-				4F28A97827563CF200E34F7B /* iTerm.swift in Sources */,
 				4F37E71A2718122E00A2B254 /* Date.swift in Sources */,
 				4F37E71B2718122E00A2B254 /* Teams.swift in Sources */,
-				4F3DCFEC274FE61200F1CB55 /* Hush.swift in Sources */,
 				4F74B7D7275114EA00F1FC11 /* Dashlane.swift in Sources */,
 				4F37E71C2718122E00A2B254 /* ScreensaverPassword.swift in Sources */,
 				4F74B7D9275114EA00F1FC11 /* Enpass.swift in Sources */,
@@ -1000,6 +1006,7 @@
 				4F3DCFDE274FE4E000F1CB55 /* Bitwarden.swift in Sources */,
 				4F37E7352718122E00A2B254 /* AppInfo.swift in Sources */,
 				4F37E7362718122E00A2B254 /* License.swift in Sources */,
+				4F923CF0275691A700070551 /* Docker.swift in Sources */,
 				4FB1190B2742614D00B89634 /* HelperAuth.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1044,6 +1051,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4F923CF22756920C00070551 /* iTerm.swift in Sources */,
 				4FB0416126F71CC0003657BE /* ButtonStyle.swift in Sources */,
 				4F5E888026A053A9005271FB /* ParetoCheck.swift in Sources */,
 				4F28A97D27566D8500E34F7B /* Firefox.swift in Sources */,
@@ -1065,10 +1073,8 @@
 				4F79F78D273BF6300082A5EB /* ChecksView.swift in Sources */,
 				4F24A08E26EB734A0036F748 /* LicenseSettingsView.swift in Sources */,
 				4F35395526E8AD4C008F5DD3 /* RemoteManagment.swift in Sources */,
-				4F28A97727563CF200E34F7B /* iTerm.swift in Sources */,
 				4FB7C68126AFF25300FB1C41 /* Date.swift in Sources */,
 				4F343A5F26F7A3D4007D2F7D /* Teams.swift in Sources */,
-				4F3DCFEB274FE61200F1CB55 /* Hush.swift in Sources */,
 				4F74B7D6275114EA00F1FC11 /* Dashlane.swift in Sources */,
 				4FB405EF26A6FC4800267D5D /* ScreensaverPassword.swift in Sources */,
 				4F74B7D8275114EA00F1FC11 /* Enpass.swift in Sources */,
@@ -1112,6 +1118,7 @@
 				4F3DCFDD274FE4E000F1CB55 /* Bitwarden.swift in Sources */,
 				4F6A92EA26C54AB7006C2F2D /* AppInfo.swift in Sources */,
 				4FDAD88F26EB784A00F64E61 /* License.swift in Sources */,
+				4F923CEF275691A700070551 /* Docker.swift in Sources */,
 				4FB1190A2742614900B89634 /* HelperAuth.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1772,6 +1779,14 @@
 				kind = branch;
 			};
 		};
+		4F923CEB2756918E00070551 /* XCRemoteSwiftPackageReference "Cache" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/hyperoslo/Cache";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 6.0.0;
+			};
+		};
 		4FF515BF26F7B362008D135E /* XCRemoteSwiftPackageReference "Alamofire" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Alamofire/Alamofire";
@@ -1872,6 +1887,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 4F84A94A26CBE4AE00A1579D /* XCRemoteSwiftPackageReference "ViewInspector" */;
 			productName = ViewInspector;
+		};
+		4F923CEC2756918E00070551 /* Cache */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4F923CEB2756918E00070551 /* XCRemoteSwiftPackageReference "Cache" */;
+			productName = Cache;
+		};
+		4F923CF427569E6300070551 /* Cache */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4F923CEB2756918E00070551 /* XCRemoteSwiftPackageReference "Cache" */;
+			productName = Cache;
 		};
 		4FF515C026F7B362008D135E /* Alamofire */ = {
 			isa = XCSwiftPackageProductDependency;

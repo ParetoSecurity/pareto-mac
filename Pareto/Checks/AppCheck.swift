@@ -7,6 +7,7 @@
 
 import Alamofire
 import AppKit
+import Cache
 import Combine
 import Foundation
 import os.log
@@ -29,6 +30,11 @@ class AppCheck: ParetoCheck, AppCheckProtocol {
 
     private var isApplicationPathCached: Bool = false
     private var applicationPathCached: String?
+    private let versionStorage = try! Storage<String, Version>(
+        diskConfig: DiskConfig(name: "Version+Bundles", expiry: .seconds(3600)),
+        memoryConfig: MemoryConfig(expiry: .seconds(3600)),
+        transformer: TransformerFactory.forCodable(ofType: Version.self) // Storage<String, Version>
+    )
 
     static let queue = DispatchQueue(label: "co.pareto.check_versions", qos: .utility, attributes: .concurrent)
     private var latestVersion = Version(0, 0, 0)
@@ -114,8 +120,6 @@ class AppCheck: ParetoCheck, AppCheckProtocol {
     }
 
     override func checkPasses() -> Bool {
-        let lock = DispatchSemaphore(value: 0)
-
         if NetworkHandler.sharedInstance().currentStatus != .satisfied {
             return checkPassed
         }
@@ -123,12 +127,17 @@ class AppCheck: ParetoCheck, AppCheckProtocol {
         // invalidate cache
         applicationPathCached = nil
         isApplicationPathCached = false
-
-        getLatestVersion { version in
-            self.latestVersion = Version(version) ?? self.latestVersion
-            lock.signal()
+        if try! versionStorage.existsObject(forKey: appBundle) {
+            latestVersion = try! versionStorage.object(forKey: appBundle)
+        } else {
+            let lock = DispatchSemaphore(value: 0)
+            getLatestVersion { version in
+                self.latestVersion = Version(version) ?? self.latestVersion
+                try! self.versionStorage.setObject(self.latestVersion, forKey: self.appBundle)
+                lock.signal()
+            }
+            lock.wait()
         }
-        lock.wait()
 
         return currentVersion >= latestVersion
     }

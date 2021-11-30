@@ -11,7 +11,6 @@ class AppTailscaleCheck: AppCheck {
     override var appName: String { "Tailscale" }
     override var appMarketingName: String { "Tailscale" }
     override var appBundle: String { "io.tailscale.ipn.macos" }
-    override var sparkleURL: String { "" }
 
     override var UUID: String {
         "3f70f103-2cd1-50f0-a053-5eb91c891ec8"
