@@ -15,12 +15,4 @@ class AppBitwardenCheck: AppCheck {
     override var UUID: String {
         "42e4fce2-b34f-5220-990a-33ba64e9ffa0"
     }
-
-    override var TitleON: String {
-        "Bitwarden is up-to-date"
-    }
-
-    override var TitleOFF: String {
-        "Bitwarden has an available update"
-    }
 }

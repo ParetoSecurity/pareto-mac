@@ -25,14 +25,6 @@ class AppFirefoxCheck: AppCheck {
         "768a574c-75a2-536d-8785-ef9512981184"
     }
 
-    override var TitleON: String {
-        "Firefox is up-to-date"
-    }
-
-    override var TitleOFF: String {
-        "Firefox has an available update"
-    }
-
     override func getLatestVersion(completion: @escaping (String) -> Void) {
         let url = "https://product-details.mozilla.org/1.0/firefox_history_stability_releases.json"
         os_log("Requesting %{public}s", url)

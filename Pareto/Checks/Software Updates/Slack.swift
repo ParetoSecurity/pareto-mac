@@ -15,12 +15,4 @@ class AppSlackCheck: AppCheck {
     override var UUID: String {
         "9894a05b-964d-5c19-bef7-53112207d271"
     }
-
-    override var TitleON: String {
-        "Slack is up-to-date"
-    }
-
-    override var TitleOFF: String {
-        "Slack has an available update"
-    }
 }

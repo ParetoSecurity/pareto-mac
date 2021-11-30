@@ -16,12 +16,4 @@ class AppMuzzleCheck: AppCheck {
     override var UUID: String {
         "99d8f8cd-6522-586c-afbb-c13d824d05a0"
     }
-
-    override var TitleON: String {
-        "Muzzle is up-to-date"
-    }
-
-    override var TitleOFF: String {
-        "Muzzle has an available update"
-    }
 }

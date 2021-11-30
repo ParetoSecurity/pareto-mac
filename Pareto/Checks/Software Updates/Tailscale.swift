@@ -15,12 +15,4 @@ class AppTailscaleCheck: AppCheck {
     override var UUID: String {
         "3f70f103-2cd1-50f0-a053-5eb91c891ec8"
     }
-
-    override var TitleON: String {
-        "Tailscale is up-to-date"
-    }
-
-    override var TitleOFF: String {
-        "Tailscale has an available update"
-    }
 }

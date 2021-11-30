@@ -32,14 +32,6 @@ class AppDockerCheck: AppCheck {
         "ee11fe36-a372-5cba-a1b4-151748fc2fa7"
     }
 
-    override var TitleON: String {
-        "Docker is up-to-date"
-    }
-
-    override var TitleOFF: String {
-        "Docker has an available update"
-    }
-
     override func getLatestVersion(completion: @escaping (String) -> Void) {
         let url = "https://raw.githubusercontent.com/docker/docker.github.io/master/desktop/mac/release-notes/index.md"
         let versionRegex = NSRegularExpression("## Docker Desktop (?<version>[\\d.]+)")

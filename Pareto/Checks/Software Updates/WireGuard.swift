@@ -15,12 +15,4 @@ class AppWireGuardCheck: AppCheck {
     override var UUID: String {
         "b0e0e64a-2d8c-50d1-947c-b037773827c9"
     }
-
-    override var TitleON: String {
-        "WireGuard is up-to-date"
-    }
-
-    override var TitleOFF: String {
-        "WireGuard has an available update"
-    }
 }

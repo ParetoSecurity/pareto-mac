@@ -12,6 +12,7 @@ import Combine
 import Foundation
 import os.log
 import OSLog
+import SwiftUI
 import SwiftyJSON
 import Version
 
@@ -23,10 +24,26 @@ protocol AppCheckProtocol {
 }
 
 class AppCheck: ParetoCheck, AppCheckProtocol {
-    var appName: String { "appName" }
-    var appMarketingName: String { "appMarketingName" }
-    var appBundle: String { "appBundle" }
-    var sparkleURL: String { "sparkleURL" }
+    var appName: String { "" }
+    var appMarketingName: String { "" }
+    var appBundle: String { "" }
+    var sparkleURL: String { "" }
+
+    override var TitleON: String {
+        #if DEBUG
+            "\(appMarketingName) is up-to-date | local=\(currentVersion) online=\(latestVersion)"
+        #else
+            "\(appMarketingName) is up-to-date"
+        #endif
+    }
+
+    override var TitleOFF: String {
+        #if DEBUG
+            "\(appMarketingName) has an available update | local=\(currentVersion) online=\(latestVersion)"
+        #else
+            "\(appMarketingName) has an available update"
+        #endif
+    }
 
     private var isApplicationPathCached: Bool = false
     private var applicationPathCached: String?
@@ -37,9 +54,22 @@ class AppCheck: ParetoCheck, AppCheckProtocol {
     )
 
     static let queue = DispatchQueue(label: "co.pareto.check_versions", qos: .utility, attributes: .concurrent)
-    private var latestVersion = Version(0, 0, 0)
+    private var latestVersion: Version {
+        if try! versionStorage.existsObject(forKey: appBundle) {
+            return try! versionStorage.object(forKey: appBundle)
+        } else {
+            let lock = DispatchSemaphore(value: 0)
+            getLatestVersion { version in
+                let latestVersion = Version(version) ?? Version(0, 0, 0)
+                try! self.versionStorage.setObject(latestVersion, forKey: self.appBundle)
+                lock.signal()
+            }
+            lock.wait()
+            return try! versionStorage.object(forKey: appBundle)
+        }
+    }
 
-    private var applicationPath: String? {
+    var applicationPath: String? {
         if isApplicationPathCached {
             return applicationPathCached
         }
@@ -75,7 +105,7 @@ class AppCheck: ParetoCheck, AppCheckProtocol {
         return applicationPath != nil
     }
 
-    private var currentVersion: Version {
+    var currentVersion: Version {
         if applicationPath == nil {
             return Version(0, 0, 0)
         }
@@ -90,9 +120,9 @@ class AppCheck: ParetoCheck, AppCheckProtocol {
                 do {
                     if response.data != nil {
                         let json = try JSON(data: response.data!)
-                        let version = json["results"][0]["version"].string
-                        os_log("%{public}s version=%{public}s", self.appBundle, version ?? "0.0.0")
-                        completion(version ?? "0.0.0")
+                        let version = json["results"][0]["version"].string ?? "0.0.0"
+                        os_log("%{public}s version=%{public}s", self.appBundle, version)
+                        completion(version)
                     } else {
                         completion("0.0.0")
                     }
@@ -103,18 +133,26 @@ class AppCheck: ParetoCheck, AppCheckProtocol {
         } else {
             os_log("Requesting %{public}s", sparkleURL)
             AF.request(sparkleURL).response(queue: AppCheck.queue, completionHandler: { response in
-                do {
-                    if response.data != nil {
-                        let xml = XmlElement(fromData: response.data!)
-                        let version = xml["rss"]!["channel"]!["item"]!["enclosure"]!.attributeDict["sparkle:shortVersionString"]
-                        os_log("%{public}s version=%{public}s", self.appBundle, version ?? "0.0.0")
-                        completion(version ?? "0.0.0")
+
+                if response.data != nil {
+                    let xml = XmlElement(fromData: response.data!)
+                    let versionNew = xml["rss"]?["channel"]?["item"]?["enclosure"]?.attributeDict["sparkle:shortVersionString"]
+                    let versionOld = xml["rss"]?["channel"]?["item"]?["enclosure"]?.attributeDict["sparkle:version"]
+                    if versionNew != nil {
+                        os_log("%{public}s sparkle:shortVersionString=%{public}s", self.appBundle, versionNew!)
+                        completion(versionNew!)
+                    } else if versionOld != nil {
+                        os_log("%{public}s sparkle:shortVersionString=%{public}s", self.appBundle, versionOld!)
+                        completion(versionOld!)
                     } else {
+                        os_log("%{public}s failed:Sparkle=0.0.0", self.appBundle)
                         completion("0.0.0")
                     }
-                } catch {
+
+                } else {
                     completion("0.0.0")
                 }
+
             })
         }
     }
@@ -123,21 +161,10 @@ class AppCheck: ParetoCheck, AppCheckProtocol {
         if NetworkHandler.sharedInstance().currentStatus != .satisfied {
             return checkPassed
         }
-
+        try? versionStorage.removeAll()
         // invalidate cache
         applicationPathCached = nil
         isApplicationPathCached = false
-        if try! versionStorage.existsObject(forKey: appBundle) {
-            latestVersion = try! versionStorage.object(forKey: appBundle)
-        } else {
-            let lock = DispatchSemaphore(value: 0)
-            getLatestVersion { version in
-                self.latestVersion = Version(version) ?? self.latestVersion
-                try! self.versionStorage.setObject(self.latestVersion, forKey: self.appBundle)
-                lock.signal()
-            }
-            lock.wait()
-        }
 
         return currentVersion >= latestVersion
     }

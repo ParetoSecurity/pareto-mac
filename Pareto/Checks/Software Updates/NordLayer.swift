@@ -15,12 +15,4 @@ class AppNordLayerCheck: AppCheck {
     override var UUID: String {
         "567eb82b-a407-5998-a620-ca8165d74852"
     }
-
-    override var TitleON: String {
-        "NordLayer is up-to-date"
-    }
-
-    override var TitleOFF: String {
-        "NordLayer has an available update"
-    }
 }

@@ -25,12 +25,16 @@ class AppGoogleChromeCheck: AppCheck {
         "d34ee340-67a7-5e3e-be8b-aef4e3133de0"
     }
 
-    override var TitleON: String {
-        "Google Chrome is up-to-date"
-    }
+    // Special treatment follows
+    // Use build number as definite version comparator
+    // https://www.chromium.org/developers/version-numbers
 
-    override var TitleOFF: String {
-        "Google Chrome has an available update"
+    override var currentVersion: Version {
+        if applicationPath == nil {
+            return Version(0, 0, 0)
+        }
+        let v = appVersion(path: applicationPath ?? "1.2.3.4")!.split(separator: ".")
+        return Version(Int(v[0]) ?? 0, Int(v[1]) ?? 0, Int(v[2]) ?? 0)
     }
 
     override func getLatestVersion(completion: @escaping (String) -> Void) {
@@ -40,9 +44,10 @@ class AppGoogleChromeCheck: AppCheck {
             do {
                 if response.data != nil {
                     let json = try JSON(data: response.data!)
-                    let version = json["versions"][0]["version"].string
-                    os_log("%{public}s version=%{public}s", self.appBundle, version ?? "0.0.0")
-                    completion(version ?? "0.0.0")
+                    let version = json["versions"][0]["version"].string ?? "2.3.4.5"
+                    let v = version.split(separator: ".")
+                    os_log("%{public}s version=%{public}s", self.appBundle, version)
+                    completion("\(v[0]).\(v[1]).\(v[2])")
                 } else {
                     completion("0.0.0")
                 }

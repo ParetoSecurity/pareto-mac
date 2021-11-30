@@ -15,12 +15,4 @@ class AppEnpassCheck: AppCheck {
     override var UUID: String {
         "ca6c8ed7-6d22-5342-908a-f010e3eb102f"
     }
-
-    override var TitleON: String {
-        "Enpass is up-to-date"
-    }
-
-    override var TitleOFF: String {
-        "Enpass has an available update"
-    }
 }
