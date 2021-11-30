@@ -24,6 +24,12 @@
 		4F24A09226EB73980036F748 /* AboutSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F24A09126EB73980036F748 /* AboutSettingsView.swift */; };
 		4F24A09426EB73C80036F748 /* ChecksSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F24A09326EB73C80036F748 /* ChecksSettingsView.swift */; };
 		4F24A09626EB73F30036F748 /* GeneralSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F24A09526EB73F30036F748 /* GeneralSettingsView.swift */; };
+		4F28A97727563CF200E34F7B /* iTerm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F28A97627563CF200E34F7B /* iTerm.swift */; };
+		4F28A97827563CF200E34F7B /* iTerm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F28A97627563CF200E34F7B /* iTerm.swift */; };
+		4F28A97A2756445900E34F7B /* GoogleChrome.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F28A9792756445900E34F7B /* GoogleChrome.swift */; };
+		4F28A97B2756445900E34F7B /* GoogleChrome.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F28A9792756445900E34F7B /* GoogleChrome.swift */; };
+		4F28A97D27566D8500E34F7B /* Firefox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F28A97C27566D8500E34F7B /* Firefox.swift */; };
+		4F28A97E27566D8500E34F7B /* Firefox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F28A97C27566D8500E34F7B /* Firefox.swift */; };
 		4F343A5F26F7A3D4007D2F7D /* Teams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F343A5E26F7A3D4007D2F7D /* Teams.swift */; };
 		4F35395526E8AD4C008F5DD3 /* RemoteManagment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F35395426E8AD4B008F5DD3 /* RemoteManagment.swift */; };
 		4F35395726E8AE02008F5DD3 /* RemoteLogin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F35395626E8AE02008F5DD3 /* RemoteLogin.swift */; };
@@ -252,6 +258,9 @@
 		4F24A09126EB73980036F748 /* AboutSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutSettingsView.swift; sourceTree = "<group>"; };
 		4F24A09326EB73C80036F748 /* ChecksSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChecksSettingsView.swift; sourceTree = "<group>"; };
 		4F24A09526EB73F30036F748 /* GeneralSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralSettingsView.swift; sourceTree = "<group>"; };
+		4F28A97627563CF200E34F7B /* iTerm.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = iTerm.swift; path = "Software Updates/iTerm.swift"; sourceTree = "<group>"; };
+		4F28A9792756445900E34F7B /* GoogleChrome.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleChrome.swift; sourceTree = "<group>"; };
+		4F28A97C27566D8500E34F7B /* Firefox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Firefox.swift; sourceTree = "<group>"; };
 		4F343A5D26F7A3C8007D2F7D /* API.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = API.playground; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		4F343A5E26F7A3D4007D2F7D /* Teams.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Teams.swift; sourceTree = "<group>"; };
 		4F35395426E8AD4B008F5DD3 /* RemoteManagment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteManagment.swift; sourceTree = "<group>"; };
@@ -477,6 +486,7 @@
 		4F3DCFD4274FE4C900F1CB55 /* Software Updates */ = {
 			isa = PBXGroup;
 			children = (
+				4F28A97627563CF200E34F7B /* iTerm.swift */,
 				4F74B7D4275114EA00F1FC11 /* Dashlane.swift */,
 				4F74B7D5275114EA00F1FC11 /* Enpass.swift */,
 				4F3DCFD8274FE4E000F1CB55 /* 1Password7.swift */,
@@ -488,6 +498,8 @@
 				4F3DCFD5274FE4E000F1CB55 /* Slack.swift */,
 				4F3DCFD7274FE4E000F1CB55 /* Tailscale.swift */,
 				4F3DCFED274FE73600F1CB55 /* WireGuard.swift */,
+				4F28A9792756445900E34F7B /* GoogleChrome.swift */,
+				4F28A97C27566D8500E34F7B /* Firefox.swift */,
 			);
 			name = "Software Updates";
 			sourceTree = "<group>";
@@ -922,6 +934,7 @@
 			files = (
 				4F37E70A2718122E00A2B254 /* ButtonStyle.swift in Sources */,
 				4F37E70B2718122E00A2B254 /* ParetoCheck.swift in Sources */,
+				4F28A97E27566D8500E34F7B /* Firefox.swift in Sources */,
 				4F37E70C2718122E00A2B254 /* RemoteLogin.swift in Sources */,
 				4F3DCFCF274FD1AE00F1CB55 /* AppCheck.swift in Sources */,
 				4F3DCFEA274FE61200F1CB55 /* Muzzle.swift in Sources */,
@@ -940,6 +953,7 @@
 				4F79F78E273BF6300082A5EB /* ChecksView.swift in Sources */,
 				4F37E7182718122E00A2B254 /* LicenseSettingsView.swift in Sources */,
 				4F37E7192718122E00A2B254 /* RemoteManagment.swift in Sources */,
+				4F28A97827563CF200E34F7B /* iTerm.swift in Sources */,
 				4F37E71A2718122E00A2B254 /* Date.swift in Sources */,
 				4F37E71B2718122E00A2B254 /* Teams.swift in Sources */,
 				4F3DCFEC274FE61200F1CB55 /* Hush.swift in Sources */,
@@ -967,6 +981,7 @@
 				4FB11913274261A700B89634 /* AppProtocol.swift in Sources */,
 				4F37E7282718122E00A2B254 /* Claim.swift in Sources */,
 				4F37E7292718122E00A2B254 /* ChecksSettingsView.swift in Sources */,
+				4F28A97B2756445900E34F7B /* GoogleChrome.swift in Sources */,
 				4F37E72A2718122E00A2B254 /* AboutSettingsView.swift in Sources */,
 				4F3DCFE0274FE4E000F1CB55 /* Tailscale.swift in Sources */,
 				4F37E72B2718122E00A2B254 /* FileVault.swift in Sources */,
@@ -1031,6 +1046,7 @@
 			files = (
 				4FB0416126F71CC0003657BE /* ButtonStyle.swift in Sources */,
 				4F5E888026A053A9005271FB /* ParetoCheck.swift in Sources */,
+				4F28A97D27566D8500E34F7B /* Firefox.swift in Sources */,
 				4F35395726E8AE02008F5DD3 /* RemoteLogin.swift in Sources */,
 				4F3DCFCE274FD1AE00F1CB55 /* AppCheck.swift in Sources */,
 				4F3DCFE9274FE61200F1CB55 /* Muzzle.swift in Sources */,
@@ -1049,6 +1065,7 @@
 				4F79F78D273BF6300082A5EB /* ChecksView.swift in Sources */,
 				4F24A08E26EB734A0036F748 /* LicenseSettingsView.swift in Sources */,
 				4F35395526E8AD4C008F5DD3 /* RemoteManagment.swift in Sources */,
+				4F28A97727563CF200E34F7B /* iTerm.swift in Sources */,
 				4FB7C68126AFF25300FB1C41 /* Date.swift in Sources */,
 				4F343A5F26F7A3D4007D2F7D /* Teams.swift in Sources */,
 				4F3DCFEB274FE61200F1CB55 /* Hush.swift in Sources */,
@@ -1076,6 +1093,7 @@
 				4FB11912274261A500B89634 /* AppProtocol.swift in Sources */,
 				4F3EF24326CA859500841375 /* Claim.swift in Sources */,
 				4F24A09426EB73C80036F748 /* ChecksSettingsView.swift in Sources */,
+				4F28A97A2756445900E34F7B /* GoogleChrome.swift in Sources */,
 				4F24A09226EB73980036F748 /* AboutSettingsView.swift in Sources */,
 				4F3DCFDF274FE4E000F1CB55 /* Tailscale.swift in Sources */,
 				4FB7C68D26AFFD2600FB1C41 /* FileVault.swift in Sources */,

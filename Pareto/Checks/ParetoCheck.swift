@@ -129,8 +129,7 @@ extension ParetoCheck {
         return dictionary
     }
 
-    func appVersion(app: String) -> String? {
-        let path = "/Applications/\(app).app/Contents/Info.plist"
+    func appVersion(path: String) -> String? {
         guard let dictionary = NSDictionary(contentsOfFile: path) else {
             os_log("Failed reading %{public}s", path)
             return nil

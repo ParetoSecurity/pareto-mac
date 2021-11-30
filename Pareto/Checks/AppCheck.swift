@@ -27,35 +27,53 @@ class AppCheck: ParetoCheck, AppCheckProtocol {
     var appBundle: String { "appBundle" }
     var sparkleURL: String { "sparkleURL" }
 
-    private var isApplicationPresentCached: Bool = false
-    private var applicationPresentCached: Bool = false
-    private static let queue = DispatchQueue(label: "co.pareto.check_versions", qos: .utility, attributes: .concurrent)
+    private var isApplicationPathCached: Bool = false
+    private var applicationPathCached: String?
+
+    static let queue = DispatchQueue(label: "co.pareto.check_versions", qos: .utility, attributes: .concurrent)
     private var latestVersion = Version(0, 0, 0)
 
-    func isApplicationPresent() -> Bool {
-        if isApplicationPresentCached {
-            return applicationPresentCached
+    private var applicationPath: String? {
+        if isApplicationPathCached {
+            return applicationPathCached
         }
-        let path = "/Applications/\(appName).app/Contents/Info.plist"
-        let found = FileManager.default.fileExists(atPath: path)
-        if !found {
-            os_log("Application is not present %{public}s", path)
+
+        let globalPath = "/Applications/\(appName).app/Contents/Info.plist"
+        if FileManager.default.fileExists(atPath: globalPath) {
+            applicationPathCached = globalPath
+            isApplicationPathCached = true
+            return globalPath
         }
-        isApplicationPresentCached = true
-        applicationPresentCached = found
-        return found
+
+        let homeDirURL = FileManager.default.homeDirectoryForCurrentUser
+        let localPath = "\(homeDirURL.path)/Applications/\(appName).app/Contents/Info.plist"
+        if FileManager.default.fileExists(atPath: localPath) {
+            applicationPathCached = localPath
+            isApplicationPathCached = true
+            return localPath
+        }
+
+        os_log("Application is not present %{public}s", appName)
+        applicationPathCached = nil
+        isApplicationPathCached = true
+
+        return nil
     }
 
     override public var isRunnable: Bool {
-        return isActive && isApplicationPresent()
+        // show if application is present
+        return isActive && applicationPath != nil
     }
 
     override public var showSettings: Bool {
-        return isApplicationPresent()
+        return applicationPath != nil
     }
 
     private var currentVersion: Version {
-        Version(appVersion(app: appName) ?? "0.0.0") ?? Version(0, 0, 0)
+        if applicationPath == nil {
+            return Version(0, 0, 0)
+        }
+        return Version(appVersion(path: applicationPath ?? "") ?? "0.0.0") ?? Version(0, 0, 0)
     }
 
     func getLatestVersion(completion: @escaping (String) -> Void) {
@@ -98,13 +116,13 @@ class AppCheck: ParetoCheck, AppCheckProtocol {
     override func checkPasses() -> Bool {
         let lock = DispatchSemaphore(value: 0)
 
-        // Invalidate presence cache (liek after we install app and run checks)
-        isApplicationPresentCached = false
-        _ = isApplicationPresent()
-
         if NetworkHandler.sharedInstance().currentStatus != .satisfied {
             return checkPassed
         }
+
+        // invalidate cache
+        applicationPathCached = nil
+        isApplicationPathCached = false
 
         getLatestVersion { version in
             self.latestVersion = Version(version) ?? self.latestVersion
@@ -116,7 +134,7 @@ class AppCheck: ParetoCheck, AppCheckProtocol {
     }
 
     @objc override func moreInfo() {
-        if let url = URL(string: "https://paretosecurity.com/security-checks/software-updates?utm_source=app&appName=\(appName.replacingOccurrences(of: " ", with: "%20"))&latestVersion=\(latestVersion)&currentVersion=\(currentVersion)&appBundle=\(appBundle)") {
+        if let url = URL(string: "https://paretosecurity.com/check/\(UUID)?utm_source=app&appName=\(appName.replacingOccurrences(of: " ", with: "%20"))&latestVersion=\(latestVersion)&currentVersion=\(currentVersion)&appBundle=\(appBundle)") {
             NSWorkspace.shared.open(url)
         }
     }

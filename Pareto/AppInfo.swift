@@ -40,10 +40,13 @@ enum AppInfo {
             AppDashlaneCheck.sharedInstance,
             AppEnpassCheck.sharedInstance,
             AppHushCheck.sharedInstance,
+            AppiTermCheck.sharedInstance,
+            AppFirefoxCheck.sharedInstance,
             AppNordLayerCheck.sharedInstance,
             AppSlackCheck.sharedInstance,
             AppTailscaleCheck.sharedInstance,
-            AppWireGuardCheck.sharedInstance
+            AppWireGuardCheck.sharedInstance,
+            AppGoogleChromeCheck.sharedInstance
         ])
     ]
 
