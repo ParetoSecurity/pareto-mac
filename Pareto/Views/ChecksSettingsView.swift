@@ -30,8 +30,8 @@ struct ChecksSettingsView: View {
                                     check.isActive = $0
                                     updater.toggle()
                                 }
-                            ))
-                            .padding(.vertical, 5.0)
+                            )).disabled(!check.showSettings)
+                                .padding(.vertical, 5.0)
                         }
                     }
                 }
