@@ -89,9 +89,11 @@ struct Report: Encodable {
                         checkStates[check.UUID] = CheckStatus.Failing.rawValue
                     }
                 } else {
-                    disabled += 1
-                    disabledSeed.append(contentsOf: check.UUID)
-                    checkStates[check.UUID] = CheckStatus.Disabled.rawValue
+                    if check.reportIfDisabled {
+                        disabled += 1
+                        disabledSeed.append(contentsOf: check.UUID)
+                        checkStates[check.UUID] = CheckStatus.Disabled.rawValue
+                    }
                 }
             }
         }

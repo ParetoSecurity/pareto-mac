@@ -35,6 +35,17 @@ class AppDelegate: AppHandlers, NSApplicationDelegate {
             print(json! as String)
             exit(0)
         }
+
+        if CommandLine.arguments.contains("-report") {
+            for claim in AppInfo.claims {
+                for check in claim.checks {
+                    claim.configure()
+                    print(check.report + "\n")
+                }
+            }
+            exit(0)
+        }
+
         if CommandLine.arguments.contains("-mdmTeam") {
             let token = CommandLine.arguments.last ?? ""
             do {

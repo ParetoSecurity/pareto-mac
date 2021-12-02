@@ -53,7 +53,7 @@ class StatusBarController: NSObject, NSMenuDelegate {
     var claimsPassed: Bool {
         var passed = true
         for claim in AppInfo.claims {
-            passed = passed && claim.checkPassed
+            passed = passed && claim.checksPassed
         }
         return passed
     }
@@ -260,7 +260,10 @@ class StatusBarController: NSObject, NSMenuDelegate {
 
     func addChecksMenuItems() {
         for claim in AppInfo.claims.sorted(by: { $0.title < $1.title }) {
-            statusItemMenu.addItem(claim.menu())
+            let menu = claim.menu()
+            if !(menu.submenu?.items.isEmpty ?? false) {
+                statusItemMenu.addItem(menu)
+            }
         }
     }
 }

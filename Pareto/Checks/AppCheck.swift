@@ -30,23 +30,21 @@ class AppCheck: ParetoCheck, AppCheckProtocol {
     var sparkleURL: String { "" }
 
     override var TitleON: String {
-        #if DEBUG
-            "\(appMarketingName) is up-to-date | local=\(currentVersion) online=\(latestVersion)"
-        #else
-            "\(appMarketingName) is up-to-date"
-        #endif
+        "\(appMarketingName) is up-to-date"
     }
 
     override var TitleOFF: String {
-        #if DEBUG
-            "\(appMarketingName) has an available update | local=\(currentVersion) online=\(latestVersion)"
-        #else
-            "\(appMarketingName) has an available update"
-        #endif
+        "\(appMarketingName) has an available update"
     }
 
-    private var isApplicationPathCached: Bool = false
-    private var applicationPathCached: String?
+    override var details: String {
+        "local=\(currentVersion) online=\(latestVersion) applicationPath=\(String(describing: applicationPath))"
+    }
+
+    override public var reportIfDisabled: Bool {
+        return false
+    }
+
     private let versionStorage = try! Storage<String, Version>(
         diskConfig: DiskConfig(name: "Version+Bundles", expiry: .seconds(3600)),
         memoryConfig: MemoryConfig(expiry: .seconds(3600)),
@@ -70,28 +68,16 @@ class AppCheck: ParetoCheck, AppCheckProtocol {
     }
 
     var applicationPath: String? {
-        if isApplicationPathCached {
-            return applicationPathCached
-        }
-
         let globalPath = "/Applications/\(appName).app/Contents/Info.plist"
         if FileManager.default.fileExists(atPath: globalPath) {
-            applicationPathCached = globalPath
-            isApplicationPathCached = true
             return globalPath
         }
 
         let homeDirURL = FileManager.default.homeDirectoryForCurrentUser
         let localPath = "\(homeDirURL.path)/Applications/\(appName).app/Contents/Info.plist"
         if FileManager.default.fileExists(atPath: localPath) {
-            applicationPathCached = localPath
-            isApplicationPathCached = true
             return localPath
         }
-
-        os_log("Application is not present %{public}s", appName)
-        applicationPathCached = nil
-        isApplicationPathCached = true
 
         return nil
     }
@@ -161,10 +147,6 @@ class AppCheck: ParetoCheck, AppCheckProtocol {
         if NetworkHandler.sharedInstance().currentStatus != .satisfied {
             return checkPassed
         }
-        try? versionStorage.removeAll()
-        // invalidate cache
-        applicationPathCached = nil
-        isApplicationPathCached = false
 
         return currentVersion >= latestVersion
     }

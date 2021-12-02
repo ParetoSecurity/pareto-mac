@@ -28,9 +28,7 @@ class Claim: Hashable {
         self.checks = checks
     }
 
-    var checkPassed: Bool { checks.allSatisfy { $0.isRunnable ? $0.checkPassed : true } }
-    var isActive: Bool { checks.allSatisfy { $0.isRunnable } }
-    var isDisabled: Bool { checks.allSatisfy { !$0.isRunnable } }
+    var checksPassed: Bool { checks.allSatisfy { $0.isRunnable ? $0.checkPassed : true } }
 
     func addSubmenu(withTitle: String, action: Selector?) -> NSMenuItem {
         let item = NSMenuItem(title: withTitle, action: action, keyEquivalent: "")
@@ -42,19 +40,17 @@ class Claim: Hashable {
         let item = NSMenuItem(title: title, action: nil, keyEquivalent: "")
         let submenu = NSMenu()
         for check in checks.sorted(by: { $0.Title < $1.Title }) {
-            if !isDisabled, check.isRunnable {
+            if check.isRunnable {
                 submenu.addItem(check.menu())
                 if Defaults[.snoozeTime] > 0 {
                     item.image = NSImage.SF(name: "shield.fill").tint(color: .systemGray)
                 } else {
-                    if checkPassed {
+                    if checksPassed {
                         item.image = NSImage.SF(name: "checkmark.shield.fill").tint(color: .systemGreen)
                     } else {
                         item.image = NSImage.SF(name: "xmark.shield.fill").tint(color: .systemOrange)
                     }
                 }
-            } else {
-                item.image = NSImage.SF(name: "shield")
             }
         }
 

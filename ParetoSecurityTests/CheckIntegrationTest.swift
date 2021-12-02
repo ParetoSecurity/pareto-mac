@@ -36,9 +36,7 @@ class CheckIntegrationTest: XCTestCase {
         claim.configure()
         claim.run()
         XCTAssertEqual(claim.checks.count, 2)
-        XCTAssertFalse(claim.checkPassed)
-        XCTAssertTrue(claim.isActive)
-        XCTAssertFalse(claim.isDisabled)
+        XCTAssertFalse(claim.checksPassed)
         XCTAssertNotEqual(claim.menu(), nil)
     }
 }

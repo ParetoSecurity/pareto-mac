@@ -55,6 +55,10 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
         return true
     }
 
+    public var reportIfDisabled: Bool {
+        return true
+    }
+
     var checkTimestamp: Int {
         get { UserDefaults.standard.integer(forKey: TimestampKey) }
         set { UserDefaults.standard.set(newValue, forKey: TimestampKey) }
@@ -95,6 +99,20 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
             PassesKey: false,
             TimestampKey: 0
         ])
+    }
+
+    var details: String { "None" }
+
+    var report: String {
+        return """
+        Check: \(Title)
+        UUID: \(UUID)
+        isActive: \(isActive)
+        isRunnable: \(isRunnable)
+        checkPassed: \(checkPassed)
+        checkTimestamp: \(checkTimestamp)
+        details: \(details)
+        """
     }
 
     func run() {
