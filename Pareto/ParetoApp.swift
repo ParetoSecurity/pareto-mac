@@ -47,7 +47,28 @@ class AppDelegate: AppHandlers, NSApplicationDelegate {
         }
 
         if CommandLine.arguments.contains("-mdmTeam") {
-            let token = CommandLine.arguments.last ?? ""
+            if !Defaults[.license].isEmpty {
+                print("Team license already active")
+                exit(0)
+            }
+
+            var token = CommandLine.arguments.last ?? ""
+
+            if token.isEmpty {
+                print("Missing team license parameter")
+                exit(0)
+            }
+
+            if token.starts(with: "paretosecurity://") {
+                let url = URL(string: token)!
+                token = url.queryParams()["token"] ?? ""
+
+                if token.isEmpty {
+                    print("Missing team license token parameter")
+                    exit(0)
+                }
+            }
+
             do {
                 let ticket = try VerifyTeamTicket(withTicket: token)
                 enrolledHandler = true
