@@ -19,6 +19,7 @@
 		4F1AE88B26F9FC150084A381 /* SwiftSocket in Frameworks */ = {isa = PBXBuildFile; productRef = 4F1AE88A26F9FC150084A381 /* SwiftSocket */; };
 		4F1AE89026F9FFA60084A381 /* MediaShare.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F1AE88F26F9FFA60084A381 /* MediaShare.swift */; };
 		4F1AE89226FA026D0084A381 /* AirPlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F1AE89126FA026D0084A381 /* AirPlay.swift */; };
+		4F1E6DDB2760081300FD3F01 /* Regex in Frameworks */ = {isa = PBXBuildFile; productRef = 4F1E6DDA2760081300FD3F01 /* Regex */; };
 		4F24A08E26EB734A0036F748 /* LicenseSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F24A08D26EB734A0036F748 /* LicenseSettingsView.swift */; };
 		4F24A09026EB735F0036F748 /* TeamSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F24A08F26EB735F0036F748 /* TeamSettings.swift */; };
 		4F24A09226EB73980036F748 /* AboutSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F24A09126EB73980036F748 /* AboutSettingsView.swift */; };
@@ -131,6 +132,7 @@
 		4F6EF892275FEE6C00752559 /* Regex in Frameworks */ = {isa = PBXBuildFile; productRef = 4F6EF891275FEE6C00752559 /* Regex */; };
 		4F6EF8942760013600752559 /* Signal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F6EF8932760013500752559 /* Signal.swift */; };
 		4F6EF8952760013600752559 /* Signal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F6EF8932760013500752559 /* Signal.swift */; };
+		4F6EF8992760046100752559 /* SoftwareUpdatesTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F6EF8982760046100752559 /* SoftwareUpdatesTest.swift */; };
 		4F74B7D6275114EA00F1FC11 /* Dashlane.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F74B7D4275114EA00F1FC11 /* Dashlane.swift */; };
 		4F74B7D7275114EA00F1FC11 /* Dashlane.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F74B7D4275114EA00F1FC11 /* Dashlane.swift */; };
 		4F74B7D8275114EA00F1FC11 /* Enpass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F74B7D5275114EA00F1FC11 /* Enpass.swift */; };
@@ -303,6 +305,7 @@
 		4F6A92F126C555C6006C2F2D /* ParetoSecurityUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParetoSecurityUITests.swift; sourceTree = "<group>"; };
 		4F6EF88D275FE5D400752559 /* Zoom.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Zoom.swift; sourceTree = "<group>"; };
 		4F6EF8932760013500752559 /* Signal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Signal.swift; sourceTree = "<group>"; };
+		4F6EF8982760046100752559 /* SoftwareUpdatesTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoftwareUpdatesTest.swift; sourceTree = "<group>"; };
 		4F74B7D4275114EA00F1FC11 /* Dashlane.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Dashlane.swift; path = "Software Updates/Dashlane.swift"; sourceTree = "<group>"; };
 		4F74B7D5275114EA00F1FC11 /* Enpass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Enpass.swift; path = "Software Updates/Enpass.swift"; sourceTree = "<group>"; };
 		4F79F78C273BF6300082A5EB /* ChecksView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChecksView.swift; sourceTree = "<group>"; };
@@ -354,6 +357,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4F1E6DDB2760081300FD3F01 /* Regex in Frameworks */,
 				4F37E7382718122E00A2B254 /* Version in Frameworks */,
 				4F37E7392718122E00A2B254 /* Path in Frameworks */,
 				4F37E73A2718122E00A2B254 /* Alamofire in Frameworks */,
@@ -574,6 +578,7 @@
 				4F57135426F8ACCC004B4359 /* WelcomeTest.swift */,
 				4F57135626F8BF84004B4359 /* ParetoAppTest.swift */,
 				4F57135C26F8C921004B4359 /* TeamsTest.swift */,
+				4F6EF8982760046100752559 /* SoftwareUpdatesTest.swift */,
 			);
 			path = ParetoSecurityTests;
 			sourceTree = "<group>";
@@ -670,6 +675,7 @@
 				4F7739F6271EBC2F008B1584 /* Sentry */,
 				4F74B7E82751312800F1FC11 /* SwiftyJSON */,
 				4F923CF427569E6300070551 /* Cache */,
+				4F1E6DDA2760081300FD3F01 /* Regex */,
 			);
 			productName = Pareto;
 			productReference = 4F37E7472718122E00A2B254 /* Pareto Security SetApp.app */;
@@ -1052,6 +1058,7 @@
 			files = (
 				4F84A94426CBBA6900A1579D /* SettingsTests.swift in Sources */,
 				4F57135326F8A6AC004B4359 /* LicenseTest.swift in Sources */,
+				4F6EF8992760046100752559 /* SoftwareUpdatesTest.swift in Sources */,
 				4F57135526F8ACCC004B4359 /* WelcomeTest.swift in Sources */,
 				4F57135726F8BF84004B4359 /* ParetoAppTest.swift in Sources */,
 				4F57135D26F8C921004B4359 /* TeamsTest.swift in Sources */,
@@ -1846,6 +1853,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 4F1AE88926F9FC150084A381 /* XCRemoteSwiftPackageReference "SwiftSocket" */;
 			productName = SwiftSocket;
+		};
+		4F1E6DDA2760081300FD3F01 /* Regex */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4F6EF890275FEE6C00752559 /* XCRemoteSwiftPackageReference "Regex" */;
+			productName = Regex;
 		};
 		4F37E6FB2718122E00A2B254 /* LaunchAtLogin */ = {
 			isa = XCSwiftPackageProductDependency;
