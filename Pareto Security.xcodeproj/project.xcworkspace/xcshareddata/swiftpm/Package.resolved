@@ -56,6 +56,15 @@
         }
       },
       {
+        "package": "Regex",
+        "repositoryURL": "https://github.com/sindresorhus/Regex",
+        "state": {
+          "branch": "main",
+          "revision": "a853f1ec197bebe1d826360bd832ef3df7e2b35b",
+          "version": null
+        }
+      },
+      {
         "package": "Sentry",
         "repositoryURL": "https://github.com/getsentry/sentry-cocoa",
         "state": {

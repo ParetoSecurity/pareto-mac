@@ -95,6 +95,9 @@ class StatusBarController: NSObject, NSMenuDelegate {
             return
         }
 
+        // invalidate possible expired cache
+        try! AppInfo.versionStorage.removeExpiredObjects()
+
         // Snooze in effect
         if Defaults[.snoozeTime] >= Date().currentTimeMillis() {
             os_log("Checks are snoozed until %s", log: Log.app, String(Defaults[.snoozeTime]))

@@ -7,7 +7,7 @@
 
 import Alamofire
 import AppKit
-import Cache
+
 import Combine
 import Foundation
 import os.log
@@ -45,25 +45,19 @@ class AppCheck: ParetoCheck, AppCheckProtocol {
         return false
     }
 
-    private let versionStorage = try! Storage<String, Version>(
-        diskConfig: DiskConfig(name: "Version+Bundles", expiry: .seconds(3600)),
-        memoryConfig: MemoryConfig(expiry: .seconds(3600)),
-        transformer: TransformerFactory.forCodable(ofType: Version.self) // Storage<String, Version>
-    )
-
     static let queue = DispatchQueue(label: "co.pareto.check_versions", qos: .utility, attributes: .concurrent)
     private var latestVersion: Version {
-        if try! versionStorage.existsObject(forKey: appBundle) {
-            return try! versionStorage.object(forKey: appBundle)
+        if try! AppInfo.versionStorage.existsObject(forKey: appBundle) {
+            return try! AppInfo.versionStorage.object(forKey: appBundle)
         } else {
             let lock = DispatchSemaphore(value: 0)
             getLatestVersion { version in
                 let latestVersion = Version(version) ?? Version(0, 0, 0)
-                try! self.versionStorage.setObject(latestVersion, forKey: self.appBundle)
+                try! AppInfo.versionStorage.setObject(latestVersion, forKey: self.appBundle)
                 lock.signal()
             }
             lock.wait()
-            return try! versionStorage.object(forKey: appBundle)
+            return try! AppInfo.versionStorage.object(forKey: appBundle)
         }
     }
 
@@ -147,7 +141,6 @@ class AppCheck: ParetoCheck, AppCheckProtocol {
         if NetworkHandler.sharedInstance().currentStatus != .satisfied {
             return checkPassed
         }
-
         return currentVersion >= latestVersion
     }
 

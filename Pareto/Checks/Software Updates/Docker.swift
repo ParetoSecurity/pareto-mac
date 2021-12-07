@@ -9,17 +9,8 @@ import Alamofire
 import Foundation
 import os.log
 import OSLog
+import Regex
 import Version
-
-extension NSRegularExpression {
-    convenience init(_ pattern: String) {
-        do {
-            try self.init(pattern: pattern)
-        } catch {
-            preconditionFailure("Illegal regular expression: \(pattern).")
-        }
-    }
-}
 
 class AppDockerCheck: AppCheck {
     static let sharedInstance = AppDockerCheck()
@@ -34,47 +25,16 @@ class AppDockerCheck: AppCheck {
 
     override func getLatestVersion(completion: @escaping (String) -> Void) {
         let url = "https://raw.githubusercontent.com/docker/docker.github.io/master/desktop/mac/release-notes/index.md"
-        let versionRegex = NSRegularExpression("## Docker Desktop (?<version>[\\d.]+)")
+        let versionRegex = Regex("## Docker Desktop ([\\d.]+)")
         os_log("Requesting %{public}s", url)
         AF.request(url).responseString(queue: AppCheck.queue, completionHandler: { response in
-            do {
-                if response.data != nil {
-                    let md = response.value ?? ""
-                    let mdRange = NSRange(
-                        md.startIndex ..< md.endIndex,
-                        in: md
-                    )
-                    let matches = versionRegex.matches(
-                        in: md,
-                        options: [],
-                        range: mdRange
-                    )
-
-                    guard let versions = matches.first else {
-                        throw NSError(domain: "", code: 0, userInfo: nil)
-                    }
-
-                    var parsedVersions: [String] = []
-
-                    for rangeIndex in 1 ..< versions.numberOfRanges {
-                        let matchRange = versions.range(at: rangeIndex)
-
-                        // Ignore matching the entire line
-                        if matchRange == mdRange { continue }
-
-                        // Extract the substring matching the capture group
-                        if let substringRange = Range(matchRange, in: md) {
-                            let version = String(md[substringRange])
-                            parsedVersions.append(version)
-                        }
-                    }
-                    completion(parsedVersions.first ?? "0.0.0")
-                } else {
-                    completion("0.0.0")
-                }
-            } catch {
+            if response.data != nil {
+                let result = versionRegex.firstMatch(in: response.value ?? "")
+                completion(result?.groups.first?.value ?? "0.0.0")
+            } else {
                 completion("0.0.0")
             }
+
         })
     }
 }

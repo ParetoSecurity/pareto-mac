@@ -5,11 +5,12 @@
 //  Created by Janez Troha on 12/07/2021.
 //
 
+import Cache
 import Foundation
 import os.log
 import OSLog
 import SwiftUI
-
+import Version
 enum AppInfo {
     static let claims = [
         Claim(withTitle: "Access Security", withChecks: [
@@ -46,6 +47,8 @@ enum AppInfo {
             AppNordLayerCheck.sharedInstance,
             AppSlackCheck.sharedInstance,
             AppTailscaleCheck.sharedInstance,
+            AppZoomCheck.sharedInstance,
+            AppSignalCheck.sharedInstance,
             AppWireGuardCheck.sharedInstance
         ])
     ]
@@ -59,6 +62,19 @@ enum AppInfo {
     static var Licensed = false
     static var secExp = false
     static let Flags = FlagsUpdater()
+    #if DEBUG
+        static let versionStorage = try! Storage<String, Version>(
+            diskConfig: DiskConfig(name: "Version+Bundles+Debug", expiry: .seconds(1)),
+            memoryConfig: MemoryConfig(expiry: .seconds(1)),
+            transformer: TransformerFactory.forCodable(ofType: Version.self) // Storage<String, Version>
+        )
+    #else
+        static let versionStorage = try! Storage<String, Version>(
+            diskConfig: DiskConfig(name: "Version+Bundles", expiry: .seconds(3600)),
+            memoryConfig: MemoryConfig(expiry: .seconds(3600)),
+            transformer: TransformerFactory.forCodable(ofType: Version.self) // Storage<String, Version>
+        )
+    #endif
 
     static let hwModel = { () -> String in
         let service = IOServiceGetMatchingService(kIOMasterPortDefault,
