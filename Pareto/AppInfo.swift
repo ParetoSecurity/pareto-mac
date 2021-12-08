@@ -14,6 +14,27 @@ import SwiftUI
 import Version
 
 enum AppInfo {
+    static let updateChecks = [
+        App1Password7Check.sharedInstance,
+        AppBitwardenCheck.sharedInstance,
+        AppCyberduckCheck.sharedInstance,
+        AppDashlaneCheck.sharedInstance,
+        AppDockerCheck.sharedInstance,
+        AppEnpassCheck.sharedInstance,
+        AppFirefoxCheck.sharedInstance,
+        AppGoogleChromeCheck.sharedInstance,
+        AppiTermCheck.sharedInstance,
+        AppNordLayerCheck.sharedInstance,
+        AppSlackCheck.sharedInstance,
+        AppTailscaleCheck.sharedInstance,
+        AppZoomCheck.sharedInstance,
+        AppSignalCheck.sharedInstance,
+        AppWireGuardCheck.sharedInstance,
+        AppLibreOfficeCheck.sharedInstance,
+        AppSublimeTextCheck.sharedInstance,
+        AppVSCodeCheck.sharedInstance
+    ]
+
     static let claims = [
         Claim(withTitle: "Access Security", withChecks: [
             AutologinCheck.sharedInstance,
@@ -36,25 +57,7 @@ enum AppInfo {
             BootCheck.sharedInstance,
             OpenWiFiCheck.sharedInstance
         ]),
-        Claim(withTitle: "Software Updates", withChecks: [
-            App1Password7Check.sharedInstance,
-            AppBitwardenCheck.sharedInstance,
-            AppCyberduckCheck.sharedInstance,
-            AppDashlaneCheck.sharedInstance,
-            AppDockerCheck.sharedInstance,
-            AppEnpassCheck.sharedInstance,
-            AppFirefoxCheck.sharedInstance,
-            AppGoogleChromeCheck.sharedInstance,
-            AppiTermCheck.sharedInstance,
-            AppNordLayerCheck.sharedInstance,
-            AppSlackCheck.sharedInstance,
-            AppTailscaleCheck.sharedInstance,
-            AppZoomCheck.sharedInstance,
-            AppSignalCheck.sharedInstance,
-            AppWireGuardCheck.sharedInstance,
-            AppLibreOfficeCheck.sharedInstance
-
-        ])
+        Claim(withTitle: "Software Updates", withChecks: updateChecks)
     ]
 
     static var claimsSorted: [Claim] {

@@ -22,7 +22,7 @@ class AppLibreOfficeCheck: AppCheck {
     override var appBundle: String { "org.libreoffice.script" }
 
     override var UUID: String {
-        "5726931a-264a-4758-b7dd-d09285ac4b7f"
+        "5726931a-264a-5758-b7dd-d09285ac4b7f"
     }
 
     // Special treatment follows

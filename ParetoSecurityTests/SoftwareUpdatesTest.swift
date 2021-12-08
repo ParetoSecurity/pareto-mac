@@ -14,29 +14,17 @@ class SoftwareUpdatesTest: XCTestCase {
     }
 
     func testAppVersionFetcehrs() throws {
-        let apps = [
-            App1Password7Check.sharedInstance,
-            AppBitwardenCheck.sharedInstance,
-            AppCyberduckCheck.sharedInstance,
-            AppDashlaneCheck.sharedInstance,
-            AppDockerCheck.sharedInstance,
-            AppEnpassCheck.sharedInstance,
-            AppFirefoxCheck.sharedInstance,
-            AppGoogleChromeCheck.sharedInstance,
-            AppiTermCheck.sharedInstance,
-            AppNordLayerCheck.sharedInstance,
-            AppSlackCheck.sharedInstance,
-            AppTailscaleCheck.sharedInstance,
-            AppZoomCheck.sharedInstance,
-            AppSignalCheck.sharedInstance,
-            AppLibreOfficeCheck.sharedInstance,
-            AppWireGuardCheck.sharedInstance
-        ]
-        for app in apps {
+        var redirects = [String]()
+        var names = [String]()
+        for app in AppInfo.updateChecks.sorted(by: { $0.appMarketingName.lowercased() < $1.appMarketingName.lowercased() }) {
             XCTAssertNotEqual(app.latestVersion, nil)
             XCTAssertNotEqual(app.UUID, nil)
             XCTAssertNotEqual(app.currentVersion, nil)
             XCTAssertFalse(app.reportIfDisabled)
+            redirects.append("<permanent-redirect tal:omit-tag from=\"https://paretosecurity.com/check/\(app.UUID)\" />")
+            names.append("<li>\(app.appMarketingName)\"</li>")
         }
+        print(redirects.joined(separator: "\n"))
+        print(names.joined(separator: "\n"))
     }
 }
