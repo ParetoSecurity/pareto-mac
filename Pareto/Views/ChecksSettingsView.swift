@@ -14,16 +14,17 @@ struct ChecksSettingsView: View {
             VStack(alignment: .leading) {
                 Text("Deselect the checks you don't want the app to run.")
                 VStack(alignment: .leading, spacing: 0.0) {
-                    ForEach(AppInfo.claims.sorted(by: { $0.title < $1.title }), id: \.self) { claim in
+                    ForEach(AppInfo.claimsSorted, id: \.self) { claim in
 
                         // Hack to force update view
                         // see https://developer.apple.com/forums/thread/131577
+                        let title = "\(claim.title) (\(claim.checks.count))"
                         if updater {
-                            Text(claim.title).fontWeight(.bold).font(.system(size: 15)).padding([.top, .bottom], 10)
+                            Text(title).fontWeight(.bold).font(.system(size: 15)).padding([.top, .bottom], 10)
                         } else {
-                            Text(claim.title).fontWeight(.bold).font(.system(size: 15)).padding([.top, .bottom], 10)
+                            Text(title).fontWeight(.bold).font(.system(size: 15)).padding([.top, .bottom], 10)
                         }
-                        ForEach(claim.checks.sorted(by: { $0.TitleON < $1.TitleON }), id: \.self) { check in
+                        ForEach(claim.checksSorted, id: \.self) { check in
                             Toggle(check.TitleON, isOn: Binding<Bool>(
                                 get: { check.isActive },
                                 set: {
@@ -40,9 +41,9 @@ struct ChecksSettingsView: View {
                          destination: URL(string: "https://paretosecurity.com/security-checks?utm_source=app")!)
                     Text(" about checks on our website.")
                 }.padding(0)
-            }.padding(.all, 20).frame(minWidth: 380, minHeight: 380)
+            }.padding(.all, 20).frame(minWidth: 380, minHeight: 480)
 
-        }.frame(width: 400, height: 300)
+        }.frame(width: 400, height: 400)
     }
 }
 

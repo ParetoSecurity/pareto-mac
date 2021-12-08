@@ -44,13 +44,17 @@ struct ReportingDevice: Encodable {
     let machineName: String
     let auth: String
     let macOSVersion: String
+    let modelName: String
+    let modelSerial: String
 
     static func current() -> ReportingDevice {
         return ReportingDevice(
             machineUUID: Defaults[.machineUUID],
             machineName: AppInfo.machineName,
             auth: Defaults[.teamAuth],
-            macOSVersion: AppInfo.macOSVersionString
+            macOSVersion: AppInfo.macOSVersionString,
+            modelName: Defaults[.sendHWInfo] ? AppInfo.hwModelName : "Disabled",
+            modelSerial: Defaults[.sendHWInfo] ? AppInfo.hwSerial : "Disabled"
         )
     }
 }

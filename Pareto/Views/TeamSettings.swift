@@ -11,6 +11,7 @@ import SwiftUI
 struct TeamSettingsView: View {
     @Default(.teamID) var teamID
     @Default(.machineUUID) var machineUUID
+    @Default(.sendHWInfo) var sendHWInfo
 
     func copy() {
         NSPasteboard.general.clearContents()
@@ -32,7 +33,7 @@ struct TeamSettingsView: View {
                             }))
                         }
                     }
-                Spacer(minLength: 10)
+                Spacer(minLength: 2)
                 Section(
                     footer: Text("Device ID")) {
                         VStack(alignment: .leading) {
@@ -41,6 +42,14 @@ struct TeamSettingsView: View {
                             }))
                         }
                     }
+                Spacer(minLength: 5)
+                Section(
+                    footer: Text("When enabled, send model name and serial number.").font(.footnote)) {
+                        VStack(alignment: .leading) {
+                            Toggle("Send inventory info on update", isOn: $sendHWInfo)
+                        }
+                    }
+
                 Spacer(minLength: 10)
                 HStack {
                     Button("Unlink this device") {
@@ -55,7 +64,7 @@ struct TeamSettingsView: View {
                 Link("Learn more »",
                      destination: URL(string: "https://paretosecurity.com/pricing?utm_source=app&utm_medium=teams-link")!)
             }
-        }.frame(width: 350, height: 100).padding(25)
+        }.frame(width: 350, height: 150).padding(25)
     }
 }
 

@@ -9,8 +9,10 @@ import Cache
 import Foundation
 import os.log
 import OSLog
+import Regex
 import SwiftUI
 import Version
+
 enum AppInfo {
     static let claims = [
         Claim(withTitle: "Access Security", withChecks: [
@@ -49,9 +51,15 @@ enum AppInfo {
             AppTailscaleCheck.sharedInstance,
             AppZoomCheck.sharedInstance,
             AppSignalCheck.sharedInstance,
-            AppWireGuardCheck.sharedInstance
+            AppWireGuardCheck.sharedInstance,
+            AppLibreOfficeCheck.sharedInstance
+
         ])
     ]
+
+    static var claimsSorted: [Claim] {
+        AppInfo.claims.sorted(by: { $0.title.lowercased() < $1.title.lowercased() })
+    }
 
     static let appVersion: String = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as! String
     static let buildVersion: String = Bundle.main.infoDictionary?["CFBundleVersion"] as! String
@@ -76,16 +84,26 @@ enum AppInfo {
         )
     #endif
 
-    static let hwModel = { () -> String in
-        let service = IOServiceGetMatchingService(kIOMasterPortDefault,
-                                                  IOServiceMatching("IOPlatformExpertDevice"))
-        var modelIdentifier: String?
-        if let modelData = IORegistryEntryCreateCFProperty(service, "model" as CFString, kCFAllocatorDefault, 0).takeRetainedValue() as? Data {
-            modelIdentifier = String(data: modelData, encoding: .utf8)?.trimmingCharacters(in: .controlCharacters)
+    static var hwModel: String {
+        HWInfo(forKey: "model")
+    }
+
+    static var hwModelName: String {
+        // Depending on if your serial number is 11 or 12 characters long take the last 3 or 4 characters, respectively, and feed that to the following URL after the ?cc=XXXX part.
+        let nameRegex = Regex("<configCode>(.+)</configCode>")
+        let cc = AppInfo.hwSerial.count <= 11 ? AppInfo.hwSerial.suffix(3) : AppInfo.hwSerial.suffix(4)
+        let url = URL(string: "https://support-sp.apple.com/sp/product?cc=\(cc)")!
+        let data = try? String(contentsOf: url)
+        if data != nil {
+            let nameResult = nameRegex.firstMatch(in: data ?? "")
+            return nameResult?.groups.first?.value ?? AppInfo.hwModel
         }
 
-        IOObjectRelease(service)
-        return modelIdentifier!
+        return AppInfo.hwModel
+    }
+
+    static var hwSerial: String {
+        HWInfo(forKey: "IOPlatformSerialNumber")
     }
 
     static let teamsURL = { () -> URL in
@@ -130,8 +148,7 @@ enum AppInfo {
                 logs.append("\(k)=\(v)")
             }
         }
-        // Disabled due to apple pulling SDK 12
-        // https://www.reddit.com/r/SwiftUI/comments/pocuh6/xcode_13_rc_they_have_temporarly_removed_macos_12/?utm_source=amp&utm_medium=
+
         logs.append("\nLogs:")
         do {
             if #available(macOS 12.0, *) {
@@ -154,7 +171,7 @@ enum AppInfo {
     }
 
     static let getVersions = { () -> String in
-        "HW: \(AppInfo.hwModel())\nmacOS: \(AppInfo.macOSVersionString)\nApp Version: \(AppInfo.appVersion)\nBuild: \(AppInfo.buildVersion)"
+        "HW: \(AppInfo.hwModel)\nmacOS: \(AppInfo.macOSVersionString)\nApp Version: \(AppInfo.appVersion)\nBuild: \(AppInfo.buildVersion)"
     }
 
     public static func getSystemUUID() -> String? {

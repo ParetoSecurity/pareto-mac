@@ -147,13 +147,13 @@ extension ParetoCheck {
         return dictionary
     }
 
-    func appVersion(path: String) -> String? {
+    func appVersion(path: String, key: String = "CFBundleShortVersionString") -> String? {
         guard let dictionary = NSDictionary(contentsOfFile: path) else {
             os_log("Failed reading %{public}s", path)
             return nil
         }
         // print("\(app): \(dictionary as AnyObject)")
-        return dictionary.value(forKey: "CFBundleShortVersionString") as? String
+        return dictionary.value(forKey: key) as? String
     }
 
     func isNotListening(withPort port: Int) -> Bool {

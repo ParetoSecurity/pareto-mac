@@ -29,6 +29,7 @@ class SoftwareUpdatesTest: XCTestCase {
             AppTailscaleCheck.sharedInstance,
             AppZoomCheck.sharedInstance,
             AppSignalCheck.sharedInstance,
+            AppLibreOfficeCheck.sharedInstance,
             AppWireGuardCheck.sharedInstance
         ]
         for app in apps {

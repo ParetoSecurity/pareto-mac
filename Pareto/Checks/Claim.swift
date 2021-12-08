@@ -23,6 +23,10 @@ class Claim: Hashable {
     public var title: String
     public var checks: [ParetoCheck]
 
+    public var checksSorted: [ParetoCheck] {
+        checks.sorted(by: { $0.Title.lowercased() < $1.Title.lowercased() })
+    }
+
     init(withTitle title: String, withChecks checks: [ParetoCheck]) {
         self.title = title
         self.checks = checks
@@ -39,7 +43,7 @@ class Claim: Hashable {
     func menu() -> NSMenuItem {
         let item = NSMenuItem(title: title, action: nil, keyEquivalent: "")
         let submenu = NSMenu()
-        for check in checks.sorted(by: { $0.Title < $1.Title }) {
+        for check in checksSorted {
             if check.isRunnable {
                 submenu.addItem(check.menu())
                 if Defaults[.snoozeTime] > 0 {

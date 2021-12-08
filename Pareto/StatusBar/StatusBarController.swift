@@ -262,7 +262,7 @@ class StatusBarController: NSObject, NSMenuDelegate {
     }
 
     func addChecksMenuItems() {
-        for claim in AppInfo.claims.sorted(by: { $0.title < $1.title }) {
+        for claim in AppInfo.claimsSorted {
             let menu = claim.menu()
             if !(menu.submenu?.items.isEmpty ?? false) {
                 statusItemMenu.addItem(menu)

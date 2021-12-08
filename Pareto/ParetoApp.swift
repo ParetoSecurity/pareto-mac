@@ -21,9 +21,9 @@ class AppDelegate: AppHandlers, NSApplicationDelegate {
         if CommandLine.arguments.contains("-export") {
             var export: [String: [String: [String]]] = [:]
 
-            for claim in AppInfo.claims {
+            for claim in AppInfo.claimsSorted {
                 var claimExport: [String: [String]] = [:]
-                for check in claim.checks {
+                for check in claim.checksSorted {
                     claimExport[check.UUID] = [check.TitleON, check.TitleOFF]
                 }
                 export[claim.title] = claimExport
@@ -37,8 +37,8 @@ class AppDelegate: AppHandlers, NSApplicationDelegate {
         }
 
         if CommandLine.arguments.contains("-report") {
-            for claim in AppInfo.claims {
-                for check in claim.checks {
+            for claim in AppInfo.claimsSorted {
+                for check in claim.checksSorted {
                     claim.configure()
                     print(check.report + "\n")
                 }

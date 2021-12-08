@@ -12,6 +12,7 @@ import Combine
 import Foundation
 import os.log
 import OSLog
+import Regex
 import SwiftUI
 import SwiftyJSON
 import Version
@@ -112,18 +113,24 @@ class AppCheck: ParetoCheck, AppCheckProtocol {
             })
         } else {
             os_log("Requesting %{public}s", sparkleURL)
-            AF.request(sparkleURL).response(queue: AppCheck.queue, completionHandler: { response in
+            let versionRegex = Regex("sparkle:shortVersionString=\"([\\.\\d]+)\"")
+            let versionFallbackRegex = Regex("sparkle:version=\"([\\.\\d]+)\"")
+            AF.request(sparkleURL).responseString(queue: AppCheck.queue, completionHandler: { response in
 
-                if response.data != nil {
-                    let xml = XmlElement(fromData: response.data!)
-                    let versionNew = xml["rss"]?["channel"]?["item"]?["enclosure"]?.attributeDict["sparkle:shortVersionString"]
-                    let versionOld = xml["rss"]?["channel"]?["item"]?["enclosure"]?.attributeDict["sparkle:version"]
-                    if versionNew != nil {
-                        os_log("%{public}s sparkle:shortVersionString=%{public}s", self.appBundle, versionNew!)
-                        completion(versionNew!)
-                    } else if versionOld != nil {
-                        os_log("%{public}s sparkle:shortVersionString=%{public}s", self.appBundle, versionOld!)
-                        completion(versionOld!)
+                if response.error == nil {
+                    let versionNew = versionRegex.allMatches(in: response.value ?? "")
+                    let versionOld = versionFallbackRegex.allMatches(in: response.value ?? "")
+
+                    if !versionNew.isEmpty {
+                        let versisons = versionNew.map { $0.groups.first?.value ?? "0.0.0" }
+                        let version = versisons.sorted().first ?? "0.0.0"
+                        os_log("%{public}s sparkle:shortVersionString=%{public}s", self.appBundle, version)
+                        completion(version)
+                    } else if !versionOld.isEmpty {
+                        let versisons = versionOld.map { $0.groups.first?.value ?? "0.0.0" }
+                        let version = versisons.sorted().first ?? "0.0.0"
+                        os_log("%{public}s sparkle:version=%{public}s", self.appBundle, version)
+                        completion(version)
                     } else {
                         os_log("%{public}s failed:Sparkle=0.0.0", self.appBundle)
                         completion("0.0.0")
