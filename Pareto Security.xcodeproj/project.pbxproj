@@ -153,6 +153,8 @@
 		4F868DD126A5C51C005B876E /* Autologin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F868DD026A5C51C005B876E /* Autologin.swift */; };
 		4F868DD326A5C751005B876E /* Screensaver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F868DD226A5C751005B876E /* Screensaver.swift */; };
 		4F8B01B226F4A6CB00EDE14B /* WelcomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F8B01B126F4A6CB00EDE14B /* WelcomeView.swift */; };
+		4F91060327623E4C00D1A348 /* SSHKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F91060227623E4B00D1A348 /* SSHKeys.swift */; };
+		4F91060427623E4C00D1A348 /* SSHKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F91060227623E4B00D1A348 /* SSHKeys.swift */; };
 		4F923CED2756918E00070551 /* Cache in Frameworks */ = {isa = PBXBuildFile; productRef = 4F923CEC2756918E00070551 /* Cache */; };
 		4F923CEF275691A700070551 /* Docker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F923CEE275691A700070551 /* Docker.swift */; };
 		4F923CF0275691A700070551 /* Docker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F923CEE275691A700070551 /* Docker.swift */; };
@@ -324,6 +326,7 @@
 		4F868DD026A5C51C005B876E /* Autologin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Autologin.swift; sourceTree = "<group>"; };
 		4F868DD226A5C751005B876E /* Screensaver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Screensaver.swift; sourceTree = "<group>"; };
 		4F8B01B126F4A6CB00EDE14B /* WelcomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeView.swift; sourceTree = "<group>"; };
+		4F91060227623E4B00D1A348 /* SSHKeys.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSHKeys.swift; sourceTree = "<group>"; };
 		4F923CEE275691A700070551 /* Docker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Docker.swift; path = "Software Updates/Docker.swift"; sourceTree = "<group>"; };
 		4F923CF12756920C00070551 /* iTerm.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = iTerm.swift; path = "Software Updates/iTerm.swift"; sourceTree = "<group>"; };
 		4F9791C026F5DB4F00E668F4 /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
@@ -463,6 +466,7 @@
 		4F1AE88C26F9FEA60084A381 /* Access Security */ = {
 			isa = PBXGroup;
 			children = (
+				4F91060227623E4B00D1A348 /* SSHKeys.swift */,
 				4F868DD026A5C51C005B876E /* Autologin.swift */,
 				4FB405EE26A6FC4800267D5D /* ScreensaverPassword.swift */,
 				4F868DD226A5C751005B876E /* Screensaver.swift */,
@@ -1038,6 +1042,7 @@
 				4F37E7332718122E00A2B254 /* NSWorkspace.swift in Sources */,
 				4F37E7342718122E00A2B254 /* NSImage.swift in Sources */,
 				4FB11914274261D700B89634 /* CodeSignCheck.swift in Sources */,
+				4F91060427623E4C00D1A348 /* SSHKeys.swift in Sources */,
 				4F3DCFDE274FE4E000F1CB55 /* Bitwarden.swift in Sources */,
 				4F37E7352718122E00A2B254 /* AppInfo.swift in Sources */,
 				4F37E7362718122E00A2B254 /* License.swift in Sources */,
@@ -1156,6 +1161,7 @@
 				4F84531026D634E5007C3B04 /* NSWorkspace.swift in Sources */,
 				4FB7C68726AFF29A00FB1C41 /* NSImage.swift in Sources */,
 				4FB11915274261D800B89634 /* CodeSignCheck.swift in Sources */,
+				4F91060327623E4C00D1A348 /* SSHKeys.swift in Sources */,
 				4F3DCFDD274FE4E000F1CB55 /* Bitwarden.swift in Sources */,
 				4F6A92EA26C54AB7006C2F2D /* AppInfo.swift in Sources */,
 				4FDAD88F26EB784A00F64E61 /* License.swift in Sources */,

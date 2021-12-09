@@ -40,7 +40,8 @@ enum AppInfo {
             AutologinCheck.sharedInstance,
             RequirePasswordToUnlock.sharedInstance,
             ScreensaverPasswordCheck.sharedInstance,
-            ScreensaverCheck.sharedInstance
+            ScreensaverCheck.sharedInstance,
+            SSHKeysCheck.sharedInstance
         ]),
         Claim(withTitle: "Firewall & Sharing", withChecks: [
             FirewallCheck.sharedInstance,
