@@ -74,6 +74,23 @@ enum AppInfo {
     static var Licensed = false
     static var secExp = false
     static let Flags = FlagsUpdater()
+
+    static var utmSource: String {
+        var source = "app"
+        #if DEBUG
+            source += "-debug"
+        #else
+            source += "-release"
+        #endif
+        #if SETAPP_ENABLED
+            source += "-setapp"
+        #else
+            source += "-direct"
+        #endif
+
+        return source
+    }
+
     #if DEBUG
         static let versionStorage = try! Storage<String, Version>(
             diskConfig: DiskConfig(name: "Version+Bundles+Debug", expiry: .seconds(1)),
@@ -111,7 +128,7 @@ enum AppInfo {
     }
 
     static let teamsURL = { () -> URL in
-        let baseURL = "https://dash.paretosecurity.com/?cc_source=app&cc_medium=team-link"
+        let baseURL = "https://dash.paretosecurity.com/?cc_source=\(AppInfo.utmSource)&cc_medium=team-link"
         return URL(string: baseURL)!
     }
 
@@ -155,7 +172,7 @@ enum AppInfo {
 
         logs.append("\nLogs:")
         do {
-            if #available(macOS 12.0, *) {
+            if #available(macOS 12, *) {
                 let logStore = try OSLogStore(scope: .currentProcessIdentifier)
                 let enumerator = try logStore.__entriesEnumerator(position: nil, predicate: nil)
                 let allEntries = Array(enumerator)
