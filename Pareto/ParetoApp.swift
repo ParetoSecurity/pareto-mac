@@ -37,11 +37,17 @@ class AppDelegate: AppHandlers, NSApplicationDelegate {
         }
 
         if CommandLine.arguments.contains("-report") {
+            // invalidate possible expired cache
+            try! AppInfo.versionStorage.removeAll()
+
             for claim in AppInfo.claimsSorted {
                 for check in claim.checksSorted {
                     claim.configure()
                     print(check.report + "\n")
                 }
+            }
+            for line in AppInfo.logEntries() {
+                print(line)
             }
             exit(0)
         }

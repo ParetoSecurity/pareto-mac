@@ -155,7 +155,7 @@ class AppCheck: ParetoCheck, AppCheckProtocol {
     }
 
     @objc override func moreInfo() {
-        if let url = URL(string: "https://paretosecurity.com/check/\(UUID)?cc_source=app&appName=\(appName.replacingOccurrences(of: " ", with: "%20"))&latestVersion=\(latestVersion)&currentVersion=\(currentVersion)&appBundle=\(appBundle)") {
+        if let url = URL(string: "https://paretosecurity.com/check/\(UUID)?utm_source=\(AppInfo.utmSource)&appName=\(appName.replacingOccurrences(of: " ", with: "%20"))&latestVersion=\(latestVersion)&currentVersion=\(currentVersion)&appBundle=\(appBundle)") {
             NSWorkspace.shared.open(url)
         }
     }
