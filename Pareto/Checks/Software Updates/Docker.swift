@@ -32,6 +32,7 @@ class AppDockerCheck: AppCheck {
                 let result = versionRegex.firstMatch(in: response.value ?? "")
                 completion(result?.groups.first?.value ?? "0.0.0")
             } else {
+                os_log("%{public}s failed: %{public}s", self.appBundle, response.error.debugDescription)
                 completion("0.0.0")
             }
 

@@ -38,6 +38,7 @@ class AppSignalCheck: AppCheck {
                 os_log("%{public}s version=%{public}s", self.appBundle, version)
                 completion(version)
             } else {
+                os_log("%{public}s failed: %{public}s", self.appBundle, response.error.debugDescription)
                 completion("0.0.0")
             }
 

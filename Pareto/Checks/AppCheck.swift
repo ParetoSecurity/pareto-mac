@@ -99,15 +99,17 @@ class AppCheck: ParetoCheck, AppCheckProtocol {
             os_log("Requesting %{public}s", url)
             AF.request(url).responseJSON(queue: AppCheck.queue, completionHandler: { response in
                 do {
-                    if response.data != nil {
+                    if response.error == nil {
                         let json = try JSON(data: response.data!)
                         let version = json["results"][0]["version"].string ?? "0.0.0"
                         os_log("%{public}s version=%{public}s", self.appBundle, version)
                         completion(version)
                     } else {
+                        os_log("%{public}s failed: %{public}s", self.appBundle, response.error.debugDescription)
                         completion("0.0.0")
                     }
                 } catch {
+                    os_log("%{public}s failed: %{public}s", self.appBundle, error.localizedDescription)
                     completion("0.0.0")
                 }
             })
@@ -137,6 +139,7 @@ class AppCheck: ParetoCheck, AppCheckProtocol {
                     }
 
                 } else {
+                    os_log("%{public}s failed: %{public}s", self.appBundle, response.error.debugDescription)
                     completion("0.0.0")
                 }
 
@@ -152,7 +155,7 @@ class AppCheck: ParetoCheck, AppCheckProtocol {
     }
 
     @objc override func moreInfo() {
-        if let url = URL(string: "https://paretosecurity.com/check/\(UUID)?utm_source=app&appName=\(appName.replacingOccurrences(of: " ", with: "%20"))&latestVersion=\(latestVersion)&currentVersion=\(currentVersion)&appBundle=\(appBundle)") {
+        if let url = URL(string: "https://paretosecurity.com/check/\(UUID)?cc_source=app&appName=\(appName.replacingOccurrences(of: " ", with: "%20"))&latestVersion=\(latestVersion)&currentVersion=\(currentVersion)&appBundle=\(appBundle)") {
             NSWorkspace.shared.open(url)
         }
     }

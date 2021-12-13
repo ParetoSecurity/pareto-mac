@@ -38,7 +38,7 @@ struct ChecksSettingsView: View {
                 }
                 HStack(spacing: 0) {
                     Link("Learn more",
-                         destination: URL(string: "https://paretosecurity.com/security-checks?utm_source=app")!)
+                         destination: URL(string: "https://paretosecurity.com/security-checks?cc_source=app")!)
                     Text(" about checks on our website.")
                 }.padding(0)
             }.padding(.all, 20).frame(minWidth: 380, minHeight: 480)

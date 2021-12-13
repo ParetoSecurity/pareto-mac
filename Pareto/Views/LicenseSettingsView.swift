@@ -40,7 +40,7 @@ struct LicenseSettingsView: View {
             VStack {
                 Text("You are running the free version of the app. Please consider purchasing the Personal lifetime license for unlimited devices!")
                 Link("Learn more »",
-                     destination: URL(string: "https://paretosecurity.com/pricing?utm_source=app&utm_medium=license-link")!)
+                     destination: URL(string: "https://paretosecurity.com/pricing?cc_source=app&cc_medium=license-link")!)
             }.frame(width: 350, height: 100).padding(25)
         }
     }

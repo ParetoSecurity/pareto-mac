@@ -42,16 +42,18 @@ class AppGoogleChromeCheck: AppCheck {
         os_log("Requesting %{public}s", url)
         AF.request(url).responseJSON(queue: AppCheck.queue, completionHandler: { response in
             do {
-                if response.data != nil {
+                if response.error == nil {
                     let json = try JSON(data: response.data!)
                     let version = json["versions"][0]["version"].string ?? "2.3.4.5"
                     let v = version.split(separator: ".")
                     os_log("%{public}s version=%{public}s", self.appBundle, version)
                     completion("\(v[0]).\(v[1]).\(v[2])")
                 } else {
+                    os_log("%{public}s failed: %{public}s", self.appBundle, response.error.debugDescription)
                     completion("0.0.0")
                 }
             } catch {
+                os_log("%{public}s failed: %{public}s", self.appBundle, error.localizedDescription)
                 completion("0.0.0")
             }
         })

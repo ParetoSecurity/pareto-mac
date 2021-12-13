@@ -46,6 +46,7 @@ class AppSublimeTextCheck: AppCheck {
                 os_log("%{public}s version=%{public}s", self.appBundle, version)
                 completion("\(version.prefix(1)).\(version.suffix(3)).0")
             } else {
+                os_log("%{public}s failed: %{public}s", self.appBundle, response.error.debugDescription)
                 completion("0.0.0")
             }
 
