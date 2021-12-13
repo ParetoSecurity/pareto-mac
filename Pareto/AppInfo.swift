@@ -155,7 +155,7 @@ enum AppInfo {
 
         logs.append("\nLogs:")
         do {
-            if #available(macOS 12.0, *) {
+            if #available(macOS 12, *) {
                 let logStore = try OSLogStore(scope: .currentProcessIdentifier)
                 let enumerator = try logStore.__entriesEnumerator(position: nil, predicate: nil)
                 let allEntries = Array(enumerator)
