@@ -47,18 +47,23 @@ class SSHKeysCheck: ParetoCheck {
     }
 
     override func checkPasses() -> Bool {
-        let files = try? FileManager.default.contentsOfDirectory(at: sshPath, includingPropertiesForKeys: nil)
-        for pub in (files!.filter { $0.pathExtension == "pub" }) {
-            let privateKey = pub.path.replacingOccurrences(of: ".pub", with: "")
-            if !itExists(privateKey) {
-                continue
+        do {
+            let files = try FileManager.default.contentsOfDirectory(at: sshPath, includingPropertiesForKeys: nil).filter { $0.pathExtension == "pub" }
+            for pub in files {
+                let privateKey = pub.path.replacingOccurrences(of: ".pub", with: "")
+                if !itExists(privateKey) {
+                    continue
+                }
+                if !isPasswordEnabled(withKey: privateKey) {
+                    os_log("Checking %{public}s", pub.path)
+                    sshKey = pub.lastPathComponent.replacingOccurrences(of: ".pub", with: "")
+                    return false
+                }
             }
-            if !isPasswordEnabled(withKey: privateKey) {
-                os_log("Checking %{public}s", pub.path)
-                sshKey = pub.lastPathComponent.replacingOccurrences(of: ".pub", with: "")
-                return false
-            }
+            return true
+        } catch {
+            os_log("Failed to check SSH keys %{public}s", error.localizedDescription)
+            return true
         }
-        return true
     }
 }
