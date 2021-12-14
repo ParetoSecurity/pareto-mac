@@ -17,14 +17,14 @@ class SSHKeysCheck: ParetoCheck {
     }
 
     override var TitleON: String {
-        "All SSH keys require a password"
+        "SSH keys require a password"
     }
 
     override var TitleOFF: String {
         if sshKey.isEmpty {
-            return "One of SSH keys is missing password"
+            return "SSH key is missing a password"
         }
-        return "The \(sshKey) SSH key is missing password"
+        return "SSH key \(sshKey) is missing a password"
     }
 
     func itExists(_ path: String) -> Bool {
