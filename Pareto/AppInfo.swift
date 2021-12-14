@@ -110,8 +110,8 @@ enum AppInfo {
         )
     #else
         static let versionStorage = try! Storage<String, Version>(
-            diskConfig: DiskConfig(name: "Version+Bundles", expiry: .minutes(60 * 24)),
-            memoryConfig: MemoryConfig(expiry: .minutes(60 * 24 * 2)),
+            diskConfig: DiskConfig(name: "Version+Bundles", expiry: .seconds(3600 * 24)),
+            memoryConfig: MemoryConfig(expiry: .seconds(3600 * 24 * 2)),
             transformer: TransformerFactory.forCodable(ofType: Version.self) // Storage<String, Version>
         )
     #endif

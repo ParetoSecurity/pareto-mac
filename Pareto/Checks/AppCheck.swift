@@ -92,10 +92,10 @@ class AppCheck: ParetoCheck, AppCheckProtocol {
         }
         var version = appVersion(path: applicationPath!) ?? "0.0.0"
         if version.contains("alpha") {
-            version = version.replacingOccurrences(of: "alpha", with:"-alpha")
+            version = version.replacingOccurrences(of: "alpha", with: "-alpha")
         }
         if version.contains("beta") {
-            version = version.replacingOccurrences(of: "beta", with:"-beta")
+            version = version.replacingOccurrences(of: "beta", with: "-beta")
         }
         return Version(version) ?? Version(0, 0, 0)
     }
