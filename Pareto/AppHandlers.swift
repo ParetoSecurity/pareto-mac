@@ -292,7 +292,7 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
             if AppInfo.Licensed || !Defaults[.teamAuth].isEmpty {
                 return
             }
-            
+
             let jwt = url.queryParams()["token"] ?? ""
             do {
                 let ticket = try VerifyTeamTicket(withTicket: jwt)
