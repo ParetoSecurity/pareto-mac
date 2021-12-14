@@ -90,7 +90,14 @@ class AppCheck: ParetoCheck, AppCheckProtocol {
         if applicationPath == nil {
             return Version(0, 0, 0)
         }
-        return Version(appVersion(path: applicationPath ?? "") ?? "0.0.0") ?? Version(0, 0, 0)
+        var version = appVersion(path: applicationPath!) ?? "0.0.0"
+        if version.contains("alpha") {
+            version = version.replacingOccurrences(of: "alpha", with:"-alpha")
+        }
+        if version.contains("beta") {
+            version = version.replacingOccurrences(of: "beta", with:"-beta")
+        }
+        return Version(version) ?? Version(0, 0, 0)
     }
 
     func getLatestVersion(completion: @escaping (String) -> Void) {
