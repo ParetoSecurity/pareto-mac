@@ -25,9 +25,6 @@ class AppLibreOfficeCheck: AppCheck {
         "5726931a-264a-5758-b7dd-d09285ac4b7f"
     }
 
-    // Special treatment follows
-    // Use build number as definite version comparator
-
     override var currentVersion: Version {
         if applicationPath == nil {
             return Version(0, 0, 0)
@@ -36,20 +33,44 @@ class AppLibreOfficeCheck: AppCheck {
         return Version(Int(v[0]) ?? 0, Int(v[1]) ?? 0, Int(v[2]) ?? 0)
     }
 
-    override func getLatestVersion(completion: @escaping (String) -> Void) {
+    func getLatestVersions(completion: @escaping ([String]) -> Void) {
         let url = "https://www.libreoffice.org/download/download/"
         os_log("Requesting %{public}s", url)
         let versionRegex = Regex("<span class=\"dl_version_number\">?([\\.\\d]+)</span>")
         AF.request(url).responseString(queue: AppCheck.queue, completionHandler: { response in
             if response.error == nil {
-                let yaml = response.value ?? "<span class=\"dl_version_number\">1.2.4</span>"
-                let version = versionRegex.firstMatch(in: yaml)?.groups.first?.value ?? "1.2.4"
-                os_log("%{public}s version=%{public}s", self.appBundle, version)
-                completion(version)
+                let html = response.value ?? "<span class=\"dl_version_number\">1.2.4</span>"
+                let versions = versionRegex.allMatches(in: html).map { $0.groups.first?.value ?? "1.2.4" }
+                completion(versions)
             } else {
                 os_log("%{public}s failed: %{public}s", self.appBundle, response.error.debugDescription)
-                completion("0.0.0")
+                completion(["0.0.0"])
             }
         })
+    }
+
+    public var latestVersions: [Version] {
+        var tempVersions = [Version(0, 0, 0)]
+        let lock = DispatchSemaphore(value: 0)
+        getLatestVersions { versions in
+            tempVersions = versions.map { Version($0) ?? Version(0, 0, 0) }
+            lock.signal()
+        }
+        lock.wait()
+        return tempVersions
+    }
+
+    override func checkPasses() -> Bool {
+        if NetworkHandler.sharedInstance().currentStatus != .satisfied {
+            return checkPassed
+        }
+
+        for version in latestVersions {
+            if currentVersion >= version {
+                return true
+            }
+        }
+
+        return false
     }
 }
