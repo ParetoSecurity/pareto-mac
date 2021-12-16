@@ -191,7 +191,7 @@ enum AppInfo {
                 let osLogEntryObjects = allEntries.compactMap { $0 as? OSLogEntry }
                 let osLogEntryLogObjects = osLogEntryObjects.compactMap { $0 as? OSLogEntryLog }
                 let subsystem = Bundle.main.bundleIdentifier!
-                for entry in osLogEntryLogObjects where entry.subsystem == subsystem {
+                for entry in osLogEntryLogObjects.suffix(10) where entry.subsystem == subsystem {
                     logs.append(entry.category + ": " + entry.composedMessage)
                 }
             } else {
@@ -204,7 +204,7 @@ enum AppInfo {
     }
 
     static let getVersions = { () -> String in
-        "HW: \(AppInfo.hwModel)\nmacOS: \(AppInfo.macOSVersionString)\nApp Version: \(AppInfo.appVersion)\nBuild: \(AppInfo.buildVersion)"
+        "HW: \(AppInfo.hwModelName)\nmacOS: \(AppInfo.macOSVersionString)\nApp Version: \(AppInfo.appVersion)\nBuild: \(AppInfo.buildVersion)"
     }
 
     public static func getSystemUUID() -> String? {
