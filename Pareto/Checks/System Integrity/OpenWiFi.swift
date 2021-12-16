@@ -41,7 +41,12 @@ class OpenWiFiCheck: ParetoCheck {
                 let range = NSRange(location: 0, length: linedata.count)
                 let normalized = regex.stringByReplacingMatches(in: linedata, options: [], range: range, withTemplate: "\t")
                 let info = normalized.split(separator: "\t")
+                // most vpns use default gateway as indiation that they route over extension
                 if info[0] == "default", info[1].contains("link#") {
+                    return true
+                }
+                // ExpressVPN uses netlink rule to route all traffic over virtual device
+                if info[0] == "0/1", info[3].contains("utun") {
                     return true
                 }
             }
