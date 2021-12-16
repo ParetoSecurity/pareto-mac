@@ -9,7 +9,7 @@ import os.log
 
 class SSHKeysCheck: ParetoCheck {
     static let sharedInstance = SSHKeysCheck()
-    private let sshPath = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent(".ssh")
+    private let sshPath = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent(".ssh").resolvingSymlinksInPath()
     private var sshKey = ""
 
     override var UUID: String {

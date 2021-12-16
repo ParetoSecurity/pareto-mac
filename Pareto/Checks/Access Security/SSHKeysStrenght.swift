@@ -56,7 +56,7 @@ struct KeyInfo: Equatable, ExpressibleByStringLiteral {
 
 class SSHKeysStrenghtCheck: ParetoCheck {
     static let sharedInstance = SSHKeysStrenghtCheck()
-    private let sshPath = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent(".ssh")
+    private let sshPath = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent(".ssh").resolvingSymlinksInPath()
     private var sshKey = ""
 
     override var UUID: String {
