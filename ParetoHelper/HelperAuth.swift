@@ -45,7 +45,6 @@ enum HelperAuthorization {
 
     // MARK: Variables
 
-    // FIXME: Add all functions that require authentication here.
     static let authorizationRights = [
         HelperAuthorizationRight(command: #selector(HelperProtocol.runCommandLs(withPath:authData:completion:)),
                                  description: "Pareto Security wants to run the checks as an Administrator",

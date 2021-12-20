@@ -34,7 +34,7 @@ enum AppInfo {
         AppLibreOfficeCheck.sharedInstance,
         AppSublimeTextCheck.sharedInstance,
         AppVSCodeCheck.sharedInstance,
-        macOSVersionCheck.sharedInstance
+        MacOSVersionCheck.sharedInstance
     ]
 
     static let claims = [

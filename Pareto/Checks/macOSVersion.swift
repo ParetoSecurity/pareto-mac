@@ -10,8 +10,8 @@ import os.log
 import Regex
 import Version
 
-class macOSVersionCheck: ParetoCheck {
-    static let sharedInstance = macOSVersionCheck()
+class MacOSVersionCheck: ParetoCheck {
+    static let sharedInstance = MacOSVersionCheck()
     override var UUID: String {
         "284162c2-f911-4b5e-8c81-30b2cf1ba73f"
     }
