@@ -33,7 +33,8 @@ enum AppInfo {
         AppWireGuardCheck.sharedInstance,
         AppLibreOfficeCheck.sharedInstance,
         AppSublimeTextCheck.sharedInstance,
-        AppVSCodeCheck.sharedInstance
+        AppVSCodeCheck.sharedInstance,
+        macOSVersionCheck.sharedInstance
     ]
 
     static let claims = [

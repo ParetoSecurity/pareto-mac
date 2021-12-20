@@ -115,6 +115,8 @@
 		4F3EF24326CA859500841375 /* Claim.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F3EF24226CA859500841375 /* Claim.swift */; };
 		4F41831727707B0800EBAE4A /* StatusBarIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F41831627707B0800EBAE4A /* StatusBarIcon.swift */; };
 		4F41831827707B0800EBAE4A /* StatusBarIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F41831627707B0800EBAE4A /* StatusBarIcon.swift */; };
+		4F41831A2770F19D00EBAE4A /* macOSVersion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F4183192770F19D00EBAE4A /* macOSVersion.swift */; };
+		4F41831B2770F19D00EBAE4A /* macOSVersion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F4183192770F19D00EBAE4A /* macOSVersion.swift */; };
 		4F47221026B08A0E0071CE2A /* Defaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F47220F26B08A0E0071CE2A /* Defaults.swift */; };
 		4F57135326F8A6AC004B4359 /* LicenseTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F57135226F8A6AC004B4359 /* LicenseTest.swift */; };
 		4F57135526F8ACCC004B4359 /* WelcomeTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F57135426F8ACCC004B4359 /* WelcomeTest.swift */; };
@@ -262,6 +264,7 @@
 		4F3DCFED274FE73600F1CB55 /* WireGuard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WireGuard.swift; path = "Software Updates/WireGuard.swift"; sourceTree = "<group>"; };
 		4F3EF24226CA859500841375 /* Claim.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Claim.swift; sourceTree = "<group>"; };
 		4F41831627707B0800EBAE4A /* StatusBarIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusBarIcon.swift; sourceTree = "<group>"; };
+		4F4183192770F19D00EBAE4A /* macOSVersion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = macOSVersion.swift; sourceTree = "<group>"; };
 		4F47220F26B08A0E0071CE2A /* Defaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Defaults.swift; sourceTree = "<group>"; };
 		4F57135226F8A6AC004B4359 /* LicenseTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LicenseTest.swift; sourceTree = "<group>"; };
 		4F57135426F8ACCC004B4359 /* WelcomeTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeTest.swift; sourceTree = "<group>"; };
@@ -486,6 +489,7 @@
 		4F3DCFD4274FE4C900F1CB55 /* Software Updates */ = {
 			isa = PBXGroup;
 			children = (
+				4F4183192770F19D00EBAE4A /* macOSVersion.swift */,
 				4F923CF12756920C00070551 /* iTerm.swift */,
 				4F923CEE275691A700070551 /* Docker.swift */,
 				4F74B7D4275114EA00F1FC11 /* Dashlane.swift */,
@@ -1011,6 +1015,7 @@
 				4F37E7332718122E00A2B254 /* NSWorkspace.swift in Sources */,
 				4F37E7342718122E00A2B254 /* NSImage.swift in Sources */,
 				4FB11914274261D700B89634 /* CodeSignCheck.swift in Sources */,
+				4F41831B2770F19D00EBAE4A /* macOSVersion.swift in Sources */,
 				4F91060427623E4C00D1A348 /* SSHKeys.swift in Sources */,
 				4F41831827707B0800EBAE4A /* StatusBarIcon.swift in Sources */,
 				4F3DCFDE274FE4E000F1CB55 /* Bitwarden.swift in Sources */,
@@ -1133,6 +1138,7 @@
 				4F84531026D634E5007C3B04 /* NSWorkspace.swift in Sources */,
 				4FB7C68726AFF29A00FB1C41 /* NSImage.swift in Sources */,
 				4FB11915274261D800B89634 /* CodeSignCheck.swift in Sources */,
+				4F41831A2770F19D00EBAE4A /* macOSVersion.swift in Sources */,
 				4F91060327623E4C00D1A348 /* SSHKeys.swift in Sources */,
 				4F41831727707B0800EBAE4A /* StatusBarIcon.swift in Sources */,
 				4F3DCFDD274FE4E000F1CB55 /* Bitwarden.swift in Sources */,
