@@ -16,7 +16,9 @@ private extension String {
 
 enum Cipher: String {
     case ED25519
+    case ED25519_SK = "ED25519-SK"
     case ECDSA
+    case ECDSA_SK = "ECDSA-SK"
     case DSA
     case RSA
 }
@@ -41,7 +43,7 @@ struct KeyInfo: Equatable, ExpressibleByStringLiteral {
             strenght = Int(components[0]) ?? 0
             singature = components[1]
             owner = components[2]
-            cipher = Cipher(rawValue: components[3].strip()) ?? Cipher.RSA
+            cipher = Cipher(rawValue: components[3].strip().uppercased()) ?? Cipher.RSA
         }
     }
 
@@ -94,13 +96,13 @@ class SSHKeysStrenghtCheck: ParetoCheck {
         os_log("%s has %d", path, info.strenght)
         // https://nvlpubs.nist.gov/nistpubs/specialpublications/nist.sp.800-57pt3r1.pdf
         switch info.cipher {
-        case Cipher.RSA:
+        case .RSA:
             return info.strenght >= 2048 // for 2020 till 2030
-        case Cipher.DSA:
+        case .DSA:
             return info.strenght >= 8192 // considered unsecure, check requires much higher strenght than attainable
-        case Cipher.ECDSA:
+        case .ECDSA, .ECDSA_SK:
             return info.strenght >= 521 // for 2020 & beyond
-        case Cipher.ED25519:
+        case .ED25519, .ED25519_SK:
             return info.strenght >= 256 // recommended
         }
     }
