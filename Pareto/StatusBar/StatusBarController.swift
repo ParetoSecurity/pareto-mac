@@ -13,10 +13,9 @@ import SwiftUI
 class StatusBarController: NSObject, NSMenuDelegate {
     var statusItem: NSStatusItem!
     var statusItemMenu: NSMenu!
-    let imageDefault = NSImage(named: "IconGray")
-    let imageWarning = NSImage(named: "IconOrange")
     var isRunnig = false
     var workItem: DispatchWorkItem?
+    var statusBarModel = StatusBarModel()
 
     private enum Snooze {
         static let oneHour = 3600 * 1000
@@ -32,18 +31,25 @@ class StatusBarController: NSObject, NSMenuDelegate {
     override
     init() {
         super.init()
-        statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
+        statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
         statusItemMenu = NSMenu(title: "ParetoSecurity")
         statusItemMenu.delegate = self
-
-        let button: NSStatusBarButton = statusItem.button!
-        button.target = self
-        button.image = imageDefault
-        button.imagePosition = .imageRight
-        button.imageScaling = .scaleProportionallyDown
-        button.title = "ParetoSecurity"
-        button.isEnabled = true
         statusItem.menu = statusItemMenu
+        let button: NSStatusBarButton = statusItem.button!
+        let view = NSHostingView(rootView: StatusBarIcon(statusBarModel: statusBarModel))
+        view.translatesAutoresizingMaskIntoConstraints = false
+        button.setFrameSize(NSSize(width: 55, height: 32))
+        button.addSubview(view)
+        button.target = self
+        button.isEnabled = true
+
+        // Apply a series of Auto Layout constraints to its view:
+        NSLayoutConstraint.activate([
+            view.topAnchor.constraint(equalTo: button.topAnchor),
+            view.leadingAnchor.constraint(equalTo: button.leadingAnchor),
+            view.widthAnchor.constraint(equalTo: button.widthAnchor),
+            view.bottomAnchor.constraint(equalTo: button.bottomAnchor)
+        ])
 
         if Defaults.firstLaunch(), AppInfo.isRunningTests {
             showMenu()
@@ -73,9 +79,9 @@ class StatusBarController: NSObject, NSMenuDelegate {
             self.addApplicationItems()
 
             if self.claimsPassed {
-                self.statusItem.button?.image = self.imageDefault
+                self.statusBarModel.state = .ok
             } else {
-                self.statusItem.button?.image = self.imageWarning
+                self.statusBarModel.state = .warning
             }
 
             #if SETAPP_ENABLED
@@ -116,7 +122,7 @@ class StatusBarController: NSObject, NSMenuDelegate {
 
         Defaults[.lastCheck] = Date().currentTimeMillis()
 
-        statusItem.button?.image = imageDefault
+        statusBarModel.state = .ok
         isRunnig = true
         workItem = DispatchWorkItem {
             for claim in AppInfo.claims {
@@ -167,9 +173,9 @@ class StatusBarController: NSObject, NSMenuDelegate {
 
     func menuDidClose(_: NSMenu) {
         if claimsPassed {
-            statusItem.button?.image = imageDefault
+            statusBarModel.state = .ok
         } else {
-            statusItem.button?.image = imageWarning
+            statusBarModel.state = .warning
         }
     }
 

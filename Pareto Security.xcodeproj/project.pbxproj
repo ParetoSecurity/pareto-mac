@@ -113,6 +113,8 @@
 		4F3DCFEE274FE73600F1CB55 /* WireGuard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F3DCFED274FE73600F1CB55 /* WireGuard.swift */; };
 		4F3DCFEF274FE73600F1CB55 /* WireGuard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F3DCFED274FE73600F1CB55 /* WireGuard.swift */; };
 		4F3EF24326CA859500841375 /* Claim.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F3EF24226CA859500841375 /* Claim.swift */; };
+		4F41831727707B0800EBAE4A /* StatusBarIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F41831627707B0800EBAE4A /* StatusBarIcon.swift */; };
+		4F41831827707B0800EBAE4A /* StatusBarIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F41831627707B0800EBAE4A /* StatusBarIcon.swift */; };
 		4F47221026B08A0E0071CE2A /* Defaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F47220F26B08A0E0071CE2A /* Defaults.swift */; };
 		4F57135326F8A6AC004B4359 /* LicenseTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F57135226F8A6AC004B4359 /* LicenseTest.swift */; };
 		4F57135526F8ACCC004B4359 /* WelcomeTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F57135426F8ACCC004B4359 /* WelcomeTest.swift */; };
@@ -165,8 +167,6 @@
 		4F923CF527569E6300070551 /* Cache in Frameworks */ = {isa = PBXBuildFile; productRef = 4F923CF427569E6300070551 /* Cache */; };
 		4F9791C126F5DB4F00E668F4 /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F9791C026F5DB4F00E668F4 /* Color.swift */; };
 		4FB0416126F71CC0003657BE /* ButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB0416026F71CC0003657BE /* ButtonStyle.swift */; };
-		4FB118EF27424F8900B89634 /* ParetoHelper.xpc in Embed XPC Services */ = {isa = PBXBuildFile; fileRef = 4FB118E427424F8900B89634 /* ParetoHelper.xpc */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		4FB118F427424FB300B89634 /* ParetoHelper.xpc in Embed XPC Services */ = {isa = PBXBuildFile; fileRef = 4FB118E427424F8900B89634 /* ParetoHelper.xpc */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		4FB118F92742506900B89634 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB118F82742506900B89634 /* main.swift */; };
 		4FB118FB274250AB00B89634 /* ParetoHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB118FA274250AB00B89634 /* ParetoHelper.swift */; };
 		4FB118FD274250D100B89634 /* ParetoHelperProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB118FC274250D100B89634 /* ParetoHelperProtocol.swift */; };
@@ -197,6 +197,8 @@
 		4FB7C68D26AFFD2600FB1C41 /* FileVault.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB7C68C26AFFD2600FB1C41 /* FileVault.swift */; };
 		4FD0A24126A024440070BED4 /* Gatekeeper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FD0A24026A024440070BED4 /* Gatekeeper.swift */; };
 		4FDAD88F26EB784A00F64E61 /* License.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FDAD88E26EB784A00F64E61 /* License.swift */; };
+		4FE23EED276BB13700CA9BA0 /* FollowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FE23EEC276BB13700CA9BA0 /* FollowView.swift */; };
+		4FE23EEE276BB13700CA9BA0 /* FollowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FE23EEC276BB13700CA9BA0 /* FollowView.swift */; };
 		4FEBA2F2269CD48F009B2469 /* ParetoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEBA2F1269CD48F009B2469 /* ParetoApp.swift */; };
 		4FEBA2F6269CD48F009B2469 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4FEBA2F5269CD48F009B2469 /* Assets.xcassets */; };
 		4FEBA2F9269CD48F009B2469 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4FEBA2F8269CD48F009B2469 /* Preview Assets.xcassets */; };
@@ -222,46 +224,7 @@
 			remoteGlobalIDString = 4FEBA2ED269CD48F009B2469;
 			remoteInfo = "Pareto Security";
 		};
-		4FB118ED27424F8900B89634 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 4FEBA2E6269CD48F009B2469 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 4FB118E327424F8900B89634;
-			remoteInfo = ParetoHelper;
-		};
-		4FB118F527424FB300B89634 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 4FEBA2E6269CD48F009B2469 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 4FB118E327424F8900B89634;
-			remoteInfo = ParetoHelper;
-		};
 /* End PBXContainerItemProxy section */
-
-/* Begin PBXCopyFilesBuildPhase section */
-		4FB118F027424F8900B89634 /* Embed XPC Services */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "$(CONTENTS_FOLDER_PATH)/XPCServices";
-			dstSubfolderSpec = 16;
-			files = (
-				4FB118EF27424F8900B89634 /* ParetoHelper.xpc in Embed XPC Services */,
-			);
-			name = "Embed XPC Services";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		4FB118F727424FB300B89634 /* Embed XPC Services */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "$(CONTENTS_FOLDER_PATH)/XPCServices";
-			dstSubfolderSpec = 16;
-			files = (
-				4FB118F427424FB300B89634 /* ParetoHelper.xpc in Embed XPC Services */,
-			);
-			name = "Embed XPC Services";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		4F0371BB26CD00B700B35E43 /* Boot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Boot.swift; sourceTree = "<group>"; };
@@ -298,6 +261,7 @@
 		4F3DCFE7274FE61200F1CB55 /* Brave Browser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Brave Browser.swift"; path = "Software Updates/Brave Browser.swift"; sourceTree = "<group>"; };
 		4F3DCFED274FE73600F1CB55 /* WireGuard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WireGuard.swift; path = "Software Updates/WireGuard.swift"; sourceTree = "<group>"; };
 		4F3EF24226CA859500841375 /* Claim.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Claim.swift; sourceTree = "<group>"; };
+		4F41831627707B0800EBAE4A /* StatusBarIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusBarIcon.swift; sourceTree = "<group>"; };
 		4F47220F26B08A0E0071CE2A /* Defaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Defaults.swift; sourceTree = "<group>"; };
 		4F57135226F8A6AC004B4359 /* LicenseTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LicenseTest.swift; sourceTree = "<group>"; };
 		4F57135426F8ACCC004B4359 /* WelcomeTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeTest.swift; sourceTree = "<group>"; };
@@ -355,6 +319,7 @@
 		4FC81A4B26C41DC8006EABA8 /* ParetoSecurityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParetoSecurityTests.swift; sourceTree = "<group>"; };
 		4FD0A24026A024440070BED4 /* Gatekeeper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Gatekeeper.swift; sourceTree = "<group>"; };
 		4FDAD88E26EB784A00F64E61 /* License.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = License.swift; sourceTree = "<group>"; };
+		4FE23EEC276BB13700CA9BA0 /* FollowView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FollowView.swift; sourceTree = "<group>"; };
 		4FEBA2EE269CD48F009B2469 /* Pareto Security.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Pareto Security.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4FEBA2F1269CD48F009B2469 /* ParetoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParetoApp.swift; sourceTree = "<group>"; };
 		4FEBA2F5269CD48F009B2469 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -439,6 +404,7 @@
 				4F24A09126EB73980036F748 /* AboutSettingsView.swift */,
 				4F24A09326EB73C80036F748 /* ChecksSettingsView.swift */,
 				4F24A09526EB73F30036F748 /* GeneralSettingsView.swift */,
+				4F41831627707B0800EBAE4A /* StatusBarIcon.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -510,6 +476,7 @@
 				4F8B01B126F4A6CB00EDE14B /* WelcomeView.swift */,
 				4F38D8C7273AC5AE00671756 /* IntroView.swift */,
 				4F38D8CA273AC5F200671756 /* PermissionsView.swift */,
+				4FE23EEC276BB13700CA9BA0 /* FollowView.swift */,
 				4F38D8CD273AC62500671756 /* EndView.swift */,
 				4F79F78C273BF6300082A5EB /* ChecksView.swift */,
 			);
@@ -676,12 +643,10 @@
 				4F37E73F2718122E00A2B254 /* Resources */,
 				4F37E7422718122E00A2B254 /* Bundle run at login */,
 				4F37E7432718122E00A2B254 /* + build number */,
-				4FB118F727424FB300B89634 /* Embed XPC Services */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				4FB118F627424FB300B89634 /* PBXTargetDependency */,
 			);
 			name = "Pareto Security SetApp";
 			packageProductDependencies = (
@@ -766,12 +731,10 @@
 				4FEBA2EC269CD48F009B2469 /* Resources */,
 				4F103013269F1D45008C1E86 /* Bundle run at login */,
 				4F103014269F28DE008C1E86 /* + build number */,
-				4FB118F027424F8900B89634 /* Embed XPC Services */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				4FB118EE27424F8900B89634 /* PBXTargetDependency */,
 			);
 			name = "Pareto Security";
 			packageProductDependencies = (
@@ -980,6 +943,7 @@
 				4F923CF32756920C00070551 /* iTerm.swift in Sources */,
 				4F37E70A2718122E00A2B254 /* ButtonStyle.swift in Sources */,
 				4F37E70B2718122E00A2B254 /* ParetoCheck.swift in Sources */,
+				4FE23EEE276BB13700CA9BA0 /* FollowView.swift in Sources */,
 				4F28A97E27566D8500E34F7B /* Firefox.swift in Sources */,
 				4F37E70C2718122E00A2B254 /* RemoteLogin.swift in Sources */,
 				4F3DCFCF274FD1AE00F1CB55 /* AppCheck.swift in Sources */,
@@ -1048,6 +1012,7 @@
 				4F37E7342718122E00A2B254 /* NSImage.swift in Sources */,
 				4FB11914274261D700B89634 /* CodeSignCheck.swift in Sources */,
 				4F91060427623E4C00D1A348 /* SSHKeys.swift in Sources */,
+				4F41831827707B0800EBAE4A /* StatusBarIcon.swift in Sources */,
 				4F3DCFDE274FE4E000F1CB55 /* Bitwarden.swift in Sources */,
 				4F37E7352718122E00A2B254 /* AppInfo.swift in Sources */,
 				4F37E7362718122E00A2B254 /* License.swift in Sources */,
@@ -1100,6 +1065,7 @@
 				4F923CF22756920C00070551 /* iTerm.swift in Sources */,
 				4FB0416126F71CC0003657BE /* ButtonStyle.swift in Sources */,
 				4F5E888026A053A9005271FB /* ParetoCheck.swift in Sources */,
+				4FE23EED276BB13700CA9BA0 /* FollowView.swift in Sources */,
 				4F28A97D27566D8500E34F7B /* Firefox.swift in Sources */,
 				4F35395726E8AE02008F5DD3 /* RemoteLogin.swift in Sources */,
 				4F3DCFCE274FD1AE00F1CB55 /* AppCheck.swift in Sources */,
@@ -1168,6 +1134,7 @@
 				4FB7C68726AFF29A00FB1C41 /* NSImage.swift in Sources */,
 				4FB11915274261D800B89634 /* CodeSignCheck.swift in Sources */,
 				4F91060327623E4C00D1A348 /* SSHKeys.swift in Sources */,
+				4F41831727707B0800EBAE4A /* StatusBarIcon.swift in Sources */,
 				4F3DCFDD274FE4E000F1CB55 /* Bitwarden.swift in Sources */,
 				4F6A92EA26C54AB7006C2F2D /* AppInfo.swift in Sources */,
 				4FDAD88F26EB784A00F64E61 /* License.swift in Sources */,
@@ -1189,23 +1156,12 @@
 			target = 4FEBA2ED269CD48F009B2469 /* Pareto Security */;
 			targetProxy = 4F6A92F326C555C6006C2F2D /* PBXContainerItemProxy */;
 		};
-		4FB118EE27424F8900B89634 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 4FB118E327424F8900B89634 /* ParetoHelper */;
-			targetProxy = 4FB118ED27424F8900B89634 /* PBXContainerItemProxy */;
-		};
-		4FB118F627424FB300B89634 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 4FB118E327424F8900B89634 /* ParetoHelper */;
-			targetProxy = 4FB118F527424FB300B89634 /* PBXContainerItemProxy */;
-		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		4F37E7452718122E00A2B254 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
@@ -1254,7 +1210,6 @@
 		4F37E7462718122E00A2B254 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
@@ -1582,7 +1537,6 @@
 		4FEBA2FF269CD48F009B2469 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
@@ -1616,7 +1570,6 @@
 		4FEBA300269CD48F009B2469 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;

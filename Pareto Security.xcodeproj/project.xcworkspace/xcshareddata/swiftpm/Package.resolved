@@ -6,8 +6,8 @@
         "repositoryURL": "https://github.com/Alamofire/Alamofire",
         "state": {
           "branch": null,
-          "revision": "d120af1e8638c7da36c8481fd61a66c0c08dc4fc",
-          "version": "5.4.4"
+          "revision": "f82c23a8a7ef8dc1a49a8bfc6a96883e79121864",
+          "version": "5.5.0"
         }
       },
       {
@@ -69,8 +69,8 @@
         "repositoryURL": "https://github.com/getsentry/sentry-cocoa",
         "state": {
           "branch": null,
-          "revision": "d7f02ac0ebd9f8f3ddb1f9a2176a5399c5021e12",
-          "version": "7.5.3"
+          "revision": "2814f3c5e624108bda1d0dccfaabbbf00217d6dc",
+          "version": "7.7.0"
         }
       },
       {

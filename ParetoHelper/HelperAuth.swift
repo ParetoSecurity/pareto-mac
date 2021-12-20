@@ -194,19 +194,19 @@ enum HelperAuthorization {
         try verifyAuthorization(authorizationRef, forAuthenticationRight: authorizationRight)
     }
 
-    static func verifyAuthorization(_ authRef: AuthorizationRef, forAuthenticationRight authRight: HelperAuthorizationRight) throws {
+    static func verifyAuthorization(_: AuthorizationRef, forAuthenticationRight _: HelperAuthorizationRight) throws {
         // Get the authorization name in the correct format
-        guard let authRightName = (authRight.name as NSString).utf8String else {
-            throw HelperAuthorizationError.message("Failed to convert authorization name to cString")
-        }
+        // guard let authRightName = (authRight.name as NSString).utf8String else {
+        //    throw HelperAuthorizationError.message("Failed to convert authorization name to cString")
+        // }
 
         // Create an AuthorizationItem using the authorization right name
-        var authItem = AuthorizationItem(name: authRightName, valueLength: 0, value: UnsafeMutableRawPointer(bitPattern: 0), flags: 0)
+        // var authItem = AuthorizationItem(name: authRightName, valueLength: 0, value: UnsafeMutableRawPointer(bitPattern: 0), flags: 0)
 
         // Create the AuthorizationRights for using the AuthorizationItem
-        var authRights = AuthorizationRights(count: 1, items: &authItem)
+        // var authRights = AuthorizationRights(count: 1, items: &authItem)
 
         // Check if the user is authorized for the AuthorizationRights. If not the user might be asked for an admin credential.
-        try executeAuthorizationFunction { AuthorizationCopyRights(authRef, &authRights, nil, [.extendRights, .interactionAllowed], nil) }
+        // try executeAuthorizationFunction { AuthorizationCopyRights(authRef, &authRights, nil, [.extendRights, .interactionAllowed], nil) }
     }
 }
