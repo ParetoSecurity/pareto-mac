@@ -16,7 +16,7 @@ class SoftwareUpdatesTest: XCTestCase {
     func testAppVersionFetcehrs() throws {
         var redirects = [String]()
         var names = [String]()
-        for app in AppInfo.updateChecks.sorted(by: { $0.appMarketingName.lowercased() < $1.appMarketingName.lowercased() }) {
+        for app in Claims.updateChecks.sorted(by: { $0.appMarketingName.lowercased() < $1.appMarketingName.lowercased() }) {
             XCTAssertNotEqual(app.latestVersion, nil)
             XCTAssertNotEqual(app.UUID, nil)
             XCTAssertNotEqual(app.currentVersion, nil)

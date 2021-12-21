@@ -51,14 +51,14 @@ class StatusBarController: NSObject, NSMenuDelegate {
             view.bottomAnchor.constraint(equalTo: button.bottomAnchor)
         ])
 
-        if Defaults.firstLaunch(), AppInfo.isRunningTests {
+        if Defaults.firstLaunch() {
             showMenu()
         }
     }
 
     var claimsPassed: Bool {
         var passed = true
-        for claim in AppInfo.claims {
+        for claim in Claims.sorted {
             passed = passed && claim.checksPassed
         }
         return passed
@@ -83,15 +83,11 @@ class StatusBarController: NSObject, NSMenuDelegate {
             } else {
                 self.statusBarModel.state = .warning
             }
-
-            #if SETAPP_ENABLED
-                SCReportUsageEvent("user-interaction", nil)
-            #endif
         }
     }
 
     func configureChecks() {
-        for claim in AppInfo.claims {
+        for claim in Claims.sorted {
             claim.configure()
         }
     }
@@ -125,7 +121,7 @@ class StatusBarController: NSObject, NSMenuDelegate {
         statusBarModel.state = .ok
         isRunnig = true
         workItem = DispatchWorkItem {
-            for claim in AppInfo.claims {
+            for claim in Claims.sorted {
                 claim.run()
             }
         }
@@ -140,8 +136,7 @@ class StatusBarController: NSObject, NSMenuDelegate {
                 if Defaults.shouldDoTeamUpdate() || interactive {
                     let report = Report.now()
                     DispatchQueue.global(qos: .utility).async {
-                        Team.update(withReport: report).responseJSON { response in
-                            debugPrint(response.result)
+                        Team.update(withReport: report).response { response in
                             switch response.result {
                             case .success:
                                 os_log("Check status was updated", log: Log.app)
@@ -181,6 +176,9 @@ class StatusBarController: NSObject, NSMenuDelegate {
 
     func menuWillOpen(_: NSMenu) {
         updateMenu()
+        #if SETAPP_ENABLED
+            SCReportUsageEvent("user-interaction", nil)
+        #endif
     }
 
     func addSubmenu(withTitle: String, action: Selector?) -> NSMenuItem {
@@ -268,7 +266,7 @@ class StatusBarController: NSObject, NSMenuDelegate {
     }
 
     func addChecksMenuItems() {
-        for claim in AppInfo.claimsSorted {
+        for claim in Claims.sorted {
             let menu = claim.menu()
             if !(menu.submenu?.items.isEmpty ?? false) {
                 statusItemMenu.addItem(menu)

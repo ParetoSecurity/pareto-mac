@@ -21,8 +21,6 @@ mwIDAQAB
 class LicenseTest: XCTestCase {
     override class func setUp() {
         super.setUp()
-        UserDefaults.standard.removeAll()
-        UserDefaults.standard.synchronize()
     }
 
     func testPersonaLicense() throws {

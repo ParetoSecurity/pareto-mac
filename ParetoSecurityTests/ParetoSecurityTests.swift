@@ -12,14 +12,12 @@ import XCTest
 class ParetoSecurityTests: XCTestCase {
     override class func setUp() {
         super.setUp()
-        UserDefaults.standard.removeAll()
-        UserDefaults.standard.synchronize()
     }
 
     func testThatUUIDsAreUnique() throws {
         var uuids: [String] = []
-        for claim in AppInfo.claims {
-            for check in claim.checks {
+        for claim in Claims.sorted {
+            for check in claim.checksSorted {
                 if uuids.contains(check.UUID) {
                     XCTFail("Duplicate UUID found \(check.UUID)")
                 }

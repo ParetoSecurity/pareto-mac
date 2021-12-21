@@ -58,17 +58,3 @@ jobs:
         with:
           name: ParetoSecurity.app
           path: ParetoSecurity.app.zip
-      - name: Build dmg for storage
-        run: npm install --global create-dmg && make dmg
-      - name: Upload DMG to Artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: ParetoSecurity.dmg
-          path: ParetoSecurity.dmg
-      - name: Generate checks info
-        run: Export/Pareto\ Security.app/Contents/MacOS/Pareto\ Security -export > checks.json
-      - name: Uplaod checks info
-        uses: actions/upload-artifact@v2
-        with:
-          name: checks.json
-          path: checks.json

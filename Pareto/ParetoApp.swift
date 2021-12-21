@@ -21,7 +21,7 @@ class AppDelegate: AppHandlers, NSApplicationDelegate {
         if CommandLine.arguments.contains("-export") {
             var export: [String: [String: [String]]] = [:]
 
-            for claim in AppInfo.claimsSorted {
+            for claim in Claims.sorted {
                 var claimExport: [String: [String]] = [:]
                 for check in claim.checksSorted {
                     claimExport[check.UUID] = [check.TitleON, check.TitleOFF]
@@ -40,7 +40,7 @@ class AppDelegate: AppHandlers, NSApplicationDelegate {
             // invalidate possible expired cache
             try! AppInfo.versionStorage.removeAll()
 
-            for claim in AppInfo.claimsSorted {
+            for claim in Claims.sorted {
                 for check in claim.checksSorted {
                     claim.configure()
                     print(check.report + "\n")
@@ -88,8 +88,7 @@ class AppDelegate: AppHandlers, NSApplicationDelegate {
                 LaunchAtLogin.isEnabled = true
 
                 print("Team ticket subscribing")
-                Team.link(withDevice: ReportingDevice.current()).responseJSON { response in
-                    print(response.result)
+                Team.link(withDevice: ReportingDevice.current()).response { response in
                     switch response.result {
                     case .success:
                         print("Team ticket is linked")
@@ -173,12 +172,10 @@ class AppDelegate: AppHandlers, NSApplicationDelegate {
         statusBar = StatusBarController()
         statusBar?.configureChecks()
         statusBar?.updateMenu()
-
         updater = AppUpdater(owner: "ParetoSecurity", repo: "pareto-mac")
 
-        // stop running checks here and reset to defaults
+        // don't do anything else if running tests
         if AppInfo.isRunningTests {
-            resetSettings()
             return
         }
 

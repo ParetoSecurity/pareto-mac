@@ -12,7 +12,6 @@ import Foundation
 import os.log
 import OSLog
 import Regex
-import SwiftyJSON
 import Version
 
 class AppZoomCheck: AppCheck {

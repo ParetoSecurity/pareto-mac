@@ -12,8 +12,6 @@ import XCTest
 class TeamsTest: XCTestCase {
     override class func setUp() {
         super.setUp()
-        UserDefaults.standard.removeAll()
-        UserDefaults.standard.synchronize()
     }
 
     func testLink() throws {

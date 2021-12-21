@@ -296,8 +296,7 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
                 Defaults[.reportingRole] = .team
                 Defaults[.isTeamOwner] = ticket.isTeamOwner
 
-                Team.link(withDevice: ReportingDevice.current()).responseJSON { response in
-                    debugPrint(response.result)
+                Team.link(withDevice: ReportingDevice.current()).response { response in
                     switch response.result {
                     case .success:
                         let alert = NSAlert()

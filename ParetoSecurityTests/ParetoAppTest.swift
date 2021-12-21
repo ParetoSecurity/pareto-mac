@@ -11,13 +11,6 @@ import XCTest
 class ParetoAppTest: XCTestCase {
     override class func setUp() {
         super.setUp()
-        UserDefaults.standard.removeAll()
-        UserDefaults.standard.synchronize()
-    }
-
-    func testActionReset() throws {
-        let app = AppHandlers()
-        app.processAction(URL(string: "paretosecurity://reset")!)
     }
 
     func testActionEnrollPersonal() throws {

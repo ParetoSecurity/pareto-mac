@@ -14,7 +14,7 @@ struct ChecksSettingsView: View {
             VStack(alignment: .leading) {
                 Text("Deselect the checks you don't want the app to run.")
                 VStack(alignment: .leading, spacing: 0.0) {
-                    ForEach(AppInfo.claimsSorted, id: \.self) { claim in
+                    ForEach(Claims.sorted, id: \.self) { claim in
 
                         // Hack to force update view
                         // see https://developer.apple.com/forums/thread/131577

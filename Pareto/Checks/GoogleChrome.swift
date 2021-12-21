@@ -11,8 +11,20 @@ import Combine
 import Foundation
 import os.log
 import OSLog
-import SwiftyJSON
 import Version
+
+// MARK: - GoogleResponse
+
+private struct GoogleResponse: Codable {
+    let versions: [ChromeVersion]
+    let nextPageToken: String
+}
+
+// MARK: - Version
+
+private struct ChromeVersion: Codable {
+    let name, version: String
+}
 
 class AppGoogleChromeCheck: AppCheck {
     static let sharedInstance = AppGoogleChromeCheck()
@@ -40,20 +52,12 @@ class AppGoogleChromeCheck: AppCheck {
     override func getLatestVersion(completion: @escaping (String) -> Void) {
         let url = "https://versionhistory.googleapis.com/v1/chrome/platforms/mac/channels/stable/versions"
         os_log("Requesting %{public}s", url)
-        AF.request(url).responseJSON(queue: AppCheck.queue, completionHandler: { response in
-            do {
-                if response.error == nil {
-                    let json = try JSON(data: response.data!)
-                    let version = json["versions"][0]["version"].string ?? "2.3.4.5"
-                    let v = version.split(separator: ".")
-                    os_log("%{public}s version=%{public}s", self.appBundle, version)
-                    completion("\(v[0]).\(v[1]).\(v[2])")
-                } else {
-                    os_log("%{public}s failed: %{public}s", self.appBundle, response.error.debugDescription)
-                    completion("0.0.0")
-                }
-            } catch {
-                os_log("%{public}s failed: %{public}s", self.appBundle, error.localizedDescription)
+        AF.request(url).responseDecodable(of: GoogleResponse.self, queue: AppCheck.queue, completionHandler: { response in
+            if response.error == nil {
+                let v = response.value?.versions.first?.version.split(separator: ".") ?? ["0", "0", "0"]
+                completion("\(v[0]).\(v[1]).\(v[2])")
+            } else {
+                os_log("%{public}s failed: %{public}s", self.appBundle, response.error.debugDescription)
                 completion("0.0.0")
             }
         })

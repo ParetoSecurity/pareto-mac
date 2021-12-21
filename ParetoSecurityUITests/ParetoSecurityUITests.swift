@@ -26,6 +26,7 @@ class ParetoSecurityUITests: XCTestCase {
 
     private func waitUntilMenu() {
         app.activate()
+        app.children(matching: .menuBar).element(boundBy: 1).children(matching: .statusItem).element.click()
         if !app.statusItems.firstMatch.waitForExistence(timeout: 3) {
             XCTFail("Menu did not build")
         }
@@ -54,7 +55,11 @@ class ParetoSecurityUITests: XCTestCase {
 
         menuBarsQuery.menuItems["Firewall & Sharing"].click()
         takeScreenshot(screenshot: app.statusItems.firstMatch.menus.firstMatch.screenshot(), name: "Firewall & Sharing")
-        takeScreenshot(screenshot: app.screenshot(), name: "Firewall & Sharing App")
+
+        takeScreenshot(screenshot: app.screenshot(), name: "Software Updates App")
+        menuBarsQuery.menuItems["Software Updates"].click()
+        takeScreenshot(screenshot: app.statusItems.firstMatch.menus.firstMatch.screenshot(), name: "Software Updates")
+        takeScreenshot(screenshot: app.screenshot(), name: "Software Updates App")
 
         menuBarsQuery.menuItems["System Integrity"].click()
         takeScreenshot(screenshot: app.statusItems.firstMatch.menus.firstMatch.screenshot(), name: "System Integritiy")
@@ -74,7 +79,6 @@ class ParetoSecurityUITests: XCTestCase {
         menuBarsQuery.menuItems["Snooze"].click()
         takeScreenshot(screenshot: app.statusItems.firstMatch.menus.firstMatch.screenshot(), name: "Snooze")
         takeScreenshot(screenshot: app.screenshot(), name: "Snooze App")
-        menuBarsQuery.menuItems["snoozeOneDay"].click()
     }
 
     func testSettingsWindow() throws {
@@ -110,9 +114,6 @@ class ParetoSecurityUITests: XCTestCase {
         menuBarsQuery.menuItems["showPrefs"].click()
         app.windows.firstMatch.toolbars.buttons["General"].click()
         takeScreenshot(screenshot: app.windows.firstMatch.screenshot(), name: "Settings General")
-
-        menuBarsQuery.statusItems["ParetoSecurity"].click()
-        menuBarsQuery/*@START_MENU_TOKEN@*/ .menuItems["showPrefs"]/*[[".statusItems[\"ParetoSecurity\"]",".menus",".menuItems[\"Preferences\"]",".menuItems[\"showPrefs\"]"],[[[-1,3],[-1,2],[-1,1,2],[-1,0,1]],[[-1,3],[-1,2],[-1,1,2]],[[-1,3],[-1,2]]],[0]]@END_MENU_TOKEN@*/ .click()
 
         let generalWindow = app.windows["General"]
         generalWindow.toolbars.buttons["About"].click()

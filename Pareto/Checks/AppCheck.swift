@@ -14,7 +14,6 @@ import os.log
 import OSLog
 import Regex
 import SwiftUI
-import SwiftyJSON
 import Version
 
 protocol AppCheckProtocol {
@@ -22,6 +21,23 @@ protocol AppCheckProtocol {
     var appMarketingName: String { get }
     var appBundle: String { get }
     var sparkleURL: String { get }
+}
+
+private struct AppStoreResponse: Codable {
+    let resultCount: Int
+    let results: [AppStoreResult]
+}
+
+private struct AppStoreResult: Codable {
+    let version, wrapperType: String
+    let artistID: Int
+    let artistName: String
+
+    enum CodingKeys: String, CodingKey {
+        case version, wrapperType
+        case artistID = "artistId"
+        case artistName
+    }
 }
 
 class AppCheck: ParetoCheck, AppCheckProtocol {
@@ -104,22 +120,17 @@ class AppCheck: ParetoCheck, AppCheckProtocol {
         if sparkleURL.isEmpty {
             let url = "https://itunes.apple.com/lookup?bundleId=\(appBundle)&country=us&entity=macSoftware&limit=1"
             os_log("Requesting %{public}s", url)
-            AF.request(url).responseJSON(queue: AppCheck.queue, completionHandler: { response in
-                do {
-                    if response.error == nil {
-                        let json = try JSON(data: response.data!)
-                        let version = json["results"][0]["version"].string ?? "0.0.0"
-                        os_log("%{public}s version=%{public}s", self.appBundle, version)
-                        completion(version)
-                    } else {
-                        os_log("%{public}s failed: %{public}s", self.appBundle, response.error.debugDescription)
-                        completion("0.0.0")
-                    }
-                } catch {
-                    os_log("%{public}s failed: %{public}s", self.appBundle, error.localizedDescription)
+            AF.request(url).responseDecodable(of: AppStoreResponse.self, queue: AppCheck.queue, completionHandler: { response in
+                if response.error == nil {
+                    let version = response.value?.results.first?.version ?? "0.0.0"
+                    os_log("%{public}s version=%{public}s", self.appBundle, version)
+                    completion(version)
+                } else {
+                    os_log("%{public}s failed: %{public}s", self.appBundle, response.error.debugDescription)
                     completion("0.0.0")
                 }
             })
+
         } else {
             os_log("Requesting %{public}s", sparkleURL)
             let versionRegex = Regex("sparkle:shortVersionString=\"([\\.\\d]+)\"")

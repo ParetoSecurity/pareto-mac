@@ -11,8 +11,6 @@ import XCTest
 class UpdaterTest: XCTestCase {
     override class func setUp() {
         super.setUp()
-        UserDefaults.standard.removeAll()
-        UserDefaults.standard.synchronize()
     }
 
     func testFetching() throws {

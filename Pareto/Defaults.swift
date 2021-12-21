@@ -15,33 +15,39 @@ enum ReportingRoles: String, Defaults.Serializable {
     case personal
 }
 
+#if DEBUG
+    let extensionDefaults = UserDefaults(suiteName: "debug-paretosecurity")!
+#else
+    let extensionDefaults = UserDefaults.standard
+#endif
+
 extension Defaults.Keys {
     // Teams
-    static let userID = Key<String>("userID", default: "")
-    static let userEmail = Key<String>("userEmail", default: "")
-    static let isTeamOwner = Key<Bool>("isTeamOwner", default: false)
-    static let teamID = Key<String>("teamID", default: "")
-    static let teamAuth = Key<String>("teamAuth", default: "")
-    static let machineUUID = Key<String>("machineUUID", default: AppInfo.getSystemUUID() ?? UUID().uuidString)
-    static let sendHWInfo = Key<Bool>("sendHWInfo", default: false)
+    static let userID = Key<String>("userID", default: "", suite: extensionDefaults)
+    static let userEmail = Key<String>("userEmail", default: "", suite: extensionDefaults)
+    static let isTeamOwner = Key<Bool>("isTeamOwner", default: false, suite: extensionDefaults)
+    static let teamID = Key<String>("teamID", default: "", suite: extensionDefaults)
+    static let teamAuth = Key<String>("teamAuth", default: "", suite: extensionDefaults)
+    static let machineUUID = Key<String>("machineUUID", default: AppInfo.getSystemUUID() ?? UUID().uuidString, suite: extensionDefaults)
+    static let sendHWInfo = Key<Bool>("sendHWInfo", default: false, suite: extensionDefaults)
 
     // License
-    static let license = Key<String>("license", default: "")
-    static let reportingRole = Key<ReportingRoles>("reportingRole", default: .free)
-    static let teamAPI = Key<String>("teamAPI", default: Team.defaultAPI)
-    static let lastTeamUpdate = Key<Int>("lastTeamUpdate", default: 0)
+    static let license = Key<String>("license", default: "", suite: extensionDefaults)
+    static let reportingRole = Key<ReportingRoles>("reportingRole", default: .free, suite: extensionDefaults)
+    static let teamAPI = Key<String>("teamAPI", default: Team.defaultAPI, suite: extensionDefaults)
+    static let lastTeamUpdate = Key<Int>("lastTeamUpdate", default: 0, suite: extensionDefaults)
 
     // Updates
-    static let updateNag = Key<Bool>("updateNag", default: false)
-    static let showBeta = Key<Bool>("showBeta", default: false)
-    static let betaChannel = Key<Bool>("betaChannel", default: false)
-    static let lastUpdateCheck = Key<Int>("lastUpdateCheck", default: Date().currentTimeMillis())
+    static let updateNag = Key<Bool>("updateNag", default: false, suite: extensionDefaults)
+    static let showBeta = Key<Bool>("showBeta", default: false, suite: extensionDefaults)
+    static let betaChannel = Key<Bool>("betaChannel", default: false, suite: extensionDefaults)
+    static let lastUpdateCheck = Key<Int>("lastUpdateCheck", default: Date().currentTimeMillis(), suite: extensionDefaults)
 
     // Checks
-    static let snoozeTime = Key<Int>("snoozeTime", default: 0)
-    static let lastCheck = Key<Int>("lastCheck", default: 0)
-    static let checksPassed = Key<Bool>("checksPassed", default: false)
-    static let lastNagShown = Key<Int>("lastNagShown", default: Date().currentTimeMillis())
+    static let snoozeTime = Key<Int>("snoozeTime", default: 0, suite: extensionDefaults)
+    static let lastCheck = Key<Int>("lastCheck", default: 0, suite: extensionDefaults)
+    static let checksPassed = Key<Bool>("checksPassed", default: false, suite: extensionDefaults)
+    static let lastNagShown = Key<Int>("lastNagShown", default: Date().currentTimeMillis(), suite: extensionDefaults)
 }
 
 public extension Defaults {

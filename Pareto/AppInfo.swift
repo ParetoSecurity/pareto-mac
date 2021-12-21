@@ -15,65 +15,15 @@ import SwiftUI
 import Version
 
 enum AppInfo {
-    static let updateChecks = [
-        App1Password7Check.sharedInstance,
-        AppBitwardenCheck.sharedInstance,
-        AppCyberduckCheck.sharedInstance,
-        AppDashlaneCheck.sharedInstance,
-        AppDockerCheck.sharedInstance,
-        AppEnpassCheck.sharedInstance,
-        AppFirefoxCheck.sharedInstance,
-        AppGoogleChromeCheck.sharedInstance,
-        AppiTermCheck.sharedInstance,
-        AppNordLayerCheck.sharedInstance,
-        AppSlackCheck.sharedInstance,
-        AppTailscaleCheck.sharedInstance,
-        AppZoomCheck.sharedInstance,
-        AppSignalCheck.sharedInstance,
-        AppWireGuardCheck.sharedInstance,
-        AppLibreOfficeCheck.sharedInstance,
-        AppSublimeTextCheck.sharedInstance,
-        AppVSCodeCheck.sharedInstance,
-        MacOSVersionCheck.sharedInstance
-    ]
-
-    static let claims = [
-        Claim(withTitle: "Access Security", withChecks: [
-            AutologinCheck.sharedInstance,
-            RequirePasswordToUnlock.sharedInstance,
-            ScreensaverPasswordCheck.sharedInstance,
-            ScreensaverCheck.sharedInstance,
-            SSHKeysCheck.sharedInstance,
-            SSHKeysStrenghtCheck.sharedInstance
-        ]),
-        Claim(withTitle: "Firewall & Sharing", withChecks: [
-            FirewallCheck.sharedInstance,
-            FileSharingCheck.sharedInstance,
-            PrinterSharingCheck.sharedInstance,
-            RemoteManagmentCheck.sharedInstance,
-            RemoteLoginCheck.sharedInstance,
-            AirPlayCheck.sharedInstance,
-            MediaShareCheck.sharedInstance
-        ]),
-        Claim(withTitle: "System Integrity", withChecks: [
-            GatekeeperCheck.sharedInstance,
-            FileVaultCheck.sharedInstance,
-            BootCheck.sharedInstance,
-            OpenWiFiCheck.sharedInstance
-        ]),
-        Claim(withTitle: "Software Updates", withChecks: updateChecks)
-    ]
-
-    static var claimsSorted: [Claim] {
-        AppInfo.claims.sorted(by: { $0.title.lowercased() < $1.title.lowercased() })
-    }
-
     static let appVersion: String = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as! String
     static let buildVersion: String = Bundle.main.infoDictionary?["CFBundleVersion"] as! String
     static let machineName: String = Host.current().localizedName!
     static let macOSVersion = ProcessInfo.processInfo.operatingSystemVersion
     static let macOSVersionString = "\(macOSVersion.majorVersion).\(macOSVersion.minorVersion).\(macOSVersion.patchVersion)"
-    static let isRunningTests = ProcessInfo.processInfo.arguments.contains("isRunningTests")
+    static var isRunningTests: Bool {
+        ProcessInfo.processInfo.arguments.contains("isRunningTests") || ProcessInfo.processInfo.environment["CI"] ?? "false" != "false"
+    }
+
     static var Licensed = false
     static var secExp = false
     static let Flags = FlagsUpdater()
