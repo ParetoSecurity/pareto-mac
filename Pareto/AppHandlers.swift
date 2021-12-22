@@ -107,6 +107,20 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
                 }
                 completion(.finished)
             }
+        #else
+            NSBackgroundActivityScheduler.repeating(withName: "UpdateRunnerSetapp", withInterval: 60 * 60 * Double(AppInfo.Flags.setappUpdate)) { (completion: NSBackgroundActivityScheduler.CompletionHandler) in
+
+                if self.networkHandler.currentStatus == .satisfied {
+                    os_log("Running update check")
+                    DispatchQueue.main.async {
+                        self.checkForRelease()
+                    }
+                } else {
+                    os_log("Skipping update check, no connection")
+                }
+
+                completion(.finished)
+            }
         #endif
 
         NSBackgroundActivityScheduler.repeating(withName: "FlagsRunner", withInterval: 60 * 5) { (completion: NSBackgroundActivityScheduler.CompletionHandler) in
@@ -137,15 +151,17 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
     func checkForRelease() {
         let currentVersion = Bundle.main.version
         if let release = try? updater!.getLatestRelease() {
-            if currentVersion < release.version {
-                if let zipURL = release.assets.filter({ $0.browser_download_url.path.hasSuffix(".zip") }).first {
-                    let done = updater!.downloadAndUpdate(withAsset: zipURL)
-                    // Failed to update
-                    if !done {
-                        Defaults[.updateNag] = true
+            #if !SETAPP_ENABLED
+                if currentVersion < release.version {
+                    if let zipURL = release.assets.filter({ $0.browser_download_url.path.hasSuffix(".zip") }).first {
+                        let done = updater!.downloadAndUpdate(withAsset: zipURL)
+                        // Failed to update
+                        if !done {
+                            Defaults[.updateNag] = true
+                        }
                     }
                 }
-            }
+            #endif
         }
     }
 

@@ -16,6 +16,7 @@ class FlagsUpdater: ObservableObject {
     @Published var teamAPI: Bool = true
     @Published var slowerTeamUpdate: Bool = false
     @Published var nagScreenDelayDays: Int = 7
+    @Published var setappUpdate: Int = 4
 
     func update() {
         struct DNSResponse: Codable {
@@ -53,6 +54,8 @@ class FlagsUpdater: ObservableObject {
                     dashboardMenuAll = (kv[1] as NSString).boolValue
                 case "dashboardMenu":
                     dashboardMenu = (kv[1] as NSString).boolValue
+                case "setappUpdate":
+                    setappUpdate = (kv[1] as NSString).integerValue
                 default:
                     os_log("Unknwon flag: \(kv[0])")
                 }

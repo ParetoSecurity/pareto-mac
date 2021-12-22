@@ -117,16 +117,8 @@ enum AppInfo {
 
         logs.append("State:")
         logs.append("Location: \(Bundle.main.path)")
-        #if DEBUG
-            logs.append("Build: debug")
-        #else
-            logs.append("Build: release")
-        #endif
-        #if SETAPP_ENABLED
-            logs.append("Distribution: setapp")
-        #else
-            logs.append("Distribution: direct")
-        #endif
+        logs.append("Build: \(AppInfo.utmSource)")
+
         for (k, v) in UserDefaults.standard.dictionaryRepresentation().sorted(by: { $0.key < $1.key }) {
             if k.starts(with: "ParetoCheck-") {
                 logs.append("\(k)=\(v)")
