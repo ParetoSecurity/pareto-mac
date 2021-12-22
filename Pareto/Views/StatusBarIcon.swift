@@ -26,7 +26,7 @@ struct StatusBarIcon: View {
                 .resizable()
                 .frame(width: 22, height: 20, alignment: .center)
 
-        }.frame(width: 22, height: 20, alignment: .center).padding(.horizontal, 2)
+        }.frame(width: 26, height: 20, alignment: .center).padding(.horizontal, 2)
             .padding(.vertical, 2)
     }
 }

@@ -23,7 +23,7 @@ struct ChecksView: View {
             }
             Spacer(minLength: 30)
             if lastCheck > 0 {
-                Text("Done!").font(.title)
+                Text("Done!").font(.largeTitle)
                 Spacer(minLength: 20)
                 Text("The checks will be performed in the background from now on.").font(.body)
                 Spacer(minLength: 30)

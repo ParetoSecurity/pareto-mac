@@ -25,7 +25,7 @@ struct PermissionsView: View {
                     .frame(maxHeight: 60, alignment: .center)
                     .accessibility(hidden: true)
 
-                Text("Configure Permissions").font(.title)
+                Text("Configure Permissions").font(.largeTitle)
                 Spacer()
                 Text("Allow the app read-only access to the system. These permissions do not allow changing or running any of the system settings.").font(.body)
             }.frame(width: 350, alignment: .center).padding(15)
@@ -51,7 +51,11 @@ struct PermissionsView: View {
             }
             Spacer(minLength: 40)
             Button("Continue") {
-                step = Steps.Checks
+                #if SETAPP_ENABLED
+                    step = Steps.Follow
+                #else
+                    step = Steps.Checks
+                #endif
             }.buttonStyle(HighlightButtonStyle(color: osaAuthorized ? .mainColor : .systemGray)).padding(10).disabled(!osaAuthorized)
         }.frame(width: 380, height: 430, alignment: .center).padding(10)
     }

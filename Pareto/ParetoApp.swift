@@ -129,6 +129,14 @@ class AppDelegate: AppHandlers, NSApplicationDelegate {
     }
 
     func applicationDidFinishLaunching(_: Notification) {
+        #if DEBUG
+            // disable any other code if in preview mode
+            if ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] == "1" {
+                return
+            }
+
+        #endif
+
         // Terminate any older versions of process if not running tests
         #if !DEBUG
             if !AppInfo.isRunningTests {
