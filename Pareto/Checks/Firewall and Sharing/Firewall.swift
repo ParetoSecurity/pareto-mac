@@ -23,7 +23,7 @@ class FirewallCheck: ParetoCheck {
         let dictionary = readDefaultsFile(path: "/Library/Preferences/com.apple.alf.plist")
         if let globalstate = dictionary?.value(forKey: "globalstate") as? Int {
             // os_log("globalstate: %{public}s", log: Log.check, globalstate)
-            return globalstate == 1
+            return globalstate >= 1
         }
         return false
     }

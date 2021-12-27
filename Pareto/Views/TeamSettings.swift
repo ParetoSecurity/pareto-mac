@@ -23,8 +23,8 @@ struct TeamSettingsView: View {
     }
 
     var body: some View {
-        Form {
-            if !teamID.isEmpty {
+        if !teamID.isEmpty {
+            Form {
                 Section(
                     footer: Text("Device Name")) {
                         VStack(alignment: .leading) {
@@ -58,13 +58,14 @@ struct TeamSettingsView: View {
                     Link("Team Dashboard »",
                          destination: AppInfo.teamsURL())
                 }
-
-            } else {
+            }.frame(width: 350, height: 150).padding(25)
+        } else {
+            Form {
                 Text("The Teams subscription will give you a web dashboard for an overview of the company’s devices.")
                 Link("Learn more »",
                      destination: URL(string: "https://paretosecurity.com/pricing?utm_source=\(AppInfo.utmSource)&utm_medium=teams-link")!)
-            }
-        }.frame(width: 350, height: 150).padding(25)
+            }.frame(width: 350, height: 80).padding(25)
+        }
     }
 }
 
