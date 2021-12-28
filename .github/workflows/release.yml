@@ -18,8 +18,7 @@ jobs:
       - uses: maxim-lobanov/setup-xcode@v1
         with:
           xcode-version: "13.2"
-      - name: Install sentry-cli
-        run: brew install getsentry/tools/sentry-cli
+
       - name: "Import Certificate: Development"
         uses: devbotsxyz/xcode-import-certificate@master
         with:
@@ -59,11 +58,6 @@ jobs:
           sed -E -i '' 's/MARKETING_VERSION = .*;/MARKETING_VERSION = ${{ steps.release.outputs.tag }};/g' Pareto\ Security.xcodeproj/project.pbxproj
       - name: "Archive for dist"
         run: make archive-release | xcpretty -tc && exit ${PIPESTATUS[0]}
-
-      - name: "Upload debug symbols"
-        run: make sentry-debug-upload
-        env:
-          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
 
       - name: Compress app for storage
         run: ditto -V -c -k --keepParent Export/Pareto\ Security.app ParetoSecurity.app.zip
@@ -118,3 +112,9 @@ jobs:
           files: checks.json
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Install sentry-cli
+        run: brew install getsentry/tools/sentry-cli
+      - name: "Upload debug symbols"
+        run: make sentry-debug-upload
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}

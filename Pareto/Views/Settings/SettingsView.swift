@@ -14,7 +14,7 @@ struct SettingsView: View {
     @Default(.teamID) var teamID
 
     enum Tabs: Hashable {
-        case general, about, teams, checks, license
+        case general, about, teams, checks, license, newsletter
     }
 
     var body: some View {
@@ -42,6 +42,13 @@ struct SettingsView: View {
                         }
                         .tag(Tabs.license)
                 }
+            #else
+                NewsletterView()
+                    .tabItem {
+                        Label("Newsletter", systemImage: "mail.stack.fill")
+                    }
+                    .tag(Tabs.newsletter)
+
             #endif
             AboutSettingsView()
                 .tabItem {

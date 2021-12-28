@@ -166,6 +166,8 @@
 		4F923CF32756920C00070551 /* iTerm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F923CF12756920C00070551 /* iTerm.swift */; };
 		4F923CF527569E6300070551 /* Cache in Frameworks */ = {isa = PBXBuildFile; productRef = 4F923CF427569E6300070551 /* Cache */; };
 		4F9791C126F5DB4F00E668F4 /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F9791C026F5DB4F00E668F4 /* Color.swift */; };
+		4FAAD326277B156200AA5CEF /* NewsletterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FAAD325277B156200AA5CEF /* NewsletterView.swift */; };
+		4FAAD327277B156200AA5CEF /* NewsletterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FAAD325277B156200AA5CEF /* NewsletterView.swift */; };
 		4FB0416126F71CC0003657BE /* ButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB0416026F71CC0003657BE /* ButtonStyle.swift */; };
 		4FB118F92742506900B89634 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB118F82742506900B89634 /* main.swift */; };
 		4FB118FB274250AB00B89634 /* ParetoHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB118FA274250AB00B89634 /* ParetoHelper.swift */; };
@@ -300,6 +302,7 @@
 		4F923CEE275691A700070551 /* Docker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Docker.swift; path = "Software Updates/Docker.swift"; sourceTree = "<group>"; };
 		4F923CF12756920C00070551 /* iTerm.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = iTerm.swift; path = "Software Updates/iTerm.swift"; sourceTree = "<group>"; };
 		4F9791C026F5DB4F00E668F4 /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
+		4FAAD325277B156200AA5CEF /* NewsletterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsletterView.swift; sourceTree = "<group>"; };
 		4FB0416026F71CC0003657BE /* ButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonStyle.swift; sourceTree = "<group>"; };
 		4FB118E427424F8900B89634 /* ParetoHelper.xpc */ = {isa = PBXFileReference; explicitFileType = "wrapper.xpc-service"; includeInIndex = 0; path = ParetoHelper.xpc; sourceTree = BUILT_PRODUCTS_DIR; };
 		4FB118EC27424F8900B89634 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -399,13 +402,8 @@
 		4F103006269EDB82008C1E86 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				4FAAD324277B154300AA5CEF /* Settings */,
 				4F38D8C6273AC57500671756 /* Welcome */,
-				4F24A08D26EB734A0036F748 /* LicenseSettingsView.swift */,
-				4F103007269EE135008C1E86 /* SettingsView.swift */,
-				4F24A08F26EB735F0036F748 /* TeamSettings.swift */,
-				4F24A09126EB73980036F748 /* AboutSettingsView.swift */,
-				4F24A09326EB73C80036F748 /* ChecksSettingsView.swift */,
-				4F24A09526EB73F30036F748 /* GeneralSettingsView.swift */,
 				4F41831627707B0800EBAE4A /* StatusBarIcon.swift */,
 			);
 			path = Views;
@@ -518,6 +516,20 @@
 				4F6A92F126C555C6006C2F2D /* ParetoSecurityUITests.swift */,
 			);
 			path = ParetoSecurityUITests;
+			sourceTree = "<group>";
+		};
+		4FAAD324277B154300AA5CEF /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				4F24A08D26EB734A0036F748 /* LicenseSettingsView.swift */,
+				4F103007269EE135008C1E86 /* SettingsView.swift */,
+				4F24A08F26EB735F0036F748 /* TeamSettings.swift */,
+				4F24A09126EB73980036F748 /* AboutSettingsView.swift */,
+				4F24A09326EB73C80036F748 /* ChecksSettingsView.swift */,
+				4F24A09526EB73F30036F748 /* GeneralSettingsView.swift */,
+				4FAAD325277B156200AA5CEF /* NewsletterView.swift */,
+			);
+			path = Settings;
 			sourceTree = "<group>";
 		};
 		4FB118E527424F8900B89634 /* ParetoHelper */ = {
@@ -956,6 +968,7 @@
 				4F37E7102718122E00A2B254 /* TeamSettings.swift in Sources */,
 				4F37E7112718122E00A2B254 /* URL.swift in Sources */,
 				4F6EF88F275FE5D400752559 /* Zoom.swift in Sources */,
+				4FAAD327277B156200AA5CEF /* NewsletterView.swift in Sources */,
 				4F38D8CC273AC5F200671756 /* PermissionsView.swift in Sources */,
 				4F37E7122718122E00A2B254 /* NetworkHandler.swift in Sources */,
 				4F37E7132718122E00A2B254 /* Log.swift in Sources */,
@@ -1080,6 +1093,7 @@
 				4F24A09026EB735F0036F748 /* TeamSettings.swift in Sources */,
 				4F81C10826EB5D270065F548 /* URL.swift in Sources */,
 				4F6EF88E275FE5D400752559 /* Zoom.swift in Sources */,
+				4FAAD326277B156200AA5CEF /* NewsletterView.swift in Sources */,
 				4F38D8CB273AC5F200671756 /* PermissionsView.swift in Sources */,
 				4F5B20C3270316DB0015642A /* NetworkHandler.swift in Sources */,
 				4FB7C67D26AFF1AB00FB1C41 /* Log.swift in Sources */,
