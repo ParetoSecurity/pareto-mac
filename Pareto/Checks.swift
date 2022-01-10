@@ -51,7 +51,8 @@ enum Claims {
             GatekeeperCheck.sharedInstance,
             FileVaultCheck.sharedInstance,
             BootCheck.sharedInstance,
-            OpenWiFiCheck.sharedInstance
+            OpenWiFiCheck.sharedInstance,
+            TimeMachineCheck.sharedInstance
         ]),
         Claim(withTitle: "Software Updates", withChecks: updateChecks + [MacOSVersionCheck.sharedInstance])
     ]
