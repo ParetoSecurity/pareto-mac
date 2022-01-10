@@ -50,6 +50,15 @@ struct SettingsView: View {
                     .tag(Tabs.newsletter)
 
             #endif
+
+            // Show newsletter for opensouece users
+            if AppInfo.utmSource.hasSuffix("-opensource") {
+                NewsletterView()
+                    .tabItem {
+                        Label("Newsletter", systemImage: "mail.stack.fill")
+                    }
+                    .tag(Tabs.newsletter)
+            }
             AboutSettingsView()
                 .tabItem {
                     Label("About", systemImage: "info")
