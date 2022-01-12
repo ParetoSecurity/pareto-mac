@@ -53,9 +53,10 @@ enum Claims {
             FileVaultCheck.sharedInstance,
             BootCheck.sharedInstance,
             OpenWiFiCheck.sharedInstance,
+            MacOSVersionCheck.sharedInstance,
             TimeMachineCheck.sharedInstance
         ]),
-        Claim(withTitle: "Software Updates", withChecks: updateChecks + [MacOSVersionCheck.sharedInstance])
+        Claim(withTitle: "Software Updates", withChecks: updateChecks)
     ]
 
     static var sorted: [Claim] {
