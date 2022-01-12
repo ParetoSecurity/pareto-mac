@@ -1,5 +1,5 @@
 //
-//  SSHKeysStrenghtCheck.swift
+//  SSHKeysStrengthCheck.swift
 //  Pareto Security
 //
 //  Created by Janez Troha on 15/12/2021.
@@ -24,15 +24,15 @@ enum Cipher: String {
 }
 
 struct KeyInfo: Equatable, ExpressibleByStringLiteral {
-    var strenght: Int = 0
-    var singature: String = ""
+    var strength: Int = 0
+    var signature: String = ""
     var owner: String = ""
     var cipher = Cipher.RSA
 
     // MARK: - Equatable Methods
 
     public static func == (lhs: KeyInfo, rhs: KeyInfo) -> Bool {
-        return (lhs.singature == rhs.singature)
+        return (lhs.signature == rhs.signature)
     }
 
     // MARK: - ExpressibleByStringLiteral Methods
@@ -40,8 +40,8 @@ struct KeyInfo: Equatable, ExpressibleByStringLiteral {
     public init(stringLiteral value: String) {
         let components = value.components(separatedBy: " ")
         if components.count == 4 {
-            strenght = Int(components[0]) ?? 0
-            singature = components[1]
+            strength = Int(components[0]) ?? 0
+            signature = components[1]
             owner = components[2]
             cipher = Cipher(rawValue: components[3].strip().uppercased()) ?? Cipher.RSA
         }
@@ -56,8 +56,8 @@ struct KeyInfo: Equatable, ExpressibleByStringLiteral {
     }
 }
 
-class SSHKeysStrenghtCheck: ParetoCheck {
-    static let sharedInstance = SSHKeysStrenghtCheck()
+class SSHKeysStrengthCheck: ParetoCheck {
+    static let sharedInstance = SSHKeysStrengthCheck()
     private let sshPath = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent(".ssh").resolvingSymlinksInPath()
     private var sshKey = ""
 
@@ -93,17 +93,17 @@ class SSHKeysStrenghtCheck: ParetoCheck {
     func isKeyStrong(withKey path: String) -> Bool {
         let output = runCMD(app: "/usr/bin/ssh-keygen", args: ["-l", "-f", path])
         let info = KeyInfo(stringLiteral: output.strip())
-        os_log("%s has %d", path, info.strenght)
+        os_log("%s has %d", path, info.strength)
         // https://nvlpubs.nist.gov/nistpubs/specialpublications/nist.sp.800-57pt3r1.pdf
         switch info.cipher {
         case .RSA:
-            return info.strenght >= 2048 // for 2020 till 2030
+            return info.strength >= 2048 // for 2020 till 2030
         case .DSA:
-            return info.strenght >= 8192 // considered unsecure, check requires much higher strenght than attainable
+            return info.strength >= 8192 // considered insecure, check requires much higher strength than attainable
         case .ECDSA, .ECDSA_SK:
-            return info.strenght >= 521 // for 2020 & beyond
+            return info.strength >= 521 // for 2020 & beyond
         case .ED25519, .ED25519_SK:
-            return info.strenght >= 256 // recommended
+            return info.strength >= 256 // recommended
         }
     }
 

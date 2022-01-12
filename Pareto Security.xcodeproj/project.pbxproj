@@ -15,8 +15,8 @@
 		4F14487726D8EB2E00A5BA34 /* Version in Frameworks */ = {isa = PBXBuildFile; productRef = 4F14487626D8EB2E00A5BA34 /* Version */; };
 		4F14487A26D8EB7A00A5BA34 /* Path in Frameworks */ = {isa = PBXBuildFile; productRef = 4F14487926D8EB7A00A5BA34 /* Path */; };
 		4F14487C26D8EDB000A5BA34 /* Bundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F14487B26D8EDB000A5BA34 /* Bundle.swift */; };
-		4F17270B2769F3410049B875 /* SSHKeysStrenght.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F17270A2769F3410049B875 /* SSHKeysStrenght.swift */; };
-		4F17270C2769F3410049B875 /* SSHKeysStrenght.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F17270A2769F3410049B875 /* SSHKeysStrenght.swift */; };
+		4F17270B2769F3410049B875 /* SSHKeysStrength.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F17270A2769F3410049B875 /* SSHKeysStrength.swift */; };
+		4F17270C2769F3410049B875 /* SSHKeysStrength.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F17270A2769F3410049B875 /* SSHKeysStrength.swift */; };
 		4F196CD62714B51900A2A7B8 /* JWTDecode in Frameworks */ = {isa = PBXBuildFile; productRef = 4F196CD52714B51900A2A7B8 /* JWTDecode */; };
 		4F1AE88B26F9FC150084A381 /* SwiftSocket in Frameworks */ = {isa = PBXBuildFile; productRef = 4F1AE88A26F9FC150084A381 /* SwiftSocket */; };
 		4F1AE89026F9FFA60084A381 /* MediaShare.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F1AE88F26F9FFA60084A381 /* MediaShare.swift */; };
@@ -240,7 +240,7 @@
 		4F103007269EE135008C1E86 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		4F14487326D8EA5E00A5BA34 /* Updater.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Updater.swift; sourceTree = "<group>"; };
 		4F14487B26D8EDB000A5BA34 /* Bundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bundle.swift; sourceTree = "<group>"; };
-		4F17270A2769F3410049B875 /* SSHKeysStrenght.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSHKeysStrenght.swift; sourceTree = "<group>"; };
+		4F17270A2769F3410049B875 /* SSHKeysStrength.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSHKeysStrength.swift; sourceTree = "<group>"; };
 		4F196CD72714C1C600A2A7B8 /* JWT.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = JWT.playground; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		4F1AE88F26F9FFA60084A381 /* MediaShare.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaShare.swift; sourceTree = "<group>"; };
 		4F1AE89126FA026D0084A381 /* AirPlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AirPlay.swift; sourceTree = "<group>"; };
@@ -442,7 +442,7 @@
 			isa = PBXGroup;
 			children = (
 				4F91060227623E4B00D1A348 /* SSHKeys.swift */,
-				4F17270A2769F3410049B875 /* SSHKeysStrenght.swift */,
+				4F17270A2769F3410049B875 /* SSHKeysStrength.swift */,
 				4F868DD026A5C51C005B876E /* Autologin.swift */,
 				4FB405EE26A6FC4800267D5D /* ScreensaverPassword.swift */,
 				4F868DD226A5C751005B876E /* Screensaver.swift */,
@@ -1010,7 +1010,7 @@
 				4FB5BD2E2760E507004E404C /* SublimeText.swift in Sources */,
 				4F3DCFE6274FE4E000F1CB55 /* NordLayer.swift in Sources */,
 				4F37E7242718122E00A2B254 /* WelcomeView.swift in Sources */,
-				4F17270C2769F3410049B875 /* SSHKeysStrenght.swift in Sources */,
+				4F17270C2769F3410049B875 /* SSHKeysStrength.swift in Sources */,
 				4FB5BD312760E846004E404C /* VSCode.swift in Sources */,
 				4F37E7252718122E00A2B254 /* OpenWiFi.swift in Sources */,
 				4F37E7262718122E00A2B254 /* IntegrationCheck.swift in Sources */,
@@ -1137,7 +1137,7 @@
 				4FB5BD2D2760E507004E404C /* SublimeText.swift in Sources */,
 				4F3DCFE5274FE4E000F1CB55 /* NordLayer.swift in Sources */,
 				4F8B01B226F4A6CB00EDE14B /* WelcomeView.swift in Sources */,
-				4F17270B2769F3410049B875 /* SSHKeysStrenght.swift in Sources */,
+				4F17270B2769F3410049B875 /* SSHKeysStrength.swift in Sources */,
 				4FB5BD302760E846004E404C /* VSCode.swift in Sources */,
 				4F5B20C127030BEB0015642A /* OpenWiFi.swift in Sources */,
 				4F6A92E826C52210006C2F2D /* IntegrationCheck.swift in Sources */,
