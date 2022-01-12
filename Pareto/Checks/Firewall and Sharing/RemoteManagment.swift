@@ -1,14 +1,14 @@
 //
-//  RemoteManagment.swift
-//  RemoteManagment
+//  RemoteManagementCheck.swift
+//  RemoteManagementCheck
 //
 //  Created by Janez Troha on 08/09/2021.
 //
 
 import Foundation
 
-class RemoteManagmentCheck: ParetoCheck {
-    static let sharedInstance = RemoteManagmentCheck()
+class RemoteManagementCheck: ParetoCheck {
+    static let sharedInstance = RemoteManagementCheck()
 
     override var UUID: String {
         "05423213-50e7-4535-ac88-60cc21626378"

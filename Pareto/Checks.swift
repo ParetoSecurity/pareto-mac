@@ -37,13 +37,13 @@ enum Claims {
             ScreensaverPasswordCheck.sharedInstance,
             ScreensaverCheck.sharedInstance,
             SSHKeysCheck.sharedInstance,
-            SSHKeysStrenghtCheck.sharedInstance
+            SSHKeysStrengthCheck.sharedInstance
         ]),
         Claim(withTitle: "Firewall & Sharing", withChecks: [
             FirewallCheck.sharedInstance,
             FileSharingCheck.sharedInstance,
             PrinterSharingCheck.sharedInstance,
-            RemoteManagmentCheck.sharedInstance,
+            RemoteManagementCheck.sharedInstance,
             RemoteLoginCheck.sharedInstance,
             AirPlayCheck.sharedInstance,
             MediaShareCheck.sharedInstance
