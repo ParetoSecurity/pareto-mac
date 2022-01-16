@@ -5,6 +5,7 @@
 //  Created by Janez Troha on 14/09/2021.
 //
 
+import Alamofire
 import Combine
 import Foundation
 import os.log
@@ -34,34 +35,38 @@ class FlagsUpdater: ObservableObject {
             }
         }
 
-        do {
-            let url = URL(string: "https://dns.google/resolve?name=flags.paretosecurity.com&type=txt")!
-            let data = try Data(contentsOf: url)
-            let flags = try JSONDecoder().decode(DNSResponse.self, from: data).answer.first?.data
-            for flag in flags!.components(separatedBy: ",") {
-                let kv = flag.components(separatedBy: "=")
-                os_log("Flag: \(kv)")
-                switch kv[0] {
-                case "personalLicenseSharing":
-                    personalLicenseSharing = (kv[1] as NSString).boolValue
-                case "teamAPI":
-                    teamAPI = (kv[1] as NSString).boolValue
-                case "slowerTeamUpdate":
-                    slowerTeamUpdate = (kv[1] as NSString).boolValue
-                case "nagScreenDelayDays":
-                    nagScreenDelayDays = (kv[1] as NSString).integerValue
-                case "dashboardMenuAll":
-                    dashboardMenuAll = (kv[1] as NSString).boolValue
-                case "dashboardMenu":
-                    dashboardMenu = (kv[1] as NSString).boolValue
-                case "setappUpdate":
-                    setappUpdate = (kv[1] as NSString).integerValue
-                default:
-                    os_log("Unknwon flag: \(kv[0])")
+        let url = "https://cloudflare-dns.com/dns-query?name=flags.paretosecurity.com&type=txt"
+        let headers: HTTPHeaders = [
+            "accept": "application/dns-json"
+        ]
+        AF.request(url, headers: headers).responseDecodable(of: DNSResponse.self, queue: AppCheck.queue, completionHandler: { response in
+            if response.error == nil {
+                let flags = response.value?.answer.first?.data.replacingOccurrences(of: "\"", with: "") ?? ""
+                for flag in flags.components(separatedBy: ",") {
+                    let KeyValue = flag.components(separatedBy: "=")
+                    os_log("Flag: \(KeyValue)")
+                    switch KeyValue[0] {
+                    case "personalLicenseSharing":
+                        self.personalLicenseSharing = (KeyValue[1] as NSString).boolValue
+                    case "teamAPI":
+                        self.teamAPI = (KeyValue[1] as NSString).boolValue
+                    case "slowerTeamUpdate":
+                        self.slowerTeamUpdate = (KeyValue[1] as NSString).boolValue
+                    case "nagScreenDelayDays":
+                        self.nagScreenDelayDays = (KeyValue[1] as NSString).integerValue
+                    case "dashboardMenuAll":
+                        self.dashboardMenuAll = (KeyValue[1] as NSString).boolValue
+                    case "dashboardMenu":
+                        self.dashboardMenu = (KeyValue[1] as NSString).boolValue
+                    case "setappUpdate":
+                        self.setappUpdate = (KeyValue[1] as NSString).integerValue
+                    default:
+                        os_log("Unknown flag: \(KeyValue[0])")
+                    }
                 }
+            } else {
+                os_log("Unknown flags error: \(response.error.debugDescription)")
             }
-        } catch {
-            os_log("Flags cannot be updated")
-        }
+        })
     }
 }
