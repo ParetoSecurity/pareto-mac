@@ -106,20 +106,20 @@ class StatusBarController: NSObject, NSMenuDelegate {
             os_log("Checks are snoozed until %s", log: Log.app, String(Defaults[.snoozeTime]))
             return
         } else {
-            // snoze expired
+            // snooze expired
             os_log("Snooze expired %s", log: Log.app, String(Defaults[.snoozeTime]))
             Defaults[.snoozeTime] = 0
         }
 
-        // dont run chekcs if not in interactive mode and it was ran less than 5 mintues ago
+        // don't run checks if not in interactive mode and it was ran less than 5 minutes ago
         if (Defaults[.lastCheck] + (60 * 1000 * 5)) >= Date().currentTimeMillis(), !interactive {
             os_log("Debounce detected, last check %sms ago", log: Log.app, String(Date().currentTimeMillis() - Defaults[.lastCheck]))
             return
         }
 
         Defaults[.lastCheck] = Date().currentTimeMillis()
-        DispatchQueue.main.sync {
-            statusBarModel.state = .ok
+        DispatchQueue.main.async {
+            self.statusBarModel.state = .ok
         }
 
         DispatchQueue.main.sync {

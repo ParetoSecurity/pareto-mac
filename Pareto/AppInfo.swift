@@ -96,53 +96,24 @@ enum AppInfo {
     }
 
     static let bugReportURL = { () -> URL in
-        let baseURL = "https://github.com/ParetoSecurity/pareto-mac/issues/new?labels=bug%2Ctriage&template=report_bug.yml&title=%5BBug%5D%3A+"
-        if #available(macOS 12.0, *) {
-            let logs = logEntries().joined(separator: "\n").addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
-            let versions = getVersions().addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
-            if let url = URL(string: baseURL + "&logs=" + logs! + "&version=" + versions!) {
-                return url
-            }
-        } else {
-            let versions = getVersions().addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
-            if let url = URL(string: baseURL + "&version=" + versions!) {
-                return url
-            }
+        let baseURL = "https://paretosecurity.com/report-bug?"
+        let logs = logEntries().joined(separator: "\n").addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
+        let versions = getVersions().addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
+        if let url = URL(string: baseURL + "&logs=" + logs! + "&version=" + versions!) {
+            return url
         }
+
         return URL(string: baseURL)!
     }
 
     static let logEntries = { () -> [String] in
         var logs = [String]()
 
-        logs.append("State:")
         logs.append("Location: \(Bundle.main.path)")
         logs.append("Build: \(AppInfo.utmSource)")
 
-        for (k, v) in UserDefaults.standard.dictionaryRepresentation().sorted(by: { $0.key < $1.key }) {
-            if k.starts(with: "ParetoCheck-") {
-                logs.append("\(k)=\(v)")
-            }
-        }
-
         logs.append("\nLogs:")
-        do {
-            if #available(macOS 12, *) {
-                let logStore = try OSLogStore(scope: .currentProcessIdentifier)
-                let enumerator = try logStore.__entriesEnumerator(position: nil, predicate: nil)
-                let allEntries = Array(enumerator)
-                let osLogEntryObjects = allEntries.compactMap { $0 as? OSLogEntry }
-                let osLogEntryLogObjects = osLogEntryObjects.compactMap { $0 as? OSLogEntryLog }
-                let subsystem = Bundle.main.bundleIdentifier!
-                for entry in osLogEntryLogObjects.suffix(10) where entry.subsystem == subsystem {
-                    logs.append(entry.category + ": " + entry.composedMessage)
-                }
-            } else {
-                logs.append("Please copy the logs from the Konsole.app with the ParetoSecurity filter.")
-            }
-        } catch {
-            logs.append("logEntries: \(error)")
-        }
+        logs.append("Please copy the logs from the Console app by searching for the ParetoSecurity.")
         return logs
     }
 

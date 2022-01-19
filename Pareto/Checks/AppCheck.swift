@@ -107,8 +107,8 @@ class AppCheck: ParetoCheck, AppCheckProtocol {
             let app = applicationPath!.components(separatedBy: "/Contents/")[0]
             let weekAgo = Date().addingTimeInterval(-7 * 24 * 60 * 60)
             let attributes = NSMetadataItem(url: URL(fileURLWithPath: app))
-            let lastUse = attributes?.value(forKey: "kMDItemLastUsedDate") as? Date
-            return lastUse ?? Date() >= weekAgo
+            guard let lastUse = attributes?.value(forAttribute: "kMDItemLastUsedDate") as? Date else { return false }
+            return lastUse >= weekAgo
         }
         return false
     }

@@ -21,9 +21,9 @@ class FirewallStealthCheck: ParetoCheck {
 
     override func checkPasses() -> Bool {
         let dictionary = readDefaultsFile(path: "/Library/Preferences/com.apple.alf.plist")
-        if let globalstate = dictionary?.value(forKey: "globalstate") as? Int {
+        if let stealthenabled = dictionary?.value(forKey: "stealthenabled") as? Int {
             // os_log("globalstate: %{public}s", log: Log.check, globalstate)
-            return globalstate == 2
+            return stealthenabled >= 1
         }
         return false
     }
