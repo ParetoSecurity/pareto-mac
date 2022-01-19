@@ -28,8 +28,7 @@ class ParetoSecurityTests: XCTestCase {
 
     func testAppInfo() throws {
         XCTAssertTrue(AppInfo.getVersions().contains("HW"))
-        XCTAssertTrue(AppInfo.logEntries().contains("State:"))
-        XCTAssertTrue(AppInfo.bugReportURL().absoluteString.contains("github.com"))
+        XCTAssertTrue(AppInfo.bugReportURL().absoluteString.contains("paretosecurity.com"))
     }
 
     func testSnooze() throws {
