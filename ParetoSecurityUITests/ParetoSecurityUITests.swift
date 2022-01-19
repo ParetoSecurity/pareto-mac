@@ -5,6 +5,7 @@
 //  Created by Janez Troha on 12/08/2021.
 //
 
+import Accessibility
 import Defaults
 @testable import Pareto_Security
 import XCTest
@@ -20,8 +21,8 @@ class ParetoSecurityUITests: XCTestCase {
     }
 
     override func tearDown() {
-        super.tearDown()
         app.terminate()
+        super.tearDown()
     }
 
     private func waitUntilMenu() {

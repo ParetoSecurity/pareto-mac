@@ -12,7 +12,7 @@ class FirewallCheck: ParetoCheck {
     }
 
     override var TitleON: String {
-        "Firewall is on and configured"
+        "Firewall is on"
     }
 
     override var TitleOFF: String {

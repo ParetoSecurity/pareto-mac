@@ -64,7 +64,7 @@
             </BuildableReference>
          </TestableReference>
          <TestableReference
-            skipped = "NO">
+            skipped = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "4F6A92EE26C555C6006C2F2D"
@@ -75,18 +75,6 @@
             <SelectedTests>
                <Test
                   Identifier = "ParetoSecurityUITests/testAppRuns()">
-               </Test>
-               <Test
-                  Identifier = "ParetoSecurityUITests/testHoverMenus()">
-               </Test>
-               <Test
-                  Identifier = "ParetoSecurityUITests/testKonamiWindow()">
-               </Test>
-               <Test
-                  Identifier = "ParetoSecurityUITests/testSettingsWindow()">
-               </Test>
-               <Test
-                  Identifier = "ParetoSecurityUITests/testSnooze()">
                </Test>
             </SelectedTests>
          </TestableReference>
