@@ -29,15 +29,6 @@
         }
       },
       {
-        "package": "ExceptionCatcher",
-        "repositoryURL": "https://github.com/sindresorhus/ExceptionCatcher",
-        "state": {
-          "branch": "main",
-          "revision": "9d99a736e17f67ab3aa333c0dad7ed2ee9d6b2b9",
-          "version": null
-        }
-      },
-      {
         "package": "JWTDecode",
         "repositoryURL": "https://github.com/auth0/JWTDecode.swift.git",
         "state": {

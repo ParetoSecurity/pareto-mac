@@ -62,11 +62,6 @@
                BlueprintName = "ParetoSecurityTests"
                ReferencedContainer = "container:Pareto Security.xcodeproj">
             </BuildableReference>
-            <SkippedTests>
-               <Test
-                  Identifier = "TeamsTest">
-               </Test>
-            </SkippedTests>
          </TestableReference>
          <TestableReference
             skipped = "NO">
@@ -80,6 +75,18 @@
             <SelectedTests>
                <Test
                   Identifier = "ParetoSecurityUITests/testAppRuns()">
+               </Test>
+               <Test
+                  Identifier = "ParetoSecurityUITests/testHoverMenus()">
+               </Test>
+               <Test
+                  Identifier = "ParetoSecurityUITests/testKonamiWindow()">
+               </Test>
+               <Test
+                  Identifier = "ParetoSecurityUITests/testSettingsWindow()">
+               </Test>
+               <Test
+                  Identifier = "ParetoSecurityUITests/testSnooze()">
                </Test>
             </SelectedTests>
          </TestableReference>

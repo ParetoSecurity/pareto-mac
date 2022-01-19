@@ -163,7 +163,6 @@
 		4F8B01B226F4A6CB00EDE14B /* WelcomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F8B01B126F4A6CB00EDE14B /* WelcomeView.swift */; };
 		4F8ECA372798262F00361728 /* FirewallStealth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F8ECA362798262F00361728 /* FirewallStealth.swift */; };
 		4F8ECA382798262F00361728 /* FirewallStealth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F8ECA362798262F00361728 /* FirewallStealth.swift */; };
-		4F8ECA3B2798273800361728 /* ExceptionCatcher in Frameworks */ = {isa = PBXBuildFile; productRef = 4F8ECA3A2798273800361728 /* ExceptionCatcher */; };
 		4F91060327623E4C00D1A348 /* SSHKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F91060227623E4B00D1A348 /* SSHKeys.swift */; };
 		4F91060427623E4C00D1A348 /* SSHKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F91060227623E4B00D1A348 /* SSHKeys.swift */; };
 		4F923CED2756918E00070551 /* Cache in Frameworks */ = {isa = PBXBuildFile; productRef = 4F923CEC2756918E00070551 /* Cache */; };
@@ -394,7 +393,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				4F6EF892275FEE6C00752559 /* Regex in Frameworks */,
-				4F8ECA3B2798273800361728 /* ExceptionCatcher in Frameworks */,
 				4F14487726D8EB2E00A5BA34 /* Version in Frameworks */,
 				4F14487A26D8EB7A00A5BA34 /* Path in Frameworks */,
 				4FF515C126F7B362008D135E /* Alamofire in Frameworks */,
@@ -777,7 +775,6 @@
 				4F7739F3271EB3AD008B1584 /* Sentry */,
 				4F923CEC2756918E00070551 /* Cache */,
 				4F6EF891275FEE6C00752559 /* Regex */,
-				4F8ECA3A2798273800361728 /* ExceptionCatcher */,
 			);
 			productName = Pareto;
 			productReference = 4FEBA2EE269CD48F009B2469 /* Pareto Security.app */;
@@ -831,7 +828,6 @@
 				4F7739F2271EB3AD008B1584 /* XCRemoteSwiftPackageReference "sentry-cocoa" */,
 				4F923CEB2756918E00070551 /* XCRemoteSwiftPackageReference "Cache" */,
 				4F6EF890275FEE6C00752559 /* XCRemoteSwiftPackageReference "Regex" */,
-				4F8ECA392798273800361728 /* XCRemoteSwiftPackageReference "ExceptionCatcher" */,
 			);
 			productRefGroup = 4FEBA2EF269CD48F009B2469 /* Products */;
 			projectDirPath = "";
@@ -1826,14 +1822,6 @@
 				kind = branch;
 			};
 		};
-		4F8ECA392798273800361728 /* XCRemoteSwiftPackageReference "ExceptionCatcher" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/sindresorhus/ExceptionCatcher";
-			requirement = {
-				branch = main;
-				kind = branch;
-			};
-		};
 		4F923CEB2756918E00070551 /* XCRemoteSwiftPackageReference "Cache" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/hyperoslo/Cache";
@@ -1942,11 +1930,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 4F84A94A26CBE4AE00A1579D /* XCRemoteSwiftPackageReference "ViewInspector" */;
 			productName = ViewInspector;
-		};
-		4F8ECA3A2798273800361728 /* ExceptionCatcher */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 4F8ECA392798273800361728 /* XCRemoteSwiftPackageReference "ExceptionCatcher" */;
-			productName = ExceptionCatcher;
 		};
 		4F923CEC2756918E00070551 /* Cache */ = {
 			isa = XCSwiftPackageProductDependency;
