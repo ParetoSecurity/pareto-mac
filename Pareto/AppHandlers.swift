@@ -48,11 +48,11 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
             // schedule update on startup
             if Defaults.shouldDoUpdateCheck() {
                 os_log("Running update check from startup")
-                DispatchQueue.main.async {
+                DispatchQueue.global(qos: .background).async {
                     if Defaults.shouldDoUpdateCheck() {
                         if self.networkHandler.currentStatus == .satisfied {
                             os_log("Running update check from startup")
-                            DispatchQueue.main.async {
+                            DispatchQueue.global(qos: .background).async {
                                 self.checkForRelease()
                                 Defaults.doneUpdateCheck()
                             }
@@ -66,14 +66,14 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
         #endif
         // Update when waking up from sleep
         NSWorkspace.onWakeup { _ in
-            DispatchQueue.main.asyncAfter(deadline: .now() + 30) {
+            DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + 30) {
                 self.statusBar?.runChecks(isIteractive: false)
             }
             #if !SETAPP_ENABLED
                 if Defaults.shouldDoUpdateCheck() {
                     if self.networkHandler.currentStatus == .satisfied {
                         os_log("Running update check from wakeup")
-                        DispatchQueue.main.async {
+                        DispatchQueue.global(qos: .background).async {
                             self.checkForRelease()
                             Defaults.doneUpdateCheck()
                         }
@@ -87,7 +87,7 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
         // Schedule hourly claim updates
         NSBackgroundActivityScheduler.repeating(withName: "ClaimRunner", withInterval: 60 * 60) { (completion: NSBackgroundActivityScheduler.CompletionHandler) in
             os_log("Running checks")
-            DispatchQueue.main.async {
+            DispatchQueue.global(qos: .background).async {
                 self.statusBar?.runChecks(isIteractive: false)
             }
             completion(.finished)
@@ -97,7 +97,7 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
                 if Defaults.shouldDoUpdateCheck() {
                     if self.networkHandler.currentStatus == .satisfied {
                         os_log("Running update check")
-                        DispatchQueue.main.async {
+                        DispatchQueue.global(qos: .background).async {
                             self.checkForRelease()
                             Defaults.doneUpdateCheck()
                         }
@@ -124,7 +124,7 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
         #endif
 
         NSBackgroundActivityScheduler.repeating(withName: "FlagsRunner", withInterval: 60 * 5) { (completion: NSBackgroundActivityScheduler.CompletionHandler) in
-            DispatchQueue.main.async {
+            DispatchQueue.global(qos: .background).async {
                 if self.networkHandler.currentStatus == .satisfied {
                     os_log("Running flags update")
                     AppInfo.Flags.update()
@@ -140,7 +140,7 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
         if status == .satisfied {
             os_log("network condtions changed to: connected")
             // wait 30 second of stable conenction before running checks
-            DispatchQueue.main.asyncAfter(deadline: .now() + 30) {
+            DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + 30) {
                 self.statusBar?.runChecks(isIteractive: false)
             }
         } else {
@@ -185,7 +185,7 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
     }
 
     @objc func runChecksDelayed() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+        DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + 2) {
             self.statusBar?.runChecks(isIteractive: false)
         }
     }

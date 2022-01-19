@@ -13,7 +13,6 @@ import SwiftUI
 class StatusBarController: NSObject, NSMenuDelegate {
     var statusItem: NSStatusItem!
     var statusItemMenu: NSMenu!
-    var isRunnig = false
     var workItem: DispatchWorkItem?
     var statusBarModel = StatusBarModel()
 
@@ -75,7 +74,9 @@ class StatusBarController: NSObject, NSMenuDelegate {
     func updateMenu() {
         DispatchQueue.main.async {
             self.statusItemMenu.removeAllItems()
-            self.addChecksMenuItems()
+            if !self.statusBarModel.isRunning {
+                self.addChecksMenuItems()
+            }
             self.addApplicationItems()
 
             if self.claimsPassed {
@@ -93,7 +94,7 @@ class StatusBarController: NSObject, NSMenuDelegate {
     }
 
     func runChecks(isIteractive interactive: Bool = true) {
-        if isRunnig {
+        if statusBarModel.isRunning {
             return
         }
 
@@ -117,9 +118,14 @@ class StatusBarController: NSObject, NSMenuDelegate {
         }
 
         Defaults[.lastCheck] = Date().currentTimeMillis()
+        DispatchQueue.main.sync {
+            statusBarModel.state = .ok
+        }
 
-        statusBarModel.state = .ok
-        isRunnig = true
+        DispatchQueue.main.sync {
+            self.statusBarModel.isRunning = true
+        }
+
         workItem = DispatchWorkItem {
             for claim in Claims.sorted {
                 claim.run()
@@ -128,7 +134,7 @@ class StatusBarController: NSObject, NSMenuDelegate {
 
         // update menus after checks have ran
         workItem?.notify(queue: .main) {
-            self.isRunnig = false
+            self.statusBarModel.isRunning = false
             self.updateMenu()
             Defaults[.checksPassed] = self.claimsPassed
 
@@ -153,16 +159,16 @@ class StatusBarController: NSObject, NSMenuDelegate {
         }
 
         // guard to prevent long running tasks
-        DispatchQueue.global().asyncAfter(deadline: .now() + 30) {
+        DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + 30) {
             // checks are still running kill them
-            if self.isRunnig {
+            if self.statusBarModel.isRunning {
                 self.workItem?.cancel()
                 os_log("Checks took more than 30s to finish canceling", log: Log.app)
             }
         }
 
         // run tasks
-        DispatchQueue.main.async(execute: workItem!)
+        DispatchQueue.global(qos: .background).async(execute: workItem!)
         os_log("Running check scheduler", log: Log.app)
     }
 
@@ -208,34 +214,41 @@ class StatusBarController: NSObject, NSMenuDelegate {
     }
 
     func addApplicationItems() {
-        if Defaults[.snoozeTime] == 0 {
-            let lastItem = NSMenuItem(title: "Last check \(Date.fromTimeStamp(timeStamp: Defaults[.lastCheck]).timeAgoDisplay())", action: nil, keyEquivalent: "")
-            lastItem.target = NSApp.delegate
-            statusItemMenu.addItem(lastItem)
+        if !statusBarModel.isRunning {
+            if Defaults[.snoozeTime] == 0 {
+                let lastItem = NSMenuItem(title: "Last check \(Date.fromTimeStamp(timeStamp: Defaults[.lastCheck]).timeAgoDisplay())", action: nil, keyEquivalent: "")
+                lastItem.target = NSApp.delegate
+                statusItemMenu.addItem(lastItem)
+            } else {
+                let lastItem = NSMenuItem(title: "Resumes \(Date.fromTimeStamp(timeStamp: snoozeTime).timeAgoDisplay())", action: nil, keyEquivalent: "")
+                lastItem.target = NSApp.delegate
+                statusItemMenu.addItem(lastItem)
+            }
         } else {
-            let lastItem = NSMenuItem(title: "Resumes \(Date.fromTimeStamp(timeStamp: snoozeTime).timeAgoDisplay())", action: nil, keyEquivalent: "")
+            let lastItem = NSMenuItem(title: "Running checks ...", action: nil, keyEquivalent: "")
             lastItem.target = NSApp.delegate
             statusItemMenu.addItem(lastItem)
         }
         statusItemMenu.addItem(NSMenuItem.separator())
+        if !statusBarModel.isRunning {
+            if Defaults[.snoozeTime] == 0 {
+                let runItem = NSMenuItem(title: "Run Checks", action: #selector(AppDelegate.runChecks), keyEquivalent: "r")
+                runItem.target = NSApp.delegate
+                statusItemMenu.addItem(runItem)
 
-        if Defaults[.snoozeTime] == 0 {
-            let runItem = NSMenuItem(title: "Run Checks", action: #selector(AppDelegate.runChecks), keyEquivalent: "r")
-            runItem.target = NSApp.delegate
-            statusItemMenu.addItem(runItem)
+                let submenu = NSMenu()
+                submenu.addItem(addSubmenu(withTitle: "for 1 hour", action: #selector(snoozeOneHour)))
+                submenu.addItem(addSubmenu(withTitle: "for 1 day", action: #selector(snoozeOneDay)))
+                submenu.addItem(addSubmenu(withTitle: "for 1 week", action: #selector(snoozeOneWeek)))
 
-            let submenu = NSMenu()
-            submenu.addItem(addSubmenu(withTitle: "for 1 hour", action: #selector(snoozeOneHour)))
-            submenu.addItem(addSubmenu(withTitle: "for 1 day", action: #selector(snoozeOneDay)))
-            submenu.addItem(addSubmenu(withTitle: "for 1 week", action: #selector(snoozeOneWeek)))
-
-            let snoozeItem = NSMenuItem(title: "Snooze", action: nil, keyEquivalent: "")
-            snoozeItem.submenu = submenu
-            statusItemMenu.addItem(snoozeItem)
-        } else {
-            let unsnoozeItem = NSMenuItem(title: "Resume checks", action: #selector(unsnooze), keyEquivalent: "u")
-            unsnoozeItem.target = self
-            statusItemMenu.addItem(unsnoozeItem)
+                let snoozeItem = NSMenuItem(title: "Snooze", action: nil, keyEquivalent: "")
+                snoozeItem.submenu = submenu
+                statusItemMenu.addItem(snoozeItem)
+            } else {
+                let unsnoozeItem = NSMenuItem(title: "Resume checks", action: #selector(unsnooze), keyEquivalent: "u")
+                unsnoozeItem.target = self
+                statusItemMenu.addItem(unsnoozeItem)
+            }
         }
 
         if (!Defaults[.teamID].isEmpty && AppInfo.Flags.dashboardMenu) || Defaults[.isTeamOwner] {

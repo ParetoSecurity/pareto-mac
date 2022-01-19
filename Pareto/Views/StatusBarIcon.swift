@@ -14,6 +14,7 @@ enum StatusBarState: String {
 
 class StatusBarModel: ObservableObject {
     @Published var state = StatusBarState.ok
+    @Published var isRunning = false
 }
 
 struct StatusBarIcon: View {
