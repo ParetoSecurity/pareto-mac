@@ -13,7 +13,7 @@ struct GeneralSettingsView: View {
     @ObservedObject private var atLogin = LaunchAtLogin.observable
     @Default(.betaChannel) var betaChannel
     @Default(.showBeta) var showBeta
-
+    @Default(.checkForUpdatesRecentOnly) var checkForUpdatesRecentOnly
     var body: some View {
         Form {
             Section(
@@ -22,7 +22,12 @@ struct GeneralSettingsView: View {
                         Toggle("Automatically launch on system startup", isOn: $atLogin.isEnabled)
                     }
                 }
-
+            Section(
+                footer: Text("Only scan for updates for recently used apps.").font(.footnote)) {
+                    VStack(alignment: .leading) {
+                        Toggle("Do update check only for apps used in the last week", isOn: $checkForUpdatesRecentOnly)
+                    }
+                }
             if showBeta {
                 Section(
                     footer: Text("Latest features but potentially bugs to report.").font(.footnote)) {
@@ -47,7 +52,7 @@ struct GeneralSettingsView: View {
             }
         }
 
-        .frame(width: 350, height: 100).padding(25)
+        .frame(width: 350, height: 1310).padding(25)
     }
 }
 

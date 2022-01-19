@@ -7,8 +7,10 @@
 
 import Alamofire
 import AppKit
-
+import Cocoa
 import Combine
+import Defaults
+import ExceptionCatcher
 import Foundation
 import os.log
 import OSLog
@@ -93,13 +95,38 @@ class AppCheck: ParetoCheck, AppCheckProtocol {
         return nil
     }
 
+    public var isInstalled: Bool {
+        applicationPath != nil
+    }
+
+    public var usedRecently: Bool {
+        if !Defaults[.checkForUpdatesRecentOnly] {
+            return true
+        }
+
+        if isInstalled {
+            let app = applicationPath!.components(separatedBy: "/Contents/")[0]
+            let weekAgo = Date().addingTimeInterval(-7 * 24 * 60 * 60)
+            do {
+                let lastUse = try ExceptionCatcher.catch { () -> Date in
+                    let attributes = NSMetadataItem(url: URL(fileURLWithPath: app))
+                    return attributes?.value(forKey: "kMDItemLastUsedDate") as! Date
+                }
+                return lastUse >= weekAgo
+            } catch {
+                return false
+            }
+        }
+        return false
+    }
+
     override public var isRunnable: Bool {
         // show if application is present
-        return isActive && applicationPath != nil
+        return isActive && isInstalled && usedRecently
     }
 
     override public var showSettings: Bool {
-        return applicationPath != nil
+        return isInstalled
     }
 
     var currentVersion: Version {

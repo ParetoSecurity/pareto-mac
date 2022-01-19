@@ -202,14 +202,14 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
             case NSApplication.ModalResponse.alertFirstButtonReturn:
                 NSWorkspace.shared.open(URL(string: "https://paretosecurity.com/pricing")!)
             case NSApplication.ModalResponse.alertSecondButtonReturn:
-                DispatchQueue.global(qos: .userInitiated).async {
+                DispatchQueue.global(qos: .background).async {
                     self.statusBar?.runChecks()
                 }
             default:
                 os_log("Unknown")
             }
         } else {
-            DispatchQueue.global(qos: .userInitiated).async {
+            DispatchQueue.global(qos: .background).async {
                 self.statusBar?.runChecks()
             }
         }
@@ -323,7 +323,7 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
                             alert.runModal()
                         #endif
                         if !Defaults.firstLaunch() {
-                            DispatchQueue.global(qos: .userInitiated).async {
+                            DispatchQueue.global(qos: .background).async {
                                 self.statusBar?.runChecks()
                             }
                         }

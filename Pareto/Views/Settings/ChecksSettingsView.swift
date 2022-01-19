@@ -5,10 +5,12 @@
 //  Created by Janez Troha on 10/09/2021.
 //
 
+import Defaults
 import SwiftUI
 
 struct ChecksSettingsView: View {
     @State var updater: Bool = false
+
     var body: some View {
         ScrollView {
             VStack(alignment: .leading) {

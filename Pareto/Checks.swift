@@ -41,6 +41,7 @@ enum Claims {
         ]),
         Claim(withTitle: "Firewall & Sharing", withChecks: [
             FirewallCheck.sharedInstance,
+            FirewallStealthCheck.sharedInstance,
             FileSharingCheck.sharedInstance,
             PrinterSharingCheck.sharedInstance,
             RemoteManagementCheck.sharedInstance,

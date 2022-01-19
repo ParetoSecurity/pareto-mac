@@ -17,6 +17,7 @@ class SoftwareUpdatesTest: XCTestCase {
         var redirects = [String]()
         var names = [String]()
         for app in Claims.updateChecks.sorted(by: { $0.appMarketingName.lowercased() < $1.appMarketingName.lowercased() }) {
+            XCTAssertNotEqual(app.usedRecently, nil)
             XCTAssertNotEqual(app.latestVersion, nil)
             XCTAssertNotEqual(app.UUID, nil)
             XCTAssertNotEqual(app.currentVersion, nil)

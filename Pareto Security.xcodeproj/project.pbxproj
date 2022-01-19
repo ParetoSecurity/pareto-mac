@@ -161,6 +161,9 @@
 		4F868DD126A5C51C005B876E /* Autologin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F868DD026A5C51C005B876E /* Autologin.swift */; };
 		4F868DD326A5C751005B876E /* Screensaver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F868DD226A5C751005B876E /* Screensaver.swift */; };
 		4F8B01B226F4A6CB00EDE14B /* WelcomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F8B01B126F4A6CB00EDE14B /* WelcomeView.swift */; };
+		4F8ECA372798262F00361728 /* FirewallStealth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F8ECA362798262F00361728 /* FirewallStealth.swift */; };
+		4F8ECA382798262F00361728 /* FirewallStealth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F8ECA362798262F00361728 /* FirewallStealth.swift */; };
+		4F8ECA3B2798273800361728 /* ExceptionCatcher in Frameworks */ = {isa = PBXBuildFile; productRef = 4F8ECA3A2798273800361728 /* ExceptionCatcher */; };
 		4F91060327623E4C00D1A348 /* SSHKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F91060227623E4B00D1A348 /* SSHKeys.swift */; };
 		4F91060427623E4C00D1A348 /* SSHKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F91060227623E4B00D1A348 /* SSHKeys.swift */; };
 		4F923CED2756918E00070551 /* Cache in Frameworks */ = {isa = PBXBuildFile; productRef = 4F923CEC2756918E00070551 /* Cache */; };
@@ -304,6 +307,7 @@
 		4F868DD026A5C51C005B876E /* Autologin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Autologin.swift; sourceTree = "<group>"; };
 		4F868DD226A5C751005B876E /* Screensaver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Screensaver.swift; sourceTree = "<group>"; };
 		4F8B01B126F4A6CB00EDE14B /* WelcomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeView.swift; sourceTree = "<group>"; };
+		4F8ECA362798262F00361728 /* FirewallStealth.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FirewallStealth.swift; sourceTree = "<group>"; };
 		4F91060227623E4B00D1A348 /* SSHKeys.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSHKeys.swift; sourceTree = "<group>"; };
 		4F923CEE275691A700070551 /* Docker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Docker.swift; path = "Software Updates/Docker.swift"; sourceTree = "<group>"; };
 		4F923CF12756920C00070551 /* iTerm.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = iTerm.swift; path = "Software Updates/iTerm.swift"; sourceTree = "<group>"; };
@@ -390,6 +394,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4F6EF892275FEE6C00752559 /* Regex in Frameworks */,
+				4F8ECA3B2798273800361728 /* ExceptionCatcher in Frameworks */,
 				4F14487726D8EB2E00A5BA34 /* Version in Frameworks */,
 				4F14487A26D8EB7A00A5BA34 /* Path in Frameworks */,
 				4FF515C126F7B362008D135E /* Alamofire in Frameworks */,
@@ -459,6 +464,7 @@
 				4F6A0E0D26CE484A003B00A3 /* PrinterSharingCheck.swift */,
 				4F6A0E0F26CE4868003B00A3 /* FileSharingCheck.swift */,
 				4F868DCE26A591E6005B876E /* Firewall.swift */,
+				4F8ECA362798262F00361728 /* FirewallStealth.swift */,
 				4F1AE88F26F9FFA60084A381 /* MediaShare.swift */,
 				4F1AE89126FA026D0084A381 /* AirPlay.swift */,
 			);
@@ -771,6 +777,7 @@
 				4F7739F3271EB3AD008B1584 /* Sentry */,
 				4F923CEC2756918E00070551 /* Cache */,
 				4F6EF891275FEE6C00752559 /* Regex */,
+				4F8ECA3A2798273800361728 /* ExceptionCatcher */,
 			);
 			productName = Pareto;
 			productReference = 4FEBA2EE269CD48F009B2469 /* Pareto Security.app */;
@@ -824,6 +831,7 @@
 				4F7739F2271EB3AD008B1584 /* XCRemoteSwiftPackageReference "sentry-cocoa" */,
 				4F923CEB2756918E00070551 /* XCRemoteSwiftPackageReference "Cache" */,
 				4F6EF890275FEE6C00752559 /* XCRemoteSwiftPackageReference "Regex" */,
+				4F8ECA392798273800361728 /* XCRemoteSwiftPackageReference "ExceptionCatcher" */,
 			);
 			productRefGroup = 4FEBA2EF269CD48F009B2469 /* Products */;
 			projectDirPath = "";
@@ -1000,6 +1008,7 @@
 				4F37E71E2718122E00A2B254 /* Autologin.swift in Sources */,
 				4F38D8CF273AC62500671756 /* EndView.swift in Sources */,
 				4FB1190D2742615800B89634 /* ParetoHelper.swift in Sources */,
+				4F8ECA382798262F00361728 /* FirewallStealth.swift in Sources */,
 				4FB1190F2742615B00B89634 /* ParetoHelperProtocol.swift in Sources */,
 				4F37E71F2718122E00A2B254 /* MediaShare.swift in Sources */,
 				4F37E7202718122E00A2B254 /* ParetoApp.swift in Sources */,
@@ -1127,6 +1136,7 @@
 				4F868DD126A5C51C005B876E /* Autologin.swift in Sources */,
 				4F38D8CE273AC62500671756 /* EndView.swift in Sources */,
 				4FB1190C2742615700B89634 /* ParetoHelper.swift in Sources */,
+				4F8ECA372798262F00361728 /* FirewallStealth.swift in Sources */,
 				4FB1190E2742615A00B89634 /* ParetoHelperProtocol.swift in Sources */,
 				4F1AE89026F9FFA60084A381 /* MediaShare.swift in Sources */,
 				4FEBA2F2269CD48F009B2469 /* ParetoApp.swift in Sources */,
@@ -1816,6 +1826,14 @@
 				kind = branch;
 			};
 		};
+		4F8ECA392798273800361728 /* XCRemoteSwiftPackageReference "ExceptionCatcher" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sindresorhus/ExceptionCatcher";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
 		4F923CEB2756918E00070551 /* XCRemoteSwiftPackageReference "Cache" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/hyperoslo/Cache";
@@ -1924,6 +1942,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 4F84A94A26CBE4AE00A1579D /* XCRemoteSwiftPackageReference "ViewInspector" */;
 			productName = ViewInspector;
+		};
+		4F8ECA3A2798273800361728 /* ExceptionCatcher */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4F8ECA392798273800361728 /* XCRemoteSwiftPackageReference "ExceptionCatcher" */;
+			productName = ExceptionCatcher;
 		};
 		4F923CEC2756918E00070551 /* Cache */ = {
 			isa = XCSwiftPackageProductDependency;
