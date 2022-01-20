@@ -63,6 +63,10 @@ class AppCheck: ParetoCheck, AppCheckProtocol {
         return false
     }
 
+    public var supportsRecentlyUsed: Bool {
+        return true
+    }
+
     static let queue = DispatchQueue(label: "co.pareto.check_versions", qos: .utility, attributes: .concurrent)
     public var latestVersion: Version {
         if try! AppInfo.versionStorage.existsObject(forKey: appBundle) {
@@ -104,6 +108,10 @@ class AppCheck: ParetoCheck, AppCheckProtocol {
         }
 
         if isInstalled {
+            if !supportsRecentlyUsed {
+                return true
+            }
+
             let app = applicationPath!.components(separatedBy: "/Contents/")[0]
             let weekAgo = Date().addingTimeInterval(-7 * 24 * 60 * 60)
             let attributes = NSMetadataItem(url: URL(fileURLWithPath: app))

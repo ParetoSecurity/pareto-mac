@@ -120,9 +120,6 @@ class StatusBarController: NSObject, NSMenuDelegate {
         Defaults[.lastCheck] = Date().currentTimeMillis()
         DispatchQueue.main.async {
             self.statusBarModel.state = .ok
-        }
-
-        DispatchQueue.main.sync {
             self.statusBarModel.isRunning = true
         }
 
