@@ -34,7 +34,13 @@ enum AppInfo {
         #if DEBUG
             source += "-debug"
         #else
-            source += "-live"
+
+            if Default[.showBeta] {
+                source += "-pre"
+            } else {
+                source += "-live"
+            }
+
         #endif
 
         #if SETAPP_ENABLED

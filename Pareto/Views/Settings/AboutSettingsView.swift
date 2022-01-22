@@ -52,6 +52,7 @@ struct AboutSettingsView: View {
 
                 VStack(alignment: .leading, spacing: 0) {
                     Text("Version: \(AppInfo.appVersion) - \(AppInfo.buildVersion)")
+                    Text("Channel: \(AppInfo.utmSource)")
                     #if !SETAPP_ENABLED
                         HStack(spacing: 10) {
                             if status == UpdateStates.Failed {
@@ -85,7 +86,7 @@ struct AboutSettingsView: View {
                 }
             }
 
-        }.frame(width: 350, height: 100).padding(25).onAppear(perform: fetch)
+        }.frame(width: 350, height: 130).padding(25).onAppear(perform: fetch)
     }
 
     private func fetch() {
