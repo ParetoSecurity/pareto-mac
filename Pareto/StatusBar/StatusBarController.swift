@@ -265,7 +265,7 @@ class StatusBarController: NSObject, NSMenuDelegate {
             statusItemMenu.addItem(updateItem)
         }
 
-        let reportItem = NSMenuItem(title: "Report a Bug", action: #selector(AppDelegate.reportBug), keyEquivalent: "b")
+        let reportItem = NSMenuItem(title: "Contact Support", action: #selector(AppDelegate.reportBug), keyEquivalent: "b")
         reportItem.target = NSApp.delegate
         statusItemMenu.addItem(reportItem)
 
