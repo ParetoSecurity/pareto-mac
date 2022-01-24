@@ -19,7 +19,8 @@ class StatusBarModel: ObservableObject {
 
 struct StatusBarIcon: View {
     @ObservedObject var statusBarModel: StatusBarModel
-    let imageNames: [String] = [StatusBarState.ok.rawValue, StatusBarState.warning.rawValue]
+    @State private var isBlinking: Bool = false
+    @State private var fadeOut: Bool = true
 
     var body: some View {
         ZStack {
@@ -34,15 +35,38 @@ struct StatusBarIcon: View {
                         .frame(width: 5.0, height: 5.0)
                         .blur(radius: 0.8)
                         .scaleEffect(x: 0.5, y: 0.5, anchor: .center)
+                }.onDisappear {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
+                        self.isBlinking = statusBarModel.state == StatusBarState.warning
+                    }
                 }
 
             } else {
-                Image(statusBarModel.state.rawValue)
-                    .resizable()
-                    .frame(width: 22, height: 20, alignment: .center)
+                if isBlinking {
+                    Image(statusBarModel.state.rawValue)
+                        .resizable()
+                        .frame(width: 22, height: 20, alignment: .center)
+                        .opacity(fadeOut ? 1 : 0.5)
+                        .animation(.easeInOut(duration: 0.6)) // animatable fade in/out
+                        .onAppear {
+                            let timer = Timer.scheduledTimer(withTimeInterval: 0.6, repeats: true) { _ in
+                                self.fadeOut.toggle() // 1) fade out
+                            }
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 15) {
+                                isBlinking = false
+                                fadeOut = true
+                                timer.invalidate()
+                            }
+                        }
+                } else {
+                    Image(statusBarModel.state.rawValue)
+                        .resizable()
+                        .frame(width: 22, height: 20, alignment: .center)
+                }
             }
 
-        }.frame(width: 26, height: 20, alignment: .center).padding(.horizontal, 2)
+        }.frame(width: 26, height: 20, alignment: .center)
+            .padding(.horizontal, 2)
             .padding(.vertical, 2)
     }
 }
