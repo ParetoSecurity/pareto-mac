@@ -35,7 +35,7 @@ enum AppInfo {
             source += "-debug"
         #else
 
-            if Default[.showBeta] {
+            if Defaults[.showBeta] {
                 source += "-pre"
             } else {
                 source += "-live"
