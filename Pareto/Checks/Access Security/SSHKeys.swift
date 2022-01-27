@@ -33,10 +33,10 @@ class SSHKeysCheck: ParetoCheck {
 
     override var isRunnable: Bool {
         if !itExists("/usr/bin/ssh-keygen") {
-            os_log("Not found /usr/bin/ssh-keygen, check disabled")
+            os_log("Not found /usr/bin/ssh-keygen, check disabled", log: Log.check)
         }
         if !itExists(sshPath.path) {
-            os_log("Not found ~/.ssh, check disabled")
+            os_log("Not found ~/.ssh, check disabled", log: Log.check)
         }
         return itExists("/usr/bin/ssh-keygen") && itExists(sshPath.path) && isActive
     }
@@ -55,7 +55,7 @@ class SSHKeysCheck: ParetoCheck {
                     continue
                 }
                 if !isPasswordEnabled(withKey: privateKey) {
-                    os_log("Checking %{public}s", pub.path)
+                    os_log("Checking %{public}s", log: Log.check, pub.absoluteURL.path)
                     sshKey = pub.lastPathComponent.replacingOccurrences(of: ".pub", with: "")
                     return false
                 }

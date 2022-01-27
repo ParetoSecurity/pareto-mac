@@ -82,10 +82,10 @@ class SSHKeysStrengthCheck: ParetoCheck {
 
     override var isRunnable: Bool {
         if !itExists("/usr/bin/ssh-keygen") {
-            os_log("Not found /usr/bin/ssh-keygen, check disabled")
+            os_log("Not found /usr/bin/ssh-keygen, check disabled", log: Log.check)
         }
         if !itExists(sshPath.path) {
-            os_log("Not found ~/.ssh, check disabled")
+            os_log("Not found ~/.ssh, check disabled", log: Log.check)
         }
         return itExists("/usr/bin/ssh-keygen") && itExists(sshPath.path) && isActive
     }
@@ -93,7 +93,7 @@ class SSHKeysStrengthCheck: ParetoCheck {
     func isKeyStrong(withKey path: String) -> Bool {
         let output = runCMD(app: "/usr/bin/ssh-keygen", args: ["-l", "-f", path])
         let info = KeyInfo(stringLiteral: output.strip())
-        os_log("%s has %d", path, info.strength)
+        os_log("%s has %d", log: Log.check, path, info.strength)
         // https://nvlpubs.nist.gov/nistpubs/specialpublications/nist.sp.800-57pt3r1.pdf
         switch info.cipher {
         case .RSA:
@@ -115,8 +115,7 @@ class SSHKeysStrengthCheck: ParetoCheck {
                 if !itExists(privateKey) {
                     continue
                 }
-                if !isKeyStrong(withKey: pub.path) {
-                    os_log("Checking %{public}s", pub.path)
+                if !isKeyStrong(withKey: pub.absoluteURL.path) {
                     sshKey = pub.lastPathComponent.replacingOccurrences(of: ".pub", with: "")
                     return false
                 }
