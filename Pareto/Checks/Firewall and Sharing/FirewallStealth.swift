@@ -19,14 +19,14 @@ class FirewallStealthCheck: ParetoCheck {
         "Firewall stealth mode is disabled"
     }
 
-    public override var isRunnable: Bool {
+    override public var isRunnable: Bool {
         return FirewallCheck.sharedInstance.isActive
     }
-    
-    public override var showSettings: Bool {
+
+    override public var showSettings: Bool {
         return isRunnable
     }
-    
+
     override func checkPasses() -> Bool {
         let dictionary = readDefaultsFile(path: "/Library/Preferences/com.apple.alf.plist")
         if let stealthenabled = dictionary?.value(forKey: "stealthenabled") as? Int {
