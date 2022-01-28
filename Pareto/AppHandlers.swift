@@ -40,7 +40,7 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
             NSApp.activate(ignoringOtherApps: true)
         } else {
             DispatchQueue.main.asyncAfter(deadline: .now() + 30) {
-                self.statusBar?.runChecks(isIteractive: false)
+                self.statusBar?.runChecks(isInteractive: false)
             }
         }
 
@@ -67,7 +67,7 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
         // Update when waking up from sleep
         NSWorkspace.onWakeup { _ in
             DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + 30) {
-                self.statusBar?.runChecks(isIteractive: false)
+                self.statusBar?.runChecks(isInteractive: false)
             }
             #if !SETAPP_ENABLED
                 if Defaults.shouldDoUpdateCheck() {
@@ -88,7 +88,7 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
         NSBackgroundActivityScheduler.repeating(withName: "ClaimRunner", withInterval: 60 * 60) { (completion: NSBackgroundActivityScheduler.CompletionHandler) in
             os_log("Running checks")
             DispatchQueue.global(qos: .background).async {
-                self.statusBar?.runChecks(isIteractive: false)
+                self.statusBar?.runChecks(isInteractive: false)
             }
             completion(.finished)
         }
@@ -141,7 +141,7 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
             os_log("network condtions changed to: connected")
             // wait 30 second of stable conenction before running checks
             DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + 30) {
-                self.statusBar?.runChecks(isIteractive: false)
+                self.statusBar?.runChecks(isInteractive: false)
             }
         } else {
             os_log("network condtions changed to: disconnected")
@@ -186,7 +186,7 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
 
     @objc func runChecksDelayed() {
         DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + 2) {
-            self.statusBar?.runChecks(isIteractive: false)
+            self.statusBar?.runChecks(isInteractive: false)
         }
     }
 

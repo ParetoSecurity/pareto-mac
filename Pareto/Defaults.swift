@@ -49,6 +49,7 @@ extension Defaults.Keys {
     static let checksPassed = Key<Bool>("checksPassed", default: false, suite: extensionDefaults)
     static let lastNagShown = Key<Int>("lastNagShown", default: Date().currentTimeMillis(), suite: extensionDefaults)
     static let checkForUpdatesRecentOnly = Key<Bool>("checkForUpdatesRecentOnly", default: true, suite: extensionDefaults)
+    static let showNotifications = Key<Bool>("showNotifications", default: false, suite: extensionDefaults)
 }
 
 public extension Defaults {
