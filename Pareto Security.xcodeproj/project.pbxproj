@@ -127,6 +127,8 @@
 		4F57135726F8BF84004B4359 /* ParetoAppTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F57135626F8BF84004B4359 /* ParetoAppTest.swift */; };
 		4F57135B26F8C5D7004B4359 /* AppHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F57135A26F8C5D7004B4359 /* AppHandlers.swift */; };
 		4F57135D26F8C921004B4359 /* TeamsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F57135C26F8C921004B4359 /* TeamsTest.swift */; };
+		4F577B3F27A43654008119F9 /* MicrosoftTeams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F577B3E27A43654008119F9 /* MicrosoftTeams.swift */; };
+		4F577B4027A43654008119F9 /* MicrosoftTeams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F577B3E27A43654008119F9 /* MicrosoftTeams.swift */; };
 		4F5B20C127030BEB0015642A /* OpenWiFi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F5B20C027030BEB0015642A /* OpenWiFi.swift */; };
 		4F5B20C3270316DB0015642A /* NetworkHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F5B20C2270316DB0015642A /* NetworkHandler.swift */; };
 		4F5E888026A053A9005271FB /* ParetoCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F5E887F26A053A9005271FB /* ParetoCheck.swift */; };
@@ -283,6 +285,7 @@
 		4F57135626F8BF84004B4359 /* ParetoAppTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParetoAppTest.swift; sourceTree = "<group>"; };
 		4F57135A26F8C5D7004B4359 /* AppHandlers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppHandlers.swift; sourceTree = "<group>"; };
 		4F57135C26F8C921004B4359 /* TeamsTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeamsTest.swift; sourceTree = "<group>"; };
+		4F577B3E27A43654008119F9 /* MicrosoftTeams.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MicrosoftTeams.swift; path = "Software Updates/MicrosoftTeams.swift"; sourceTree = "<group>"; };
 		4F5B20C027030BEB0015642A /* OpenWiFi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenWiFi.swift; sourceTree = "<group>"; };
 		4F5B20C2270316DB0015642A /* NetworkHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkHandler.swift; sourceTree = "<group>"; };
 		4F5E887F26A053A9005271FB /* ParetoCheck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParetoCheck.swift; sourceTree = "<group>"; };
@@ -503,6 +506,7 @@
 			children = (
 				4F4183192770F19D00EBAE4A /* macOSVersion.swift */,
 				4F923CF12756920C00070551 /* iTerm.swift */,
+				4F577B3E27A43654008119F9 /* MicrosoftTeams.swift */,
 				4F923CEE275691A700070551 /* Docker.swift */,
 				4F56AB5D278C6DF5001CAAEF /* AdobeReader.swift */,
 				4F74B7D4275114EA00F1FC11 /* Dashlane.swift */,
@@ -1044,6 +1048,7 @@
 				4F37E7312718122E00A2B254 /* GeneralSettingsView.swift in Sources */,
 				4F37E7322718122E00A2B254 /* AppHandlers.swift in Sources */,
 				4F37E7332718122E00A2B254 /* NSWorkspace.swift in Sources */,
+				4F577B4027A43654008119F9 /* MicrosoftTeams.swift in Sources */,
 				4F37E7342718122E00A2B254 /* NSImage.swift in Sources */,
 				4FB11914274261D700B89634 /* CodeSignCheck.swift in Sources */,
 				4F41831B2770F19D00EBAE4A /* macOSVersion.swift in Sources */,
@@ -1173,6 +1178,7 @@
 				4F24A09626EB73F30036F748 /* GeneralSettingsView.swift in Sources */,
 				4F57135B26F8C5D7004B4359 /* AppHandlers.swift in Sources */,
 				4F84531026D634E5007C3B04 /* NSWorkspace.swift in Sources */,
+				4F577B3F27A43654008119F9 /* MicrosoftTeams.swift in Sources */,
 				4FB7C68726AFF29A00FB1C41 /* NSImage.swift in Sources */,
 				4FB11915274261D800B89634 /* CodeSignCheck.swift in Sources */,
 				4F41831A2770F19D00EBAE4A /* macOSVersion.swift in Sources */,

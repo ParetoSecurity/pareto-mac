@@ -13,7 +13,7 @@ class SoftwareUpdatesTest: XCTestCase {
         super.setUp()
     }
 
-    func testAppVersionFetcehrs() throws {
+    func testAppVersionFetchers() throws {
         var redirects = [String]()
         var names = [String]()
         for app in Claims.updateChecks.sorted(by: { $0.appMarketingName.lowercased() < $1.appMarketingName.lowercased() }) {

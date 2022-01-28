@@ -28,7 +28,8 @@ enum Claims {
         AppSublimeTextCheck.sharedInstance,
         AppVSCodeCheck.sharedInstance,
         AdobeReaderCheck.sharedInstance,
-        AppLuLuCheck.sharedInstance
+        AppLuLuCheck.sharedInstance,
+        AppMicrosoftTeamsCheck.sharedInstance
     ]
 
     static let all = [
