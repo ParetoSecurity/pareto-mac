@@ -53,6 +53,7 @@ class StatusBarController: NSObject, NSMenuDelegate {
         if Defaults.firstLaunch() {
             showMenu()
         }
+        statusItem.isVisible = true
     }
 
     var claimsPassed: Bool {
@@ -93,7 +94,7 @@ class StatusBarController: NSObject, NSMenuDelegate {
         }
     }
 
-    func runChecks(isIteractive interactive: Bool = true) {
+    func runChecks(isInteractive interactive: Bool = true) {
         if statusBarModel.isRunning {
             return
         }

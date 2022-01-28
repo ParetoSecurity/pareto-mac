@@ -13,6 +13,7 @@ struct GeneralSettingsView: View {
     @ObservedObject private var atLogin = LaunchAtLogin.observable
     @Default(.betaChannel) var betaChannel
     @Default(.showBeta) var showBeta
+    @Default(.showNotifications) var showNotifications
     @Default(.checkForUpdatesRecentOnly) var checkForUpdatesRecentOnly
     var body: some View {
         Form {
@@ -30,6 +31,17 @@ struct GeneralSettingsView: View {
                 }
             if showBeta {
                 Section(
+                    footer: Text("When priority check fails show notification.").font(.footnote)) {
+                        VStack(alignment: .leading) {
+                            Toggle("Show priority check failures as notifications", isOn: $showNotifications).onChange(of: showNotifications) { isEnabled in
+                                if isEnabled {
+                                    registerNotifications()
+                                }
+                            }
+                        }
+                    }
+
+                Section(
                     footer: Text("Latest features but potentially bugs to report.").font(.footnote)) {
                         VStack(alignment: .leading) {
                             Toggle("Update app to pre-release builds", isOn: $betaChannel)
@@ -44,15 +56,19 @@ struct GeneralSettingsView: View {
                         Button("Show Welcome") {
                             NSApp.sendAction(#selector(AppDelegate.showWelcome), to: nil, from: nil)
                         }
-                        Button("Update Flags") {
-                            AppInfo.Flags.update()
+                        Button("Notify") {
+                            registerNotifications()
+                            showNotification(check: OpenWiFiCheck.sharedInstance)
                         }
                     }
                 #endif
             }
         }
-
-        .frame(width: 350, height: 130).padding(25)
+        #if DEBUG
+            .frame(width: 350, height: 180).padding(25)
+        #else
+            .frame(width: 350, height: 130).padding(25)
+        #endif
     }
 }
 

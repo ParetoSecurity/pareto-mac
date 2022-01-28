@@ -15,6 +15,7 @@ import OSLog
     import Sentry
 #endif
 import SwiftUI
+import UserNotifications
 
 class AppDelegate: AppHandlers, NSApplicationDelegate {
     func applicationWillFinishLaunching(_: Notification) {
@@ -188,6 +189,10 @@ class AppDelegate: AppHandlers, NSApplicationDelegate {
         }
 
         runApp()
+
+        if Defaults[.showNotifications] {
+            registerNotifications()
+        }
     }
 }
 
