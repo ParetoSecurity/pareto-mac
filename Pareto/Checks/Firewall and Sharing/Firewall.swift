@@ -19,6 +19,10 @@ class FirewallCheck: ParetoCheck {
         "Firewall is off"
     }
 
+    override public var isCritical: Bool {
+        return true
+    }
+
     override func checkPasses() -> Bool {
         let dictionary = readDefaultsFile(path: "/Library/Preferences/com.apple.alf.plist")
         if let globalstate = dictionary?.value(forKey: "globalstate") as? Int {

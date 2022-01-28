@@ -31,6 +31,10 @@ class OpenWiFiCheck: ParetoCheck {
         return CWWiFiClient.shared().interface(withName: nil)?.security() != CWSecurity.none
     }
 
+    override public var isCritical: Bool {
+        return true
+    }
+
     var isRoutedViaVPN: Bool {
         let data = runCMD(app: "/usr/sbin/netstat", args: ["-rnt"])
 

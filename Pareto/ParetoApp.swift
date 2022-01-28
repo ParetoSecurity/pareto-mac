@@ -15,8 +15,32 @@ import OSLog
     import Sentry
 #endif
 import SwiftUI
+import UserNotifications
 
-class AppDelegate: AppHandlers, NSApplicationDelegate {
+class AppDelegate: AppHandlers, NSApplicationDelegate, UNUserNotificationCenterDelegate {
+    func userNotificationCenter(_: UNUserNotificationCenter, didReceive response: UNNotificationResponse) async {
+        // Get the meeting ID from the original notification.
+        let userInfo = response.notification.request.content.userInfo
+
+        if response.notification.request.content.categoryIdentifier ==
+            NotificationType.Check.rawValue {
+            // Retrieve the meeting details.
+            let checkID = userInfo["CHECK_ID"] as! String
+
+            switch response.actionIdentifier {
+            case NotificationAction.MoreInfo.rawValue:
+                print(checkID)
+
+            case UNNotificationDefaultActionIdentifier,
+                 UNNotificationDismissActionIdentifier:
+                break
+
+            default:
+                break
+            }
+        }
+    }
+
     func applicationWillFinishLaunching(_: Notification) {
         if CommandLine.arguments.contains("-export") {
             var export: [String: [String: [String]]] = [:]
@@ -188,6 +212,10 @@ class AppDelegate: AppHandlers, NSApplicationDelegate {
         }
 
         runApp()
+
+        if Defaults[.showNotifications] {
+            registerNotifications()
+        }
     }
 }
 

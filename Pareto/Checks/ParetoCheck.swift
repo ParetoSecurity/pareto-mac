@@ -93,6 +93,10 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
         return item
     }
 
+    public var isCritical: Bool {
+        return false
+    }
+
     func configure() {
         UserDefaults.standard.register(defaults: [
             EnabledKey: true,
@@ -124,6 +128,10 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
         os_log("Running check for %{public}s - %{public}s", log: Log.app, UUID, Title)
         checkPassed = checkPasses()
         checkTimestamp = Int(Date().currentTimeMillis())
+
+        if isCritical, !checkPassed {
+            showNotification(check: self)
+        }
     }
 
     @objc func moreInfo() {
