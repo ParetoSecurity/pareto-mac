@@ -129,7 +129,7 @@ enum Team {
         ).validate().cURLDescription { cmd in
             debugPrint(cmd)
         }.response(queue: queue) { data in
-            debugPrint(data)
+            os_log("%s", log: Log.api, data.debugDescription)
         }
     }
 
@@ -142,7 +142,7 @@ enum Team {
         ).cURLDescription { cmd in
             debugPrint(cmd)
         }.validate().response(queue: queue) { data in
-            debugPrint(data)
+            os_log("%s", log: Log.api, data.debugDescription)
         }
     }
 }

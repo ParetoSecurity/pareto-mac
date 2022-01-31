@@ -67,7 +67,7 @@ struct GeneralSettingsView: View {
         #if DEBUG
             .frame(width: 350, height: 180).padding(25)
         #else
-            .frame(width: 350, height: 130).padding(25)
+            .frame(width: 350, height: 150).padding(25)
         #endif
     }
 }
