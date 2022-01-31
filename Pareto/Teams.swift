@@ -127,9 +127,9 @@ enum Team {
             parameters: device,
             encoder: JSONParameterEncoder.default
         ).validate().cURLDescription { cmd in
-            debugPrint(cmd)
+            os_log("Request: %(public)s", log: Log.api, cmd)
         }.response(queue: queue) { data in
-            debugPrint(data)
+            os_log("Response: %(public)s", log: Log.api, data.debugDescription)
         }
     }
 
@@ -140,9 +140,9 @@ enum Team {
             parameters: report,
             encoder: JSONParameterEncoder.default
         ).cURLDescription { cmd in
-            debugPrint(cmd)
+            os_log("Request: %(public)s", log: Log.api, cmd)
         }.validate().response(queue: queue) { data in
-            debugPrint(data)
+            os_log("Response: %(public)s", log: Log.api, data.debugDescription)
         }
     }
 }
