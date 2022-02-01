@@ -33,6 +33,12 @@ enum Claims {
     ]
 
     static let all = [
+        Claim(withTitle: "macOS Updates", withChecks: [
+            MacOSVersionCheck.sharedInstance,
+            SecurityUpdateCheck.sharedInstance,
+            AutomaticDownloadCheck.sharedInstance,
+            SystemUpdatesCheck.sharedInstance
+        ]),
         Claim(withTitle: "Access Security", withChecks: [
             AutologinCheck.sharedInstance,
             RequirePasswordToUnlock.sharedInstance,
@@ -56,7 +62,6 @@ enum Claims {
             FileVaultCheck.sharedInstance,
             BootCheck.sharedInstance,
             OpenWiFiCheck.sharedInstance,
-            MacOSVersionCheck.sharedInstance,
             TimeMachineCheck.sharedInstance
         ]),
         Claim(withTitle: "Software Updates", withChecks: updateChecks)

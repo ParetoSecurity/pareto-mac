@@ -21,7 +21,7 @@ class ScreensaverCheck: ParetoCheck {
 
     override func checkPasses() -> Bool {
         let script = "tell application \"System Events\" to tell screen saver preferences to get delay interval"
-        let out = Int(runOSA(appleScript: script) ?? "0") ?? 0
+        let out = Int(runOSA(appleScript: script)?.trim() ?? "0") ?? 0
         return out > 0 && out <= 300
     }
 }
