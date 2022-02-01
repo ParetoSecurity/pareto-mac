@@ -25,17 +25,8 @@ func runCMD(app: String, args: [String]) -> String {
 }
 
 func runOSA(appleScript: String) -> String? {
-    var error: NSDictionary?
-    if let scriptObject = NSAppleScript(source: appleScript) {
-        if let outputString = scriptObject.executeAndReturnError(&error).stringValue {
-            os_log("OSA: %{public}s", log: Log.check, type: .debug, outputString)
-            return outputString
-        } else if let error = error {
-            os_log("Failed to execute script\n%{public}@", log: Log.check, type: .error, error.description)
-        }
-    }
-
-    return nil
+    let out = runCMD(app: "/usr/bin/osascript", args: ["-e", appleScript])
+    return out
 }
 
 func lsof(withCommand cmd: String, withPort port: Int) -> Bool {

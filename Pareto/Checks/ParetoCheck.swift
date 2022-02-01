@@ -155,6 +155,11 @@ extension ParetoCheck {
         return dictionary
     }
 
+    func readDefaultsNative(path: String, key: String) -> String? {
+        let output = runCMD(app: "/usr/bin/defaults", args: ["read", path, key])
+        return output.contains("does not exist") ? nil : output.trim()
+    }
+
     func appVersion(path: String, key: String = "CFBundleShortVersionString") -> String? {
         guard let dictionary = NSDictionary(contentsOfFile: path) else {
             os_log("Failed reading %{public}s", path)
