@@ -26,7 +26,6 @@ enum Cipher: String {
 struct KeyInfo: Equatable, ExpressibleByStringLiteral {
     var strength: Int = 0
     var signature: String = ""
-    var owner: String = ""
     var cipher = Cipher.RSA
 
     // MARK: - Equatable Methods
@@ -39,11 +38,11 @@ struct KeyInfo: Equatable, ExpressibleByStringLiteral {
 
     public init(stringLiteral value: String) {
         let components = value.components(separatedBy: " ")
-        if components.count == 4 {
+        if components.count >= 4 {
+            let rawCipher = components.last!.strip().uppercased()
             strength = Int(components[0]) ?? 0
             signature = components[1]
-            owner = components[2]
-            cipher = Cipher(rawValue: components[3].strip().uppercased()) ?? Cipher.RSA
+            cipher = Cipher(rawValue: rawCipher) ?? Cipher.RSA
         }
     }
 
