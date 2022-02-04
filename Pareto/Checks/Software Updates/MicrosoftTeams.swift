@@ -28,7 +28,7 @@ class AppMicrosoftTeamsCheck: AppCheck {
     }
 
     override func getLatestVersion(completion: @escaping (String) -> Void) {
-        let url = "https://macadmins.software/latest.xml"
+        let url = viaEdgeCache("https://macadmins.software/latest.xml")
         let packageRegex = Regex("<package>(.*)</package>")
         let versionRegex = Regex("<cfbundleversion>(\\d+)</cfbundleversion>")
 

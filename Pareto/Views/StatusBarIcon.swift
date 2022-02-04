@@ -38,10 +38,8 @@ struct StatusBarIcon: View {
                         .blur(radius: 0.8)
                         .scaleEffect(x: 0.5, y: 0.5, anchor: .center)
                 }.onDisappear {
-      
                     self.isBlinking = true
                     self.isBlinkingState = statusBarModel.state == StatusBarState.warning ? StatusBarState.warning : StatusBarState.allOk
-                    
                 }
 
             } else {
@@ -70,7 +68,7 @@ struct StatusBarIcon: View {
                 } else {
                     Image(statusBarModel.state.rawValue)
                         .resizable()
-                        .frame(width: 22, height: 20, alignment: .center).onAppear{
+                        .frame(width: 22, height: 20, alignment: .center).onAppear {
                             DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
                                 if statusBarModel.state == .allOk {
                                     statusBarModel.state = .idle

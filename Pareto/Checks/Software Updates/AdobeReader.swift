@@ -24,7 +24,7 @@ class AdobeReaderCheck: AppCheck {
     }
 
     override func getLatestVersion(completion: @escaping (String) -> Void) {
-        let url = "https://helpx.adobe.com/acrobat/release-note/release-notes-acrobat-reader.html"
+        let url = viaEdgeCache("https://helpx.adobe.com/acrobat/release-note/release-notes-acrobat-reader.html")
         let linksRegex = Regex("<a .+ReleaseNotesDC.+>(.+)</a>")
         let versionRegex = Regex(".+\\((.+)\\)")
         os_log("Requesting %{public}s", url)

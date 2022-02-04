@@ -21,7 +21,7 @@ class AppSlackCheck: AppCheck {
     }
 
     override func getLatestVersion(completion: @escaping (String) -> Void) {
-        let url = "https://slack.com/release-notes/mac"
+        let url = viaEdgeCache("https://slack.com/release-notes/mac")
         let versionRegex = Regex("<h2>Slack ?([\\.\\d]+)</h2>")
         os_log("Requesting %{public}s", url)
         AF.request(url).responseString(queue: AppCheck.queue, completionHandler: { response in

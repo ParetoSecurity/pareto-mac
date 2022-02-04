@@ -65,3 +65,10 @@ func memoize<Input: Hashable, Output>(_ function: @escaping (Input) -> Output) -
         return result
     }
 }
+
+func viaEdgeCache(_ url: String) -> String {
+    if AppInfo.Flags.useEdgeCache {
+        return url.replacingOccurrences(of: "https://", with: "https://pareto-cache.team-niteo.workers.dev/")
+    }
+    return url
+}

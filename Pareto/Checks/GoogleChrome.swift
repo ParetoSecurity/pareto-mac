@@ -50,7 +50,7 @@ class AppGoogleChromeCheck: AppCheck {
     }
 
     override func getLatestVersion(completion: @escaping (String) -> Void) {
-        let url = "https://versionhistory.googleapis.com/v1/chrome/platforms/mac/channels/stable/versions"
+        let url = viaEdgeCache("https://versionhistory.googleapis.com/v1/chrome/platforms/mac/channels/stable/versions")
         os_log("Requesting %{public}s", url)
         AF.request(url).responseDecodable(of: GoogleResponse.self, queue: AppCheck.queue, completionHandler: { response in
             if response.error == nil {

@@ -34,7 +34,7 @@ class AppLibreOfficeCheck: AppCheck {
     }
 
     func getLatestVersions(completion: @escaping ([String]) -> Void) {
-        let url = "https://www.libreoffice.org/download/download/"
+        let url = viaEdgeCache("https://www.libreoffice.org/download/download/")
         os_log("Requesting %{public}s", url)
         let versionRegex = Regex("<span class=\"dl_version_number\">?([\\.\\d]+)</span>")
         AF.request(url).responseString(queue: AppCheck.queue, completionHandler: { response in

@@ -149,7 +149,7 @@ class AppCheck: ParetoCheck, AppCheckProtocol {
 
     func getLatestVersion(completion: @escaping (String) -> Void) {
         if sparkleURL.isEmpty {
-            let url = "https://itunes.apple.com/lookup?bundleId=\(appBundle)&country=us&entity=macSoftware&limit=1"
+            let url = viaEdgeCache("https://itunes.apple.com/lookup?bundleId=\(appBundle)&country=us&entity=macSoftware&limit=1")
             os_log("Requesting %{public}s", url)
             AF.request(url).responseDecodable(of: AppStoreResponse.self, queue: AppCheck.queue, completionHandler: { response in
                 if response.error == nil {

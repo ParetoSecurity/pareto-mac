@@ -26,7 +26,7 @@ class AppLuLuCheck: AppCheck {
     }
 
     override func getLatestVersion(completion: @escaping (String) -> Void) {
-        let url = "https://objective-see.com/products/changelogs/LuLu.txt"
+        let url = viaEdgeCache("https://objective-see.com/products/changelogs/LuLu.txt")
         let versionRegex = Regex("VERSION ([\\.\\d]+) ")
         os_log("Requesting %{public}s", url)
 

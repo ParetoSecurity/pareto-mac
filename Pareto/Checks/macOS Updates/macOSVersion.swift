@@ -30,7 +30,7 @@ class MacOSVersionCheck: ParetoCheck {
     }
 
     func getLatestVersion(doc: String, completion: @escaping (String) -> Void) {
-        let url = "https://support.apple.com/en-us/\(doc)"
+        let url = viaEdgeCache("https://support.apple.com/en-us/\(doc)")
         let versionRegex = Regex("<h2.*>macOS.+ ([\\.\\d]+)<\\/h2>")
         os_log("Requesting %{public}s", url)
         AF.request(url).responseString(queue: AppCheck.queue, completionHandler: { response in

@@ -26,7 +26,7 @@ class AppSignalCheck: AppCheck {
     }
 
     override func getLatestVersion(completion: @escaping (String) -> Void) {
-        let url = "https://updates.signal.org/desktop/latest-mac.yml"
+        let url = viaEdgeCache("https://updates.signal.org/desktop/latest-mac.yml")
         let versionRegex = Regex("version: ?([\\.\\d]+)")
         os_log("Requesting %{public}s", url)
 

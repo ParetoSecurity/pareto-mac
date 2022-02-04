@@ -170,7 +170,7 @@ class StatusBarController: NSObject, NSMenuDelegate {
     }
 
     func menuDidClose(_: NSMenu) {
-        if self.statusBarModel.isRunning{
+        if statusBarModel.isRunning {
             return
         }
         if claimsPassed {

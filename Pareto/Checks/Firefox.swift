@@ -38,7 +38,7 @@ class AppFirefoxCheck: AppCheck {
     }
 
     override func getLatestVersion(completion: @escaping (String) -> Void) {
-        let url = "https://product-details.mozilla.org/1.0/firefox_history_stability_releases.json"
+        let url = viaEdgeCache("https://product-details.mozilla.org/1.0/firefox_history_stability_releases.json")
         os_log("Requesting %{public}s", url)
         AF.request(url).responseDecodable(of: FirefoxVersions.self, queue: AppCheck.queue, completionHandler: { response in
             if response.error == nil {

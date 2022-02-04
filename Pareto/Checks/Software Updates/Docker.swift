@@ -24,7 +24,7 @@ class AppDockerCheck: AppCheck {
     }
 
     override func getLatestVersion(completion: @escaping (String) -> Void) {
-        let url = "https://raw.githubusercontent.com/docker/docker.github.io/master/desktop/mac/release-notes/index.md"
+        let url = viaEdgeCache("https://raw.githubusercontent.com/docker/docker.github.io/master/desktop/mac/release-notes/index.md")
         let versionRegex = Regex("## Docker Desktop ([\\d.]+)")
         os_log("Requesting %{public}s", url)
         AF.request(url).responseString(queue: AppCheck.queue, completionHandler: { response in

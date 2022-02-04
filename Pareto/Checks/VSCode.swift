@@ -26,7 +26,7 @@ class AppVSCodeCheck: AppCheck {
     }
 
     override func getLatestVersion(completion: @escaping (String) -> Void) {
-        let url = "https://code.visualstudio.com/updates/"
+        let url = viaEdgeCache("https://code.visualstudio.com/updates/")
         let versionRegex = Regex("<strong>Update ([\\.\\d]+)</strong>")
         os_log("Requesting %{public}s", url)
 

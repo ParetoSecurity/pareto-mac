@@ -14,6 +14,7 @@ class FlagsUpdater: ObservableObject {
     @Published var personalLicenseSharing: Bool = true
     @Published var dashboardMenu: Bool = true
     @Published var dashboardMenuAll: Bool = true
+    @Published var useEdgeCache: Bool = true
     @Published var teamAPI: Bool = true
     @Published var slowerTeamUpdate: Bool = false
     @Published var nagScreenDelayDays: Int = 7
@@ -50,6 +51,8 @@ class FlagsUpdater: ObservableObject {
                         self.personalLicenseSharing = (KeyValue[1] as NSString).boolValue
                     case "teamAPI":
                         self.teamAPI = (KeyValue[1] as NSString).boolValue
+                    case "useEdgeCache":
+                        self.useEdgeCache = (KeyValue[1] as NSString).boolValue
                     case "slowerTeamUpdate":
                         self.slowerTeamUpdate = (KeyValue[1] as NSString).boolValue
                     case "nagScreenDelayDays":

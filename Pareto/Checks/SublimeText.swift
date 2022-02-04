@@ -34,7 +34,7 @@ class AppSublimeTextCheck: AppCheck {
     }
 
     override func getLatestVersion(completion: @escaping (String) -> Void) {
-        let url = "https://www.sublimetext.com/download"
+        let url = viaEdgeCache("https://www.sublimetext.com/download")
         let versionRegex = Regex("Build (\\d+)")
         os_log("Requesting %{public}s", url)
 
