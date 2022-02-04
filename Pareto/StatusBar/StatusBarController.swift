@@ -81,7 +81,7 @@ class StatusBarController: NSObject, NSMenuDelegate {
             self.addApplicationItems()
 
             if self.claimsPassed {
-                self.statusBarModel.state = .ok
+                self.statusBarModel.state = .allOk
             } else {
                 self.statusBarModel.state = .warning
             }
@@ -120,7 +120,6 @@ class StatusBarController: NSObject, NSMenuDelegate {
 
         Defaults[.lastCheck] = Date().currentTimeMillis()
         DispatchQueue.main.async {
-            self.statusBarModel.state = .ok
             self.statusBarModel.isRunning = true
         }
 
@@ -157,7 +156,7 @@ class StatusBarController: NSObject, NSMenuDelegate {
         }
 
         // guard to prevent long running tasks
-        DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + 30) {
+        DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + 90) {
             // checks are still running kill them
             if self.statusBarModel.isRunning {
                 self.workItem?.cancel()
@@ -171,8 +170,11 @@ class StatusBarController: NSObject, NSMenuDelegate {
     }
 
     func menuDidClose(_: NSMenu) {
+        if self.statusBarModel.isRunning{
+            return
+        }
         if claimsPassed {
-            statusBarModel.state = .ok
+            statusBarModel.state = .idle
         } else {
             statusBarModel.state = .warning
         }
