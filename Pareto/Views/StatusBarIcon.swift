@@ -10,6 +10,7 @@ import SwiftUI
 enum StatusBarState: String {
     case ok = "IconGray"
     case warning = "IconOrange"
+    case allOk = "IconGreen"
 }
 
 class StatusBarModel: ObservableObject {
@@ -20,6 +21,7 @@ class StatusBarModel: ObservableObject {
 struct StatusBarIcon: View {
     @ObservedObject var statusBarModel: StatusBarModel
     @State private var isBlinking: Bool = false
+    @State private var isBlinkingState = StatusBarState.warning
     @State private var fadeOut: Bool = true
 
     var body: some View {
@@ -37,13 +39,14 @@ struct StatusBarIcon: View {
                         .scaleEffect(x: 0.5, y: 0.5, anchor: .center)
                 }.onDisappear {
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
-                        self.isBlinking = statusBarModel.state == StatusBarState.warning
+                        self.isBlinking = true
+                        self.isBlinkingState = statusBarModel.state == StatusBarState.warning ? StatusBarState.warning : StatusBarState.allOk
                     }
                 }
 
             } else {
                 if isBlinking {
-                    Image(statusBarModel.state.rawValue)
+                    Image(isBlinkingState.rawValue)
                         .resizable()
                         .frame(width: 22, height: 20, alignment: .center)
                         .opacity(fadeOut ? 1 : 0.5)
@@ -52,8 +55,9 @@ struct StatusBarIcon: View {
                             let timer = Timer.scheduledTimer(withTimeInterval: 0.6, repeats: true) { _ in
                                 self.fadeOut.toggle() // 1) fade out
                             }
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 15) {
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 7) {
                                 isBlinking = false
+                                isBlinkingState = StatusBarState.warning
                                 fadeOut = true
                                 timer.invalidate()
                             }
