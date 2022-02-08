@@ -20,11 +20,11 @@ class FirewallStealthCheck: ParetoCheck {
     }
 
     override public var isRunnable: Bool {
-        return FirewallCheck.sharedInstance.isActive
+        return FirewallCheck.sharedInstance.isActive && isActive
     }
 
     override public var showSettings: Bool {
-        return isRunnable
+        return FirewallCheck.sharedInstance.isActive
     }
 
     override func checkPasses() -> Bool {
