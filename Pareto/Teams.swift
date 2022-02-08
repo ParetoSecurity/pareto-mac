@@ -163,7 +163,7 @@ enum Team {
             parameters: report,
             encoder: JSONParameterEncoder.default,
             headers: headers
-        ).cURLDescription { cmd in
+        ){ $0.timeoutInterval = 5 }.cURLDescription { cmd in
             debugPrint(cmd)
         }.validate().response(queue: queue) { data in
             os_log("%s", log: Log.api, data.debugDescription)
@@ -178,7 +178,7 @@ enum Team {
             base + "/\(Defaults[.teamID])/settings",
             method: .get,
             headers: headers
-        ).cURLDescription { cmd in
+        ) { $0.timeoutInterval = 5 }.cURLDescription { cmd in
             debugPrint(cmd)
         }.validate().responseDecodable(of: DeviceSettings.self, queue: AppCheck.queue, completionHandler: { response in
             if response.error == nil {
@@ -235,9 +235,10 @@ func VerifyTeamTicket(withTicket data: String, publicKey key: String = rsaPublic
 class TeamSettingsUpdater: ObservableObject {
     @Published var disabledChecks: [String] = []
 
-    func update() {
+    func update(completion: @escaping () -> Void) {
         Team.settings { res in
             self.disabledChecks = res?.disabledList ?? []
+            completion()
         }
     }
 }

@@ -32,6 +32,10 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
     func runApp() {
         networkHandler.addObserver(observer: self)
 
+        if !Defaults[.teamID].isEmpty {
+            AppInfo.TeamSettings.update { os_log("Updated teams settings") }
+        }
+
         if Defaults.firstLaunch() {
             #if !DEBUG
                 LaunchAtLogin.isEnabled = true
@@ -128,6 +132,21 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
                 if self.networkHandler.currentStatus == .satisfied {
                     os_log("Running flags update")
                     AppInfo.Flags.update()
+                } else {
+                    os_log("Skipping flags update, no connection")
+                }
+            }
+            completion(.finished)
+        }
+        NSBackgroundActivityScheduler.repeating(withName: "TeamsRunner", withInterval: 60 * 59) { (completion: NSBackgroundActivityScheduler.CompletionHandler) in
+            DispatchQueue.global(qos: .background).async {
+                if self.networkHandler.currentStatus == .satisfied {
+                    if !Defaults[.teamID].isEmpty {
+                        os_log("Running flags update")
+                        AppInfo.TeamSettings.update { os_log("Updated teams settings") }
+                    } else {
+                        os_log("Skipping flags update, no team")
+                    }
                 } else {
                     os_log("Skipping flags update, no connection")
                 }

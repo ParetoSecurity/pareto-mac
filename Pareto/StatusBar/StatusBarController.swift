@@ -98,12 +98,6 @@ class StatusBarController: NSObject, NSMenuDelegate {
         if statusBarModel.isRunning {
             return
         }
-
-        // Update team configuration
-        if !Defaults[.teamID].isEmpty {
-            AppInfo.TeamSettings.update()
-        }
-
         // invalidate possible expired cache
         try! AppInfo.versionStorage.removeExpiredObjects()
 
@@ -132,6 +126,16 @@ class StatusBarController: NSObject, NSMenuDelegate {
             for claim in Claims.sorted {
                 claim.run()
             }
+        }
+
+        // Update team configuration
+        if !Defaults[.teamID].isEmpty {
+            let lock = DispatchSemaphore(value: 0)
+            AppInfo.TeamSettings.update {
+                os_log("Updated teams settings")
+                lock.signal()
+            }
+            lock.wait()
         }
 
         // update menus after checks have ran
