@@ -17,11 +17,11 @@ class SystemUpdatesCheck: ParetoCheck {
     }
 
     override var TitleON: String {
-        "System data files and security updates are auto-installed"
+        "Security updates are auto-installed"
     }
 
     override var TitleOFF: String {
-        "System data files and security updates are not auto-installed"
+        "Security updates are not auto-installed"
     }
 
     override func checkPasses() -> Bool {

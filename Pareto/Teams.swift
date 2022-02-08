@@ -12,6 +12,22 @@ import Foundation
 import JWTDecode
 import os.log
 
+// MARK: - DeviceSettings
+
+struct DeviceSettings: Codable {
+    let disabledChecks: [DisabledCheck]
+
+    var disabledList: [String] {
+        disabledChecks.map { $0.id }
+    }
+}
+
+// MARK: - DisabledCheck
+
+struct DisabledCheck: Codable {
+    let id: String
+}
+
 private extension JWT {
     var teamAuth: String? {
         return claim(name: "token").string
@@ -121,11 +137,15 @@ enum Team {
     private static let queue = DispatchQueue(label: "co.pareto.api", qos: .utility, attributes: .concurrent)
 
     static func link(withDevice device: ReportingDevice) -> DataRequest {
-        AF.request(
+        let headers: HTTPHeaders = [
+            "X-Device-Auth": Defaults[.teamAuth]
+        ]
+        return AF.request(
             base + "/\(Defaults[.teamID])/device",
             method: .put,
             parameters: device,
-            encoder: JSONParameterEncoder.default
+            encoder: JSONParameterEncoder.default,
+            headers: headers
         ).validate().cURLDescription { cmd in
             debugPrint(cmd)
         }.response(queue: queue) { data in
@@ -134,16 +154,40 @@ enum Team {
     }
 
     static func update(withReport report: Report) -> DataRequest {
-        AF.request(
+        let headers: HTTPHeaders = [
+            "X-Device-Auth": Defaults[.teamAuth]
+        ]
+        return AF.request(
             base + "/\(Defaults[.teamID])/device",
             method: .patch,
             parameters: report,
-            encoder: JSONParameterEncoder.default
+            encoder: JSONParameterEncoder.default,
+            headers: headers
         ).cURLDescription { cmd in
             debugPrint(cmd)
         }.validate().response(queue: queue) { data in
             os_log("%s", log: Log.api, data.debugDescription)
         }
+    }
+
+    static func settings(completion: @escaping (DeviceSettings?) -> Void) {
+        let headers: HTTPHeaders = [
+            "X-Device-Auth": Defaults[.teamAuth]
+        ]
+        AF.request(
+            base + "/\(Defaults[.teamID])/settings",
+            method: .get,
+            headers: headers
+        ).cURLDescription { cmd in
+            debugPrint(cmd)
+        }.validate().responseDecodable(of: DeviceSettings.self, queue: AppCheck.queue, completionHandler: { response in
+            if response.error == nil {
+                completion(response.value)
+            } else {
+                os_log("Device status failed: %{public}s", response.error.debugDescription)
+                completion(nil)
+            }
+        })
     }
 }
 
@@ -186,4 +230,14 @@ func VerifyTeamTicket(withTicket data: String, publicKey key: String = rsaPublic
         return ticket
     }
     throw License.Error.invalidLicense
+}
+
+class TeamSettingsUpdater: ObservableObject {
+    @Published var disabledChecks: [String] = []
+
+    func update() {
+        Team.settings { res in
+            self.disabledChecks = res?.disabledList ?? []
+        }
+    }
 }

@@ -99,6 +99,11 @@ class StatusBarController: NSObject, NSMenuDelegate {
             return
         }
 
+        // Update team configuration
+        if !Defaults[.teamID].isEmpty {
+            AppInfo.TeamSettings.update()
+        }
+
         // invalidate possible expired cache
         try! AppInfo.versionStorage.removeExpiredObjects()
 

@@ -120,6 +120,11 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
     }
 
     func run() {
+        if AppInfo.TeamSettings.disabledChecks.contains(where: { $0 == UUID }) {
+            os_log("Team disabled check %{public}s - %{public}s", log: Log.app, UUID, Title)
+            return
+        }
+
         if !isRunnable {
             os_log("Disabled check %{public}s - %{public}s", log: Log.app, UUID, Title)
             return

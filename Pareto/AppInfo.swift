@@ -27,7 +27,7 @@ enum AppInfo {
     static var Licensed = false
     static var secExp = false
     static let Flags = FlagsUpdater()
-
+    static let TeamSettings = TeamSettingsUpdater()
     static var utmSource: String {
         var source = "app"
 

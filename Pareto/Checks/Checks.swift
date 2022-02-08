@@ -34,10 +34,10 @@ enum Claims {
 
     static let all = [
         Claim(withTitle: "macOS Updates", withChecks: [
-            MacOSVersionCheck.sharedInstance,
-            SecurityUpdateCheck.sharedInstance,
-            AutomaticDownloadCheck.sharedInstance,
-            SystemUpdatesCheck.sharedInstance
+            MacOSVersionCheck.sharedInstance
+            // SecurityUpdateCheck.sharedInstance,
+            // AutomaticDownloadCheck.sharedInstance,
+            // SystemUpdatesCheck.sharedInstance
         ]),
         Claim(withTitle: "Access Security", withChecks: [
             AutologinCheck.sharedInstance,
