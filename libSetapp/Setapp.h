@@ -25,7 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /*! @brief Constant that shows library version
  */
-static NSString * const SCLibraryVersion = @"1.6.3";
+static NSString * const SCLibraryVersion = @"1.6.6";
 
 #pragma mark - Request authorization code
 
