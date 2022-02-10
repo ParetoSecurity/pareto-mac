@@ -163,7 +163,7 @@ enum Team {
             parameters: report,
             encoder: JSONParameterEncoder.default,
             headers: headers
-        ){ $0.timeoutInterval = 5 }.cURLDescription { cmd in
+        ) { $0.timeoutInterval = 5 }.cURLDescription { cmd in
             debugPrint(cmd)
         }.validate().response(queue: queue) { data in
             os_log("%s", log: Log.api, data.debugDescription)
@@ -238,6 +238,7 @@ class TeamSettingsUpdater: ObservableObject {
     func update(completion: @escaping () -> Void) {
         Team.settings { res in
             self.disabledChecks = res?.disabledList ?? []
+            os_log("Team disabled checks: %s", self.disabledChecks.debugDescription)
             completion()
         }
     }

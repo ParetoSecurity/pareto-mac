@@ -27,14 +27,18 @@ struct ChecksSettingsView: View {
                             Text(title).fontWeight(.bold).font(.system(size: 15)).padding([.top, .bottom], 10)
                         }
                         ForEach(claim.checksSorted, id: \.self) { check in
-                            Toggle(check.TitleON, isOn: Binding<Bool>(
-                                get: { check.isActive },
-                                set: {
-                                    check.isActive = $0
-                                    updater.toggle()
+                            VStack(alignment: .leading) {
+                                Toggle(check.TitleON, isOn: Binding<Bool>(
+                                    get: { check.isActive },
+                                    set: {
+                                        check.isActive = $0
+                                        updater.toggle()
+                                    }
+                                )).disabled(!check.showSettings)
+                                if check.teamDisabled {
+                                    Text("Enforced by your team rules.").font(.footnote)
                                 }
-                            )).disabled(!check.showSettings)
-                                .padding(.vertical, 5.0)
+                            }.padding(.vertical, 5.0)
                         }
                     }
                 }
