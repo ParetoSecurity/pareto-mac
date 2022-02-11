@@ -1,5 +1,5 @@
 //
-//  AutoUpdateCheck.swift
+//  AppStoreUpdatesCheck.swift
 //  Pareto Security
 //
 //  Created by Janez Troha on 15/07/2021.
@@ -10,24 +10,24 @@ import os.log
 import Regex
 import Version
 
-class SecurityUpdateCheck: ParetoCheck {
-    static let sharedInstance = SecurityUpdateCheck()
+class AutoUpdateCheck: ParetoCheck {
+    static let sharedInstance = AutoUpdateCheck()
     override var UUID: String {
-        "c491097c-6b8a-4cad-ae08-87c8bdfce100"
+        "dba1dea4-8c96-4b33-95f4-63d68bd0387e"
     }
-
+    
     override var TitleON: String {
-        "Security updates are enabled"
+        "macOS updates are auto-installed"
     }
-
+    
     override var TitleOFF: String {
-        "Security updates are disabled"
+        "macOS updates are not auto-installed"
     }
-
+    
     override func checkPasses() -> Bool {
         let path = "/Library/Preferences/com.apple.SoftwareUpdate"
-        if let enabled = readDefaultsNative(path: path, key: "AutomaticCheckEnabled") {
-            os_log("AutomaticCheckEnabled, status %{enabled}s", log: Log.check, enabled)
+        if let enabled = readDefaultsNative(path: path, key: "AutomaticallyInstallMacOSUpdates") {
+            os_log("AutomaticallyInstallMacOSUpdates, status %{enabled}s", log: Log.check, enabled)
             return enabled == "1"
         }
         // can also be missing if it never changed, but defaults to true

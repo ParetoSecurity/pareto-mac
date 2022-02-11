@@ -30,7 +30,7 @@ class AutomaticDownloadCheck: ParetoCheck {
             os_log("AutomaticDownload, status %{enabled}s", log: Log.check, enabled)
             return enabled == "1"
         }
-        // can also be missing if it never changed
+        // can also be missing if it never changed, but defaults to true
         return true
     }
 }

@@ -37,7 +37,8 @@ enum Claims {
             MacOSVersionCheck.sharedInstance,
             SecurityUpdateCheck.sharedInstance,
             AutomaticDownloadCheck.sharedInstance,
-            SystemUpdatesCheck.sharedInstance
+            SystemUpdatesCheck.sharedInstance,
+            AutoUpdateCheck.sharedInstance
         ]),
         Claim(withTitle: "Access Security", withChecks: [
             AutologinCheck.sharedInstance,
