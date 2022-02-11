@@ -10,27 +10,26 @@ import os.log
 import Regex
 import Version
 
-class AutomaticDownloadCheck: ParetoCheck {
-    static let sharedInstance = AutomaticDownloadCheck()
+class AutomaticInstallCheck: ParetoCheck {
+    static let sharedInstance = AutomaticInstallCheck()
     override var UUID: String {
         "1fa68e99-e152-4ac1-8362-e6b7c54cc4b4"
     }
 
     override var TitleON: String {
-        "Downloading new updates is enabled"
+        "Automatic install of new updates"
     }
 
     override var TitleOFF: String {
-        "Downloading new updates is disabled"
+        "Automatic install of new updates is disabled"
     }
 
     override func checkPasses() -> Bool {
         let path = "/Library/Preferences/com.apple.SoftwareUpdate"
-        if let enabled = readDefaultsNative(path: path, key: "AutomaticDownload") {
+        if let enabled = readDefaultsNative(path: path, key: "AutomaticallyInstallMacOSUpdates") {
             os_log("AutomaticDownload, status %{enabled}s", log: Log.check, enabled)
             return enabled == "1"
         }
-        // can also be missing if it never changed
-        return true
+        return false
     }
 }
