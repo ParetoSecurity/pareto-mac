@@ -26,16 +26,20 @@ class SystemUpdatesCheck: ParetoCheck {
 
     override func checkPasses() -> Bool {
         let path = "/Library/Preferences/com.apple.SoftwareUpdate"
-        var allOK = false
-        if let CriticalUpdateInstall = readDefaultsNative(path: path, key: "CriticalUpdateInstall") {
-            os_log("CriticalUpdateInstall, status %{enabled}s", log: Log.check, CriticalUpdateInstall)
-            allOK = (CriticalUpdateInstall == "1")
+
+        // can also be missing if it never changed, but defaults to true
+        var CriticalUpdateInstall = true
+        var ConfigDataInstall = true
+
+        if let CriticalUpdateInstallRaw = readDefaultsNative(path: path, key: "CriticalUpdateInstall") {
+            os_log("CriticalUpdateInstall, status %{enabled}s", log: Log.check, CriticalUpdateInstallRaw)
+            CriticalUpdateInstall = (CriticalUpdateInstallRaw == "1")
         }
-        if let ConfigDataInstall = readDefaultsNative(path: path, key: "ConfigDataInstall") {
-            os_log("ConfigDataInstall, status %{enabled}s", log: Log.check, ConfigDataInstall)
-            allOK = (ConfigDataInstall == "1")
+        if let ConfigDataInstallRaw = readDefaultsNative(path: path, key: "ConfigDataInstall") {
+            os_log("ConfigDataInstall, status %{enabled}s", log: Log.check, ConfigDataInstallRaw)
+            ConfigDataInstall = (ConfigDataInstallRaw == "1")
         }
 
-        return allOK
+        return CriticalUpdateInstall && ConfigDataInstall
     }
 }
