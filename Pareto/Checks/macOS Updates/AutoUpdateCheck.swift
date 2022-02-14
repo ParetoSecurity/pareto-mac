@@ -15,15 +15,15 @@ class AutoUpdateCheck: ParetoCheck {
     override var UUID: String {
         "dba1dea4-8c96-4b33-95f4-63d68bd0387e"
     }
-    
+
     override var TitleON: String {
         "macOS updates are auto-installed"
     }
-    
+
     override var TitleOFF: String {
         "macOS updates are not auto-installed"
     }
-    
+
     override func checkPasses() -> Bool {
         let path = "/Library/Preferences/com.apple.SoftwareUpdate"
         if let enabled = readDefaultsNative(path: path, key: "AutomaticallyInstallMacOSUpdates") {
