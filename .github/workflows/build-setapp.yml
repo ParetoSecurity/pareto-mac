@@ -51,7 +51,7 @@ jobs:
             ${{ runner.os }}-
 
       - name: Build
-        run: make archive-debug-setapp | xcpretty && exit ${PIPESTATUS[0]}
+        run: make archive-debug-setapp
 
       - name: Compress app for storage
         run: ditto -V -c -k --keepParent SetAppExport/Pareto\ Security.app ParetoSecuritySetApp.app.zip

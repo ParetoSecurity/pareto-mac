@@ -59,7 +59,7 @@ jobs:
         run: |
           sed -E -i '' 's/MARKETING_VERSION = .*;/MARKETING_VERSION = ${{ steps.release.outputs.tag }};/g' Pareto\ Security.xcodeproj/project.pbxproj
       - name: "Archive for dist"
-        run: make archive-release-setapp | xcpretty -tc && exit ${PIPESTATUS[0]}
+        run: make archive-release-setapp
 
       - name: "Upload debug symbols"
         run: make sentry-debug-upload-setapp
