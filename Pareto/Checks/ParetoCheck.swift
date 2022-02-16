@@ -104,6 +104,10 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
         return false
     }
 
+    public var CIS: String {
+        return "0"
+    }
+
     func configure() {
         UserDefaults.standard.register(defaults: [
             EnabledKey: true,

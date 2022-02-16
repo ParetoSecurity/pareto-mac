@@ -43,10 +43,10 @@ enum Claims {
         Claim(withTitle: "Access Security", withChecks: [
             AutologinCheck.sharedInstance,
             RequirePasswordToUnlock.sharedInstance,
-            ScreensaverPasswordCheck.sharedInstance,
             ScreensaverCheck.sharedInstance,
             SSHKeysCheck.sharedInstance,
-            SSHKeysStrengthCheck.sharedInstance
+            SSHKeysStrengthCheck.sharedInstance,
+            PasswordAfterSleepCheck.sharedInstance
         ]),
         Claim(withTitle: "Firewall & Sharing", withChecks: [
             FirewallCheck.sharedInstance,
