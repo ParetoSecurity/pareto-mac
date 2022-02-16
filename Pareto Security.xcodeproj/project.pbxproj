@@ -52,13 +52,12 @@
 		4F37E7192718122E00A2B254 /* RemoteManagment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F35395426E8AD4B008F5DD3 /* RemoteManagment.swift */; };
 		4F37E71A2718122E00A2B254 /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB7C68026AFF25300FB1C41 /* Date.swift */; };
 		4F37E71B2718122E00A2B254 /* Teams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F343A5E26F7A3D4007D2F7D /* Teams.swift */; };
-		4F37E71C2718122E00A2B254 /* ScreensaverPassword.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB405EE26A6FC4800267D5D /* ScreensaverPassword.swift */; };
 		4F37E71D2718122E00A2B254 /* Defaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F47220F26B08A0E0071CE2A /* Defaults.swift */; };
 		4F37E71E2718122E00A2B254 /* Autologin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F868DD026A5C51C005B876E /* Autologin.swift */; };
 		4F37E71F2718122E00A2B254 /* MediaShare.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F1AE88F26F9FFA60084A381 /* MediaShare.swift */; };
 		4F37E7202718122E00A2B254 /* ParetoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEBA2F1269CD48F009B2469 /* ParetoApp.swift */; };
 		4F37E7212718122E00A2B254 /* Flags.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FF22A6426F0CFA500500213 /* Flags.swift */; };
-		4F37E7222718122E00A2B254 /* PasswordFromLock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F84A94826CBE21300A1579D /* PasswordFromLock.swift */; };
+		4F37E7222718122E00A2B254 /* PasswordtoUnlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F84A94826CBE21300A1579D /* PasswordtoUnlock.swift */; };
 		4F37E7232718122E00A2B254 /* Bundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F14487B26D8EDB000A5BA34 /* Bundle.swift */; };
 		4F37E7242718122E00A2B254 /* WelcomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F8B01B126F4A6CB00EDE14B /* WelcomeView.swift */; };
 		4F37E7252718122E00A2B254 /* OpenWiFi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F5B20C027030BEB0015642A /* OpenWiFi.swift */; };
@@ -118,6 +117,8 @@
 		4F41831A2770F19D00EBAE4A /* macOSVersion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F4183192770F19D00EBAE4A /* macOSVersion.swift */; };
 		4F41831B2770F19D00EBAE4A /* macOSVersion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F4183192770F19D00EBAE4A /* macOSVersion.swift */; };
 		4F47221026B08A0E0071CE2A /* Defaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F47220F26B08A0E0071CE2A /* Defaults.swift */; };
+		4F4E286027BD748D006A18C1 /* PasswordAfterSleep.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F4E285F27BD748D006A18C1 /* PasswordAfterSleep.swift */; };
+		4F4E286127BD748D006A18C1 /* PasswordAfterSleep.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F4E285F27BD748D006A18C1 /* PasswordAfterSleep.swift */; };
 		4F56AB5B278C57F1001CAAEF /* TimeMachine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F56AB5A278C57F1001CAAEF /* TimeMachine.swift */; };
 		4F56AB5C278C57F1001CAAEF /* TimeMachine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F56AB5A278C57F1001CAAEF /* TimeMachine.swift */; };
 		4F56AB5E278C6DF5001CAAEF /* AdobeReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F56AB5D278C6DF5001CAAEF /* AdobeReader.swift */; };
@@ -161,7 +162,7 @@
 		4F84531026D634E5007C3B04 /* NSWorkspace.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F84530F26D634E5007C3B04 /* NSWorkspace.swift */; };
 		4F84531226D638C0007C3B04 /* NSBackgroundActivityScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F84531126D638C0007C3B04 /* NSBackgroundActivityScheduler.swift */; };
 		4F84A94426CBBA6900A1579D /* SettingsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F84A94326CBBA6900A1579D /* SettingsTests.swift */; };
-		4F84A94926CBE21300A1579D /* PasswordFromLock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F84A94826CBE21300A1579D /* PasswordFromLock.swift */; };
+		4F84A94926CBE21300A1579D /* PasswordtoUnlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F84A94826CBE21300A1579D /* PasswordtoUnlock.swift */; };
 		4F84A94C26CBE4AE00A1579D /* ViewInspector in Frameworks */ = {isa = PBXBuildFile; productRef = 4F84A94B26CBE4AE00A1579D /* ViewInspector */; };
 		4F868DCF26A591E6005B876E /* Firewall.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F868DCE26A591E6005B876E /* Firewall.swift */; };
 		4F868DD126A5C51C005B876E /* Autologin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F868DD026A5C51C005B876E /* Autologin.swift */; };
@@ -200,7 +201,6 @@
 		4FB11913274261A700B89634 /* AppProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB118FE2742518600B89634 /* AppProtocol.swift */; };
 		4FB11914274261D700B89634 /* CodeSignCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB11904274257B400B89634 /* CodeSignCheck.swift */; };
 		4FB11915274261D800B89634 /* CodeSignCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB11904274257B400B89634 /* CodeSignCheck.swift */; };
-		4FB405EF26A6FC4800267D5D /* ScreensaverPassword.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB405EE26A6FC4800267D5D /* ScreensaverPassword.swift */; };
 		4FB51A5727A94457003F528E /* SecurityUpdateCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB51A5627A94457003F528E /* SecurityUpdateCheck.swift */; };
 		4FB51A5827A94457003F528E /* SecurityUpdateCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB51A5627A94457003F528E /* SecurityUpdateCheck.swift */; };
 		4FB51A5A27A94F27003F528E /* SystemUpdatesCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB51A5927A94F27003F528E /* SystemUpdatesCheck.swift */; };
@@ -288,6 +288,7 @@
 		4F41831627707B0800EBAE4A /* StatusBarIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusBarIcon.swift; sourceTree = "<group>"; };
 		4F4183192770F19D00EBAE4A /* macOSVersion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = macOSVersion.swift; sourceTree = "<group>"; };
 		4F47220F26B08A0E0071CE2A /* Defaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Defaults.swift; sourceTree = "<group>"; };
+		4F4E285F27BD748D006A18C1 /* PasswordAfterSleep.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PasswordAfterSleep.swift; sourceTree = "<group>"; };
 		4F56AB5A278C57F1001CAAEF /* TimeMachine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimeMachine.swift; sourceTree = "<group>"; };
 		4F56AB5D278C6DF5001CAAEF /* AdobeReader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AdobeReader.swift; path = "Software Updates/AdobeReader.swift"; sourceTree = "<group>"; };
 		4F57135226F8A6AC004B4359 /* LicenseTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LicenseTest.swift; sourceTree = "<group>"; };
@@ -318,7 +319,7 @@
 		4F84530F26D634E5007C3B04 /* NSWorkspace.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSWorkspace.swift; sourceTree = "<group>"; };
 		4F84531126D638C0007C3B04 /* NSBackgroundActivityScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSBackgroundActivityScheduler.swift; sourceTree = "<group>"; };
 		4F84A94326CBBA6900A1579D /* SettingsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTests.swift; sourceTree = "<group>"; };
-		4F84A94826CBE21300A1579D /* PasswordFromLock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordFromLock.swift; sourceTree = "<group>"; };
+		4F84A94826CBE21300A1579D /* PasswordtoUnlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordtoUnlock.swift; sourceTree = "<group>"; };
 		4F868DCE26A591E6005B876E /* Firewall.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Firewall.swift; sourceTree = "<group>"; };
 		4F868DD026A5C51C005B876E /* Autologin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Autologin.swift; sourceTree = "<group>"; };
 		4F868DD226A5C751005B876E /* Screensaver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Screensaver.swift; sourceTree = "<group>"; };
@@ -340,7 +341,6 @@
 		4FB119022742525E00B89634 /* HelperAuth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelperAuth.swift; sourceTree = "<group>"; };
 		4FB11904274257B400B89634 /* CodeSignCheck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeSignCheck.swift; sourceTree = "<group>"; };
 		4FB119082742611600B89634 /* Launchd.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Launchd.plist; sourceTree = "<group>"; };
-		4FB405EE26A6FC4800267D5D /* ScreensaverPassword.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreensaverPassword.swift; sourceTree = "<group>"; };
 		4FB51A5627A94457003F528E /* SecurityUpdateCheck.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SecurityUpdateCheck.swift; sourceTree = "<group>"; };
 		4FB51A5927A94F27003F528E /* SystemUpdatesCheck.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SystemUpdatesCheck.swift; sourceTree = "<group>"; };
 		4FB51A5C27A94F7C003F528E /* AutomaticDownloadCheck.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AutomaticDownloadCheck.swift; sourceTree = "<group>"; };
@@ -470,9 +470,9 @@
 				4F91060227623E4B00D1A348 /* SSHKeys.swift */,
 				4F17270A2769F3410049B875 /* SSHKeysStrength.swift */,
 				4F868DD026A5C51C005B876E /* Autologin.swift */,
-				4FB405EE26A6FC4800267D5D /* ScreensaverPassword.swift */,
 				4F868DD226A5C751005B876E /* Screensaver.swift */,
-				4F84A94826CBE21300A1579D /* PasswordFromLock.swift */,
+				4F4E285F27BD748D006A18C1 /* PasswordAfterSleep.swift */,
+				4F84A94826CBE21300A1579D /* PasswordtoUnlock.swift */,
 			);
 			path = "Access Security";
 			sourceTree = "<group>";
@@ -482,8 +482,8 @@
 			children = (
 				4F35395426E8AD4B008F5DD3 /* RemoteManagment.swift */,
 				4F35395626E8AE02008F5DD3 /* RemoteLogin.swift */,
-				4F6A0E0D26CE484A003B00A3 /* PrinterSharingCheck.swift */,
 				4F6A0E0F26CE4868003B00A3 /* FileSharingCheck.swift */,
+				4F6A0E0D26CE484A003B00A3 /* PrinterSharingCheck.swift */,
 				4F868DCE26A591E6005B876E /* Firewall.swift */,
 				4F8ECA362798262F00361728 /* FirewallStealth.swift */,
 				4F1AE88F26F9FFA60084A381 /* MediaShare.swift */,
@@ -1002,6 +1002,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4F923CF32756920C00070551 /* iTerm.swift in Sources */,
+				4F4E286127BD748D006A18C1 /* PasswordAfterSleep.swift in Sources */,
 				4F37E70A2718122E00A2B254 /* ButtonStyle.swift in Sources */,
 				4F37E70B2718122E00A2B254 /* ParetoCheck.swift in Sources */,
 				4FE23EEE276BB13700CA9BA0 /* FollowView.swift in Sources */,
@@ -1033,7 +1034,6 @@
 				4F56AB5F278C6DF5001CAAEF /* AdobeReader.swift in Sources */,
 				4F37E71B2718122E00A2B254 /* Teams.swift in Sources */,
 				4F74B7D7275114EA00F1FC11 /* Dashlane.swift in Sources */,
-				4F37E71C2718122E00A2B254 /* ScreensaverPassword.swift in Sources */,
 				4F74B7D9275114EA00F1FC11 /* Enpass.swift in Sources */,
 				4F3DCFE4274FE4E000F1CB55 /* Cyberduck.swift in Sources */,
 				4F38D8C9273AC5AE00671756 /* IntroView.swift in Sources */,
@@ -1047,7 +1047,7 @@
 				4F37E7202718122E00A2B254 /* ParetoApp.swift in Sources */,
 				4FB5BD2B2760CA9D004E404C /* LibreOffice.swift in Sources */,
 				4F37E7212718122E00A2B254 /* Flags.swift in Sources */,
-				4F37E7222718122E00A2B254 /* PasswordFromLock.swift in Sources */,
+				4F37E7222718122E00A2B254 /* PasswordtoUnlock.swift in Sources */,
 				4F37E7232718122E00A2B254 /* Bundle.swift in Sources */,
 				4FB5BD2E2760E507004E404C /* SublimeText.swift in Sources */,
 				4F3DCFE6274FE4E000F1CB55 /* NordLayer.swift in Sources */,
@@ -1137,6 +1137,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4F923CF22756920C00070551 /* iTerm.swift in Sources */,
+				4F4E286027BD748D006A18C1 /* PasswordAfterSleep.swift in Sources */,
 				4FB0416126F71CC0003657BE /* ButtonStyle.swift in Sources */,
 				4F5E888026A053A9005271FB /* ParetoCheck.swift in Sources */,
 				4FE23EED276BB13700CA9BA0 /* FollowView.swift in Sources */,
@@ -1168,7 +1169,6 @@
 				4F56AB5E278C6DF5001CAAEF /* AdobeReader.swift in Sources */,
 				4F343A5F26F7A3D4007D2F7D /* Teams.swift in Sources */,
 				4F74B7D6275114EA00F1FC11 /* Dashlane.swift in Sources */,
-				4FB405EF26A6FC4800267D5D /* ScreensaverPassword.swift in Sources */,
 				4F74B7D8275114EA00F1FC11 /* Enpass.swift in Sources */,
 				4F3DCFE3274FE4E000F1CB55 /* Cyberduck.swift in Sources */,
 				4F38D8C8273AC5AE00671756 /* IntroView.swift in Sources */,
@@ -1182,7 +1182,7 @@
 				4FEBA2F2269CD48F009B2469 /* ParetoApp.swift in Sources */,
 				4FB5BD2A2760CA9D004E404C /* LibreOffice.swift in Sources */,
 				4FF22A6526F0CFA500500213 /* Flags.swift in Sources */,
-				4F84A94926CBE21300A1579D /* PasswordFromLock.swift in Sources */,
+				4F84A94926CBE21300A1579D /* PasswordtoUnlock.swift in Sources */,
 				4F14487C26D8EDB000A5BA34 /* Bundle.swift in Sources */,
 				4FB5BD2D2760E507004E404C /* SublimeText.swift in Sources */,
 				4F3DCFE5274FE4E000F1CB55 /* NordLayer.swift in Sources */,
