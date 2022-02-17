@@ -24,7 +24,7 @@ class PasswordAfterSleepCheck: ParetoCheck {
         "1-5.8"
     }
 
-    @objc func getGracePeriod() -> Int {
+    @objc func getGracePeriod() -> Int64 {
         // credit Victor Vrantchan
         let handle = dlopen(
             "/System/Library/PrivateFrameworks/MobileKeyBag.framework/Versions/Current/MobileKeyBag",
@@ -34,11 +34,12 @@ class PasswordAfterSleepCheck: ParetoCheck {
         typealias GetterFunction = @convention(c) (Any?) -> NSDictionary
         let MKBDeviceGetGracePeriod = unsafeBitCast(symbol, to: GetterFunction.self)
         let x = MKBDeviceGetGracePeriod([:])
-        return x["GracePeriod"] as? Int ?? 0
+        return x["GracePeriod"] as? Int64 ?? 0
     }
 
     override func checkPasses() -> Bool {
         let out = getGracePeriod()
-        return out > 0 && out <= 60 * 15
+        // when disabled 2147483647 == max 32bit integer
+        return out >= 0 && out <= 60 * 15
     }
 }
