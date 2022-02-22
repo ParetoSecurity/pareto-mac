@@ -109,7 +109,7 @@ public class AppUpdater {
                     // Success
                     if let statusCode = (response as? HTTPURLResponse)?.statusCode {
                         if statusCode != 200 {
-                            os_log("Failed to downlaod \(asset.browser_download_url). Status code: \(statusCode)")
+                            os_log("Failed to download \(asset.browser_download_url). Status code: \(statusCode)")
                             lock.signal()
                             return
                         }
@@ -133,7 +133,7 @@ public class AppUpdater {
                             lock.signal()
                         }
                     } else {
-                        os_log("Could not parse resposne of \(asset.browser_download_url)")
+                        os_log("Could not parse response of \(asset.browser_download_url)")
                         lock.signal()
                     }
                 } else {
@@ -227,8 +227,8 @@ private func unzip(_ url: URL, contentType: Release.Asset.ContentType) -> URL {
         proc.arguments = [url.path]
     }
     func findApp() throws -> URL? {
-        let cnts = try FileManager.default.contentsOfDirectory(at: url.deletingLastPathComponent(), includingPropertiesForKeys: [.isDirectoryKey], options: .skipsSubdirectoryDescendants)
-        for url in cnts {
+        let files = try FileManager.default.contentsOfDirectory(at: url.deletingLastPathComponent(), includingPropertiesForKeys: [.isDirectoryKey], options: .skipsSubdirectoryDescendants)
+        for url in files {
             guard url.pathExtension == "app" else { continue }
             guard let foo = try url.resourceValues(forKeys: [.isDirectoryKey]).isDirectory, foo else { continue }
             return url

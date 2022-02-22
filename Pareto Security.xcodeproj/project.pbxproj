@@ -187,7 +187,6 @@
 		4FB118F92742506900B89634 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB118F82742506900B89634 /* main.swift */; };
 		4FB118FB274250AB00B89634 /* ParetoHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB118FA274250AB00B89634 /* ParetoHelper.swift */; };
 		4FB118FD274250D100B89634 /* ParetoHelperProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB118FC274250D100B89634 /* ParetoHelperProtocol.swift */; };
-		4FB118FF2742518600B89634 /* AppProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB118FE2742518600B89634 /* AppProtocol.swift */; };
 		4FB119032742525E00B89634 /* HelperAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB119022742525E00B89634 /* HelperAuth.swift */; };
 		4FB11905274257B400B89634 /* CodeSignCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB11904274257B400B89634 /* CodeSignCheck.swift */; };
 		4FB119092742611600B89634 /* Launchd.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4FB119082742611600B89634 /* Launchd.plist */; };
@@ -197,8 +196,6 @@
 		4FB1190D2742615800B89634 /* ParetoHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB118FA274250AB00B89634 /* ParetoHelper.swift */; };
 		4FB1190E2742615A00B89634 /* ParetoHelperProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB118FC274250D100B89634 /* ParetoHelperProtocol.swift */; };
 		4FB1190F2742615B00B89634 /* ParetoHelperProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB118FC274250D100B89634 /* ParetoHelperProtocol.swift */; };
-		4FB11912274261A500B89634 /* AppProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB118FE2742518600B89634 /* AppProtocol.swift */; };
-		4FB11913274261A700B89634 /* AppProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB118FE2742518600B89634 /* AppProtocol.swift */; };
 		4FB11914274261D700B89634 /* CodeSignCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB11904274257B400B89634 /* CodeSignCheck.swift */; };
 		4FB11915274261D800B89634 /* CodeSignCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB11904274257B400B89634 /* CodeSignCheck.swift */; };
 		4FB51A5727A94457003F528E /* SecurityUpdateCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB51A5627A94457003F528E /* SecurityUpdateCheck.swift */; };
@@ -337,7 +334,6 @@
 		4FB118F82742506900B89634 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		4FB118FA274250AB00B89634 /* ParetoHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParetoHelper.swift; sourceTree = "<group>"; };
 		4FB118FC274250D100B89634 /* ParetoHelperProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParetoHelperProtocol.swift; sourceTree = "<group>"; };
-		4FB118FE2742518600B89634 /* AppProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppProtocol.swift; sourceTree = "<group>"; };
 		4FB119022742525E00B89634 /* HelperAuth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelperAuth.swift; sourceTree = "<group>"; };
 		4FB11904274257B400B89634 /* CodeSignCheck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeSignCheck.swift; sourceTree = "<group>"; };
 		4FB119082742611600B89634 /* Launchd.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Launchd.plist; sourceTree = "<group>"; };
@@ -670,7 +666,6 @@
 				4FEBA2F5269CD48F009B2469 /* Assets.xcassets */,
 				4FEBA2FA269CD48F009B2469 /* Info.plist */,
 				4FEBA2FB269CD48F009B2469 /* Pareto.entitlements */,
-				4FB118FE2742518600B89634 /* AppProtocol.swift */,
 				4F57135A26F8C5D7004B4359 /* AppHandlers.swift */,
 				4FEBA2F1269CD48F009B2469 /* ParetoApp.swift */,
 				4F343A5E26F7A3D4007D2F7D /* Teams.swift */,
@@ -1059,7 +1054,6 @@
 				4F37E7262718122E00A2B254 /* IntegrationCheck.swift in Sources */,
 				4F3DCFDC274FE4E000F1CB55 /* Slack.swift in Sources */,
 				4F37E7272718122E00A2B254 /* Boot.swift in Sources */,
-				4FB11913274261A700B89634 /* AppProtocol.swift in Sources */,
 				4FB51A5E27A94F7C003F528E /* AutomaticDownloadCheck.swift in Sources */,
 				4F37E7282718122E00A2B254 /* Claim.swift in Sources */,
 				4F37E7292718122E00A2B254 /* ChecksSettingsView.swift in Sources */,
@@ -1111,7 +1105,6 @@
 				4FB118FD274250D100B89634 /* ParetoHelperProtocol.swift in Sources */,
 				4FB11905274257B400B89634 /* CodeSignCheck.swift in Sources */,
 				4FB118F92742506900B89634 /* main.swift in Sources */,
-				4FB118FF2742518600B89634 /* AppProtocol.swift in Sources */,
 				4FB119032742525E00B89634 /* HelperAuth.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1194,7 +1187,6 @@
 				4F6A92E826C52210006C2F2D /* IntegrationCheck.swift in Sources */,
 				4F3DCFDB274FE4E000F1CB55 /* Slack.swift in Sources */,
 				4F0371BC26CD00B700B35E43 /* Boot.swift in Sources */,
-				4FB11912274261A500B89634 /* AppProtocol.swift in Sources */,
 				4FB51A5D27A94F7C003F528E /* AutomaticDownloadCheck.swift in Sources */,
 				4F3EF24326CA859500841375 /* Claim.swift in Sources */,
 				4F24A09426EB73C80036F748 /* ChecksSettingsView.swift in Sources */,

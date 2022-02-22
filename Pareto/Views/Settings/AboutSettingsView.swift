@@ -19,7 +19,17 @@ struct AboutSettingsView: View {
         case NewVersion = "New version found"
         case Installing = "Installing new update"
         case Updated = "App is up to date"
-        case Failed = "Failed to update, download manualy"
+        case Failed = "Failed to update, download manually"
+    }
+
+    func copy() {
+        var logs = [String]()
+        logs.append("Version: \(AppInfo.getVersions())")
+        logs.append("Location: \(Bundle.main.path)")
+        logs.append("Build: \(AppInfo.utmSource)")
+
+        NSPasteboard.general.clearContents()
+        NSPasteboard.general.setString(logs.joined(separator: "\n"))
     }
 
     var body: some View {
@@ -51,7 +61,9 @@ struct AboutSettingsView: View {
                      destination: URL(string: "https://paretosecurity.com")!).font(.title)
 
                 VStack(alignment: .leading, spacing: 0) {
-                    Text("Version: \(AppInfo.appVersion) - \(AppInfo.buildVersion)")
+                    Text("Version: \(AppInfo.appVersion) - \(AppInfo.buildVersion)").contextMenu(ContextMenu(menuItems: {
+                        Button("Copy diagnostic data", action: copy)
+                    }))
                     Text("Channel: \(AppInfo.utmSource)")
                     #if !SETAPP_ENABLED
                         HStack(spacing: 10) {
