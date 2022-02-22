@@ -42,25 +42,12 @@ jobs:
       - name: Cache SPM modules
         uses: actions/cache@v2
         env:
-          cache-name: cache-spm
+          cache-name: cache-spm-v2
         with:
           path: SourcePackages
           key: ${{ runner.os }}-spm-${{ env.cache-name }}-${{ hashFiles('Pareto Security.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved') }}
           restore-keys: |
             ${{ runner.os }}-spm-${{ env.cache-name }}-
-            ${{ runner.os }}-spm-
-            ${{ runner.os }}-
-      - name: Cache DerivedData
-        uses: actions/cache@v2
-        env:
-          cache-name: cache-build
-        with:
-          path: /Users/runner/Library/Developer/Xcode/DerivedData/
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('Pareto Security.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved') }}
-          restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-
-            ${{ runner.os }}-build-
-            ${{ runner.os }}-
       - name: Patch permissions kTCCServiceAppleEvents
         run: |
           epochdate=$(($(date +'%s * 1000 + %-N / 1000000')))
@@ -71,16 +58,16 @@ jobs:
           sudo sqlite3 "$HOME/Library/Application Support/com.apple.TCC/TCC.db" "$tcc_service_developer_tool"
           sudo sqlite3 "$HOME/Library/Application Support/com.apple.TCC/TCC.db" "$tcc_update"
       - name: Tests
-        run: make test
+        run: make test | xcpretty && exit ${PIPESTATUS[0]}
       - name: Update coverage
         run: bash <(curl -s https://codecov.io/bash)
       - name: Install xcparse
-        run: brew install chargepoint/xcparse/xcparse
+        run: brew install mint
       - name: Gather screenshots
         run: |
           mkdir -p "${{ runner.temp }}/screenshots/"
           # export the screenshots
-          xcparse screenshots --test ./test.xcresult '${{ runner.temp }}/screenshots'
+          mint run ChargePoint/xcparse xcparse screenshots --test ./test.xcresult '${{ runner.temp }}/screenshots'
       - name: Upload screenshots
         uses: actions/upload-artifact@v2
         with:
@@ -95,7 +82,7 @@ jobs:
   build:
     name: Build and Archive Native
     runs-on: macos-11
-    timeout-minutes: 10
+    timeout-minutes: 15
     needs: lint
     permissions:
       issues: write
@@ -127,27 +114,23 @@ jobs:
       - name: Cache SPM modules
         uses: actions/cache@v2
         env:
-          cache-name: cache-spm
+          cache-name: cache-spm-v2
         with:
           path: SourcePackages
           key: ${{ runner.os }}-spm-${{ env.cache-name }}-${{ hashFiles('Pareto Security.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved') }}
           restore-keys: |
             ${{ runner.os }}-spm-${{ env.cache-name }}-
-            ${{ runner.os }}-spm-
-            ${{ runner.os }}-
       - name: Cache DerivedData
         uses: actions/cache@v2
         env:
-          cache-name: cache-build
+          cache-name: build_derived_data
         with:
-          path: /Users/runner/Library/Developer/Xcode/DerivedData/
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('Pareto Security.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved') }}
+          path: ~/Library/Developer/Xcode/DerivedData
+          key: ${{ runner.os }}-${{ env.cache-name }}
           restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-
-            ${{ runner.os }}-build-
-            ${{ runner.os }}-
+            ${{ runner.os }}-${{ env.cache-name }}-
       - name: Build
-        run: make archive-debug
+        run: make archive-debug | xcpretty && exit ${PIPESTATUS[0]}
       - name: Compress app for storage
         run: ditto -V -c -k --keepParent Export/Pareto\ Security.app ParetoSecurity.app.zip
       - name: Upload App to Artifacts
@@ -158,7 +141,7 @@ jobs:
   build-setapp:
     name: Build and Archive SetApp
     runs-on: macos-11
-    timeout-minutes: 10
+    timeout-minutes: 15
     needs: lint
     permissions:
       issues: write
@@ -190,27 +173,23 @@ jobs:
       - name: Cache SPM modules
         uses: actions/cache@v2
         env:
-          cache-name: cache-spm
+          cache-name: cache-spm-v2
         with:
           path: SourcePackages
           key: ${{ runner.os }}-spm-${{ env.cache-name }}-${{ hashFiles('Pareto Security.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved') }}
           restore-keys: |
             ${{ runner.os }}-spm-${{ env.cache-name }}-
-            ${{ runner.os }}-spm-
-            ${{ runner.os }}-
       - name: Cache DerivedData
         uses: actions/cache@v2
         env:
-          cache-name: cache-build
+          cache-name: setapp_build_derived_data
         with:
-          path: /Users/runner/Library/Developer/Xcode/DerivedData/
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('Pareto Security.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved') }}
+          path: ~/Library/Developer/Xcode/DerivedData
+          key: ${{ runner.os }}-${{ env.cache-name }}
           restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-
-            ${{ runner.os }}-build-
-            ${{ runner.os }}-
+            ${{ runner.os }}-${{ env.cache-name }}-
       - name: Build
-        run: make archive-debug-setapp
+        run: make archive-debug-setapp | xcpretty && exit ${PIPESTATUS[0]}
 
       - name: Compress app for storage
         run: ditto -V -c -k --keepParent SetAppExport/Pareto\ Security.app ParetoSecuritySetApp.app.zip

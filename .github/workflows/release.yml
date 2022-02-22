@@ -45,14 +45,12 @@ jobs:
       - name: Cache SPM modules
         uses: actions/cache@v2
         env:
-          cache-name: cache-spm
+          cache-name: cache-spm-v2
         with:
           path: SourcePackages
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('Pareto Security.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved') }}
+          key: ${{ runner.os }}-spm-${{ env.cache-name }}-${{ hashFiles('Pareto Security.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved') }}
           restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-
-            ${{ runner.os }}-build-
-            ${{ runner.os }}-
+            ${{ runner.os }}-spm-${{ env.cache-name }}-
       - name: Patch version from release
         run: |
           sed -E -i '' 's/MARKETING_VERSION = .*;/MARKETING_VERSION = ${{ steps.release.outputs.tag }};/g' Pareto\ Security.xcodeproj/project.pbxproj
@@ -158,15 +156,12 @@ jobs:
       - name: Cache SPM modules
         uses: actions/cache@v2
         env:
-          cache-name: cache-spm
+          cache-name: cache-spm-v2
         with:
           path: SourcePackages
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('Pareto Security.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved') }}
+          key: ${{ runner.os }}-spm-${{ env.cache-name }}-${{ hashFiles('Pareto Security.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved') }}
           restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-
-            ${{ runner.os }}-build-
-            ${{ runner.os }}-
-
+            ${{ runner.os }}-spm-${{ env.cache-name }}-
       - name: Patch version from release
         run: |
           sed -E -i '' 's/MARKETING_VERSION = .*;/MARKETING_VERSION = ${{ steps.release.outputs.tag }};/g' Pareto\ Security.xcodeproj/project.pbxproj
