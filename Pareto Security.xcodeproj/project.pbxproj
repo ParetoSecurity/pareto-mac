@@ -158,6 +158,8 @@
 		4F7739F7271EBC2F008B1584 /* Sentry in Frameworks */ = {isa = PBXBuildFile; productRef = 4F7739F6271EBC2F008B1584 /* Sentry */; };
 		4F79F78D273BF6300082A5EB /* ChecksView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F79F78C273BF6300082A5EB /* ChecksView.swift */; };
 		4F79F78E273BF6300082A5EB /* ChecksView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F79F78C273BF6300082A5EB /* ChecksView.swift */; };
+		4F7F3E7D27C4E545003A035D /* AppProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F7F3E7C27C4E545003A035D /* AppProtocol.swift */; };
+		4F7F3E7E27C4E545003A035D /* AppProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F7F3E7C27C4E545003A035D /* AppProtocol.swift */; };
 		4F81C10826EB5D270065F548 /* URL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F81C10726EB5D270065F548 /* URL.swift */; };
 		4F84531026D634E5007C3B04 /* NSWorkspace.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F84530F26D634E5007C3B04 /* NSWorkspace.swift */; };
 		4F84531226D638C0007C3B04 /* NSBackgroundActivityScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F84531126D638C0007C3B04 /* NSBackgroundActivityScheduler.swift */; };
@@ -312,6 +314,7 @@
 		4F74B7D4275114EA00F1FC11 /* Dashlane.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Dashlane.swift; path = "Software Updates/Dashlane.swift"; sourceTree = "<group>"; };
 		4F74B7D5275114EA00F1FC11 /* Enpass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Enpass.swift; path = "Software Updates/Enpass.swift"; sourceTree = "<group>"; };
 		4F79F78C273BF6300082A5EB /* ChecksView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChecksView.swift; sourceTree = "<group>"; };
+		4F7F3E7C27C4E545003A035D /* AppProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppProtocol.swift; sourceTree = "<group>"; };
 		4F81C10726EB5D270065F548 /* URL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URL.swift; sourceTree = "<group>"; };
 		4F84530F26D634E5007C3B04 /* NSWorkspace.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSWorkspace.swift; sourceTree = "<group>"; };
 		4F84531126D638C0007C3B04 /* NSBackgroundActivityScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSBackgroundActivityScheduler.swift; sourceTree = "<group>"; };
@@ -658,6 +661,7 @@
 		4FEBA2F0269CD48F009B2469 /* Pareto */ = {
 			isa = PBXGroup;
 			children = (
+				4F7F3E7C27C4E545003A035D /* AppProtocol.swift */,
 				4F10300A269F0568008C1E86 /* Checks */,
 				4FB7C67F26AFF22C00FB1C41 /* Extensions */,
 				4F103009269F054C008C1E86 /* StatusBar */,
@@ -666,8 +670,8 @@
 				4FEBA2F5269CD48F009B2469 /* Assets.xcassets */,
 				4FEBA2FA269CD48F009B2469 /* Info.plist */,
 				4FEBA2FB269CD48F009B2469 /* Pareto.entitlements */,
-				4F57135A26F8C5D7004B4359 /* AppHandlers.swift */,
 				4FEBA2F1269CD48F009B2469 /* ParetoApp.swift */,
+				4F57135A26F8C5D7004B4359 /* AppHandlers.swift */,
 				4F343A5E26F7A3D4007D2F7D /* Teams.swift */,
 				4FB7C67C26AFF1AB00FB1C41 /* Log.swift */,
 				4F47220F26B08A0E0071CE2A /* Defaults.swift */,
@@ -1034,6 +1038,7 @@
 				4F38D8C9273AC5AE00671756 /* IntroView.swift in Sources */,
 				4F37E71D2718122E00A2B254 /* Defaults.swift in Sources */,
 				4F37E71E2718122E00A2B254 /* Autologin.swift in Sources */,
+				4F7F3E7E27C4E545003A035D /* AppProtocol.swift in Sources */,
 				4F38D8CF273AC62500671756 /* EndView.swift in Sources */,
 				4FB1190D2742615800B89634 /* ParetoHelper.swift in Sources */,
 				4F8ECA382798262F00361728 /* FirewallStealth.swift in Sources */,
@@ -1167,6 +1172,7 @@
 				4F38D8C8273AC5AE00671756 /* IntroView.swift in Sources */,
 				4F47221026B08A0E0071CE2A /* Defaults.swift in Sources */,
 				4F868DD126A5C51C005B876E /* Autologin.swift in Sources */,
+				4F7F3E7D27C4E545003A035D /* AppProtocol.swift in Sources */,
 				4F38D8CE273AC62500671756 /* EndView.swift in Sources */,
 				4FB1190C2742615700B89634 /* ParetoHelper.swift in Sources */,
 				4F8ECA372798262F00361728 /* FirewallStealth.swift in Sources */,

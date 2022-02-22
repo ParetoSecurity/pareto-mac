@@ -181,12 +181,15 @@ class AppDelegate: AppHandlers, NSApplicationDelegate {
         statusBar = StatusBarController()
         statusBar?.configureChecks()
         statusBar?.updateMenu()
-        updater = AppUpdater(owner: "ParetoSecurity", repo: "pareto-mac")
 
-        // don't do anything else if running tests
-        if AppInfo.isRunningTests {
-            return
-        }
+        #if DEBUG
+            // don't do anything else if running tests
+            if AppInfo.isRunningTests {
+                return
+            }
+        #endif
+
+        updater = AppUpdater(owner: "ParetoSecurity", repo: "pareto-mac")
 
         runApp()
 

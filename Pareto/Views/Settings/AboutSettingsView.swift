@@ -29,7 +29,7 @@ struct AboutSettingsView: View {
         logs.append("Build: \(AppInfo.utmSource)")
 
         NSPasteboard.general.clearContents()
-        NSPasteboard.general.setString(logs.joined(separator: "\n"))
+        NSPasteboard.general.setString(logs.joined(separator: "\n"), forType: .string)
     }
 
     var body: some View {
@@ -61,16 +61,14 @@ struct AboutSettingsView: View {
                      destination: URL(string: "https://paretosecurity.com")!).font(.title)
 
                 VStack(alignment: .leading, spacing: 0) {
-                    Text("Version: \(AppInfo.appVersion) - \(AppInfo.buildVersion)").contextMenu(ContextMenu(menuItems: {
-                        Button("Copy diagnostic data", action: copy)
-                    }))
+                    Text("Version: \(AppInfo.appVersion) - \(AppInfo.buildVersion)")
                     Text("Channel: \(AppInfo.utmSource)")
                     #if !SETAPP_ENABLED
                         HStack(spacing: 10) {
                             if status == UpdateStates.Failed {
                                 HStack(spacing: 0) {
                                     Text("Failed to update ")
-                                    Link("download manualy",
+                                    Link("download manually",
                                          destination: URL(string: "https://github.com/ParetoSecurity/pareto-mac/releases/latest/download/ParetoSecurity.dmg")!)
                                 }
                             } else {
@@ -83,7 +81,9 @@ struct AboutSettingsView: View {
                             }
                         }
                     #endif
-                }
+                }.contextMenu(ContextMenu(menuItems: {
+                    Button("Copy diagnostic data", action: copy)
+                }))
 
                 HStack(spacing: 0) {
                     Text("We’d love to ")
