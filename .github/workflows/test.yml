@@ -2,9 +2,9 @@ name: Test and Build
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   lint:
@@ -12,75 +12,86 @@ jobs:
     runs-on: macos-11
     timeout-minutes: 3
     steps:
-    - uses: maxim-lobanov/setup-xcode@v1
-      with:
-        xcode-version: '13.2'
-    - name: Repository checkout
-      uses: actions/checkout@v2
-    - name: Lint
-      run: swiftlint
+      - uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: "13.2"
+      - name: Repository checkout
+        uses: actions/checkout@v2
+      - name: Lint
+        run: swiftlint
   test:
     name: Unit and UI Tests
     runs-on: macos-11
     needs: lint
-    timeout-minutes: 12    
+    timeout-minutes: 12
     permissions:
-      issues: write 
+      issues: write
       pull-requests: write
     steps:
-    - uses: maxim-lobanov/setup-xcode@v1
-      with:
-        xcode-version: '13.2'
-    - name: "Import Certificate: Development"
-      uses: devbotsxyz/xcode-import-certificate@master
-      with:
-        certificate-data: ${{ secrets.DEVELOPMENT_CERTIFICATE_DATA }}
-        certificate-passphrase: ${{ secrets.DEVELOPMENT_CERTIFICATE_PASSPHRASE }}
-        keychain-password: ${{ secrets.KEYCHAIN_PASSWORD }}
-    - name: Repository checkout
-      uses: actions/checkout@v2
-    - name: Cache SPM modules
-      uses: actions/cache@v2
-      env:
-        cache-name: cache-spm
-      with:
-        path: SourcePackages
-        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('Pareto Security.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved') }}
-        restore-keys: |
-          ${{ runner.os }}-build-${{ env.cache-name }}-
-          ${{ runner.os }}-build-
-          ${{ runner.os }}-
-    - name: Patch permissions kTCCServiceAppleEvents
-      run: |
-        epochdate=$(($(date +'%s * 1000 + %-N / 1000000')))
-        tcc_update="replace into access (service,client,client_type,auth_value,auth_reason,auth_version,indirect_object_identifier,flags,last_modified) values (\"kTCCServiceAppleEvents\",\"niteo.co.Pareto\",0,2,3,1,\"com.apple.systemevents\",0,$epochdate);"
-        tcc_service_accessibility="replace into access (service,client,client_type,auth_value,auth_reason,auth_version,indirect_object_identifier,flags,last_modified) values (\"kTCCServiceAccessibility\",\"com.apple.dt.Xcode-Helper\",0,2,1,1,\"UNUSED\",0,$epochdate);"
-        tcc_service_developer_tool="replace into access (service,client,client_type,auth_value,auth_reason,auth_version,indirect_object_identifier,flags,last_modified) values (\"kTCCServiceDeveloperTool\",\"com.apple.Terminal\",0,2,1,1,\"UNUSED\",0,$epochdate);"
-        sudo sqlite3 "$HOME/Library/Application Support/com.apple.TCC/TCC.db" "$tcc_service_accessibility"
-        sudo sqlite3 "$HOME/Library/Application Support/com.apple.TCC/TCC.db" "$tcc_service_developer_tool"
-        sudo sqlite3 "$HOME/Library/Application Support/com.apple.TCC/TCC.db" "$tcc_update"
-    - name: Tests
-      run: make test
-    - name: Update coverage
-      run: bash <(curl -s https://codecov.io/bash)
-    - name: Install xcparse
-      run: brew install chargepoint/xcparse/xcparse
-    - name: Gather screenshots
-      run: |
-        mkdir -p "${{ runner.temp }}/screenshots/"
-        # export the screenshots
-        xcparse screenshots --test ./test.xcresult '${{ runner.temp }}/screenshots'
-    - name: Upload screenshots
-      uses: actions/upload-artifact@v2
-      with:
-        name: screenshots-${{ github.run_number }}
-        path: ${{ runner.temp }}/screenshots
-    - uses: mshick/add-pr-comment@v1
-      with:
-        message: |
-          You can find the app screenshots under the Artifacts at https://github.com/ParetoSecurity/pareto-mac/actions/runs/${{ github.run_id }}
-        repo-token: ${{ secrets.GITHUB_TOKEN }}
-        repo-token-user-login: 'github-actions[bot]'
+      - uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: "13.2"
+      - name: "Import Certificate: Development"
+        uses: devbotsxyz/xcode-import-certificate@master
+        with:
+          certificate-data: ${{ secrets.DEVELOPMENT_CERTIFICATE_DATA }}
+          certificate-passphrase: ${{ secrets.DEVELOPMENT_CERTIFICATE_PASSPHRASE }}
+          keychain-password: ${{ secrets.KEYCHAIN_PASSWORD }}
+      - name: Repository checkout
+        uses: actions/checkout@v2
+      - name: Cache SPM modules
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-spm
+        with:
+          path: SourcePackages
+          key: ${{ runner.os }}-spm-${{ env.cache-name }}-${{ hashFiles('Pareto Security.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved') }}
+          restore-keys: |
+            ${{ runner.os }}-spm-${{ env.cache-name }}-
+            ${{ runner.os }}-spm-
+            ${{ runner.os }}-
+      - name: Cache DerivedData
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-build
+        with:
+          path: /Users/runner/Library/Developer/Xcode/DerivedData/
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('Pareto Security.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+      - name: Patch permissions kTCCServiceAppleEvents
+        run: |
+          epochdate=$(($(date +'%s * 1000 + %-N / 1000000')))
+          tcc_update="replace into access (service,client,client_type,auth_value,auth_reason,auth_version,indirect_object_identifier,flags,last_modified) values (\"kTCCServiceAppleEvents\",\"niteo.co.Pareto\",0,2,3,1,\"com.apple.systemevents\",0,$epochdate);"
+          tcc_service_accessibility="replace into access (service,client,client_type,auth_value,auth_reason,auth_version,indirect_object_identifier,flags,last_modified) values (\"kTCCServiceAccessibility\",\"com.apple.dt.Xcode-Helper\",0,2,1,1,\"UNUSED\",0,$epochdate);"
+          tcc_service_developer_tool="replace into access (service,client,client_type,auth_value,auth_reason,auth_version,indirect_object_identifier,flags,last_modified) values (\"kTCCServiceDeveloperTool\",\"com.apple.Terminal\",0,2,1,1,\"UNUSED\",0,$epochdate);"
+          sudo sqlite3 "$HOME/Library/Application Support/com.apple.TCC/TCC.db" "$tcc_service_accessibility"
+          sudo sqlite3 "$HOME/Library/Application Support/com.apple.TCC/TCC.db" "$tcc_service_developer_tool"
+          sudo sqlite3 "$HOME/Library/Application Support/com.apple.TCC/TCC.db" "$tcc_update"
+      - name: Tests
+        run: make test
+      - name: Update coverage
+        run: bash <(curl -s https://codecov.io/bash)
+      - name: Install xcparse
+        run: brew install chargepoint/xcparse/xcparse
+      - name: Gather screenshots
+        run: |
+          mkdir -p "${{ runner.temp }}/screenshots/"
+          # export the screenshots
+          xcparse screenshots --test ./test.xcresult '${{ runner.temp }}/screenshots'
+      - name: Upload screenshots
+        uses: actions/upload-artifact@v2
+        with:
+          name: screenshots-${{ github.run_number }}
+          path: ${{ runner.temp }}/screenshots
+      - uses: mshick/add-pr-comment@v1
+        with:
+          message: |
+            You can find the app screenshots under the Artifacts at https://github.com/ParetoSecurity/pareto-mac/actions/runs/${{ github.run_id }}
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          repo-token-user-login: "github-actions[bot]"
   build:
     name: Build and Archive Native
     runs-on: macos-11
@@ -119,6 +130,17 @@ jobs:
           cache-name: cache-spm
         with:
           path: SourcePackages
+          key: ${{ runner.os }}-spm-${{ env.cache-name }}-${{ hashFiles('Pareto Security.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved') }}
+          restore-keys: |
+            ${{ runner.os }}-spm-${{ env.cache-name }}-
+            ${{ runner.os }}-spm-
+            ${{ runner.os }}-
+      - name: Cache DerivedData
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-build
+        with:
+          path: /Users/runner/Library/Developer/Xcode/DerivedData/
           key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('Pareto Security.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved') }}
           restore-keys: |
             ${{ runner.os }}-build-${{ env.cache-name }}-
@@ -171,12 +193,22 @@ jobs:
           cache-name: cache-spm
         with:
           path: SourcePackages
+          key: ${{ runner.os }}-spm-${{ env.cache-name }}-${{ hashFiles('Pareto Security.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved') }}
+          restore-keys: |
+            ${{ runner.os }}-spm-${{ env.cache-name }}-
+            ${{ runner.os }}-spm-
+            ${{ runner.os }}-
+      - name: Cache DerivedData
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-build
+        with:
+          path: /Users/runner/Library/Developer/Xcode/DerivedData/
           key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('Pareto Security.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved') }}
           restore-keys: |
             ${{ runner.os }}-build-${{ env.cache-name }}-
             ${{ runner.os }}-build-
             ${{ runner.os }}-
-
       - name: Build
         run: make archive-debug-setapp
 
