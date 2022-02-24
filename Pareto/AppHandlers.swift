@@ -5,6 +5,7 @@
 //  Created by Janez Troha on 20/09/2021.
 //
 
+import Alamofire
 import Defaults
 import Foundation
 import LaunchAtLogin
@@ -296,13 +297,36 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
                     AppInfo.Licensed = true
                     Defaults[.reportingRole] = .personal
 
-                    let alert = NSAlert()
-                    alert.messageText = "Pareto Security is now licensed."
-                    alert.alertStyle = NSAlert.Style.informational
-                    alert.addButton(withTitle: "OK")
-                    #if !DEBUG
-                        alert.runModal()
-                    #endif
+                    // If we don't need to verify license return early
+                    if license.role != "verify" {
+                        return
+                    }
+                    let parameters: [String: String] = [
+                        "uuid": license.uuid,
+                        "machineUUID": Defaults[.machineUUID]
+                    ]
+                    let verifyURL = "https://dash.paretosecurity.com/api/v1/enroll/verify"
+                    AF.request(verifyURL, method: .post, parameters: parameters, encoder: JSONParameterEncoder.default).responseString(queue: AppCheck.queue, completionHandler: { response in
+                        if response.error == nil {
+                            let alert = NSAlert()
+                            alert.messageText = "Pareto Security is now licensed."
+                            alert.alertStyle = NSAlert.Style.informational
+                            alert.addButton(withTitle: "OK")
+                            #if !DEBUG
+                                alert.runModal()
+                            #endif
+                        } else {
+                            Defaults.toFree()
+                            let alert = NSAlert()
+                            alert.messageText = "No more licenses available for this account!"
+                            alert.alertStyle = NSAlert.Style.critical
+                            alert.addButton(withTitle: "OK")
+                            #if !DEBUG
+                                alert.runModal()
+                            #endif
+                        }
+                    })
+
                 } catch {
                     Defaults.toFree()
                     let alert = NSAlert()
@@ -313,61 +337,62 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
                         alert.runModal()
                     #endif
                 }
-        #endif
-        case "enrollTeam":
-            if AppInfo.Licensed || !Defaults[.teamAuth].isEmpty {
-                return
-            }
 
-            let jwt = url.queryParams()["token"] ?? ""
-            do {
-                let ticket = try VerifyTeamTicket(withTicket: jwt)
-                enrolledHandler = true
-                Defaults[.license] = jwt
-                Defaults[.userID] = ""
-                Defaults[.teamAuth] = ticket.teamAuth
-                Defaults[.teamID] = ticket.teamUUID
-                AppInfo.Licensed = true
-                Defaults[.reportingRole] = .team
-                Defaults[.isTeamOwner] = ticket.isTeamOwner
-
-                Team.link(withDevice: ReportingDevice.current()).response { response in
-                    switch response.result {
-                    case .success:
-                        let alert = NSAlert()
-                        alert.messageText = "Pareto Security is linked to your team."
-                        alert.alertStyle = NSAlert.Style.informational
-                        alert.addButton(withTitle: "OK")
-                        #if !DEBUG
-                            alert.runModal()
-                        #endif
-                        if !Defaults.firstLaunch() {
-                            DispatchQueue.global(qos: .background).async {
-                                self.statusBar?.runChecks()
-                            }
-                        }
-                    case .failure:
-                        Defaults.toFree()
-                        let alert = NSAlert()
-                        alert.messageText = "Device has been linked already! Please unlink the device from team and try again!"
-                        alert.alertStyle = NSAlert.Style.critical
-                        alert.addButton(withTitle: "OK")
-                        #if !DEBUG
-                            alert.runModal()
-                        #endif
-                    }
+            case "enrollTeam":
+                if AppInfo.Licensed || !Defaults[.teamAuth].isEmpty {
+                    return
                 }
 
-            } catch {
-                Defaults.toFree()
-                let alert = NSAlert()
-                alert.messageText = "Team ticket is not valid. Please email support@paretosecurity.com."
-                alert.alertStyle = NSAlert.Style.informational
-                alert.addButton(withTitle: "OK")
-                #if !DEBUG
-                    alert.runModal()
-                #endif
-            }
+                let jwt = url.queryParams()["token"] ?? ""
+                do {
+                    let ticket = try VerifyTeamTicket(withTicket: jwt)
+                    enrolledHandler = true
+                    Defaults[.license] = jwt
+                    Defaults[.userID] = ""
+                    Defaults[.teamAuth] = ticket.teamAuth
+                    Defaults[.teamID] = ticket.teamUUID
+                    AppInfo.Licensed = true
+                    Defaults[.reportingRole] = .team
+                    Defaults[.isTeamOwner] = ticket.isTeamOwner
+
+                    Team.link(withDevice: ReportingDevice.current()).response { response in
+                        switch response.result {
+                        case .success:
+                            let alert = NSAlert()
+                            alert.messageText = "Pareto Security is activated and linked."
+                            alert.alertStyle = NSAlert.Style.informational
+                            alert.addButton(withTitle: "OK")
+                            #if !DEBUG
+                                alert.runModal()
+                            #endif
+                            if !Defaults.firstLaunch() {
+                                DispatchQueue.global(qos: .background).async {
+                                    self.statusBar?.runChecks()
+                                }
+                            }
+                        case .failure:
+                            Defaults.toFree()
+                            let alert = NSAlert()
+                            alert.messageText = "Device has been linked already! Please unlink the device and try again!"
+                            alert.alertStyle = NSAlert.Style.critical
+                            alert.addButton(withTitle: "OK")
+                            #if !DEBUG
+                                alert.runModal()
+                            #endif
+                        }
+                    }
+
+                } catch {
+                    Defaults.toFree()
+                    let alert = NSAlert()
+                    alert.messageText = "Team ticket is not valid. Please email support@paretosecurity.com."
+                    alert.alertStyle = NSAlert.Style.informational
+                    alert.addButton(withTitle: "OK")
+                    #if !DEBUG
+                        alert.runModal()
+                    #endif
+                }
+        #endif
         case "reset":
             resetSettings()
             if !AppInfo.isRunningTests {
