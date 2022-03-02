@@ -50,4 +50,9 @@ class LicenseTest: XCTestCase {
         let data = ""
         XCTAssertThrowsError(try VerifyTeamTicket(withTicket: data, publicKey: publicKey))
     }
+
+    func testProcessAction() throws {
+        let url = URL(string: "paretosecurity://enrollSingle/?token=eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJwZXJzb25hbEBkb21haW4uY29tIiwicm9sZSI6InZlcmlmeSIsInV1aWQiOiIxMjM0IiwiaWF0IjoxNTE2MjM5MDIyfQ.gGqIGYx77owMjF0q8NktVPdKW-q1-IudaieAo-SAQAw7xFigSe5Usvia20PyOFyGg-FxwZso7OZflRDBOmfWjR_0EIkjxPnwIKnms2ZtHLqxaF0smV5jNoHQ4rGs7mffbrsuP8NuHJD0clUjkDx97eZjKiUH9YqDesNgfahs4QK3LQHFmZ7Fs8AsAEhQUodABjZwcIJBkDn2ANiOnAlJq3cPWXOp0MiYhoK5wbifxIrgNVkL5XOhSkdpe6fwO2UTb3Z9nzojRjGO1ps1Rr-BNKFVWzFPSeSzjxfc5IEWoOYSwa0hFgqHlYPqDu4okyvVLgoK7azJqNH9V0TOuP4qEw")!
+        AppDelegate().processAction(url)
+    }
 }

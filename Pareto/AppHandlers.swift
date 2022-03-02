@@ -44,7 +44,7 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
             NSApp.sendAction(#selector(showWelcome), to: nil, from: nil)
             NSApp.activate(ignoringOtherApps: true)
         } else {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 30) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 300) {
                 self.statusBar?.runChecks(isInteractive: false)
             }
         }
@@ -71,7 +71,11 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
         #endif
         // Update when waking up from sleep
         NSWorkspace.onWakeup { _ in
-            DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + 30) {
+            if Defaults[.disableChecksEvents] {
+                os_log("disableChecksEvents, skip running checks")
+                return
+            }
+            DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + 300) {
                 self.statusBar?.runChecks(isInteractive: false)
             }
             #if !SETAPP_ENABLED
@@ -157,6 +161,11 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
     }
 
     func statusDidChange(status: NWPath.Status) {
+        if Defaults[.disableChecksEvents] {
+            os_log("disableChecksEvents, skip running checks")
+            return
+        }
+
         if status == .satisfied {
             os_log("network condtions changed to: connected")
             // wait 30 second of stable conenction before running checks
@@ -276,7 +285,7 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
         Defaults[.showBeta] = true
     }
 
-    func processAction(_ url: URL) {
+    public func processAction(_ url: URL) {
         #if !DEBUG
             let crumb = Breadcrumb()
             crumb.level = SentryLevel.info

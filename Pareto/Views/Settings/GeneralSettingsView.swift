@@ -15,6 +15,8 @@ struct GeneralSettingsView: View {
     @Default(.showBeta) var showBeta
     @Default(.showNotifications) var showNotifications
     @Default(.checkForUpdatesRecentOnly) var checkForUpdatesRecentOnly
+    @Default(.disableChecksEvents) var disableChecksEvents
+
     var body: some View {
         Form {
             Section(
@@ -38,6 +40,12 @@ struct GeneralSettingsView: View {
                                     registerNotifications()
                                 }
                             }
+                        }
+                    }
+                Section(
+                    footer: Text("Disable check on events.").font(.footnote)) {
+                        VStack(alignment: .leading) {
+                            Toggle("Skip running checks on events", isOn: $disableChecksEvents)
                         }
                     }
 
@@ -65,9 +73,9 @@ struct GeneralSettingsView: View {
             }
         }
         #if DEBUG
-            .frame(width: 350, height: 180).padding(25)
+            .frame(width: 350).padding(25)
         #else
-            .frame(width: 350, height: 150).padding(25)
+            .frame(width: 350).padding(25)
         #endif
     }
 }
