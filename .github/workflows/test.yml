@@ -6,11 +6,15 @@ on:
   pull_request:
     branches: [main]
 
+
 jobs:
   lint:
     name: Lint
     runs-on: macos-11
     timeout-minutes: 3
+    concurrency: 
+      group: ${{ github.workflow }}-${{ github.ref }}-lint
+      cancel-in-progress: true
     steps:
       - uses: maxim-lobanov/setup-xcode@v1
         with:
@@ -24,6 +28,9 @@ jobs:
     runs-on: macos-11
     needs: lint
     timeout-minutes: 12
+    concurrency: 
+      group: ${{ github.workflow }}-${{ github.ref }}-test
+      cancel-in-progress: true
     permissions:
       issues: write
       pull-requests: write
@@ -83,10 +90,12 @@ jobs:
     name: Build and Archive Native
     runs-on: macos-11
     timeout-minutes: 15
-    needs: lint
     permissions:
       issues: write
       pull-requests: write
+    concurrency: 
+      group: ${{ github.workflow }}-${{ github.ref }}-build
+      cancel-in-progress: true
     steps:
       - uses: mshick/add-pr-comment@v1
         with:
@@ -138,14 +147,68 @@ jobs:
         with:
           name: ParetoSecurity.app
           path: ParetoSecurity.app.zip
+  test-profile-default:
+    name: Profile - Default
+    runs-on: macos-11
+    timeout-minutes: 15
+    needs: build
+    concurrency: 
+      group: ${{ github.workflow }}-${{ github.ref }}-test-profile-default
+      cancel-in-progress: true
+    steps:
+      - name: Repository checkout
+        uses: actions/checkout@v2
+      - name: Download the build output
+        uses: actions/download-artifact@v2
+        with:
+          name: ParetoSecurity.app
+      - name: Patch permissions kTCCServiceAppleEvents
+        run: |
+          epochdate=$(($(date +'%s * 1000 + %-N / 1000000')))
+          tcc_update="replace into access (service,client,client_type,auth_value,auth_reason,auth_version,indirect_object_identifier,flags,last_modified) values (\"kTCCServiceAppleEvents\",\"niteo.co.Pareto\",0,2,3,1,\"com.apple.systemevents\",0,$epochdate);"
+          tcc_service_accessibility="replace into access (service,client,client_type,auth_value,auth_reason,auth_version,indirect_object_identifier,flags,last_modified) values (\"kTCCServiceAccessibility\",\"com.apple.dt.Xcode-Helper\",0,2,1,1,\"UNUSED\",0,$epochdate);"
+          tcc_service_developer_tool="replace into access (service,client,client_type,auth_value,auth_reason,auth_version,indirect_object_identifier,flags,last_modified) values (\"kTCCServiceDeveloperTool\",\"com.apple.Terminal\",0,2,1,1,\"UNUSED\",0,$epochdate);"
+          sudo sqlite3 "$HOME/Library/Application Support/com.apple.TCC/TCC.db" "$tcc_service_accessibility"
+          sudo sqlite3 "$HOME/Library/Application Support/com.apple.TCC/TCC.db" "$tcc_service_developer_tool"
+          sudo sqlite3 "$HOME/Library/Application Support/com.apple.TCC/TCC.db" "$tcc_update"
+      - name: Generate Profile
+        run: .github/bin/profile default
+  test-profile-bad:
+    name: Profile - Bad
+    runs-on: macos-11
+    timeout-minutes: 15
+    needs: build
+    concurrency: 
+      group: ${{ github.workflow }}-${{ github.ref }}-test-profile-bad
+      cancel-in-progress: true
+    steps:
+      - name: Repository checkout
+        uses: actions/checkout@v2
+      - name: Download the build output
+        uses: actions/download-artifact@v2
+        with:
+          name: ParetoSecurity.app
+      - name: Patch permissions kTCCServiceAppleEvents
+        run: |
+          epochdate=$(($(date +'%s * 1000 + %-N / 1000000')))
+          tcc_update="replace into access (service,client,client_type,auth_value,auth_reason,auth_version,indirect_object_identifier,flags,last_modified) values (\"kTCCServiceAppleEvents\",\"niteo.co.Pareto\",0,2,3,1,\"com.apple.systemevents\",0,$epochdate);"
+          tcc_service_accessibility="replace into access (service,client,client_type,auth_value,auth_reason,auth_version,indirect_object_identifier,flags,last_modified) values (\"kTCCServiceAccessibility\",\"com.apple.dt.Xcode-Helper\",0,2,1,1,\"UNUSED\",0,$epochdate);"
+          tcc_service_developer_tool="replace into access (service,client,client_type,auth_value,auth_reason,auth_version,indirect_object_identifier,flags,last_modified) values (\"kTCCServiceDeveloperTool\",\"com.apple.Terminal\",0,2,1,1,\"UNUSED\",0,$epochdate);"
+          sudo sqlite3 "$HOME/Library/Application Support/com.apple.TCC/TCC.db" "$tcc_service_accessibility"
+          sudo sqlite3 "$HOME/Library/Application Support/com.apple.TCC/TCC.db" "$tcc_service_developer_tool"
+          sudo sqlite3 "$HOME/Library/Application Support/com.apple.TCC/TCC.db" "$tcc_update"
+      - name: Generate Profile
+        run: .github/bin/profile bad
   build-setapp:
     name: Build and Archive SetApp
     runs-on: macos-11
     timeout-minutes: 15
-    needs: lint
     permissions:
       issues: write
       pull-requests: write
+    concurrency: 
+      group: ${{ github.workflow }}-${{ github.ref }}-build-setapp
+      cancel-in-progress: true
     steps:
       - uses: mshick/add-pr-comment@v1
         with:

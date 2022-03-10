@@ -119,14 +119,18 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
     var details: String { "None" }
 
     var report: String {
+        return "\(UUID):\(checkPassed)"
+    }
+    
+    var reportJSON: String {
         return """
-        Check: \(Title)
-        UUID: \(UUID)
-        isActive: \(isActive)
-        isRunnable: \(isRunnable)
-        checkPassed: \(checkPassed)
-        checkTimestamp: \(checkTimestamp)
-        details: \(details)
+        {
+        "check": "\(Title)",
+        "uuid": "\(UUID)",
+        "isActive": "\(isActive)",
+        "isRunnable": "\(isRunnable)",
+        "checkPassed": "\(checkPassed)"
+        }
         """
     }
 
