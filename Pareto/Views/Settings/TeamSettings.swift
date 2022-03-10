@@ -33,7 +33,6 @@ struct TeamSettingsView: View {
                             }))
                         }
                     }
-                Spacer(minLength: 2)
                 Section(
                     footer: Text("Device ID")) {
                         VStack(alignment: .leading) {
@@ -42,7 +41,6 @@ struct TeamSettingsView: View {
                             }))
                         }
                     }
-                Spacer(minLength: 5)
                 Section(
                     footer: Text("When enabled, send model name and serial number.").font(.footnote)) {
                         VStack(alignment: .leading) {
@@ -50,7 +48,6 @@ struct TeamSettingsView: View {
                         }
                     }
 
-                Spacer(minLength: 10)
                 HStack {
                     Button("Unlink this device") {
                         Defaults.toFree()

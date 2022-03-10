@@ -43,7 +43,7 @@ struct GeneralSettingsView: View {
                         }
                     }
                 Section(
-                    footer: Text("Disable check on events.").font(.footnote)) {
+                    footer: Text("Skip all processing after wakeup, network changes.").font(.footnote)) {
                         VStack(alignment: .leading) {
                             Toggle("Skip running checks on events", isOn: $disableChecksEvents)
                         }
