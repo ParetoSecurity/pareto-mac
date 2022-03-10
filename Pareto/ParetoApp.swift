@@ -42,14 +42,26 @@ class AppDelegate: AppHandlers, NSApplicationDelegate {
             try! AppInfo.versionStorage.removeAll()
 
             for claim in Claims.sorted {
+                claim.configure()
                 for check in claim.checksSorted {
-                    claim.configure()
+                    check.run()
                     print(check.report + "\n")
                 }
             }
-            for line in AppInfo.logEntries() {
-                print(line)
+            exit(0)
+        }
+        if CommandLine.arguments.contains("-report-json") {
+            // invalidate possible expired cache
+            try! AppInfo.versionStorage.removeAll()
+            print("[")
+            for claim in Claims.sorted {
+                claim.configure()
+                for check in claim.checksSorted {
+                    check.run()
+                    print(check.reportJSON + ",\n")
+                }
             }
+            print("]")
             exit(0)
         }
 
