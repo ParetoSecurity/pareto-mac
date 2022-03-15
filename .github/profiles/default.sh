@@ -1,7 +1,5 @@
 #!/bin/bash
 
-set -xe
-
 # enable firewall
 sudo defaults write /Library/Preferences/com.apple.alf globalstate -int 1
 sudo defaults write /Library/Preferences/com.apple.alf stealthenabled -int 1
