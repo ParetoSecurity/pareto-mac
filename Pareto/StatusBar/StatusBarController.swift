@@ -79,11 +79,14 @@ class StatusBarController: NSObject, NSMenuDelegate {
                 self.addChecksMenuItems()
             }
             self.addApplicationItems()
-
-            if self.claimsPassed {
-                self.statusBarModel.state = .allOk
+            if self.snoozeTime > 0 {
+                self.statusBarModel.state = .idle
             } else {
-                self.statusBarModel.state = .warning
+                if self.claimsPassed {
+                    self.statusBarModel.state = .allOk
+                } else {
+                    self.statusBarModel.state = .warning
+                }
             }
         }
     }
