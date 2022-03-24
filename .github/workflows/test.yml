@@ -6,13 +6,12 @@ on:
   pull_request:
     branches: [main]
 
-
 jobs:
   lint:
     name: Lint
     runs-on: macos-11
     timeout-minutes: 3
-    concurrency: 
+    concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}-lint
       cancel-in-progress: true
     steps:
@@ -28,7 +27,7 @@ jobs:
     runs-on: macos-11
     needs: lint
     timeout-minutes: 12
-    concurrency: 
+    concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}-test
       cancel-in-progress: true
     permissions:
@@ -68,8 +67,18 @@ jobs:
         run: make test | xcpretty && exit ${PIPESTATUS[0]}
       - name: Update coverage
         run: bash <(curl -s https://codecov.io/bash)
-      - name: Install xcparse
-        run: brew install mint
+
+      - name: Cache mint modules
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-mint-v2
+        with:
+          path: ~/.mint
+          key: ${{ runner.os }}-mint-${{ env.cache-name }}-${{ hashFiles('Mintfile') }}
+          restore-keys: |
+            ${{ runner.os }}-mint-${{ env.cache-name }}-
+      - name: Install mint and packages
+        run: brew install mint && mint bootstrap
       - name: Gather screenshots
         run: |
           mkdir -p "${{ runner.temp }}/screenshots/"
@@ -93,7 +102,7 @@ jobs:
     permissions:
       issues: write
       pull-requests: write
-    concurrency: 
+    concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}-build
       cancel-in-progress: true
     steps:
@@ -152,7 +161,7 @@ jobs:
     runs-on: macos-11
     timeout-minutes: 15
     needs: build
-    concurrency: 
+    concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}-test-profile-default
       cancel-in-progress: true
     steps:
@@ -178,7 +187,7 @@ jobs:
     runs-on: macos-11
     timeout-minutes: 15
     needs: build
-    concurrency: 
+    concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}-test-profile-bad
       cancel-in-progress: true
     steps:
@@ -206,7 +215,7 @@ jobs:
     permissions:
       issues: write
       pull-requests: write
-    concurrency: 
+    concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}-build-setapp
       cancel-in-progress: true
     steps:
