@@ -121,7 +121,7 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
     var report: String {
         return "\(UUID):\(checkPassed)"
     }
-    
+
     var reportJSON: String {
         return """
         {
