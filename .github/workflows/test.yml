@@ -10,7 +10,7 @@ jobs:
   lint:
     name: Lint
     runs-on: macos-11
-    timeout-minutes: 3
+    timeout-minutes: 15
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}-lint
       cancel-in-progress: true
@@ -20,8 +20,19 @@ jobs:
           xcode-version: "latest-stable"
       - name: Repository checkout
         uses: actions/checkout@v2
+      - name: Cache mint modules
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-mint-v2
+        with:
+          path: ~/.mint
+          key: ${{ runner.os }}-mint-${{ env.cache-name }}-${{ hashFiles('Mintfile') }}
+          restore-keys: |
+            ${{ runner.os }}-mint-${{ env.cache-name }}-
+      - name: Install mint and packages
+        run: brew install mint && mint bootstrap
       - name: Lint
-        run: swiftlint
+        run: make lint
   test:
     name: Unit and UI Tests
     runs-on: macos-11
@@ -45,6 +56,17 @@ jobs:
           keychain-password: ${{ secrets.KEYCHAIN_PASSWORD }}
       - name: Repository checkout
         uses: actions/checkout@v2
+      - name: Cache mint modules
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-mint-v2
+        with:
+          path: ~/.mint
+          key: ${{ runner.os }}-mint-${{ env.cache-name }}-${{ hashFiles('Mintfile') }}
+          restore-keys: |
+            ${{ runner.os }}-mint-${{ env.cache-name }}-
+      - name: Install mint and packages
+        run: brew install mint && mint bootstrap
       - name: Cache SPM modules
         uses: actions/cache@v2
         env:
@@ -64,21 +86,9 @@ jobs:
           sudo sqlite3 "$HOME/Library/Application Support/com.apple.TCC/TCC.db" "$tcc_service_developer_tool"
           sudo sqlite3 "$HOME/Library/Application Support/com.apple.TCC/TCC.db" "$tcc_update"
       - name: Tests
-        run: make test | xcpretty && exit ${PIPESTATUS[0]}
+        run: set -o pipefail && make test 2>&1 | mint run xcbeautify
       - name: Update coverage
         run: bash <(curl -s https://codecov.io/bash)
-
-      - name: Cache mint modules
-        uses: actions/cache@v2
-        env:
-          cache-name: cache-mint-v2
-        with:
-          path: ~/.mint
-          key: ${{ runner.os }}-mint-${{ env.cache-name }}-${{ hashFiles('Mintfile') }}
-          restore-keys: |
-            ${{ runner.os }}-mint-${{ env.cache-name }}-
-      - name: Install mint and packages
-        run: brew install mint && mint install ChargePoint/xcparse
       - name: Gather screenshots
         run: |
           mkdir -p "${{ runner.temp }}/screenshots/"
@@ -97,6 +107,7 @@ jobs:
           repo-token-user-login: "github-actions[bot]"
   build:
     name: Build and Archive Native
+    needs: lint
     runs-on: macos-11
     timeout-minutes: 15
     permissions:
@@ -129,6 +140,17 @@ jobs:
           keychain-password: ${{ secrets.KEYCHAIN_PASSWORD }}
       - name: Repository checkout
         uses: actions/checkout@v2
+      - name: Cache mint modules
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-mint-v2
+        with:
+          path: ~/.mint
+          key: ${{ runner.os }}-mint-${{ env.cache-name }}-${{ hashFiles('Mintfile') }}
+          restore-keys: |
+            ${{ runner.os }}-mint-${{ env.cache-name }}-
+      - name: Install mint and packages
+        run: brew install mint && mint bootstrap
       - name: Cache SPM modules
         uses: actions/cache@v2
         env:
@@ -148,7 +170,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-${{ env.cache-name }}-
       - name: Build
-        run: make archive-debug | xcpretty && exit ${PIPESTATUS[0]}
+        run: set -o pipefail && make archive-debug 2>&1 | mint run xcbeautify
       - name: Compress app for storage
         run: ditto -V -c -k --keepParent Export/Pareto\ Security.app ParetoSecurity.app.zip
       - name: Upload App to Artifacts
@@ -212,6 +234,7 @@ jobs:
     name: Build and Archive SetApp
     runs-on: macos-11
     timeout-minutes: 15
+    needs: lint
     permissions:
       issues: write
       pull-requests: write
@@ -242,6 +265,17 @@ jobs:
           keychain-password: ${{ secrets.KEYCHAIN_PASSWORD }}
       - name: Repository checkout
         uses: actions/checkout@v2
+      - name: Cache mint modules
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-mint-v2
+        with:
+          path: ~/.mint
+          key: ${{ runner.os }}-mint-${{ env.cache-name }}-${{ hashFiles('Mintfile') }}
+          restore-keys: |
+            ${{ runner.os }}-mint-${{ env.cache-name }}-
+      - name: Install mint and packages
+        run: brew install mint && mint bootstrap
       - name: Cache SPM modules
         uses: actions/cache@v2
         env:
@@ -261,7 +295,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-${{ env.cache-name }}-
       - name: Build
-        run: make archive-debug-setapp | xcpretty && exit ${PIPESTATUS[0]}
+        run: set -o pipefail && make archive-debug-setapp 2>&1 | mint run xcbeautify
 
       - name: Compress app for storage
         run: ditto -V -c -k --keepParent SetAppExport/Pareto\ Security.app ParetoSecuritySetApp.app.zip
