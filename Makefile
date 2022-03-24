@@ -44,11 +44,11 @@ dmg:
 	create-dmg --overwrite Export/Pareto\ Security.app Export && mv Export/*.dmg ParetoSecurity.dmg
 
 lint:
-	swiftlint .
+	mint run swiftlint .
 
 fmt:
-	swiftformat --swiftversion 5 .
-	swiftlint . --fix
+	mint run swiftformat --swiftversion 5 .
+	mint run swiftlint . --fix
 
 notarize:
 	xcrun notarytool submit ParetoSecurity.dmg --team-id PM784W7B8X --progress --wait

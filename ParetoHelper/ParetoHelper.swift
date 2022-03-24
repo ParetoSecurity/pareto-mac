@@ -148,7 +148,7 @@ class ParetoHelper: NSObject, NSXPCListenerDelegate, HelperProtocol {
         let task = Process()
         let stdOut = Pipe()
 
-        let stdOutHandler = { (file: FileHandle!) -> Void in
+        let stdOutHandler = { (file: FileHandle!) in
             let data = file.availableData
             guard let output = NSString(data: data, encoding: String.Encoding.utf8.rawValue) else { return }
             if let remoteObject = self.connection()?.remoteObjectProxy as? AppProtocol {
@@ -158,7 +158,7 @@ class ParetoHelper: NSObject, NSXPCListenerDelegate, HelperProtocol {
         stdOut.fileHandleForReading.readabilityHandler = stdOutHandler
 
         let stdErr = Pipe()
-        let stdErrHandler = { (file: FileHandle!) -> Void in
+        let stdErrHandler = { (file: FileHandle!) in
             let data = file.availableData
             guard let output = NSString(data: data, encoding: String.Encoding.utf8.rawValue) else { return }
             if let remoteObject = self.connection()?.remoteObjectProxy as? AppProtocol {

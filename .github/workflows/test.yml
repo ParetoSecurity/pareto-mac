@@ -78,7 +78,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-mint-${{ env.cache-name }}-
       - name: Install mint and packages
-        run: brew install mint && mint bootstrap
+        run: brew install mint && mint install ChargePoint/xcparse
       - name: Gather screenshots
         run: |
           mkdir -p "${{ runner.temp }}/screenshots/"
