@@ -24,8 +24,8 @@
         "repositoryURL": "https://github.com/sindresorhus/Defaults",
         "state": {
           "branch": null,
-          "revision": "63d93f97ad545c8bceb125a8a36175ea705f7cf5",
-          "version": "5.0.0"
+          "revision": "119f654d44f7b90f00dc11f7dd1c94a36f12576b",
+          "version": "6.2.1"
         }
       },
       {
@@ -69,8 +69,8 @@
         "repositoryURL": "https://github.com/getsentry/sentry-cocoa",
         "state": {
           "branch": null,
-          "revision": "2814f3c5e624108bda1d0dccfaabbbf00217d6dc",
-          "version": "7.7.0"
+          "revision": "0c9efc707a8a62b8b6a6fb03431cc74a9ea8cc51",
+          "version": "7.11.0"
         }
       },
       {
@@ -96,7 +96,7 @@
         "repositoryURL": "https://github.com/nalexn/ViewInspector",
         "state": {
           "branch": "master",
-          "revision": "c766db3be0eff8994bcdc92718dfc7fc19baf3ca",
+          "revision": "6b88c4ec1fa20cf38f2138052e63c8e79df5d76e",
           "version": null
         }
       }
