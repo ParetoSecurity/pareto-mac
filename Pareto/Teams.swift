@@ -12,8 +12,6 @@ import Foundation
 import JWTDecode
 import os.log
 
-// MARK: - DeviceSettings
-
 struct DeviceSettings: Codable {
     let disabledChecks: [DisabledCheck]
 
@@ -22,10 +20,12 @@ struct DeviceSettings: Codable {
     }
 }
 
-// MARK: - DisabledCheck
-
 struct DisabledCheck: Codable {
     let id: String
+}
+
+struct TokenSettings: Codable {
+    let token: String
 }
 
 private extension JWT {
@@ -163,10 +163,26 @@ enum Team {
             parameters: report,
             encoder: JSONParameterEncoder.default,
             headers: headers
-        ) { $0.timeoutInterval = 5 }.cURLDescription { cmd in
+        ) { $0.timeoutInterval = 15 }.cURLDescription { cmd in
             debugPrint(cmd)
-        }.validate().response(queue: queue) { data in
-            os_log("%s", log: Log.api, data.debugDescription)
+        }.redirect(using: Redirector(behavior: .doNotFollow)).responseDecodable(of: TokenSettings.self, queue: queue) { data in
+            if data.response?.statusCode == 301 {
+                os_log("Move detected, updating ticket", log: Log.api)
+                do {
+                    let ticket = try VerifyTeamTicket(withTicket: data.value!.token)
+                    Defaults[.license] = data.value!.token
+                    Defaults[.userID] = ""
+                    Defaults[.teamAuth] = ticket.teamAuth
+                    Defaults[.teamID] = ticket.teamUUID
+                    AppInfo.Licensed = true
+                    Defaults[.reportingRole] = .team
+                    Defaults[.isTeamOwner] = ticket.isTeamOwner
+                } catch {
+                    os_log("Move detected, ticket parsing failed", log: Log.api)
+                }
+            } else {
+                os_log("%s", log: Log.api, data.debugDescription)
+            }
         }
     }
 
@@ -180,14 +196,14 @@ enum Team {
             headers: headers
         ) { $0.timeoutInterval = 5 }.cURLDescription { cmd in
             debugPrint(cmd)
-        }.validate().responseDecodable(of: DeviceSettings.self, queue: AppCheck.queue, completionHandler: { response in
+        }.validate().responseDecodable(of: DeviceSettings.self, queue: queue) { response in
             if response.error == nil {
                 completion(response.value)
             } else {
                 os_log("Device status failed: %{public}s", response.error.debugDescription)
                 completion(nil)
             }
-        })
+        }
     }
 }
 
