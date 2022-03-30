@@ -1,0 +1,12 @@
+#!/bin/bash
+
+# 1. Before Installing, create a file named 'BundledActivation.txt' at the path /Library/Pareto Security/.
+# 2. Install Pareto Security with the installer app.
+# 3. The file must contain activation token in first line starting with eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzUxMiJ9.
+
+if [ -f /Applications/Pareto\ Security.app/Contents/Info.plist ]; then
+    if [ -f /Library/Pareto\ Security/BundledInvite.txt ]; then
+        echo "Activating with team invite"
+        /Applications/Pareto\ Security.app/Contents/MacOS/Pareto\ Security -mdmTeam "$(</Library/Pareto\ Security/BundledActivation.txt)"
+    fi
+fi

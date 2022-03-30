@@ -43,6 +43,10 @@ build-release-setapp:
 dmg:
 	create-dmg --overwrite Export/Pareto\ Security.app Export && mv Export/*.dmg ParetoSecurity.dmg
 
+pkg:
+	productbuild --scripts ".github/pkg" --component Export/Pareto\ Security.app / ParetoSecurityPlain.pkg
+	productsign --sign "Developer ID Installer: Niteo GmbH" ParetoSecurityPlain.pkg ParetoSecurity.pkg
+
 lint:
 	mint run swiftlint .
 
