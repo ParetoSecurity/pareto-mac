@@ -2,6 +2,7 @@
 .swiftpm/xcode/package.xcworkspace/contents.xcworkspacedata
 *.xcarchive
 *.dmg
+*.pkg
 *.private
 *.xcresult
 /.build

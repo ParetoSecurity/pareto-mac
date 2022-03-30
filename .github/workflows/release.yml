@@ -88,6 +88,28 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Build pkg for release
+        run: make pkg
+
+      - name: "Notarize Release Build"
+        run: xcrun notarytool submit ParetoSecurity.pkg --password ${{ secrets.NOTARIZATION_PASSWORD }} --apple-id ${{ secrets.NOTARIZATION_USERNAME }} --team-id PM784W7B8X --progress --wait
+
+      - name: Upload pkg to Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: ParetoSecurity.pkg
+          path: ParetoSecurity.pkg
+
+      - name: "Staple Release pkg"
+        run: for i in {1..3}; do xcrun stapler staple ParetoSecurity.pkg && break || sleep 15; done
+
+      - name: Release pkg
+        uses: softprops/action-gh-release@v1
+        with:
+          files: ParetoSecurity.pkg
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Cleanup
         run: rm -f ParetoSecurity.app.zip
 
