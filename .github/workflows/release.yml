@@ -95,9 +95,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build pkg for release
-        run: make pkg
+        run: sudo make pkg
 
-      - name: "Notarize Release Build"
+      - name: "Notarize Release Build pkg"
         run: xcrun notarytool submit ParetoSecurity.pkg --password ${{ secrets.NOTARIZATION_PASSWORD }} --apple-id ${{ secrets.NOTARIZATION_USERNAME }} --team-id PM784W7B8X --progress --wait
 
       - name: Upload pkg to Artifacts
