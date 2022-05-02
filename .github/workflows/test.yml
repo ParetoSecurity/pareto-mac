@@ -9,7 +9,7 @@ on:
 jobs:
   lint:
     name: Lint
-    runs-on: macos-11
+    runs-on: macos-12
     timeout-minutes: 15
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}-lint
@@ -35,7 +35,7 @@ jobs:
         run: make lint
   test:
     name: Unit and UI Tests
-    runs-on: macos-11
+    runs-on: macos-12
     needs: lint
     timeout-minutes: 12
     concurrency:
@@ -108,7 +108,7 @@ jobs:
   build:
     name: Build and Archive Native
     needs: lint
-    runs-on: macos-11
+    runs-on: macos-12
     timeout-minutes: 15
     permissions:
       issues: write
@@ -180,7 +180,7 @@ jobs:
           path: ParetoSecurity.app.zip
   test-profile-default:
     name: Profile - Default
-    runs-on: macos-11
+    runs-on: macos-12
     timeout-minutes: 15
     needs: build
     concurrency:
@@ -206,7 +206,7 @@ jobs:
         run: .github/bin/profile default
   test-profile-bad:
     name: Profile - Bad
-    runs-on: macos-11
+    runs-on: macos-12
     timeout-minutes: 15
     needs: build
     concurrency:
@@ -232,7 +232,7 @@ jobs:
         run: .github/bin/profile bad
   build-setapp:
     name: Build and Archive SetApp
-    runs-on: macos-11
+    runs-on: macos-12
     timeout-minutes: 15
     needs: lint
     permissions:
