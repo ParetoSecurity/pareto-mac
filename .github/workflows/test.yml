@@ -179,8 +179,11 @@ jobs:
           name: ParetoSecurity.app
           path: ParetoSecurity.app.zip
   test-profile-default:
+    strategy:
+      matrix:
+        os: [macos-11, macos-12]
+    runs-on: ${{ matrix.os }}
     name: Profile - Default
-    runs-on: macos-12
     timeout-minutes: 15
     needs: build
     concurrency:
@@ -205,8 +208,11 @@ jobs:
       - name: Generate Profile
         run: .github/bin/profile default
   test-profile-bad:
+    strategy:
+      matrix:
+        os: [macos-11, macos-12]
+    runs-on: ${{ matrix.os }}
     name: Profile - Bad
-    runs-on: macos-12
     timeout-minutes: 15
     needs: build
     concurrency:
