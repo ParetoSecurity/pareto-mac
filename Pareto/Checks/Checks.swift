@@ -63,7 +63,9 @@ enum Claims {
             FileVaultCheck.sharedInstance,
             BootCheck.sharedInstance,
             OpenWiFiCheck.sharedInstance,
-            TimeMachineCheck.sharedInstance
+            TimeMachineCheck.sharedInstance,
+            TimeMachineHasBackupCheck.sharedInstance,
+            TimeMachineIsEncryptedCheck.sharedInstance
         ]),
         Claim(withTitle: "Software Updates", withChecks: updateChecks)
     ]
