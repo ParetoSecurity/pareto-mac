@@ -218,6 +218,12 @@
 		4FF13D9D26DE235700E4084E /* UpdaterTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FF13D9C26DE235700E4084E /* UpdaterTest.swift */; };
 		4FF22A6526F0CFA500500213 /* Flags.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FF22A6426F0CFA500500213 /* Flags.swift */; };
 		4FF515C126F7B362008D135E /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 4FF515C026F7B362008D135E /* Alamofire */; };
+		4FFDC59D282148530092B7BF /* TimeMachineHasBackup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FFDC59C282148530092B7BF /* TimeMachineHasBackup.swift */; };
+		4FFDC59E282148530092B7BF /* TimeMachineHasBackup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FFDC59C282148530092B7BF /* TimeMachineHasBackup.swift */; };
+		4FFDC5A1282153B50092B7BF /* TimeMachineBackup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FFDC5A0282153B50092B7BF /* TimeMachineBackup.swift */; };
+		4FFDC5A2282153B50092B7BF /* TimeMachineBackup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FFDC5A0282153B50092B7BF /* TimeMachineBackup.swift */; };
+		4FFDC5A428215A8F0092B7BF /* TimeMachineIsEncrypted.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FFDC5A328215A8F0092B7BF /* TimeMachineIsEncrypted.swift */; };
+		4FFDC5A528215A8F0092B7BF /* TimeMachineIsEncrypted.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FFDC5A328215A8F0092B7BF /* TimeMachineIsEncrypted.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -347,6 +353,9 @@
 		4FF13D9626DCCB9900E4084E /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
 		4FF13D9C26DE235700E4084E /* UpdaterTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdaterTest.swift; sourceTree = "<group>"; };
 		4FF22A6426F0CFA500500213 /* Flags.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Flags.swift; sourceTree = "<group>"; };
+		4FFDC59C282148530092B7BF /* TimeMachineHasBackup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimeMachineHasBackup.swift; sourceTree = "<group>"; };
+		4FFDC5A0282153B50092B7BF /* TimeMachineBackup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeMachineBackup.swift; sourceTree = "<group>"; };
+		4FFDC5A328215A8F0092B7BF /* TimeMachineIsEncrypted.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimeMachineIsEncrypted.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -471,6 +480,8 @@
 				4F0371BB26CD00B700B35E43 /* Boot.swift */,
 				4FB7C68C26AFFD2600FB1C41 /* FileVault.swift */,
 				4F56AB5A278C57F1001CAAEF /* TimeMachine.swift */,
+				4FFDC59C282148530092B7BF /* TimeMachineHasBackup.swift */,
+				4FFDC5A328215A8F0092B7BF /* TimeMachineIsEncrypted.swift */,
 				4FD0A24026A024440070BED4 /* Gatekeeper.swift */,
 				4F5B20C027030BEB0015642A /* OpenWiFi.swift */,
 			);
@@ -620,6 +631,7 @@
 		4FEBA2F0269CD48F009B2469 /* Pareto */ = {
 			isa = PBXGroup;
 			children = (
+				4FFDC59F2821539F0092B7BF /* Models */,
 				4F7F3E7C27C4E545003A035D /* AppProtocol.swift */,
 				4F10300A269F0568008C1E86 /* Checks */,
 				4FB7C67F26AFF22C00FB1C41 /* Extensions */,
@@ -651,6 +663,14 @@
 				4FEBA2F8269CD48F009B2469 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		4FFDC59F2821539F0092B7BF /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				4FFDC5A0282153B50092B7BF /* TimeMachineBackup.swift */,
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -948,12 +968,14 @@
 				4F6EF88F275FE5D400752559 /* Zoom.swift in Sources */,
 				4FAAD327277B156200AA5CEF /* NewsletterView.swift in Sources */,
 				4F38D8CC273AC5F200671756 /* PermissionsView.swift in Sources */,
+				4FFDC5A528215A8F0092B7BF /* TimeMachineIsEncrypted.swift in Sources */,
 				4F37E7122718122E00A2B254 /* NetworkHandler.swift in Sources */,
 				4F37E7132718122E00A2B254 /* Log.swift in Sources */,
 				4F37E7142718122E00A2B254 /* Utils.swift in Sources */,
 				4F56AB5C278C57F1001CAAEF /* TimeMachine.swift in Sources */,
 				4FB51A5B27A94F27003F528E /* SystemUpdatesCheck.swift in Sources */,
 				4F37E7152718122E00A2B254 /* Updater.swift in Sources */,
+				4FFDC59E282148530092B7BF /* TimeMachineHasBackup.swift in Sources */,
 				4F37E7162718122E00A2B254 /* Firewall.swift in Sources */,
 				4F37E7172718122E00A2B254 /* Color.swift in Sources */,
 				4F79F78E273BF6300082A5EB /* ChecksView.swift in Sources */,
@@ -998,6 +1020,7 @@
 				4F37E72B2718122E00A2B254 /* FileVault.swift in Sources */,
 				4F37E72C2718122E00A2B254 /* SettingsView.swift in Sources */,
 				4F37E72D2718122E00A2B254 /* AirPlay.swift in Sources */,
+				4FFDC5A2282153B50092B7BF /* TimeMachineBackup.swift in Sources */,
 				4F37E72E2718122E00A2B254 /* Screensaver.swift in Sources */,
 				4F37E72F2718122E00A2B254 /* NSBackgroundActivityScheduler.swift in Sources */,
 				4F3DCFEF274FE73600F1CB55 /* WireGuard.swift in Sources */,
@@ -1067,12 +1090,14 @@
 				4F6EF88E275FE5D400752559 /* Zoom.swift in Sources */,
 				4FAAD326277B156200AA5CEF /* NewsletterView.swift in Sources */,
 				4F38D8CB273AC5F200671756 /* PermissionsView.swift in Sources */,
+				4FFDC5A428215A8F0092B7BF /* TimeMachineIsEncrypted.swift in Sources */,
 				4F5B20C3270316DB0015642A /* NetworkHandler.swift in Sources */,
 				4FB7C67D26AFF1AB00FB1C41 /* Log.swift in Sources */,
 				4FF13D9726DCCB9900E4084E /* Utils.swift in Sources */,
 				4F56AB5B278C57F1001CAAEF /* TimeMachine.swift in Sources */,
 				4FB51A5A27A94F27003F528E /* SystemUpdatesCheck.swift in Sources */,
 				4F14487426D8EA5E00A5BA34 /* Updater.swift in Sources */,
+				4FFDC59D282148530092B7BF /* TimeMachineHasBackup.swift in Sources */,
 				4F868DCF26A591E6005B876E /* Firewall.swift in Sources */,
 				4F9791C126F5DB4F00E668F4 /* Color.swift in Sources */,
 				4F79F78D273BF6300082A5EB /* ChecksView.swift in Sources */,
@@ -1117,6 +1142,7 @@
 				4FB7C68D26AFFD2600FB1C41 /* FileVault.swift in Sources */,
 				4F103008269EE136008C1E86 /* SettingsView.swift in Sources */,
 				4F1AE89226FA026D0084A381 /* AirPlay.swift in Sources */,
+				4FFDC5A1282153B50092B7BF /* TimeMachineBackup.swift in Sources */,
 				4F868DD326A5C751005B876E /* Screensaver.swift in Sources */,
 				4F84531226D638C0007C3B04 /* NSBackgroundActivityScheduler.swift in Sources */,
 				4F3DCFEE274FE73600F1CB55 /* WireGuard.swift in Sources */,

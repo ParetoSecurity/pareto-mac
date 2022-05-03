@@ -7,18 +7,18 @@
 import Foundation
 import os.log
 
-class TimeMachineCheck: ParetoCheck {
-    static let sharedInstance = TimeMachineCheck()
+class TimeMachineHasBackupCheck: ParetoCheck {
+    static let sharedInstance = TimeMachineHasBackupCheck()
     override var UUID: String {
-        "355a56c1-1098-4b5d-ac8a-a1e8fc52dcfd"
+        "455a56c1-1098-4b5d-ac8a-a1e8fc52dcfd"
     }
 
     override var TitleON: String {
-        "Time Machine is on"
+        "Time Machine has up to date backup"
     }
 
     override var TitleOFF: String {
-        "Time Machine is off"
+        "Time Machine is missing up to date backup"
     }
 
     override func checkPasses() -> Bool {
@@ -28,6 +28,6 @@ class TimeMachineCheck: ParetoCheck {
             return false
         }
         let tmConf = TimeMachineConfig(obj: dict!)
-        return tmConf.AutoBackup && !tmConf.Destinations.isEmpty && !tmConf.LastDestinationID.isEmpty
+        return tmConf.AutoBackup && tmConf.upToDateBackup
     }
 }
