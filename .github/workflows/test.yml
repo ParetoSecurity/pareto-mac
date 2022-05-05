@@ -184,7 +184,7 @@ jobs:
         os: [macos-11, macos-12]
     runs-on: ${{ matrix.os }}
     name: Profile - Default
-    timeout-minutes: 15
+    timeout-minutes: 3
     needs: build
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}-test-profile-default
@@ -213,7 +213,7 @@ jobs:
         os: [macos-11, macos-12]
     runs-on: ${{ matrix.os }}
     name: Profile - Bad
-    timeout-minutes: 15
+    timeout-minutes: 3
     needs: build
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}-test-profile-bad
