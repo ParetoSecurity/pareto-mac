@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -x 
+
 report="profile.txt"
 snapshot=".github/fixtures/$1.txt"
 profile=".github/profiles/$1.sh"
@@ -9,6 +11,6 @@ ls -all
 source $profile
 
 unzip ParetoSecurity.app.zip
-mv Pareto\ Security.app /Applications
-/Applications/Pareto\ Security.app/Contents/MacOS/Pareto\ Security -report >$report
+sudo mv Pareto\ Security.app /Applications
+/Applications/Pareto\ Security.app/Contents/MacOS/Pareto\ Security -report | tee $report
 diff --ignore-all-space --ignore-blank-lines --side-by-side "$snapshot" "$report"
