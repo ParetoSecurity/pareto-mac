@@ -21,11 +21,20 @@ class TimeMachineCheck: ParetoCheck {
         "Time Machine is off"
     }
 
+    var isConfigured: Bool {
+        let status = runCMD(app: "/usr/bin/tmutil", args: ["destinationinfo"])
+        return status.contains("ID") && status.contains("Name")
+    }
+
+    private var dict: NSDictionary? {
+        readDefaultsFile(path: "/Library/Preferences/com.apple.TimeMachine.plist")
+    }
+
     override func checkPasses() -> Bool {
-        let dict = readDefaultsFile(path: "/Library/Preferences/com.apple.TimeMachine.plist")
         if dict == nil {
-            os_log("/Library/Preferences/com.apple.TimeMachine.plist is empty")
-            return false
+            os_log("/Library/Preferences/com.apple.TimeMachine.plist use fallabck")
+            let status = runCMD(app: "/usr/bin/tmutil", args: ["status"])
+            return isConfigured && !status.contains("Stopping = 1")
         }
         let tmConf = TimeMachineConfig(obj: dict!)
         return tmConf.AutoBackup && !tmConf.Destinations.isEmpty && !tmConf.LastDestinationID.isEmpty

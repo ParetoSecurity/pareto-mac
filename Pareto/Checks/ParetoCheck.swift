@@ -66,6 +66,10 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
         return true
     }
 
+    public var showSettingsWarnDiskAccess: Bool {
+        return false
+    }
+
     var checkTimestamp: Int {
         get { UserDefaults.standard.integer(forKey: TimestampKey) }
         set { UserDefaults.standard.set(newValue, forKey: TimestampKey) }

@@ -21,8 +21,23 @@ class TimeMachineIsEncryptedCheck: ParetoCheck {
         "Time Machine backup is not encrypted"
     }
 
+    private var dict: NSDictionary? {
+        readDefaultsFile(path: "/Library/Preferences/com.apple.TimeMachine.plist")
+    }
+
+    override public var isRunnable: Bool {
+        return dict != nil && isActive
+    }
+
+    override public var showSettings: Bool {
+        return dict != nil
+    }
+
+    override public var showSettingsWarnDiskAccess: Bool {
+        return true
+    }
+
     override func checkPasses() -> Bool {
-        let dict = readDefaultsFile(path: "/Library/Preferences/com.apple.TimeMachine.plist")
         if dict == nil {
             os_log("/Library/Preferences/com.apple.TimeMachine.plist is empty")
             return false
