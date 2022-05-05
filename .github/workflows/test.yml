@@ -67,6 +67,15 @@ jobs:
             ${{ runner.os }}-mint-${{ env.cache-name }}-
       - name: Install mint and packages
         run: brew install mint && mint bootstrap
+      - name: Cache DerivedData
+        uses: actions/cache@v2
+        env:
+          cache-name: test-derived-data-v1
+        with:
+          path: ~/Library/Developer/Xcode/DerivedData
+          key: ${{ runner.os }}-${{ env.cache-name }}
+          restore-keys: |
+            ${{ runner.os }}-${{ env.cache-name }}-
       - name: Cache SPM modules
         uses: actions/cache@v2
         env:
@@ -163,7 +172,7 @@ jobs:
       - name: Cache DerivedData
         uses: actions/cache@v2
         env:
-          cache-name: build_derived_data
+          cache-name: build-derived-data-v1
         with:
           path: ~/Library/Developer/Xcode/DerivedData
           key: ${{ runner.os }}-${{ env.cache-name }}
@@ -294,7 +303,7 @@ jobs:
       - name: Cache DerivedData
         uses: actions/cache@v2
         env:
-          cache-name: setapp_build_derived_data
+          cache-name: setapp-build-derived-data-v1
         with:
           path: ~/Library/Developer/Xcode/DerivedData
           key: ${{ runner.os }}-${{ env.cache-name }}

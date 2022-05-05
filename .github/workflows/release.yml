@@ -62,7 +62,7 @@ jobs:
       - name: Cache DerivedData
         uses: actions/cache@v2
         env:
-          cache-name: release_derived_data
+          cache-name: release-derived-data-v1
         with:
           path: ~/Library/Developer/Xcode/DerivedData
           key: ${{ runner.os }}-${{ env.cache-name }}
@@ -215,7 +215,7 @@ jobs:
       - name: Cache DerivedData
         uses: actions/cache@v2
         env:
-          cache-name: release_derived_data
+          cache-name: release-derived-data-v1
         with:
           path: ~/Library/Developer/Xcode/DerivedData
           key: ${{ runner.os }}-${{ env.cache-name }}
