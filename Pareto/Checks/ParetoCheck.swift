@@ -88,9 +88,9 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
                 item.image = NSImage.SF(name: "seal.fill").tint(color: .systemGray)
             } else {
                 if checkPassed {
-                    item.image = NSImage.SF(name: "checkmark.seal.fill").tint(color: .systemGreen)
+                    item.image = NSImage.SF(name: "checkmark").tint(color: .systemGreen)
                 } else {
-                    item.image = NSImage.SF(name: "xmark.seal.fill").tint(color: .systemOrange)
+                    item.image = NSImage.SF(name: "xmark").tint(color: .systemOrange)
                 }
             }
         } else {
