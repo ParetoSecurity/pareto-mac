@@ -5,15 +5,54 @@
 //  Created by Janez Troha on 09/11/2021.
 //
 
+import Foundation
 import SwiftUI
+
+private class PermissionsChecker: ObservableObject {
+    /// The timer
+    private var timer: Timer?
+    @Published var osaAuthorized = false
+    @Published var fdaAuthorized = false
+    @Published var ran = false
+
+    private func osaIsAuthorized() -> Bool {
+        let script = "tell application \"System Events\" to tell security preferences to get automatic login"
+
+        var error: NSDictionary?
+        if let scriptObject = NSAppleScript(source: script) {
+            if let _ = scriptObject.executeAndReturnError(&error).stringValue {
+                return true
+            } else if error != nil {
+                return false
+            }
+        }
+        return false
+    }
+
+    func start() {
+        timer?.invalidate() // cancel timer if any
+        timer = Timer.scheduledTimer(withTimeInterval: 2.0, repeats: true) { _ in
+            self.fdaAuthorized = TimeMachineHasBackupCheck.sharedInstance.isRunnable
+            self.osaAuthorized = self.osaIsAuthorized()
+            self.ran = true
+        }
+    }
+
+    func stop() {
+        timer?.invalidate()
+    }
+}
 
 struct PermissionsView: View {
     @Binding var step: Steps
-    @State var osaAuthorized = false
+    @ObservedObject fileprivate var checker = PermissionsChecker()
 
     func authorizeOSAClick() {
-        let script = "tell application \"System Events\" to tell security preferences to get automatic login"
-        osaAuthorized = runOSA(appleScript: script) != nil
+        NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.preference.security?AppleEvents")!)
+    }
+
+    func authorizeFDAClick() {
+        NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_AllFiles")!)
     }
 
     var body: some View {
@@ -35,20 +74,39 @@ struct PermissionsView: View {
                     Text("System Events Access").font(.title2)
                     Text("App requires read-only access to system events so that it can react on connectivity changes, settings changes, and to run checks. ").font(.footnote)
                 }
-                Button(!osaAuthorized ? "Authorize" : "Authorized") {
-                    authorizeOSAClick()
-                }.buttonStyle(HighlightButtonStyle(h: 4, v: 4, color: !osaAuthorized ? .mainColor : .systemGray)).frame(width: 80, alignment: .center).disabled(osaAuthorized)
-            }.frame(width: 350, alignment: .center)
 
-            if AppInfo.secExp {
-                HStack {
-                    VStack(alignment: .leading) {
-                        Text("Admin Permissions").font(.title2)
-                        Text("App requires read-only administrator permissions to run checks.").font(.footnote)
+                Button(action: authorizeOSAClick, label: {
+                    if checker.ran {
+                        if checker.osaAuthorized {
+                            Text("Authorised")
+                        } else {
+                            Text("Authorise")
+                        }
+                    } else {
+                        Text("Verifying")
                     }
-                    Button("Authorized") {}.buttonStyle(HighlightButtonStyle(h: 4, v: 4, color: .systemGray)).frame(width: 80, alignment: .center)
-                }.frame(width: 350, alignment: .center)
-            }
+                }).disabled(checker.osaAuthorized)
+
+            }.frame(width: 350, alignment: .center)
+            HStack {
+                VStack(alignment: .leading) {
+                    Text("Full Disk Access").font(.title2)
+                    Text("App requires full disk access if you want to use the Time Machine checks.").font(.footnote)
+                }
+
+                Button(action: authorizeFDAClick, label: {
+                    if checker.ran {
+                        if checker.fdaAuthorized {
+                            Text("Authorised")
+                        } else {
+                            Text("Authorise")
+                        }
+                    } else {
+                        Text("Verifying")
+                    }
+                }).disabled(checker.fdaAuthorized)
+
+            }.frame(width: 350, alignment: .center)
             Spacer(minLength: 40)
             Button("Continue") {
                 #if SETAPP_ENABLED
@@ -56,8 +114,12 @@ struct PermissionsView: View {
                 #else
                     step = Steps.Checks
                 #endif
-            }.buttonStyle(HighlightButtonStyle(color: osaAuthorized ? .mainColor : .systemGray)).padding(10).disabled(!osaAuthorized)
-        }.frame(width: 380, height: 430, alignment: .center).padding(10)
+            }.buttonStyle(HighlightButtonStyle(color: checker.osaAuthorized ? .mainColor : .systemGray)).padding(10).disabled(!checker.osaAuthorized)
+        }.frame(width: 380, height: 430, alignment: .center).padding(10).onAppear {
+            checker.start()
+        }.onDisappear {
+            checker.stop()
+        }
     }
 }
 

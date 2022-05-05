@@ -38,7 +38,7 @@ struct ChecksSettingsView: View {
                                 if check.teamDisabled {
                                     Text("Enforced by your team rules.").font(.footnote)
                                 }
-                                if check.showSettingsWarnDiskAccess {
+                                if check.showSettingsWarnDiskAccess && !check.isRunnable {
                                     Text("Requires full disk access permission.").font(.footnote)
                                     Button {
                                         NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_AllFiles")!)
