@@ -48,6 +48,26 @@ jobs:
       - name: Expose release info to actions
         id: release
         run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
+      - name: Cache mint modules
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-mint-v2
+        with:
+          path: ~/.mint
+          key: ${{ runner.os }}-mint-${{ env.cache-name }}-${{ hashFiles('Mintfile') }}
+          restore-keys: |
+            ${{ runner.os }}-mint-${{ env.cache-name }}-
+      - name: Install mint and packages
+        run: brew install mint && mint bootstrap
+      - name: Cache DerivedData
+        uses: actions/cache@v2
+        env:
+          cache-name: release_derived_data
+        with:
+          path: ~/Library/Developer/Xcode/DerivedData
+          key: ${{ runner.os }}-${{ env.cache-name }}
+          restore-keys: |
+            ${{ runner.os }}-${{ env.cache-name }}-
       - name: Cache SPM modules
         uses: actions/cache@v2
         env:
@@ -61,7 +81,7 @@ jobs:
         run: |
           sed -E -i '' 's/MARKETING_VERSION = .*;/MARKETING_VERSION = ${{ steps.release.outputs.tag }};/g' Pareto\ Security.xcodeproj/project.pbxproj
       - name: "Archive for dist"
-        run: make archive-release
+        run: set -o pipefail && make archive-release | mint run xcbeautify
 
       - name: Compress app for storage
         run: ditto -V -c -k --keepParent Export/Pareto\ Security.app ParetoSecurity.app.zip
@@ -181,6 +201,26 @@ jobs:
       - name: Expose release info to actions
         id: release
         run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
+      - name: Cache mint modules
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-mint-v2
+        with:
+          path: ~/.mint
+          key: ${{ runner.os }}-mint-${{ env.cache-name }}-${{ hashFiles('Mintfile') }}
+          restore-keys: |
+            ${{ runner.os }}-mint-${{ env.cache-name }}-
+      - name: Install mint and packages
+        run: brew install mint && mint bootstrap
+      - name: Cache DerivedData
+        uses: actions/cache@v2
+        env:
+          cache-name: release_derived_data
+        with:
+          path: ~/Library/Developer/Xcode/DerivedData
+          key: ${{ runner.os }}-${{ env.cache-name }}
+          restore-keys: |
+            ${{ runner.os }}-${{ env.cache-name }}-
       - name: Cache SPM modules
         uses: actions/cache@v2
         env:
@@ -194,7 +234,7 @@ jobs:
         run: |
           sed -E -i '' 's/MARKETING_VERSION = .*;/MARKETING_VERSION = ${{ steps.release.outputs.tag }};/g' Pareto\ Security.xcodeproj/project.pbxproj
       - name: "Archive for dist"
-        run: make archive-release-setapp
+        run: set -o pipefail && make archive-release-setapp | mint run xcbeautify
 
       - name: "Upload debug symbols"
         run: make sentry-debug-upload-setapp
