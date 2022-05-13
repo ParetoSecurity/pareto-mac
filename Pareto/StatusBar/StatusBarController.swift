@@ -72,13 +72,15 @@ class StatusBarController: NSObject, NSMenuDelegate {
         }
     }
 
-    func updateMenu() {
+    func updateMenu(partial: Bool = false) {
         DispatchQueue.main.async {
-            self.statusItemMenu.removeAllItems()
-            if !self.statusBarModel.isRunning {
-                self.addChecksMenuItems()
+            if !partial {
+                self.statusItemMenu.removeAllItems()
+                if !self.statusBarModel.isRunning {
+                    self.addChecksMenuItems()
+                }
+                self.addApplicationItems()
             }
-            self.addApplicationItems()
             if self.snoozeTime > 0 {
                 self.statusBarModel.state = .idle
             } else {
@@ -182,14 +184,7 @@ class StatusBarController: NSObject, NSMenuDelegate {
     }
 
     func menuDidClose(_: NSMenu) {
-        if statusBarModel.isRunning {
-            return
-        }
-        if claimsPassed {
-            statusBarModel.state = .idle
-        } else {
-            statusBarModel.state = .warning
-        }
+        updateMenu(partial: true)
     }
 
     func menuWillOpen(_: NSMenu) {

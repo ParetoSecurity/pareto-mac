@@ -904,7 +904,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nif [[ -z \"${XCODE_RUNNING_FOR_PREVIEWS}\" ]]; then\n    buildNumber=$(/usr/libexec/PlistBuddy -c \"Print CFBundleVersion\" \"${PROJECT_DIR}/${INFOPLIST_FILE}\")\n    buildNumber=$(($buildNumber + 1))\n    /usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $buildNumber\" \"${PROJECT_DIR}/${INFOPLIST_FILE}\"\nfi\n\n";
+			shellScript = "#!/bin/bash\n\n# taken from blog post: http://www.mokacoding.com/blog/automatic-xcode-versioning-with-git/\n# Automatically sets version of target based on most recent tag in git\n# Automatically sets build number to number of commits\n#\n# Add script to build phase in xcode at the top of the chain named \"set build number\"\n# put this script in the root of the xcode project in a directory called scripts (good idea to version control this too)\n# call the script as $SRCROOT/scripts/set_build_number_by_git_commits.sh in xcode\n\ngit=$(sh /etc/profile; which git)\nnumber_of_commits=$(\"$git\" rev-list HEAD --count)\ngit_release_version=$(\"$git\" describe --tags --always --abbrev=0)\n\ntarget_plist=\"$TARGET_BUILD_DIR/$INFOPLIST_PATH\"\ndsym_plist=\"$DWARF_DSYM_FOLDER_PATH/$DWARF_DSYM_FILE_NAME/Contents/Info.plist\"\n\nfor plist in \"$target_plist\" \"$dsym_plist\"; do\n  if [ -f \"$plist\" ]; then\n    /usr/libexec/PlistBuddy -c \"Set :CFBundleVersion 5$number_of_commits\" \"$plist\"\n    /usr/libexec/PlistBuddy -c \"Set :CFBundleShortVersionString ${git_release_version#*v}\" \"$plist\"\n  fi\ndone\n";
 		};
 		4F37E7422718122E00A2B254 /* Bundle run at login */ = {
 			isa = PBXShellScriptBuildPhase;
