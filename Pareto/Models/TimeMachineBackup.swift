@@ -7,19 +7,23 @@
 
 import Foundation
 
-struct TimeMachineDestinations: Codable {
-    let LastKnownEncryptionState: String
+enum EncryptionState: String {
+    case Encrypted, NotEncrypted, Unknown = ""
+}
+
+struct TimeMachineDestinations {
+    let LastKnownEncryptionState: EncryptionState
     let DestinationID: String
     let ConsistencyScanDate: Date // Last time of backup
 
     init(obj: NSDictionary) {
-        LastKnownEncryptionState = obj.value(forKey: "LastKnownEncryptionState") as? String ?? ""
+        LastKnownEncryptionState = EncryptionState(rawValue: obj.value(forKey: "LastKnownEncryptionState") as? String ?? "") ?? EncryptionState.Unknown
         DestinationID = obj.value(forKey: "DestinationID") as? String ?? ""
         ConsistencyScanDate = obj.value(forKey: "ConsistencyScanDate") as? Date ?? Date.distantPast
     }
 
     var isEncrypted: Bool {
-        return !LastKnownEncryptionState.isEmpty
+        return LastKnownEncryptionState == EncryptionState.Encrypted
     }
 
     var isUpToDateBackup: Bool {
@@ -28,7 +32,7 @@ struct TimeMachineDestinations: Codable {
     }
 }
 
-struct TimeMachineConfig: Codable {
+struct TimeMachineConfig {
     let AutoBackup: Bool
     let HostUUIDs: [String]
     let Destinations: [TimeMachineDestinations]
