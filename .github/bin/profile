@@ -12,5 +12,8 @@ source $profile
 
 unzip ParetoSecurity.app.zip
 mv Pareto\ Security.app /Applications
+
+exit 0
+
 /Applications/Pareto\ Security.app/Contents/MacOS/Pareto\ Security -report | tee $report
 diff --ignore-all-space --ignore-blank-lines --side-by-side "$snapshot" "$report"
