@@ -117,6 +117,8 @@
 		4F41831A2770F19D00EBAE4A /* macOSVersion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F4183192770F19D00EBAE4A /* macOSVersion.swift */; };
 		4F41831B2770F19D00EBAE4A /* macOSVersion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F4183192770F19D00EBAE4A /* macOSVersion.swift */; };
 		4F47221026B08A0E0071CE2A /* Defaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F47220F26B08A0E0071CE2A /* Defaults.swift */; };
+		4F4B6E84282E4C5C00FAC103 /* AirDrop.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F4B6E83282E4C5C00FAC103 /* AirDrop.swift */; };
+		4F4B6E85282E4C5C00FAC103 /* AirDrop.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F4B6E83282E4C5C00FAC103 /* AirDrop.swift */; };
 		4F4E286027BD748D006A18C1 /* PasswordAfterSleep.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F4E285F27BD748D006A18C1 /* PasswordAfterSleep.swift */; };
 		4F4E286127BD748D006A18C1 /* PasswordAfterSleep.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F4E285F27BD748D006A18C1 /* PasswordAfterSleep.swift */; };
 		4F56AB5B278C57F1001CAAEF /* TimeMachine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F56AB5A278C57F1001CAAEF /* TimeMachine.swift */; };
@@ -281,6 +283,7 @@
 		4F41831627707B0800EBAE4A /* StatusBarIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusBarIcon.swift; sourceTree = "<group>"; };
 		4F4183192770F19D00EBAE4A /* macOSVersion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = macOSVersion.swift; sourceTree = "<group>"; };
 		4F47220F26B08A0E0071CE2A /* Defaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Defaults.swift; sourceTree = "<group>"; };
+		4F4B6E83282E4C5C00FAC103 /* AirDrop.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AirDrop.swift; sourceTree = "<group>"; };
 		4F4E285F27BD748D006A18C1 /* PasswordAfterSleep.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PasswordAfterSleep.swift; sourceTree = "<group>"; };
 		4F56AB5A278C57F1001CAAEF /* TimeMachine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimeMachine.swift; sourceTree = "<group>"; };
 		4F56AB5D278C6DF5001CAAEF /* AdobeReader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AdobeReader.swift; path = "Software Updates/AdobeReader.swift"; sourceTree = "<group>"; };
@@ -470,6 +473,7 @@
 				4F8ECA362798262F00361728 /* FirewallStealth.swift */,
 				4F1AE88F26F9FFA60084A381 /* MediaShare.swift */,
 				4F1AE89126FA026D0084A381 /* AirPlay.swift */,
+				4F4B6E83282E4C5C00FAC103 /* AirDrop.swift */,
 			);
 			path = "Firewall and Sharing";
 			sourceTree = "<group>";
@@ -994,6 +998,7 @@
 				4F38D8CF273AC62500671756 /* EndView.swift in Sources */,
 				4F8ECA382798262F00361728 /* FirewallStealth.swift in Sources */,
 				4F37E71F2718122E00A2B254 /* MediaShare.swift in Sources */,
+				4F4B6E85282E4C5C00FAC103 /* AirDrop.swift in Sources */,
 				4F37E7202718122E00A2B254 /* ParetoApp.swift in Sources */,
 				4FB5BD2B2760CA9D004E404C /* LibreOffice.swift in Sources */,
 				4F37E7212718122E00A2B254 /* Flags.swift in Sources */,
@@ -1116,6 +1121,7 @@
 				4F38D8CE273AC62500671756 /* EndView.swift in Sources */,
 				4F8ECA372798262F00361728 /* FirewallStealth.swift in Sources */,
 				4F1AE89026F9FFA60084A381 /* MediaShare.swift in Sources */,
+				4F4B6E84282E4C5C00FAC103 /* AirDrop.swift in Sources */,
 				4FEBA2F2269CD48F009B2469 /* ParetoApp.swift in Sources */,
 				4FB5BD2A2760CA9D004E404C /* LibreOffice.swift in Sources */,
 				4FF22A6526F0CFA500500213 /* Flags.swift in Sources */,
