@@ -13,14 +13,19 @@ import JWTDecode
 import os.log
 
 struct DeviceSettings: Codable {
-    let disabledChecks: [DisabledCheck]
-
+    let ignoredChecks: [APICheck]
+    let requiredChecks: [APICheck]
+    
     var disabledList: [String] {
-        disabledChecks.map { $0.id }
+        ignoredChecks.map { $0.id }
+    }
+    
+    var enforcedList: [String] {
+        requiredChecks.map { $0.id }
     }
 }
 
-struct DisabledCheck: Codable {
+struct APICheck: Codable {
     let id: String
 }
 
@@ -250,11 +255,14 @@ func VerifyTeamTicket(withTicket data: String, publicKey key: String = rsaPublic
 
 class TeamSettingsUpdater: ObservableObject {
     @Published var disabledChecks: [String] = []
-
+    @Published var enforcedChecks: [String] = []
+    
     func update(completion: @escaping () -> Void) {
         Team.settings { res in
             self.disabledChecks = res?.disabledList ?? []
+            self.enforcedChecks = res?.enforcedList ?? []
             os_log("Team disabled checks: %s", self.disabledChecks.debugDescription)
+            os_log("Team enforced checks: %s", self.enforcedChecks.debugDescription)
             completion()
         }
     }

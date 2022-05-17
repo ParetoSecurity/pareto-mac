@@ -45,9 +45,17 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
     public var teamDisabled: Bool {
         AppInfo.TeamSettings.disabledChecks.contains(where: { $0 == UUID })
     }
+    
+    public var teamEnforced: Bool {
+        AppInfo.TeamSettings.enforcedChecks.contains(where: { $0 == UUID })
+    }
+
 
     public var isActive: Bool {
         get {
+            if teamEnforced{
+                return true
+            }
             let userEnabled = UserDefaults.standard.bool(forKey: EnabledKey)
             return userEnabled && !teamDisabled
         }
@@ -59,7 +67,7 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
     }
 
     public var showSettings: Bool {
-        return !teamDisabled
+        return !teamDisabled || !teamEnforced
     }
 
     public var reportIfDisabled: Bool {
