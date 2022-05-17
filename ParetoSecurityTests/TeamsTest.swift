@@ -37,4 +37,14 @@ class TeamsTest: XCTestCase {
 
         _ = Team.update(withReport: report)
     }
+
+    func testSettings() throws {
+        Defaults[.teamID] = "fd4e6814-440c-46d2-b240-4e0d2f786fbc"
+        Defaults[.teamAPI] = "http://localhost"
+
+        Team.settings { settings in
+            XCTAssertEqual(settings?.enforcedList, [])
+            XCTAssertEqual(settings?.disabledList, [])
+        }
+    }
 }

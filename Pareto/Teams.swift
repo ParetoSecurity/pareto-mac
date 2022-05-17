@@ -256,7 +256,7 @@ func VerifyTeamTicket(withTicket data: String, publicKey key: String = rsaPublic
 class TeamSettingsUpdater: ObservableObject {
     @Published var disabledChecks: [String] = []
     @Published var enforcedChecks: [String] = []
-    
+
     func update(completion: @escaping () -> Void) {
         Team.settings { res in
             self.disabledChecks = res?.disabledList ?? []
