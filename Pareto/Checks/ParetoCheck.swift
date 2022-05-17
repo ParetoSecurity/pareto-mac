@@ -50,10 +50,6 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
         AppInfo.TeamSettings.enforcedChecks.contains(where: { $0 == UUID })
     }
 
-    public var teamEnforced: Bool {
-        AppInfo.TeamSettings.enforcedChecks.contains(where: { $0 == UUID })
-    }
-
     public var isActive: Bool {
         get {
             if teamEnforced {
