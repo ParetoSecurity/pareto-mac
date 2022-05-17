@@ -15,11 +15,11 @@ import os.log
 struct DeviceSettings: Codable {
     let ignoredChecks: [APICheck]
     let requiredChecks: [APICheck]
-    
+
     var disabledList: [String] {
         ignoredChecks.map { $0.id }
     }
-    
+
     var enforcedList: [String] {
         requiredChecks.map { $0.id }
     }

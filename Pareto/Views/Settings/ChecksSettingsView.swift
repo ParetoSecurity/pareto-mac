@@ -35,7 +35,7 @@ struct ChecksSettingsView: View {
                                         updater.toggle()
                                     }
                                 )).disabled(!check.showSettings)
-                                if check.teamDisabled {
+                                if check.teamDisabled || check.teamEnforced {
                                     Text("Enforced by your team rules.").font(.footnote)
                                 }
                                 if check.showSettingsWarnDiskAccess && !check.isRunnable {
