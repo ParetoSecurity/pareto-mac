@@ -1,0 +1,27 @@
+//
+//  Config.xcconfig
+//  Pareto Security
+//
+//  Created by Janez Troha on 24/05/2022.
+//
+
+// Configuration settings file format documentation can be found at:
+// https://help.apple.com/xcode/#/dev745c5c974
+
+// App and helper tool bundle identifiers need to be defined at the project level so during the build processes for each
+// they can reference each other's bundle identifiers. These are encoded into the code requirements for each other.
+APP_BUNDLE_IDENTIFIER = niteo.co.Pareto
+HELPER_TOOL_BUNDLE_IDENTIFIER = $(APP_BUNDLE_IDENTIFIER).helper
+APP_VERSION = 0.0.17
+
+// Setting a minimum deployment target less than 10.14.4 means the Swift 5 Runtime Support for Command Line Tools
+// must be installed in order for the helper tool to run. (Alternatively the helper tool could be implemented in another
+// language such as Objective C, C, or C++.)
+MACOSX_DEPLOYMENT_TARGET = 11.0
+
+// Directory containing app-specific code shared by both the app and helper tool.
+SHARED_DIRECTORY = Shared
+
+// Required for notarisation. Protects from classes of exploits, like code injection, dynamically linked library (DLL)
+// hijacking, and process memory space tampering.
+ENABLE_HARDENED_RUNTIME = YES

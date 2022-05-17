@@ -8,6 +8,33 @@
 
 /* Begin PBXBuildFile section */
 		4F0371BC26CD00B700B35E43 /* Boot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F0371BB26CD00B700B35E43 /* Boot.swift */; };
+		4F07B99B283CCB9000419C13 /* CodeInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F07B996283CCB9000419C13 /* CodeInfo.swift */; };
+		4F07B99C283CCB9000419C13 /* CodeInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F07B996283CCB9000419C13 /* CodeInfo.swift */; };
+		4F07B99D283CCB9000419C13 /* CodeInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F07B996283CCB9000419C13 /* CodeInfo.swift */; };
+		4F07B99E283CCB9000419C13 /* AllowedCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F07B997283CCB9000419C13 /* AllowedCommand.swift */; };
+		4F07B99F283CCB9000419C13 /* AllowedCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F07B997283CCB9000419C13 /* AllowedCommand.swift */; };
+		4F07B9A0283CCB9000419C13 /* AllowedCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F07B997283CCB9000419C13 /* AllowedCommand.swift */; };
+		4F07B9A1283CCB9000419C13 /* SharedConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F07B998283CCB9000419C13 /* SharedConstants.swift */; };
+		4F07B9A2283CCB9000419C13 /* SharedConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F07B998283CCB9000419C13 /* SharedConstants.swift */; };
+		4F07B9A3283CCB9000419C13 /* SharedConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F07B998283CCB9000419C13 /* SharedConstants.swift */; };
+		4F07B9A4283CCB9000419C13 /* HelperToolInfoPropertyList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F07B999283CCB9000419C13 /* HelperToolInfoPropertyList.swift */; };
+		4F07B9A5283CCB9000419C13 /* HelperToolInfoPropertyList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F07B999283CCB9000419C13 /* HelperToolInfoPropertyList.swift */; };
+		4F07B9A6283CCB9100419C13 /* HelperToolInfoPropertyList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F07B999283CCB9000419C13 /* HelperToolInfoPropertyList.swift */; };
+		4F07B9A7283CCB9100419C13 /* HelperToolLaunchdPropertyList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F07B99A283CCB9000419C13 /* HelperToolLaunchdPropertyList.swift */; };
+		4F07B9A8283CCB9100419C13 /* HelperToolLaunchdPropertyList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F07B99A283CCB9000419C13 /* HelperToolLaunchdPropertyList.swift */; };
+		4F07B9A9283CCB9100419C13 /* HelperToolLaunchdPropertyList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F07B99A283CCB9000419C13 /* HelperToolLaunchdPropertyList.swift */; };
+		4F07B9AD283CCBE900419C13 /* Uninstaller.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F07B9AA283CCBE900419C13 /* Uninstaller.swift */; };
+		4F07B9AE283CCBE900419C13 /* Uninstaller.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F07B9AA283CCBE900419C13 /* Uninstaller.swift */; };
+		4F07B9AF283CCBE900419C13 /* Uninstaller.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F07B9AA283CCBE900419C13 /* Uninstaller.swift */; };
+		4F07B9B0283CCBE900419C13 /* AllowedCommandRunner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F07B9AB283CCBE900419C13 /* AllowedCommandRunner.swift */; };
+		4F07B9B1283CCBE900419C13 /* AllowedCommandRunner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F07B9AB283CCBE900419C13 /* AllowedCommandRunner.swift */; };
+		4F07B9B2283CCBE900419C13 /* AllowedCommandRunner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F07B9AB283CCBE900419C13 /* AllowedCommandRunner.swift */; };
+		4F07B9B3283CCBE900419C13 /* Updater.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F07B9AC283CCBE900419C13 /* Updater.swift */; };
+		4F07B9B4283CCBE900419C13 /* Updater.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F07B9AC283CCBE900419C13 /* Updater.swift */; };
+		4F07B9B5283CCBE900419C13 /* Updater.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F07B9AC283CCBE900419C13 /* Updater.swift */; };
+		4F07B9B7283CCCC700419C13 /* SecureXPC in Frameworks */ = {isa = PBXBuildFile; productRef = 4F07B9B6283CCCC700419C13 /* SecureXPC */; };
+		4F07B9B9283CCCCE00419C13 /* Blessed in Frameworks */ = {isa = PBXBuildFile; productRef = 4F07B9B8283CCCCE00419C13 /* Blessed */; };
+		4F07B9BB283CCCDD00419C13 /* EmbeddedPropertyList in Frameworks */ = {isa = PBXBuildFile; productRef = 4F07B9BA283CCCDD00419C13 /* EmbeddedPropertyList */; };
 		4F080D1D26C50D2800686786 /* ParetoSecurityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FC81A4B26C41DC8006EABA8 /* ParetoSecurityTests.swift */; };
 		4F103008269EE136008C1E86 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F103007269EE135008C1E86 /* SettingsView.swift */; };
 		4F103012269F1C65008C1E86 /* LaunchAtLogin in Frameworks */ = {isa = PBXBuildFile; productRef = 4F103011269F1C65008C1E86 /* LaunchAtLogin */; };
@@ -21,14 +48,17 @@
 		4F1AE88B26F9FC150084A381 /* SwiftSocket in Frameworks */ = {isa = PBXBuildFile; productRef = 4F1AE88A26F9FC150084A381 /* SwiftSocket */; };
 		4F1AE89026F9FFA60084A381 /* MediaShare.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F1AE88F26F9FFA60084A381 /* MediaShare.swift */; };
 		4F1AE89226FA026D0084A381 /* AirPlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F1AE89126FA026D0084A381 /* AirPlay.swift */; };
+		4F1E6C232833A07300C8AFAB /* Blessed in Frameworks */ = {isa = PBXBuildFile; productRef = 4F1E6C222833A07300C8AFAB /* Blessed */; };
+		4F1E6C262833A08500C8AFAB /* SecureXPC in Frameworks */ = {isa = PBXBuildFile; productRef = 4F1E6C252833A08500C8AFAB /* SecureXPC */; };
+		4F1E6C462833A2AC00C8AFAB /* EmbeddedPropertyList in Frameworks */ = {isa = PBXBuildFile; productRef = 4F1E6C452833A2AC00C8AFAB /* EmbeddedPropertyList */; };
+		4F1E6C502833A38800C8AFAB /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F1E6C4F2833A38800C8AFAB /* main.swift */; };
+		4F1E6C562833A47800C8AFAB /* niteo.co.Pareto.helper in Copy Helper */ = {isa = PBXBuildFile; fileRef = 4F1E6C4D2833A38800C8AFAB /* niteo.co.Pareto.helper */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		4F1E6C5B2834F37500C8AFAB /* AutoUpdateAppCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F1E6C5A2834F37500C8AFAB /* AutoUpdateAppCheck.swift */; };
-		4F1E6C5C2834F37500C8AFAB /* AutoUpdateAppCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F1E6C5A2834F37500C8AFAB /* AutoUpdateAppCheck.swift */; };
 		4F1E6C5E2834F5D200C8AFAB /* SecureTerminal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F1E6C5D2834F5D200C8AFAB /* SecureTerminal.swift */; };
 		4F1E6C5F2834F5D200C8AFAB /* SecureTerminal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F1E6C5D2834F5D200C8AFAB /* SecureTerminal.swift */; };
 		4F1E6C612834F98A00C8AFAB /* SecureiTerm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F1E6C602834F98A00C8AFAB /* SecureiTerm.swift */; };
 		4F1E6C622834F98A00C8AFAB /* SecureiTerm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F1E6C602834F98A00C8AFAB /* SecureiTerm.swift */; };
 		4F1E6C6428355B2100C8AFAB /* InternetSharing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F1E6C6328355B2100C8AFAB /* InternetSharing.swift */; };
-		4F1E6C6528355B2100C8AFAB /* InternetSharing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F1E6C6328355B2100C8AFAB /* InternetSharing.swift */; };
 		4F1E6DDB2760081300FD3F01 /* Regex in Frameworks */ = {isa = PBXBuildFile; productRef = 4F1E6DDA2760081300FD3F01 /* Regex */; };
 		4F24A08E26EB734A0036F748 /* LicenseSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F24A08D26EB734A0036F748 /* LicenseSettingsView.swift */; };
 		4F24A09026EB735F0036F748 /* TeamSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F24A08F26EB735F0036F748 /* TeamSettings.swift */; };
@@ -168,8 +198,6 @@
 		4F7739F7271EBC2F008B1584 /* Sentry in Frameworks */ = {isa = PBXBuildFile; productRef = 4F7739F6271EBC2F008B1584 /* Sentry */; };
 		4F79F78D273BF6300082A5EB /* ChecksView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F79F78C273BF6300082A5EB /* ChecksView.swift */; };
 		4F79F78E273BF6300082A5EB /* ChecksView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F79F78C273BF6300082A5EB /* ChecksView.swift */; };
-		4F7F3E7D27C4E545003A035D /* AppProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F7F3E7C27C4E545003A035D /* AppProtocol.swift */; };
-		4F7F3E7E27C4E545003A035D /* AppProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F7F3E7C27C4E545003A035D /* AppProtocol.swift */; };
 		4F81C10826EB5D270065F548 /* URL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F81C10726EB5D270065F548 /* URL.swift */; };
 		4F84531026D634E5007C3B04 /* NSWorkspace.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F84530F26D634E5007C3B04 /* NSWorkspace.swift */; };
 		4F84531226D638C0007C3B04 /* NSBackgroundActivityScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F84531126D638C0007C3B04 /* NSBackgroundActivityScheduler.swift */; };
@@ -253,9 +281,34 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		4F1E6C552833A45300C8AFAB /* Copy Helper */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = Contents/Library/LaunchServices;
+			dstSubfolderSpec = 1;
+			files = (
+				4F1E6C562833A47800C8AFAB /* niteo.co.Pareto.helper in Copy Helper */,
+			);
+			name = "Copy Helper";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		4F0371BB26CD00B700B35E43 /* Boot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Boot.swift; sourceTree = "<group>"; };
 		4F04C278273E9CC400AD635F /* setapp-bridge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "setapp-bridge.h"; path = "libSetapp/setapp-bridge.h"; sourceTree = SOURCE_ROOT; };
+		4F07B996283CCB9000419C13 /* CodeInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CodeInfo.swift; sourceTree = "<group>"; };
+		4F07B997283CCB9000419C13 /* AllowedCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AllowedCommand.swift; sourceTree = "<group>"; };
+		4F07B998283CCB9000419C13 /* SharedConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SharedConstants.swift; sourceTree = "<group>"; };
+		4F07B999283CCB9000419C13 /* HelperToolInfoPropertyList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HelperToolInfoPropertyList.swift; sourceTree = "<group>"; };
+		4F07B99A283CCB9000419C13 /* HelperToolLaunchdPropertyList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HelperToolLaunchdPropertyList.swift; sourceTree = "<group>"; };
+		4F07B9AA283CCBE900419C13 /* Uninstaller.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Uninstaller.swift; sourceTree = "<group>"; };
+		4F07B9AB283CCBE900419C13 /* AllowedCommandRunner.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AllowedCommandRunner.swift; sourceTree = "<group>"; };
+		4F07B9AC283CCBE900419C13 /* Updater.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Updater.swift; sourceTree = "<group>"; };
+		4F07B9C1283CCF7200419C13 /* ConfigApp.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = ConfigApp.xcconfig; sourceTree = "<group>"; };
+		4F07B9C4283CCFB100419C13 /* ConfigHelper.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = ConfigHelper.xcconfig; sourceTree = "<group>"; };
+		4F07B9CA283CD16D00419C13 /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
 		4F103007269EE135008C1E86 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		4F14487326D8EA5E00A5BA34 /* Updater.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Updater.swift; sourceTree = "<group>"; };
 		4F14487B26D8EDB000A5BA34 /* Bundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bundle.swift; sourceTree = "<group>"; };
@@ -263,6 +316,9 @@
 		4F196CD72714C1C600A2A7B8 /* JWT.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = JWT.playground; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		4F1AE88F26F9FFA60084A381 /* MediaShare.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaShare.swift; sourceTree = "<group>"; };
 		4F1AE89126FA026D0084A381 /* AirPlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AirPlay.swift; sourceTree = "<group>"; };
+		4F1E6C4D2833A38800C8AFAB /* niteo.co.Pareto.helper */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = niteo.co.Pareto.helper; sourceTree = BUILT_PRODUCTS_DIR; };
+		4F1E6C4F2833A38800C8AFAB /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		4F1E6C542833A3D100C8AFAB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		4F1E6C5A2834F37500C8AFAB /* AutoUpdateAppCheck.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AutoUpdateAppCheck.swift; sourceTree = "<group>"; };
 		4F1E6C5D2834F5D200C8AFAB /* SecureTerminal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SecureTerminal.swift; sourceTree = "<group>"; };
 		4F1E6C602834F98A00C8AFAB /* SecureiTerm.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SecureiTerm.swift; sourceTree = "<group>"; };
@@ -278,7 +334,7 @@
 		4F343A5E26F7A3D4007D2F7D /* Teams.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Teams.swift; sourceTree = "<group>"; };
 		4F35395426E8AD4B008F5DD3 /* RemoteManagment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteManagment.swift; sourceTree = "<group>"; };
 		4F35395626E8AE02008F5DD3 /* RemoteLogin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteLogin.swift; sourceTree = "<group>"; };
-		4F37E7472718122E00A2B254 /* Pareto Security SetApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Pareto Security SetApp.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		4F37E7472718122E00A2B254 /* Pareto Security.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Pareto Security.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4F38D8C7273AC5AE00671756 /* IntroView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntroView.swift; sourceTree = "<group>"; };
 		4F38D8CA273AC5F200671756 /* PermissionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionsView.swift; sourceTree = "<group>"; };
 		4F38D8CD273AC62500671756 /* EndView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndView.swift; sourceTree = "<group>"; };
@@ -314,7 +370,7 @@
 		4F6A92E526C521BE006C2F2D /* CheckIntegrationTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckIntegrationTest.swift; sourceTree = "<group>"; };
 		4F6A92E726C52210006C2F2D /* IntegrationCheck.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntegrationCheck.swift; sourceTree = "<group>"; };
 		4F6A92E926C54AB7006C2F2D /* AppInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppInfo.swift; sourceTree = "<group>"; };
-		4F6A92EF26C555C6006C2F2D /* ParetoSecurityUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ParetoSecurityUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		4F6A92EF26C555C6006C2F2D /* Pareto Security.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Pareto Security.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4F6A92F126C555C6006C2F2D /* ParetoSecurityUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParetoSecurityUITests.swift; sourceTree = "<group>"; };
 		4F6EF88D275FE5D400752559 /* Zoom.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Zoom.swift; sourceTree = "<group>"; };
 		4F6EF8932760013500752559 /* Signal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Signal.swift; sourceTree = "<group>"; };
@@ -323,7 +379,6 @@
 		4F74B7D4275114EA00F1FC11 /* Dashlane.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Dashlane.swift; path = "Software Updates/Dashlane.swift"; sourceTree = "<group>"; };
 		4F74B7D5275114EA00F1FC11 /* Enpass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Enpass.swift; path = "Software Updates/Enpass.swift"; sourceTree = "<group>"; };
 		4F79F78C273BF6300082A5EB /* ChecksView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChecksView.swift; sourceTree = "<group>"; };
-		4F7F3E7C27C4E545003A035D /* AppProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppProtocol.swift; sourceTree = "<group>"; };
 		4F81C10726EB5D270065F548 /* URL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URL.swift; sourceTree = "<group>"; };
 		4F84530F26D634E5007C3B04 /* NSWorkspace.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSWorkspace.swift; sourceTree = "<group>"; };
 		4F84531126D638C0007C3B04 /* NSBackgroundActivityScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSBackgroundActivityScheduler.swift; sourceTree = "<group>"; };
@@ -352,7 +407,7 @@
 		4FB7C68026AFF25300FB1C41 /* Date.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Date.swift; sourceTree = "<group>"; };
 		4FB7C68626AFF29A00FB1C41 /* NSImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSImage.swift; sourceTree = "<group>"; };
 		4FB7C68C26AFFD2600FB1C41 /* FileVault.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileVault.swift; sourceTree = "<group>"; };
-		4FC81A4926C41DC8006EABA8 /* ParetoSecurityTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ParetoSecurityTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		4FC81A4926C41DC8006EABA8 /* Pareto Security.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Pareto Security.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4FC81A4B26C41DC8006EABA8 /* ParetoSecurityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParetoSecurityTests.swift; sourceTree = "<group>"; };
 		4FD0A24026A024440070BED4 /* Gatekeeper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Gatekeeper.swift; sourceTree = "<group>"; };
 		4FDA93A22771D9FC00F9D8B4 /* Checks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Checks.swift; sourceTree = "<group>"; };
@@ -374,6 +429,16 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		4F1E6C4A2833A38800C8AFAB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4F07B9B7283CCCC700419C13 /* SecureXPC in Frameworks */,
+				4F07B9B9283CCCCE00419C13 /* Blessed in Frameworks */,
+				4F07B9BB283CCCDD00419C13 /* EmbeddedPropertyList in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		4F37E7372718122E00A2B254 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -416,16 +481,31 @@
 				4FF515C126F7B362008D135E /* Alamofire in Frameworks */,
 				4F7739F4271EB3AD008B1584 /* Sentry in Frameworks */,
 				4F6A0E1326CE608C003B00A3 /* Defaults in Frameworks */,
+				4F1E6C232833A07300C8AFAB /* Blessed in Frameworks */,
 				4F1AE88B26F9FC150084A381 /* SwiftSocket in Frameworks */,
 				4F103012269F1C65008C1E86 /* LaunchAtLogin in Frameworks */,
 				4F196CD62714B51900A2A7B8 /* JWTDecode in Frameworks */,
+				4F1E6C462833A2AC00C8AFAB /* EmbeddedPropertyList in Frameworks */,
 				4F923CED2756918E00070551 /* Cache in Frameworks */,
+				4F1E6C262833A08500C8AFAB /* SecureXPC in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4F07B995283CCB5A00419C13 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				4F07B997283CCB9000419C13 /* AllowedCommand.swift */,
+				4F07B996283CCB9000419C13 /* CodeInfo.swift */,
+				4F07B999283CCB9000419C13 /* HelperToolInfoPropertyList.swift */,
+				4F07B99A283CCB9000419C13 /* HelperToolLaunchdPropertyList.swift */,
+				4F07B998283CCB9000419C13 /* SharedConstants.swift */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
 		4F103006269EDB82008C1E86 /* Views */ = {
 			isa = PBXGroup;
 			children = (
@@ -506,6 +586,19 @@
 			);
 			path = "System Integrity";
 			sourceTree = "<group>";
+		};
+		4F1E6C4E2833A38800C8AFAB /* ParetoSecurityAuthorized */ = {
+			isa = PBXGroup;
+			children = (
+				4F07B9AB283CCBE900419C13 /* AllowedCommandRunner.swift */,
+				4F07B9AA283CCBE900419C13 /* Uninstaller.swift */,
+				4F07B9AC283CCBE900419C13 /* Updater.swift */,
+				4F1E6C4F2833A38800C8AFAB /* main.swift */,
+				4F1E6C542833A3D100C8AFAB /* Info.plist */,
+				4F07B9C4283CCFB100419C13 /* ConfigHelper.xcconfig */,
+			);
+			path = ParetoSecurityAuthorized;
+			sourceTree = SOURCE_ROOT;
 		};
 		4F38D8C6273AC57500671756 /* Welcome */ = {
 			isa = PBXGroup;
@@ -627,11 +720,14 @@
 		4FEBA2E5269CD48F009B2469 = {
 			isa = PBXGroup;
 			children = (
-				4F196CD72714C1C600A2A7B8 /* JWT.playground */,
+				4F07B9CA283CD16D00419C13 /* Config.xcconfig */,
 				4F343A5D26F7A3C8007D2F7D /* API.playground */,
+				4F196CD72714C1C600A2A7B8 /* JWT.playground */,
+				4F07B995283CCB5A00419C13 /* Shared */,
 				4FEBA2F0269CD48F009B2469 /* Pareto */,
 				4FC81A4A26C41DC8006EABA8 /* ParetoSecurityTests */,
 				4F6A92F026C555C6006C2F2D /* ParetoSecurityUITests */,
+				4F1E6C4E2833A38800C8AFAB /* ParetoSecurityAuthorized */,
 				4FEBA2EF269CD48F009B2469 /* Products */,
 				4FB7C68E26AFFEE500FB1C41 /* Frameworks */,
 			);
@@ -641,9 +737,10 @@
 			isa = PBXGroup;
 			children = (
 				4FEBA2EE269CD48F009B2469 /* Pareto Security.app */,
-				4FC81A4926C41DC8006EABA8 /* ParetoSecurityTests.xctest */,
-				4F6A92EF26C555C6006C2F2D /* ParetoSecurityUITests.xctest */,
-				4F37E7472718122E00A2B254 /* Pareto Security SetApp.app */,
+				4FC81A4926C41DC8006EABA8 /* Pareto Security.xctest */,
+				4F6A92EF26C555C6006C2F2D /* Pareto Security.xctest */,
+				4F37E7472718122E00A2B254 /* Pareto Security.app */,
+				4F1E6C4D2833A38800C8AFAB /* niteo.co.Pareto.helper */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -652,7 +749,6 @@
 			isa = PBXGroup;
 			children = (
 				4FFDC59F2821539F0092B7BF /* Models */,
-				4F7F3E7C27C4E545003A035D /* AppProtocol.swift */,
 				4F10300A269F0568008C1E86 /* Checks */,
 				4FB7C67F26AFF22C00FB1C41 /* Extensions */,
 				4F103009269F054C008C1E86 /* StatusBar */,
@@ -673,6 +769,7 @@
 				4FDAD88E26EB784A00F64E61 /* License.swift */,
 				4F04C278273E9CC400AD635F /* setapp-bridge.h */,
 				4F577B4127A448CE008119F9 /* Notifications.swift */,
+				4F07B9C1283CCF7200419C13 /* ConfigApp.xcconfig */,
 			);
 			path = Pareto;
 			sourceTree = "<group>";
@@ -696,6 +793,28 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		4F1E6C4C2833A38800C8AFAB /* ParetoSecurityAuthorized */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4F1E6C512833A38800C8AFAB /* Build configuration list for PBXNativeTarget "ParetoSecurityAuthorized" */;
+			buildPhases = (
+				4F07B991283CC81100419C13 /* Run satisfy-job-bless-requirements */,
+				4F1E6C492833A38800C8AFAB /* Sources */,
+				4F1E6C4A2833A38800C8AFAB /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ParetoSecurityAuthorized;
+			packageProductDependencies = (
+				4F07B9B6283CCCC700419C13 /* SecureXPC */,
+				4F07B9B8283CCCCE00419C13 /* Blessed */,
+				4F07B9BA283CCCDD00419C13 /* EmbeddedPropertyList */,
+			);
+			productName = ParetoSecurityAuthorized;
+			productReference = 4F1E6C4D2833A38800C8AFAB /* niteo.co.Pareto.helper */;
+			productType = "com.apple.product-type.tool";
+		};
 		4F37E6FA2718122E00A2B254 /* Pareto Security SetApp */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 4F37E7442718122E00A2B254 /* Build configuration list for PBXNativeTarget "Pareto Security SetApp" */;
@@ -724,7 +843,7 @@
 				4F1E6DDA2760081300FD3F01 /* Regex */,
 			);
 			productName = Pareto;
-			productReference = 4F37E7472718122E00A2B254 /* Pareto Security SetApp.app */;
+			productReference = 4F37E7472718122E00A2B254 /* Pareto Security.app */;
 			productType = "com.apple.product-type.application";
 		};
 		4F6A92EE26C555C6006C2F2D /* ParetoSecurityUITests */ = {
@@ -742,7 +861,7 @@
 			);
 			name = ParetoSecurityUITests;
 			productName = ParetoSecurityUITests;
-			productReference = 4F6A92EF26C555C6006C2F2D /* ParetoSecurityUITests.xctest */;
+			productReference = 4F6A92EF26C555C6006C2F2D /* Pareto Security.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 		4FC81A4826C41DC8006EABA8 /* ParetoSecurityTests */ = {
@@ -763,18 +882,20 @@
 				4F84A94B26CBE4AE00A1579D /* ViewInspector */,
 			);
 			productName = ParetoSecurityTests;
-			productReference = 4FC81A4926C41DC8006EABA8 /* ParetoSecurityTests.xctest */;
+			productReference = 4FC81A4926C41DC8006EABA8 /* Pareto Security.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 		4FEBA2ED269CD48F009B2469 /* Pareto Security */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 4FEBA2FE269CD48F009B2469 /* Build configuration list for PBXNativeTarget "Pareto Security" */;
 			buildPhases = (
+				4F07B990283CC7DD00419C13 /* Run satisfy-job-bless-requirements */,
 				4FEBA2EA269CD48F009B2469 /* Sources */,
 				4FEBA2EB269CD48F009B2469 /* Frameworks */,
 				4FEBA2EC269CD48F009B2469 /* Resources */,
 				4F103013269F1D45008C1E86 /* Bundle run at login */,
 				4F103014269F28DE008C1E86 /* + build number */,
+				4F1E6C552833A45300C8AFAB /* Copy Helper */,
 			);
 			buildRules = (
 			);
@@ -792,6 +913,9 @@
 				4F7739F3271EB3AD008B1584 /* Sentry */,
 				4F923CEC2756918E00070551 /* Cache */,
 				4F6EF891275FEE6C00752559 /* Regex */,
+				4F1E6C222833A07300C8AFAB /* Blessed */,
+				4F1E6C252833A08500C8AFAB /* SecureXPC */,
+				4F1E6C452833A2AC00C8AFAB /* EmbeddedPropertyList */,
 			);
 			productName = Pareto;
 			productReference = 4FEBA2EE269CD48F009B2469 /* Pareto Security.app */;
@@ -804,9 +928,12 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
-				LastSwiftUpdateCheck = 1300;
-				LastUpgradeCheck = 1340;
+				LastSwiftUpdateCheck = 1340;
+				LastUpgradeCheck = 1300;
 				TargetAttributes = {
+					4F1E6C4C2833A38800C8AFAB = {
+						CreatedOnToolsVersion = 13.4;
+					};
 					4F6A92EE26C555C6006C2F2D = {
 						CreatedOnToolsVersion = 13.0;
 						TestTargetID = 4FEBA2ED269CD48F009B2469;
@@ -841,6 +968,9 @@
 				4F7739F2271EB3AD008B1584 /* XCRemoteSwiftPackageReference "sentry-cocoa" */,
 				4F923CEB2756918E00070551 /* XCRemoteSwiftPackageReference "Cache" */,
 				4F6EF890275FEE6C00752559 /* XCRemoteSwiftPackageReference "Regex" */,
+				4F1E6C212833A07300C8AFAB /* XCRemoteSwiftPackageReference "Blessed" */,
+				4F1E6C242833A08500C8AFAB /* XCRemoteSwiftPackageReference "SecureXPC" */,
+				4F1E6C442833A2AC00C8AFAB /* XCRemoteSwiftPackageReference "EmbeddedPropertyList" */,
 			);
 			productRefGroup = 4FEBA2EF269CD48F009B2469 /* Products */;
 			projectDirPath = "";
@@ -850,6 +980,7 @@
 				4FC81A4826C41DC8006EABA8 /* ParetoSecurityTests */,
 				4F6A92EE26C555C6006C2F2D /* ParetoSecurityUITests */,
 				4F37E6FA2718122E00A2B254 /* Pareto Security SetApp */,
+				4F1E6C4C2833A38800C8AFAB /* ParetoSecurityAuthorized */,
 			);
 		};
 /* End PBXProject section */
@@ -890,6 +1021,42 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		4F07B990283CC7DD00419C13 /* Run satisfy-job-bless-requirements */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Run satisfy-job-bless-requirements";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\"${SRCROOT}\"/BuildScripts/PropertyListModifier.swift satisfy-job-bless-requirements\n";
+		};
+		4F07B991283CC81100419C13 /* Run satisfy-job-bless-requirements */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Run satisfy-job-bless-requirements";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\"${SRCROOT}\"/BuildScripts/PropertyListModifier.swift satisfy-job-bless-requirements specify-mach-services auto-increment-version\n";
+		};
 		4F103013269F1D45008C1E86 /* Bundle run at login */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -965,6 +1132,22 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		4F1E6C492833A38800C8AFAB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4F07B9A3283CCB9000419C13 /* SharedConstants.swift in Sources */,
+				4F07B99D283CCB9000419C13 /* CodeInfo.swift in Sources */,
+				4F1E6C502833A38800C8AFAB /* main.swift in Sources */,
+				4F07B9A6283CCB9100419C13 /* HelperToolInfoPropertyList.swift in Sources */,
+				4F07B9A9283CCB9100419C13 /* HelperToolLaunchdPropertyList.swift in Sources */,
+				4F07B9B5283CCBE900419C13 /* Updater.swift in Sources */,
+				4F07B9AF283CCBE900419C13 /* Uninstaller.swift in Sources */,
+				4F07B9B2283CCBE900419C13 /* AllowedCommandRunner.swift in Sources */,
+				4F07B9A0283CCB9000419C13 /* AllowedCommand.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		4F37E7092718122E00A2B254 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -973,8 +1156,10 @@
 				4F4E286127BD748D006A18C1 /* PasswordAfterSleep.swift in Sources */,
 				4F37E70A2718122E00A2B254 /* ButtonStyle.swift in Sources */,
 				4F9982FD281FC46600C5F54F /* Defaults+Workaround.swift in Sources */,
+				4F07B9A2283CCB9000419C13 /* SharedConstants.swift in Sources */,
 				4F37E70B2718122E00A2B254 /* ParetoCheck.swift in Sources */,
 				4FE23EEE276BB13700CA9BA0 /* FollowView.swift in Sources */,
+				4F07B99C283CCB9000419C13 /* CodeInfo.swift in Sources */,
 				4F28A97E27566D8500E34F7B /* Firefox.swift in Sources */,
 				4F37E70C2718122E00A2B254 /* RemoteLogin.swift in Sources */,
 				4F3DCFCF274FD1AE00F1CB55 /* AppCheck.swift in Sources */,
@@ -997,6 +1182,7 @@
 				4F37E7152718122E00A2B254 /* Updater.swift in Sources */,
 				4FFDC59E282148530092B7BF /* TimeMachineHasBackup.swift in Sources */,
 				4F37E7162718122E00A2B254 /* Firewall.swift in Sources */,
+				4F07B9B1283CCBE900419C13 /* AllowedCommandRunner.swift in Sources */,
 				4F37E7172718122E00A2B254 /* Color.swift in Sources */,
 				4F79F78E273BF6300082A5EB /* ChecksView.swift in Sources */,
 				4F37E7182718122E00A2B254 /* LicenseSettingsView.swift in Sources */,
@@ -1006,13 +1192,11 @@
 				4F37E71B2718122E00A2B254 /* Teams.swift in Sources */,
 				4F74B7D7275114EA00F1FC11 /* Dashlane.swift in Sources */,
 				4F1E6C5F2834F5D200C8AFAB /* SecureTerminal.swift in Sources */,
-				4F1E6C6528355B2100C8AFAB /* InternetSharing.swift in Sources */,
 				4F74B7D9275114EA00F1FC11 /* Enpass.swift in Sources */,
 				4F3DCFE4274FE4E000F1CB55 /* Cyberduck.swift in Sources */,
 				4F38D8C9273AC5AE00671756 /* IntroView.swift in Sources */,
 				4F37E71D2718122E00A2B254 /* Defaults.swift in Sources */,
 				4F37E71E2718122E00A2B254 /* Autologin.swift in Sources */,
-				4F7F3E7E27C4E545003A035D /* AppProtocol.swift in Sources */,
 				4F38D8CF273AC62500671756 /* EndView.swift in Sources */,
 				4F8ECA382798262F00361728 /* FirewallStealth.swift in Sources */,
 				4F37E71F2718122E00A2B254 /* MediaShare.swift in Sources */,
@@ -1023,16 +1207,18 @@
 				4F1E6C622834F98A00C8AFAB /* SecureiTerm.swift in Sources */,
 				4F37E7222718122E00A2B254 /* PasswordtoUnlock.swift in Sources */,
 				4F37E7232718122E00A2B254 /* Bundle.swift in Sources */,
-				4F1E6C5C2834F37500C8AFAB /* AutoUpdateAppCheck.swift in Sources */,
 				4FB5BD2E2760E507004E404C /* SublimeText.swift in Sources */,
+				4F07B9A5283CCB9000419C13 /* HelperToolInfoPropertyList.swift in Sources */,
 				4F3DCFE6274FE4E000F1CB55 /* NordLayer.swift in Sources */,
 				4F37E7242718122E00A2B254 /* WelcomeView.swift in Sources */,
 				4F17270C2769F3410049B875 /* SSHKeysStrength.swift in Sources */,
 				4FB5BD312760E846004E404C /* VSCode.swift in Sources */,
+				4F07B9A8283CCB9100419C13 /* HelperToolLaunchdPropertyList.swift in Sources */,
 				4F37E7252718122E00A2B254 /* OpenWiFi.swift in Sources */,
 				4F905C4327B6C9B20012C661 /* AutoUpdateCheck.swift in Sources */,
 				4F37E7262718122E00A2B254 /* IntegrationCheck.swift in Sources */,
 				4F3DCFDC274FE4E000F1CB55 /* Slack.swift in Sources */,
+				4F07B99F283CCB9000419C13 /* AllowedCommand.swift in Sources */,
 				4F37E7272718122E00A2B254 /* Boot.swift in Sources */,
 				4FB51A5E27A94F7C003F528E /* AutomaticDownloadCheck.swift in Sources */,
 				4F37E7282718122E00A2B254 /* Claim.swift in Sources */,
@@ -1049,8 +1235,10 @@
 				4F37E72E2718122E00A2B254 /* Screensaver.swift in Sources */,
 				4F37E72F2718122E00A2B254 /* NSBackgroundActivityScheduler.swift in Sources */,
 				4F3DCFEF274FE73600F1CB55 /* WireGuard.swift in Sources */,
+				4F07B9AE283CCBE900419C13 /* Uninstaller.swift in Sources */,
 				4F3DCFE2274FE4E000F1CB55 /* 1Password7.swift in Sources */,
 				4F72B75E27A2D9D400B37502 /* LuLu.swift in Sources */,
+				4F07B9B4283CCBE900419C13 /* Updater.swift in Sources */,
 				4F37E7302718122E00A2B254 /* Gatekeeper.swift in Sources */,
 				4F37E7312718122E00A2B254 /* GeneralSettingsView.swift in Sources */,
 				4F37E7322718122E00A2B254 /* AppHandlers.swift in Sources */,
@@ -1097,6 +1285,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4F923CF22756920C00070551 /* iTerm.swift in Sources */,
+				4F07B9A1283CCB9000419C13 /* SharedConstants.swift in Sources */,
 				4F4E286027BD748D006A18C1 /* PasswordAfterSleep.swift in Sources */,
 				4FB0416126F71CC0003657BE /* ButtonStyle.swift in Sources */,
 				4F9982FC281FC46600C5F54F /* Defaults+Workaround.swift in Sources */,
@@ -1113,21 +1302,25 @@
 				4F24A09026EB735F0036F748 /* TeamSettings.swift in Sources */,
 				4F81C10826EB5D270065F548 /* URL.swift in Sources */,
 				4F6EF88E275FE5D400752559 /* Zoom.swift in Sources */,
+				4F07B9AD283CCBE900419C13 /* Uninstaller.swift in Sources */,
 				4FAAD326277B156200AA5CEF /* NewsletterView.swift in Sources */,
 				4F38D8CB273AC5F200671756 /* PermissionsView.swift in Sources */,
 				4FFDC5A428215A8F0092B7BF /* TimeMachineIsEncrypted.swift in Sources */,
 				4F5B20C3270316DB0015642A /* NetworkHandler.swift in Sources */,
 				4FB7C67D26AFF1AB00FB1C41 /* Log.swift in Sources */,
 				4FF13D9726DCCB9900E4084E /* Utils.swift in Sources */,
+				4F07B9A7283CCB9100419C13 /* HelperToolLaunchdPropertyList.swift in Sources */,
 				4F56AB5B278C57F1001CAAEF /* TimeMachine.swift in Sources */,
 				4FB51A5A27A94F27003F528E /* SystemUpdatesCheck.swift in Sources */,
 				4F14487426D8EA5E00A5BA34 /* Updater.swift in Sources */,
+				4F07B9A4283CCB9000419C13 /* HelperToolInfoPropertyList.swift in Sources */,
 				4FFDC59D282148530092B7BF /* TimeMachineHasBackup.swift in Sources */,
 				4F868DCF26A591E6005B876E /* Firewall.swift in Sources */,
 				4F9791C126F5DB4F00E668F4 /* Color.swift in Sources */,
 				4F79F78D273BF6300082A5EB /* ChecksView.swift in Sources */,
 				4F24A08E26EB734A0036F748 /* LicenseSettingsView.swift in Sources */,
 				4F35395526E8AD4C008F5DD3 /* RemoteManagment.swift in Sources */,
+				4F07B9B3283CCBE900419C13 /* Updater.swift in Sources */,
 				4FB7C68126AFF25300FB1C41 /* Date.swift in Sources */,
 				4F56AB5E278C6DF5001CAAEF /* AdobeReader.swift in Sources */,
 				4F343A5F26F7A3D4007D2F7D /* Teams.swift in Sources */,
@@ -1139,7 +1332,6 @@
 				4F38D8C8273AC5AE00671756 /* IntroView.swift in Sources */,
 				4F47221026B08A0E0071CE2A /* Defaults.swift in Sources */,
 				4F868DD126A5C51C005B876E /* Autologin.swift in Sources */,
-				4F7F3E7D27C4E545003A035D /* AppProtocol.swift in Sources */,
 				4F38D8CE273AC62500671756 /* EndView.swift in Sources */,
 				4F8ECA372798262F00361728 /* FirewallStealth.swift in Sources */,
 				4F1AE89026F9FFA60084A381 /* MediaShare.swift in Sources */,
@@ -1172,9 +1364,11 @@
 				4FB7C68D26AFFD2600FB1C41 /* FileVault.swift in Sources */,
 				4F103008269EE136008C1E86 /* SettingsView.swift in Sources */,
 				4F1AE89226FA026D0084A381 /* AirPlay.swift in Sources */,
+				4F07B99B283CCB9000419C13 /* CodeInfo.swift in Sources */,
 				4FFDC5A1282153B50092B7BF /* TimeMachineBackup.swift in Sources */,
 				4F868DD326A5C751005B876E /* Screensaver.swift in Sources */,
 				4F84531226D638C0007C3B04 /* NSBackgroundActivityScheduler.swift in Sources */,
+				4F07B99E283CCB9000419C13 /* AllowedCommand.swift in Sources */,
 				4F3DCFEE274FE73600F1CB55 /* WireGuard.swift in Sources */,
 				4F3DCFE1274FE4E000F1CB55 /* 1Password7.swift in Sources */,
 				4F72B75D27A2D9D400B37502 /* LuLu.swift in Sources */,
@@ -1184,6 +1378,7 @@
 				4F84531026D634E5007C3B04 /* NSWorkspace.swift in Sources */,
 				4F577B3F27A43654008119F9 /* MicrosoftTeams.swift in Sources */,
 				4FB7C68726AFF29A00FB1C41 /* NSImage.swift in Sources */,
+				4F07B9B0283CCBE900419C13 /* AllowedCommandRunner.swift in Sources */,
 				4F41831A2770F19D00EBAE4A /* macOSVersion.swift in Sources */,
 				4F91060327623E4C00D1A348 /* SSHKeys.swift in Sources */,
 				4F41831727707B0800EBAE4A /* StatusBarIcon.swift in Sources */,
@@ -1211,8 +1406,49 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		4F1E6C522833A38800C8AFAB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4F07B9C4283CCFB100419C13 /* ConfigHelper.xcconfig */;
+			buildSettings = {
+				APP_BUNDLE_IDENTIFIER = niteo.co.Pareto;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1.0.1;
+				DEVELOPMENT_TEAM = PM784W7B8X;
+				ENABLE_HARDENED_RUNTIME = YES;
+				INFOPLIST_FILE = "$(SRCROOT)/ParetoSecurityAuthorized/Info.plist";
+				MACOSX_DEPLOYMENT_TARGET = 12.3;
+				MARKETING_VERSION = 2;
+				OTHER_LDFLAGS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = niteo.co.Pareto.helper;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		4F1E6C532833A38800C8AFAB /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4F07B9C4283CCFB100419C13 /* ConfigHelper.xcconfig */;
+			buildSettings = {
+				APP_BUNDLE_IDENTIFIER = niteo.co.Pareto;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1.0.1;
+				DEVELOPMENT_TEAM = PM784W7B8X;
+				ENABLE_HARDENED_RUNTIME = YES;
+				INFOPLIST_FILE = "$(SRCROOT)/ParetoSecurityAuthorized/Info.plist";
+				MACOSX_DEPLOYMENT_TARGET = 12.3;
+				MARKETING_VERSION = 2;
+				OTHER_LDFLAGS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = niteo.co.Pareto.helper;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
 		4F37E7452718122E00A2B254 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4F07B9C1283CCF7200419C13 /* ConfigApp.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1262,6 +1498,7 @@
 		};
 		4F37E7462718122E00A2B254 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4F07B9C1283CCF7200419C13 /* ConfigApp.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1308,6 +1545,7 @@
 		};
 		4F6A92F626C555C6006C2F2D /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4F07B9C1283CCF7200419C13 /* ConfigApp.xcconfig */;
 			buildSettings = {
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
 				CODE_SIGN_IDENTITY = "Apple Development";
@@ -1334,6 +1572,7 @@
 		};
 		4F6A92F726C555C6006C2F2D /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4F07B9C1283CCF7200419C13 /* ConfigApp.xcconfig */;
 			buildSettings = {
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
 				CODE_SIGN_IDENTITY = "Apple Development";
@@ -1360,6 +1599,7 @@
 		};
 		4FC81A4E26C41DC8006EABA8 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4F07B9C1283CCF7200419C13 /* ConfigApp.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
@@ -1387,6 +1627,7 @@
 		};
 		4FC81A4F26C41DC8006EABA8 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4F07B9C1283CCF7200419C13 /* ConfigApp.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
@@ -1414,6 +1655,7 @@
 		};
 		4FEBA2FC269CD48F009B2469 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4F07B9CA283CD16D00419C13 /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -1477,6 +1719,7 @@
 		};
 		4FEBA2FD269CD48F009B2469 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4F07B9CA283CD16D00419C13 /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -1533,6 +1776,7 @@
 		};
 		4FEBA2FF269CD48F009B2469 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4F07B9C1283CCF7200419C13 /* ConfigApp.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1566,6 +1810,7 @@
 		};
 		4FEBA300269CD48F009B2469 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4F07B9C1283CCF7200419C13 /* ConfigApp.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1598,6 +1843,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		4F1E6C512833A38800C8AFAB /* Build configuration list for PBXNativeTarget "ParetoSecurityAuthorized" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4F1E6C522833A38800C8AFAB /* Debug */,
+				4F1E6C532833A38800C8AFAB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		4F37E7442718122E00A2B254 /* Build configuration list for PBXNativeTarget "Pareto Security SetApp" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -1684,6 +1938,30 @@
 			requirement = {
 				branch = spm;
 				kind = branch;
+			};
+		};
+		4F1E6C212833A07300C8AFAB /* XCRemoteSwiftPackageReference "Blessed" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/trilemma-dev/Blessed";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.4.0;
+			};
+		};
+		4F1E6C242833A08500C8AFAB /* XCRemoteSwiftPackageReference "SecureXPC" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/trilemma-dev/SecureXPC";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.7.0;
+			};
+		};
+		4F1E6C442833A2AC00C8AFAB /* XCRemoteSwiftPackageReference "EmbeddedPropertyList" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/trilemma-dev/EmbeddedPropertyList";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.0;
 			};
 		};
 		4F37E6FC2718122E00A2B254 /* XCRemoteSwiftPackageReference "LaunchAtLogin" */ = {
@@ -1793,6 +2071,21 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		4F07B9B6283CCCC700419C13 /* SecureXPC */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4F1E6C242833A08500C8AFAB /* XCRemoteSwiftPackageReference "SecureXPC" */;
+			productName = SecureXPC;
+		};
+		4F07B9B8283CCCCE00419C13 /* Blessed */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4F1E6C212833A07300C8AFAB /* XCRemoteSwiftPackageReference "Blessed" */;
+			productName = Blessed;
+		};
+		4F07B9BA283CCCDD00419C13 /* EmbeddedPropertyList */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4F1E6C442833A2AC00C8AFAB /* XCRemoteSwiftPackageReference "EmbeddedPropertyList" */;
+			productName = EmbeddedPropertyList;
+		};
 		4F103011269F1C65008C1E86 /* LaunchAtLogin */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 4F103010269F1C65008C1E86 /* XCRemoteSwiftPackageReference "LaunchAtLogin" */;
@@ -1817,6 +2110,21 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 4F1AE88926F9FC150084A381 /* XCRemoteSwiftPackageReference "SwiftSocket" */;
 			productName = SwiftSocket;
+		};
+		4F1E6C222833A07300C8AFAB /* Blessed */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4F1E6C212833A07300C8AFAB /* XCRemoteSwiftPackageReference "Blessed" */;
+			productName = Blessed;
+		};
+		4F1E6C252833A08500C8AFAB /* SecureXPC */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4F1E6C242833A08500C8AFAB /* XCRemoteSwiftPackageReference "SecureXPC" */;
+			productName = SecureXPC;
+		};
+		4F1E6C452833A2AC00C8AFAB /* EmbeddedPropertyList */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4F1E6C442833A2AC00C8AFAB /* XCRemoteSwiftPackageReference "EmbeddedPropertyList" */;
+			productName = EmbeddedPropertyList;
 		};
 		4F1E6DDA2760081300FD3F01 /* Regex */ = {
 			isa = XCSwiftPackageProductDependency;

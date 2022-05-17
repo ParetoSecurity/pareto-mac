@@ -4,6 +4,8 @@
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<key>CFBundleDisplayName</key>
+	<string></string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -26,7 +28,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>4722</string>
+	<string>4724</string>
 	<key>LSApplicationCategoryType</key>
 	<string>public.app-category.utilities</string>
 	<key>LSMinimumSystemVersion</key>
@@ -43,6 +45,11 @@
 	<true/>
 	<key>NSSystemAdministrationUsageDescription</key>
 	<string>The requested operation in Pareto Security requires elevation to be executed</string>
+	<key>SMPrivilegedExecutables</key>
+	<dict>
+		<key>niteo.co.Pareto.helper</key>
+		<string>anchor apple generic and identifier "niteo.co.Pareto.helper" and certificate leaf[subject.OU] = "PM784W7B8X"</string>
+	</dict>
 	<key>com.apple.security.files.bookmarks.app-scope</key>
 	<true/>
 	<key>com.apple.security.files.user-selected.read-write</key>

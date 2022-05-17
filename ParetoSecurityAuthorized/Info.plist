@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>BuildHash</key>
+	<string>21d1f7fddf43d47785b80a100f360e5b47bad9316901292fb46c95341ad9f9fe</string>
+	<key>CFBundleIdentifier</key>
+	<string>niteo.co.Pareto.helper</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleVersion</key>
+	<string>0.0.21</string>
+	<key>SMAuthorizedClients</key>
+	<array>
+		<string>anchor apple generic and identifier "niteo.co.Pareto" and info[CFBundleVersion] &gt;= "0.0.17" and certificate leaf[subject.OU] = "PM784W7B8X"</string>
+	</array>
+</dict>
+</plist>

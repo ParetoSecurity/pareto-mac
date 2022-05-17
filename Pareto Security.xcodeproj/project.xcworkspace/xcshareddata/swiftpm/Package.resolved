@@ -10,6 +10,15 @@
       }
     },
     {
+      "identity" : "blessed",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/trilemma-dev/Blessed",
+      "state" : {
+        "revision" : "395c49c07641a0f3cb47c0a6e45293cdb9609707",
+        "version" : "0.4.0"
+      }
+    },
+    {
       "identity" : "cache",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/hyperoslo/Cache",
@@ -25,6 +34,15 @@
       "state" : {
         "revision" : "119f654d44f7b90f00dc11f7dd1c94a36f12576b",
         "version" : "6.2.1"
+      }
+    },
+    {
+      "identity" : "embeddedpropertylist",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/trilemma-dev/EmbeddedPropertyList",
+      "state" : {
+        "revision" : "21bd832e28a9a66ecdb7b4c21910bb0487a22fe5",
+        "version" : "2.0.2"
       }
     },
     {
@@ -61,6 +79,15 @@
       "state" : {
         "branch" : "main",
         "revision" : "a853f1ec197bebe1d826360bd832ef3df7e2b35b"
+      }
+    },
+    {
+      "identity" : "securexpc",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/trilemma-dev/SecureXPC",
+      "state" : {
+        "revision" : "b19860657d5f64c8b535a942bec5ba4d73323a7f",
+        "version" : "0.7.0"
       }
     },
     {
