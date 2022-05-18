@@ -37,7 +37,7 @@ jobs:
     name: Unit and UI Tests
     runs-on: macos-12
     needs: lint
-    timeout-minutes: 12
+    timeout-minutes: 30
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}-test
       cancel-in-progress: true
