@@ -22,7 +22,8 @@ class AirDropCheck: ParetoCheck {
     }
 
     override func checkPasses() -> Bool {
-        let discoverableMode = readDefaultsNative(path: "com.apple.sharingd", key: "DiscoverableMode") ?? ""
+        // Contacts Only is the default
+        let discoverableMode = readDefaultsNative(path: "com.apple.sharingd", key: "DiscoverableMode") ?? "Contacts Only"
         if discoverableMode.contains("Contacts Only") {
             return true
         }
