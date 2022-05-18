@@ -65,7 +65,8 @@ enum Claims {
             BootCheck.sharedInstance,
             OpenWiFiCheck.sharedInstance,
             TimeMachineCheck.sharedInstance,
-            SecureTerminalCheck.sharedInstance
+            SecureTerminalCheck.sharedInstance,
+            SecureiTermCheck.sharedInstance
             // TimeMachineHasBackupCheck.sharedInstance,
             // TimeMachineIsEncryptedCheck.sharedInstance
         ]),

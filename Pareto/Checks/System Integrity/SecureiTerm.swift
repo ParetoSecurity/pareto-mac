@@ -29,7 +29,7 @@ class SecureiTermCheck: ParetoCheck {
     }
 
     override func checkPasses() -> Bool {
-        if let enabled = readDefaultsNative(path: "com.googlecode.iterm2", key: "\"Secure Input\"") {
+        if let enabled = readDefaultsNative(path: "com.googlecode.iterm2", key: "Secure Input") {
             os_log("Secure Input, status %{enabled}s", log: Log.check, enabled)
             return enabled == "1"
         }
