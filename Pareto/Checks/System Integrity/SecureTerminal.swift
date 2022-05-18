@@ -15,15 +15,15 @@ class SecureTerminalCheck: ParetoCheck {
     override var UUID: String {
         "5cbe1cfd-ff28-4cc7-8998-5d72e608b28d"
     }
-    
+
     override var TitleON: String {
-        "Other apps cannot read from Terminal.app"
+        "Terminal uses secure entry"
     }
-    
+
     override var TitleOFF: String {
-        "Other apps can read from Terminal.app"
+        "Terminal is not using secure entry"
     }
-    
+
     override func checkPasses() -> Bool {
         if let enabled = readDefaultsNative(path: "com.apple.Terminal", key: "SecureKeyboardEntry") {
             os_log("SecureKeyboardEntry, status %{enabled}s", log: Log.check, enabled)

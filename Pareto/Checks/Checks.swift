@@ -29,8 +29,7 @@ enum Claims {
         AppVSCodeCheck.sharedInstance,
         AdobeReaderCheck.sharedInstance,
         AppLuLuCheck.sharedInstance,
-        AppMicrosoftTeamsCheck.sharedInstance,
-        AutoUpdateAppCheck.sharedInstance
+        AppMicrosoftTeamsCheck.sharedInstance
     ]
 
     static let all = [
@@ -70,7 +69,7 @@ enum Claims {
             // TimeMachineHasBackupCheck.sharedInstance,
             // TimeMachineIsEncryptedCheck.sharedInstance
         ]),
-        Claim(withTitle: "Software Updates", withChecks: updateChecks)
+        Claim(withTitle: "Software Updates", withChecks: updateChecks + [AutoUpdateAppCheck.sharedInstance])
     ]
 
     static var sorted: [Claim] {
