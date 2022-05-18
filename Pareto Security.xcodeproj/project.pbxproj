@@ -21,6 +21,12 @@
 		4F1AE88B26F9FC150084A381 /* SwiftSocket in Frameworks */ = {isa = PBXBuildFile; productRef = 4F1AE88A26F9FC150084A381 /* SwiftSocket */; };
 		4F1AE89026F9FFA60084A381 /* MediaShare.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F1AE88F26F9FFA60084A381 /* MediaShare.swift */; };
 		4F1AE89226FA026D0084A381 /* AirPlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F1AE89126FA026D0084A381 /* AirPlay.swift */; };
+		4F1E6C5B2834F37500C8AFAB /* AutoUpdateAppCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F1E6C5A2834F37500C8AFAB /* AutoUpdateAppCheck.swift */; };
+		4F1E6C5C2834F37500C8AFAB /* AutoUpdateAppCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F1E6C5A2834F37500C8AFAB /* AutoUpdateAppCheck.swift */; };
+		4F1E6C5E2834F5D200C8AFAB /* SecureTerminal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F1E6C5D2834F5D200C8AFAB /* SecureTerminal.swift */; };
+		4F1E6C5F2834F5D200C8AFAB /* SecureTerminal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F1E6C5D2834F5D200C8AFAB /* SecureTerminal.swift */; };
+		4F1E6C612834F98A00C8AFAB /* SecureiTerm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F1E6C602834F98A00C8AFAB /* SecureiTerm.swift */; };
+		4F1E6C622834F98A00C8AFAB /* SecureiTerm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F1E6C602834F98A00C8AFAB /* SecureiTerm.swift */; };
 		4F1E6DDB2760081300FD3F01 /* Regex in Frameworks */ = {isa = PBXBuildFile; productRef = 4F1E6DDA2760081300FD3F01 /* Regex */; };
 		4F24A08E26EB734A0036F748 /* LicenseSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F24A08D26EB734A0036F748 /* LicenseSettingsView.swift */; };
 		4F24A09026EB735F0036F748 /* TeamSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F24A08F26EB735F0036F748 /* TeamSettings.swift */; };
@@ -255,6 +261,9 @@
 		4F196CD72714C1C600A2A7B8 /* JWT.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = JWT.playground; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		4F1AE88F26F9FFA60084A381 /* MediaShare.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaShare.swift; sourceTree = "<group>"; };
 		4F1AE89126FA026D0084A381 /* AirPlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AirPlay.swift; sourceTree = "<group>"; };
+		4F1E6C5A2834F37500C8AFAB /* AutoUpdateAppCheck.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AutoUpdateAppCheck.swift; sourceTree = "<group>"; };
+		4F1E6C5D2834F5D200C8AFAB /* SecureTerminal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SecureTerminal.swift; sourceTree = "<group>"; };
+		4F1E6C602834F98A00C8AFAB /* SecureiTerm.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SecureiTerm.swift; sourceTree = "<group>"; };
 		4F24A08D26EB734A0036F748 /* LicenseSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LicenseSettingsView.swift; sourceTree = "<group>"; };
 		4F24A08F26EB735F0036F748 /* TeamSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeamSettings.swift; sourceTree = "<group>"; };
 		4F24A09126EB73980036F748 /* AboutSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutSettingsView.swift; sourceTree = "<group>"; };
@@ -484,6 +493,8 @@
 				4F0371BB26CD00B700B35E43 /* Boot.swift */,
 				4FB7C68C26AFFD2600FB1C41 /* FileVault.swift */,
 				4F56AB5A278C57F1001CAAEF /* TimeMachine.swift */,
+				4F1E6C5D2834F5D200C8AFAB /* SecureTerminal.swift */,
+				4F1E6C602834F98A00C8AFAB /* SecureiTerm.swift */,
 				4FFDC59C282148530092B7BF /* TimeMachineHasBackup.swift */,
 				4FFDC5A328215A8F0092B7BF /* TimeMachineIsEncrypted.swift */,
 				4FD0A24026A024440070BED4 /* Gatekeeper.swift */,
@@ -562,6 +573,7 @@
 				4F4183192770F19D00EBAE4A /* macOSVersion.swift */,
 				4FB51A5627A94457003F528E /* SecurityUpdateCheck.swift */,
 				4F905C4127B6C9B20012C661 /* AutoUpdateCheck.swift */,
+				4F1E6C5A2834F37500C8AFAB /* AutoUpdateAppCheck.swift */,
 				4FB51A5C27A94F7C003F528E /* AutomaticDownloadCheck.swift */,
 				4FB51A5927A94F27003F528E /* SystemUpdatesCheck.swift */,
 			);
@@ -989,6 +1001,7 @@
 				4F56AB5F278C6DF5001CAAEF /* AdobeReader.swift in Sources */,
 				4F37E71B2718122E00A2B254 /* Teams.swift in Sources */,
 				4F74B7D7275114EA00F1FC11 /* Dashlane.swift in Sources */,
+				4F1E6C5F2834F5D200C8AFAB /* SecureTerminal.swift in Sources */,
 				4F74B7D9275114EA00F1FC11 /* Enpass.swift in Sources */,
 				4F3DCFE4274FE4E000F1CB55 /* Cyberduck.swift in Sources */,
 				4F38D8C9273AC5AE00671756 /* IntroView.swift in Sources */,
@@ -1002,8 +1015,10 @@
 				4F37E7202718122E00A2B254 /* ParetoApp.swift in Sources */,
 				4FB5BD2B2760CA9D004E404C /* LibreOffice.swift in Sources */,
 				4F37E7212718122E00A2B254 /* Flags.swift in Sources */,
+				4F1E6C622834F98A00C8AFAB /* SecureiTerm.swift in Sources */,
 				4F37E7222718122E00A2B254 /* PasswordtoUnlock.swift in Sources */,
 				4F37E7232718122E00A2B254 /* Bundle.swift in Sources */,
+				4F1E6C5C2834F37500C8AFAB /* AutoUpdateAppCheck.swift in Sources */,
 				4FB5BD2E2760E507004E404C /* SublimeText.swift in Sources */,
 				4F3DCFE6274FE4E000F1CB55 /* NordLayer.swift in Sources */,
 				4F37E7242718122E00A2B254 /* WelcomeView.swift in Sources */,
@@ -1112,6 +1127,7 @@
 				4F56AB5E278C6DF5001CAAEF /* AdobeReader.swift in Sources */,
 				4F343A5F26F7A3D4007D2F7D /* Teams.swift in Sources */,
 				4F74B7D6275114EA00F1FC11 /* Dashlane.swift in Sources */,
+				4F1E6C5E2834F5D200C8AFAB /* SecureTerminal.swift in Sources */,
 				4F74B7D8275114EA00F1FC11 /* Enpass.swift in Sources */,
 				4F3DCFE3274FE4E000F1CB55 /* Cyberduck.swift in Sources */,
 				4F38D8C8273AC5AE00671756 /* IntroView.swift in Sources */,
@@ -1125,8 +1141,10 @@
 				4FEBA2F2269CD48F009B2469 /* ParetoApp.swift in Sources */,
 				4FB5BD2A2760CA9D004E404C /* LibreOffice.swift in Sources */,
 				4FF22A6526F0CFA500500213 /* Flags.swift in Sources */,
+				4F1E6C612834F98A00C8AFAB /* SecureiTerm.swift in Sources */,
 				4F84A94926CBE21300A1579D /* PasswordtoUnlock.swift in Sources */,
 				4F14487C26D8EDB000A5BA34 /* Bundle.swift in Sources */,
+				4F1E6C5B2834F37500C8AFAB /* AutoUpdateAppCheck.swift in Sources */,
 				4FB5BD2D2760E507004E404C /* SublimeText.swift in Sources */,
 				4F3DCFE5274FE4E000F1CB55 /* NordLayer.swift in Sources */,
 				4F8B01B226F4A6CB00EDE14B /* WelcomeView.swift in Sources */,

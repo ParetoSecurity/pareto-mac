@@ -29,7 +29,8 @@ enum Claims {
         AppVSCodeCheck.sharedInstance,
         AdobeReaderCheck.sharedInstance,
         AppLuLuCheck.sharedInstance,
-        AppMicrosoftTeamsCheck.sharedInstance
+        AppMicrosoftTeamsCheck.sharedInstance,
+        AutoUpdateAppCheck.sharedInstance
     ]
 
     static let all = [
@@ -64,7 +65,8 @@ enum Claims {
             FileVaultCheck.sharedInstance,
             BootCheck.sharedInstance,
             OpenWiFiCheck.sharedInstance,
-            TimeMachineCheck.sharedInstance
+            TimeMachineCheck.sharedInstance,
+            SecureTerminalCheck.sharedInstance
             // TimeMachineHasBackupCheck.sharedInstance,
             // TimeMachineIsEncryptedCheck.sharedInstance
         ]),
