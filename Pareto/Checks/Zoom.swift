@@ -34,7 +34,7 @@ class AppZoomCheck: AppCheck {
     }
 
     override func getLatestVersion(completion: @escaping (String) -> Void) {
-        let url = viaEdgeCache("https://zoom.us/client/latest/ZoomInstallerIT.pkg")
+        let url = "https://zoom.us/client/latest/ZoomInstallerIT.pkg"
         let versionRegex = Regex("prod\\/(\\d+\\.\\d+\\.\\d+).\\d+\\/")
         os_log("Requesting %{public}s", url)
 

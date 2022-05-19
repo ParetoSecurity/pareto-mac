@@ -23,19 +23,23 @@ class MacOSVersionCheck: ParetoCheck {
     override var TitleOFF: String {
         "macOS is not up-to-date"
     }
-
+    
+    override var help: String? {
+        "Current version: \(currentVersion.description), Latest: \(latestXX)"
+    }
+    
     var currentVersion: Version {
         let os = ProcessInfo.processInfo.operatingSystemVersion
         return Version(os.majorVersion, os.minorVersion, os.patchVersion)
     }
 
     func getLatestVersion(doc: String, completion: @escaping (String) -> Void) {
-        let url = viaEdgeCache("https://support.apple.com/en-us/\(doc)")
+        let url = "https://support.apple.com/en-us/\(doc)"
         let versionRegex = Regex("<h2.*>macOS.+ ([\\.\\d]+)<\\/h2>")
         os_log("Requesting %{public}s", url)
         AF.request(url).responseString(queue: AppCheck.queue, completionHandler: { response in
             if response.error == nil {
-                let html = response.value ?? "<h2>macOS Dar win 1.2.5</h2>"
+                let html = response.value ?? "<h2>macOS 1.2.5</h2>"
                 var version = versionRegex.firstMatch(in: html)?.groups.first?.value ?? "1.2.3"
                 if version.components(separatedBy: ".").count == 2 {
                     version = "\(version).0"
@@ -48,33 +52,22 @@ class MacOSVersionCheck: ParetoCheck {
         })
     }
 
-    var latest11xx: Version {
+    var latestXX: Version {
+        var doc = "HT211896"
+        if #available(macOS 12, *) {
+            doc = "HT212585"
+        }
         var tempVersion = "0.0.0"
         let lock = DispatchSemaphore(value: 0)
-        getLatestVersion(doc: "HT211896") { version in
+        getLatestVersion(doc: doc) { version in
             tempVersion = version
             lock.signal()
         }
         lock.wait()
         return Version(tempVersion) ?? Version(0, 0, 0)
     }
-
-    var latest12xx: Version {
-        var tempVersion = "0.0.0"
-        let lock = DispatchSemaphore(value: 0)
-        getLatestVersion(doc: "HT212585") { version in
-            tempVersion = version
-            lock.signal()
-        }
-        lock.wait()
-
-        return Version(tempVersion) ?? Version(0, 0, 0)
-    }
-
+    
     override func checkPasses() -> Bool {
-        if currentVersion.major == 11 {
-            return currentVersion >= latest11xx
-        }
-        return currentVersion >= latest12xx
+        return currentVersion >= latestXX
     }
 }
