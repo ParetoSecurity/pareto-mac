@@ -20,7 +20,7 @@ class InternetShareCheck: ParetoCheck {
     override var TitleOFF: String {
         "Sharing internet is on"
     }
-    
+
     override func checkPasses() -> Bool {
         if let dict = readDefaultsFile(path: "/Library/Preferences/SystemConfiguration/com.apple.nat.plist") {
             if let NAT = (dict.value(forKey: "NAT") as? NSDictionary) {

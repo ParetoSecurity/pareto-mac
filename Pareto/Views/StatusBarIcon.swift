@@ -66,15 +66,27 @@ struct StatusBarIcon: View {
                             }
                         }
                 } else {
-                    Image(statusBarModel.state.rawValue)
-                        .resizable()
-                        .frame(width: 22, height: 20, alignment: .center).onAppear {
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                                if statusBarModel.state == .allOk {
-                                    statusBarModel.state = .idle
+                    if statusBarModel.state == .allOk {
+                        Image(statusBarModel.state.rawValue)
+                            .resizable()
+                            .frame(width: 22, height: 20, alignment: .center).onAppear {
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                                    if statusBarModel.state == .allOk {
+                                        statusBarModel.state = .idle
+                                    }
                                 }
                             }
-                        }
+                    } else {
+                        Image(statusBarModel.state.rawValue)
+                            .resizable()
+                            .frame(width: 22, height: 20, alignment: .center).onAppear {
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                                    if statusBarModel.state == .allOk {
+                                        statusBarModel.state = .idle
+                                    }
+                                }
+                            }
+                    }
                 }
             }
 

@@ -23,11 +23,11 @@ class MacOSVersionCheck: ParetoCheck {
     override var TitleOFF: String {
         "macOS is not up-to-date"
     }
-    
+
     override var help: String? {
         "Current version: \(currentVersion.description), Latest: \(latestXX)"
     }
-    
+
     var currentVersion: Version {
         let os = ProcessInfo.processInfo.operatingSystemVersion
         return Version(os.majorVersion, os.minorVersion, os.patchVersion)
@@ -66,7 +66,7 @@ class MacOSVersionCheck: ParetoCheck {
         lock.wait()
         return Version(tempVersion) ?? Version(0, 0, 0)
     }
-    
+
     override func checkPasses() -> Bool {
         return currentVersion >= latestXX
     }

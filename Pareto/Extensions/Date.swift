@@ -1,10 +1,10 @@
 import Foundation
 
 extension Date {
-    public static let DayInMilis = (60 * 60 * 24 * 1000)
-    public static let HourInMilis = (60 * 60 * 1000)
+    public static let DayInMs = (60 * 60 * 24 * 1000)
+    public static let HourInMs = (60 * 60 * 1000)
 
-    func currentTimeMillis() -> Int {
+    func currentTimeMs() -> Int {
         return Int(timeIntervalSince1970 * 1000)
     }
 

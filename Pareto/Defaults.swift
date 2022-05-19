@@ -37,14 +37,14 @@ extension Defaults.Keys {
     static let updateNag = Key<Bool>("updateNag", default: false, suite: extensionDefaults)
     static let showBeta = Key<Bool>("showBeta", default: false, suite: extensionDefaults)
     static let betaChannel = Key<Bool>("betaChannel", default: false, suite: extensionDefaults)
-    static let lastUpdateCheck = Key<Int>("lastUpdateCheck", default: Date().currentTimeMillis(), suite: extensionDefaults)
+    static let lastUpdateCheck = Key<Int>("lastUpdateCheck", default: Date().currentTimeMs(), suite: extensionDefaults)
 
     // Checks
     static let snoozeTime = Key<Int>("snoozeTime", default: 0, suite: extensionDefaults)
     static let lastCheck = Key<Int>("lastCheck", default: 0, suite: extensionDefaults)
     static let checksPassed = Key<Bool>("checksPassed", default: false, suite: extensionDefaults)
     static let disableChecksEvents = Key<Bool>("disableChecksEvents", default: false, suite: extensionDefaults)
-    static let lastNagShown = Key<Int>("lastNagShown", default: Date().currentTimeMillis(), suite: extensionDefaults)
+    static let lastNagShown = Key<Int>("lastNagShown", default: Date().currentTimeMs(), suite: extensionDefaults)
     static let checkForUpdatesRecentOnly = Key<Bool>("checkForUpdatesRecentOnly", default: true, suite: extensionDefaults)
     static let showNotifications = Key<Bool>("showNotifications", default: false, suite: extensionDefaults)
 }
@@ -55,28 +55,28 @@ public extension Defaults {
     }
 
     static func shouldDoUpdateCheck() -> Bool {
-        return Defaults[.lastUpdateCheck] + Date.HourInMilis < Date().currentTimeMillis()
+        return Defaults[.lastUpdateCheck] + Date.HourInMs < Date().currentTimeMs()
     }
 
     static func doneUpdateCheck() {
-        Defaults[.lastUpdateCheck] = Date().currentTimeMillis()
+        Defaults[.lastUpdateCheck] = Date().currentTimeMs()
         Defaults[.updateNag] = false
     }
 
     static func shouldDoTeamUpdate() -> Bool {
-        return Defaults[.lastTeamUpdate] + (AppInfo.Flags.slowerTeamUpdate ? Date.HourInMilis * 8 : Date.HourInMilis) < Date().currentTimeMillis()
+        return Defaults[.lastTeamUpdate] + (AppInfo.Flags.slowerTeamUpdate ? Date.HourInMs * 8 : Date.HourInMs) < Date().currentTimeMs()
     }
 
     static func doneTeamUpdate() {
-        Defaults[.lastTeamUpdate] = Date().currentTimeMillis()
+        Defaults[.lastTeamUpdate] = Date().currentTimeMs()
     }
 
     static func shouldShowNag() -> Bool {
-        return Defaults[.lastNagShown] + (Date.HourInMilis * 24 * AppInfo.Flags.nagScreenDelayDays) < Date().currentTimeMillis()
+        return Defaults[.lastNagShown] + (Date.HourInMs * 24 * AppInfo.Flags.nagScreenDelayDays) < Date().currentTimeMs()
     }
 
     static func shownNag() {
-        Defaults[.lastNagShown] = Date().currentTimeMillis()
+        Defaults[.lastNagShown] = Date().currentTimeMs()
     }
 
     static func toFree() {

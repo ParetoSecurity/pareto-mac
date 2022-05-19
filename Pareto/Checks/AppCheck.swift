@@ -70,7 +70,7 @@ class AppCheck: ParetoCheck, AppCheckProtocol {
     override var help: String? {
         "Current: \(currentVersion.description), Latest: \(latestVersion)"
     }
-    
+
     static let queue = DispatchQueue(label: "co.pareto.check_versions", qos: .utility, attributes: .concurrent)
     public var latestVersion: Version {
         if try! AppInfo.versionStorage.existsObject(forKey: appBundle) {

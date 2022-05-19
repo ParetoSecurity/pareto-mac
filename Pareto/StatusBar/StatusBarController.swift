@@ -107,7 +107,7 @@ class StatusBarController: NSObject, NSMenuDelegate {
         try! AppInfo.versionStorage.removeExpiredObjects()
 
         // Snooze in effect
-        if Defaults[.snoozeTime] >= Date().currentTimeMillis() {
+        if Defaults[.snoozeTime] >= Date().currentTimeMs() {
             os_log("Checks are snoozed until %s", log: Log.app, String(Defaults[.snoozeTime]))
             return
         } else {
@@ -117,12 +117,12 @@ class StatusBarController: NSObject, NSMenuDelegate {
         }
 
         // don't run checks if not in interactive mode and it was ran less than 5 minutes ago
-        if (Defaults[.lastCheck] + (60 * 1000 * 5)) >= Date().currentTimeMillis(), !interactive {
-            os_log("Debounce detected, last check %sms ago", log: Log.app, String(Date().currentTimeMillis() - Defaults[.lastCheck]))
+        if (Defaults[.lastCheck] + (60 * 1000 * 5)) >= Date().currentTimeMs(), !interactive {
+            os_log("Debounce detected, last check %sms ago", log: Log.app, String(Date().currentTimeMs() - Defaults[.lastCheck]))
             return
         }
 
-        Defaults[.lastCheck] = Date().currentTimeMillis()
+        Defaults[.lastCheck] = Date().currentTimeMs()
         DispatchQueue.main.async {
             self.statusBarModel.isRunning = true
         }
@@ -201,17 +201,17 @@ class StatusBarController: NSObject, NSMenuDelegate {
     }
 
     @objc func snoozeOneHour() {
-        snoozeTime = Date().currentTimeMillis() + Snooze.oneHour
+        snoozeTime = Date().currentTimeMs() + Snooze.oneHour
         updateMenu()
     }
 
     @objc func snoozeOneDay() {
-        snoozeTime = Date().currentTimeMillis() + Snooze.oneDay
+        snoozeTime = Date().currentTimeMs() + Snooze.oneDay
         updateMenu()
     }
 
     @objc func snoozeOneWeek() {
-        snoozeTime = Date().currentTimeMillis() + Snooze.oneWeek
+        snoozeTime = Date().currentTimeMs() + Snooze.oneWeek
         updateMenu()
     }
 

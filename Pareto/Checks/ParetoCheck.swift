@@ -133,7 +133,7 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
     var report: String {
         return "\(UUID):\(checkPassed)"
     }
-    
+
     var help: String? {
         nil
     }
@@ -163,7 +163,7 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
 
         os_log("Running check for %{public}s - %{public}s", log: Log.app, UUID, Title)
         checkPassed = checkPasses()
-        checkTimestamp = Int(Date().currentTimeMillis())
+        checkTimestamp = Int(Date().currentTimeMs())
 
         if isCritical, !checkPassed {
             showNotification(check: self)
