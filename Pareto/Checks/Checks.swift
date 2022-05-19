@@ -57,7 +57,8 @@ enum Claims {
             RemoteLoginCheck.sharedInstance,
             AirPlayCheck.sharedInstance,
             AirDropCheck.sharedInstance,
-            MediaShareCheck.sharedInstance
+            MediaShareCheck.sharedInstance,
+            InternetShareCheck.sharedInstance
         ]),
         Claim(withTitle: "System Integrity", withChecks: [
             GatekeeperCheck.sharedInstance,
