@@ -94,6 +94,7 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
     func menu() -> NSMenuItem {
         let item = NSMenuItem(title: Title, action: #selector(moreInfo), keyEquivalent: "")
         item.target = self
+        item.toolTip = help
         if isRunnable {
             if Defaults[.snoozeTime] > 0 {
                 item.image = NSImage.SF(name: "seal.fill").tint(color: .systemGray)
@@ -131,6 +132,10 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
 
     var report: String {
         return "\(UUID):\(checkPassed)"
+    }
+    
+    var help: String? {
+        nil
     }
 
     var reportJSON: String {
