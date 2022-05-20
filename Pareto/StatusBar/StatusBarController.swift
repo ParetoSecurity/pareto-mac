@@ -137,6 +137,7 @@ class StatusBarController: NSObject, NSMenuDelegate {
         if !Defaults[.teamID].isEmpty {
             let lock = DispatchSemaphore(value: 0)
             AppInfo.TeamSettings.update {
+                AppInfo.TeamSettings.updateIgnored()
                 os_log("Updated teams settings")
                 lock.signal()
             }

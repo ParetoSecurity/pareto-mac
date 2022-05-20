@@ -16,7 +16,7 @@ struct DeviceSettings: Codable {
     let ignoredChecks: [APICheck]
     let requiredChecks: [APICheck]
 
-    var disabledList: [String] {
+    var ignoredList: [String] {
         ignoredChecks.map { $0.id }
     }
 
@@ -254,16 +254,33 @@ func VerifyTeamTicket(withTicket data: String, publicKey key: String = rsaPublic
 }
 
 class TeamSettingsUpdater: ObservableObject {
-    @Published var disabledChecks: [String] = []
+    @Published var ignoredChecks: [String] = []
     @Published var enforcedChecks: [String] = []
 
     func update(completion: @escaping () -> Void) {
         Team.settings { res in
-            self.disabledChecks = res?.disabledList ?? []
+            self.ignoredChecks = res?.ignoredList ?? []
             self.enforcedChecks = res?.enforcedList ?? []
-            os_log("Team disabled checks: %s", self.disabledChecks.debugDescription)
+            os_log("Team ignored checks: %s", self.ignoredChecks.debugDescription)
             os_log("Team enforced checks: %s", self.enforcedChecks.debugDescription)
             completion()
         }
+    }
+
+    func updateIgnored() {
+        if Defaults[.appliedIgnoredChecks] {
+            os_log("Team ignored checks already applied once.")
+            return
+        }
+
+        for claim in Claims.all {
+            for check in claim.checks {
+                if ignoredChecks.contains(where: { $0 == check.UUID }) {
+                    check.isActive = false
+                }
+            }
+        }
+        os_log("Team ignored checks applied.")
+        Defaults[.appliedIgnoredChecks] = true
     }
 }

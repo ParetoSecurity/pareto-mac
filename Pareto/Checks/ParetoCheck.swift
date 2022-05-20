@@ -42,10 +42,6 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
         checkPassed ? TitleON : TitleOFF
     }
 
-    public var teamDisabled: Bool {
-        AppInfo.TeamSettings.disabledChecks.contains(where: { $0 == UUID })
-    }
-
     public var teamEnforced: Bool {
         AppInfo.TeamSettings.enforcedChecks.contains(where: { $0 == UUID })
     }
@@ -55,8 +51,7 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
             if teamEnforced {
                 return true
             }
-            let userEnabled = UserDefaults.standard.bool(forKey: EnabledKey)
-            return userEnabled && !teamDisabled
+            return UserDefaults.standard.bool(forKey: EnabledKey)
         }
         set { UserDefaults.standard.set(newValue, forKey: EnabledKey) }
     }
@@ -66,7 +61,7 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
     }
 
     public var showSettings: Bool {
-        return !teamDisabled && !teamEnforced
+        return !teamEnforced
     }
 
     public var reportIfDisabled: Bool {
@@ -151,11 +146,6 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
     }
 
     func run() {
-        if AppInfo.TeamSettings.disabledChecks.contains(where: { $0 == UUID }) {
-            os_log("Team disabled check %{public}s - %{public}s", log: Log.app, UUID, Title)
-            return
-        }
-
         if !isRunnable {
             os_log("Disabled check %{public}s - %{public}s", log: Log.app, UUID, Title)
             return

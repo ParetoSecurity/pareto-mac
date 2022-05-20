@@ -148,7 +148,9 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
                 if self.networkHandler.currentStatus == .satisfied {
                     if !Defaults[.teamID].isEmpty {
                         os_log("Running flags update")
-                        AppInfo.TeamSettings.update { os_log("Updated teams settings") }
+                        AppInfo.TeamSettings.update {
+                            os_log("Updated teams settings")
+                        }
                     } else {
                         os_log("Skipping flags update, no team")
                     }
@@ -373,6 +375,7 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
                     Team.link(withDevice: ReportingDevice.current()).response { response in
                         switch response.result {
                         case .success:
+                            Defaults[.appliedIgnoredChecks] = false
                             DispatchQueue.main.async {
                                 let alert = NSAlert()
                                 alert.messageText = "Pareto Security is activated and linked."

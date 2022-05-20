@@ -26,6 +26,7 @@ extension Defaults.Keys {
     static let teamAuth = Key<String>("teamAuth", default: "", suite: extensionDefaults)
     static let machineUUID = Key<String>("machineUUID", default: AppInfo.getSystemUUID() ?? UUID().uuidString, suite: extensionDefaults)
     static let sendHWInfo = Key<Bool>("sendHWInfo", default: false, suite: extensionDefaults)
+    static let appliedIgnoredChecks = Key<Bool>("appliedIgnoredChecksv1", default: false, suite: extensionDefaults)
 
     // License
     static let license = Key<String>("license", default: "", suite: extensionDefaults)

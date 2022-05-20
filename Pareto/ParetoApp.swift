@@ -104,6 +104,7 @@ class AppDelegate: AppHandlers, NSApplicationDelegate {
                 Team.link(withDevice: ReportingDevice.current()).response { response in
                     switch response.result {
                     case .success:
+                        Defaults[.appliedIgnoredChecks] = false
                         print("Team ticket is linked")
                         Defaults[.lastCheck] = 1
                         exit(0)
