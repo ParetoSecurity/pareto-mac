@@ -25,7 +25,7 @@ class SecureiTermCheck: ParetoCheck {
     }
 
     override var isRunnable: Bool {
-        AppiTermCheck.sharedInstance.isInstalled
+        AppiTermCheck.sharedInstance.isInstalled && isActive
     }
 
     override func checkPasses() -> Bool {
