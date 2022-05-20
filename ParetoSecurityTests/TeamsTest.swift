@@ -45,7 +45,7 @@ class TeamsTest: XCTestCase {
 
         Team.settings { settings in
             XCTAssertEqual(settings?.enforcedList, [])
-            XCTAssertEqual(settings?.disabledList, [])
+            XCTAssertEqual(settings?.ignoredList, [])
         }
     }
 }
