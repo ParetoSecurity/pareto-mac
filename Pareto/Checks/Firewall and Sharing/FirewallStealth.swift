@@ -24,6 +24,9 @@ class FirewallStealthCheck: ParetoCheck {
     }
 
     override public var showSettings: Bool {
+        if teamEnforced {
+            return false
+        }
         return FirewallCheck.sharedInstance.isActive
     }
 

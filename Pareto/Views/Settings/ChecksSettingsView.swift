@@ -10,11 +10,15 @@ import SwiftUI
 
 struct ChecksSettingsView: View {
     @State var updater: Bool = false
+    @Default(.teamID) var teamID
 
     var body: some View {
         ScrollView {
             VStack(alignment: .leading) {
                 Text("Deselect the checks you don't want the app to run.")
+                if !teamID.isEmpty {
+                    Text("Checks with asterisk (✴) are required by your team.")
+                }
                 VStack(alignment: .leading, spacing: 0.0) {
                     ForEach(Claims.sorted, id: \.self) { claim in
 
@@ -26,18 +30,26 @@ struct ChecksSettingsView: View {
                         } else {
                             Text(title).fontWeight(.bold).font(.system(size: 15)).padding([.top, .bottom], 10)
                         }
-                        ForEach(claim.checksSorted, id: \.self) { check in
+                        ForEach(claim.checksSorted.filter { check in
+                            check.isInstalled
+                        }, id: \.self) { check in
                             VStack(alignment: .leading) {
-                                Toggle(check.TitleON, isOn: Binding<Bool>(
-                                    get: { check.isActive },
-                                    set: {
-                                        check.isActive = $0
-                                        updater.toggle()
+                                LazyHStack {
+                                    if check.teamEnforced {
+                                        Text("✴")
+                                        Text(check.TitleON)
+
+                                    } else {
+                                        Toggle(check.TitleON, isOn: Binding<Bool>(
+                                            get: { check.isActive },
+                                            set: {
+                                                check.isActive = $0
+                                                updater.toggle()
+                                            }
+                                        )).disabled(!check.showSettings)
                                     }
-                                )).disabled(!check.showSettings)
-                                if check.teamEnforced {
-                                    Text("Check is required by your Team.").font(.footnote)
                                 }
+
                                 if check.showSettingsWarnDiskAccess && !check.isRunnable {
                                     Text("Requires full disk access permission.").font(.footnote)
                                     Button {
@@ -56,9 +68,9 @@ struct ChecksSettingsView: View {
                          destination: URL(string: "https://paretosecurity.com/security-checks?utm_source=\(AppInfo.utmSource)")!)
                     Text(" about checks on our website.")
                 }.padding(0)
-            }.padding(.all, 20).frame(minWidth: 380, minHeight: 480)
+            }.padding(.all, 20).frame(minWidth: 480, minHeight: 480)
 
-        }.frame(width: 400, height: 400)
+        }.frame(width: 500, height: 400)
     }
 }
 

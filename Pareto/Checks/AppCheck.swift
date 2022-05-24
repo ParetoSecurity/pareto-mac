@@ -102,7 +102,7 @@ class AppCheck: ParetoCheck, AppCheckProtocol {
         return nil
     }
 
-    public var isInstalled: Bool {
+    override public var isInstalled: Bool {
         applicationPath != nil
     }
 
@@ -131,6 +131,9 @@ class AppCheck: ParetoCheck, AppCheckProtocol {
     }
 
     override public var showSettings: Bool {
+        if teamEnforced {
+            return false
+        }
         return isInstalled
     }
 

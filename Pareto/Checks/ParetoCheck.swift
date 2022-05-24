@@ -60,6 +60,10 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
         return isActive
     }
 
+    public var isInstalled: Bool {
+        return true
+    }
+
     public var showSettings: Bool {
         return !teamEnforced
     }
@@ -160,10 +164,12 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
         }
     }
 
+    var infoURL: URL {
+        URL(string: "https://paretosecurity.com/check/" + UUID + "?utm_source=" + AppInfo.utmSource)!
+    }
+
     @objc func moreInfo() {
-        if let url = URL(string: "https://paretosecurity.com/check/" + UUID + "?utm_source=" + AppInfo.utmSource) {
-            NSWorkspace.shared.open(url)
-        }
+        NSWorkspace.shared.open(infoURL)
     }
 }
 
