@@ -94,9 +94,16 @@ jobs:
 
       - name: Build dmg for release
         run: npm install --global create-dmg && make dmg
-
+        
+      - name: Add APPLE_CONNECT_API_KEY
+        env:
+          APPLE_CONNECT_API_KEY: ${{ secrets.APPLE_CONNECT_API_KEY }}
+        run: |
+          echo "$APPLE_CONNECT_API_KEY" | base64 -d > apple-connect-api-key.p8
+      - name: "Add notarization to keychain"
+        run: xcrun notarytool store-credentials notarize --key apple-connect-api-key.p8 --key-id HDA2244YHP --issuer f755a738-4c55-473e-a6f9-88357a9ef310 --validate
       - name: "Notarize Release Build"
-        run: xcrun notarytool submit ParetoSecurity.dmg --password ${{ secrets.NOTARIZATION_PASSWORD }} --apple-id ${{ secrets.NOTARIZATION_USERNAME }} --team-id PM784W7B8X --progress --wait
+        run: xcrun notarytool submit ParetoSecurity.app.zip --team-id PM784W7B8X --keychain-profile "Notarize" --progress --wait
 
       - name: Upload DMG to Artifacts
         uses: actions/upload-artifact@v2
@@ -244,8 +251,15 @@ jobs:
       - name: Compress app for notarization
         run: ditto -V -c -k --keepParent SetAppExport/Pareto\ Security.app ParetoSecurity.app.zip
 
+      - name: Add APPLE_CONNECT_API_KEY
+        env:
+          APPLE_CONNECT_API_KEY: ${{ secrets.APPLE_CONNECT_API_KEY }}
+        run: |
+          echo "$APPLE_CONNECT_API_KEY" | base64 -d > apple-connect-api-key.p8
+      - name: "Add notarization to keychain"
+        run: xcrun notarytool store-credentials notarize --key apple-connect-api-key.p8 --key-id HDA2244YHP --issuer f755a738-4c55-473e-a6f9-88357a9ef310 --validate
       - name: "Notarize Release Build"
-        run: xcrun notarytool submit ParetoSecurity.app.zip --password ${{ secrets.NOTARIZATION_PASSWORD }} --apple-id ${{ secrets.NOTARIZATION_USERNAME }} --team-id PM784W7B8X --progress --wait
+        run: xcrun notarytool submit ParetoSecurity.app.zip --team-id PM784W7B8X --keychain-profile "Notarize" --progress --wait
 
       - name: "Staple Release App"
         run: for i in {1..3}; do xcrun stapler staple SetAppExport/Pareto\ Security.app && break || sleep 15; done
