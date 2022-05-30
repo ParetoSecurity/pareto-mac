@@ -15,6 +15,8 @@ import os.log
 struct DeviceSettings: Codable {
     let ignoredChecks: [APICheck]
     let requiredChecks: [APICheck]
+    let name: String
+    let admin: String
 
     var ignoredList: [String] {
         ignoredChecks.map { $0.id }
@@ -256,11 +258,15 @@ func VerifyTeamTicket(withTicket data: String, publicKey key: String = rsaPublic
 class TeamSettingsUpdater: ObservableObject {
     @Published var ignoredChecks: [String] = []
     @Published var enforcedChecks: [String] = []
+    @Published var name: String = "Default Team"
+    @Published var admin: String = "admin@niteo.co"
 
     func update(completion: @escaping () -> Void) {
         Team.settings { res in
             self.ignoredChecks = res?.ignoredList ?? []
             self.enforcedChecks = res?.enforcedList ?? []
+            self.name = res?.name ?? "Default Team"
+            self.admin = res?.admin ?? "admin@niteo.co"
             os_log("Team ignored checks: %s", self.ignoredChecks.debugDescription)
             os_log("Team enforced checks: %s", self.enforcedChecks.debugDescription)
             completion()
