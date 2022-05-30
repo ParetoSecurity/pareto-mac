@@ -24,7 +24,7 @@ struct SettingsView: View {
                     Label("General", systemImage: "gear")
                 }
                 .tag(Tabs.general)
-            TeamSettingsView()
+            TeamSettingsView(teamSettings: AppInfo.TeamSettings)
                 .tabItem {
                     Label("Teams", systemImage: "person.3.fill")
                 }

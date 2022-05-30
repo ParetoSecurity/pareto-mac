@@ -9,9 +9,15 @@ import Defaults
 import SwiftUI
 
 struct TeamSettingsView: View {
+    @StateObject var teamSettings: TeamSettingsUpdater
     @Default(.teamID) var teamID
     @Default(.machineUUID) var machineUUID
     @Default(.sendHWInfo) var sendHWInfo
+
+    func copyMail() {
+        NSPasteboard.general.clearContents()
+        NSPasteboard.general.setString(teamSettings.admin, forType: .string)
+    }
 
     func copy() {
         NSPasteboard.general.clearContents()
@@ -24,23 +30,41 @@ struct TeamSettingsView: View {
 
     var body: some View {
         if !teamID.isEmpty {
-            Form {
+            VStack(alignment: .leading) {
                 Section(
-                    footer: Text("Device Name")) {
+                    footer: Text("Team Name").font(.caption)) {
+                        VStack(alignment: .leading) {
+                            Text("\(teamSettings.name)")
+                        }
+                    }
+                Spacer(minLength: 1)
+                Section(
+                    footer: Text("Team Admin").font(.caption)) {
+                        VStack(alignment: .leading) {
+                            Link(teamSettings.admin, destination: URL(string: "mailto:\(teamSettings.admin)")!).contextMenu(ContextMenu(menuItems: {
+                                Button("Copy", action: copyMail)
+                            }))
+                        }
+                    }
+                Spacer(minLength: 1)
+                Section(
+                    footer: Text("Device Name").font(.caption)) {
                         VStack(alignment: .leading) {
                             Text("\(AppInfo.machineName)").contextMenu(ContextMenu(menuItems: {
                                 Button("How to change", action: help)
                             }))
                         }
                     }
+                Spacer(minLength: 1)
                 Section(
-                    footer: Text("Device ID")) {
+                    footer: Text("Device ID").font(.caption)) {
                         VStack(alignment: .leading) {
                             Text("\(machineUUID)").contextMenu(ContextMenu(menuItems: {
                                 Button("Copy", action: copy)
                             }))
                         }
                     }
+                Spacer(minLength: 2)
                 Section(
                     footer: Text("When enabled, send model name and serial number.").font(.footnote)) {
                         VStack(alignment: .leading) {
@@ -55,7 +79,9 @@ struct TeamSettingsView: View {
                     Link("Team Dashboard »",
                          destination: AppInfo.teamsURL())
                 }
-            }.frame(width: 350).padding(25)
+            }.frame(minWidth: 350, minHeight: 150).padding(25).onAppear {
+                teamSettings.update {}
+            }
         } else {
             Form {
                 Text("The Teams subscription will give you a web dashboard for an overview of the company’s devices.")
@@ -63,11 +89,5 @@ struct TeamSettingsView: View {
                      destination: URL(string: "https://paretosecurity.com/pricing?utm_source=\(AppInfo.utmSource)&utm_medium=teams-link")!)
             }.frame(width: 350).padding(25)
         }
-    }
-}
-
-struct TeamSettings_Previews: PreviewProvider {
-    static var previews: some View {
-        TeamSettingsView()
     }
 }
