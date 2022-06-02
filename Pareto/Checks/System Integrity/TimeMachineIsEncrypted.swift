@@ -34,7 +34,7 @@ class TimeMachineIsEncryptedCheck: ParetoCheck {
     }
 
     override public var showSettingsWarnDiskAccess: Bool {
-        return true
+        return true && dict == nil
     }
 
     override func checkPasses() -> Bool {

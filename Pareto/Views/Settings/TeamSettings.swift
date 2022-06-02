@@ -79,7 +79,7 @@ struct TeamSettingsView: View {
                     Link("Team Dashboard »",
                          destination: AppInfo.teamsURL())
                 }
-            }.frame(minWidth: 350, minHeight: 150).padding(25).onAppear {
+            }.frame(width: 350, height: 250).padding(25).onAppear {
                 DispatchQueue.main.async {
                     teamSettings.update {}
                 }

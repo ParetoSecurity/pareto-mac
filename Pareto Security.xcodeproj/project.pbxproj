@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		4F0371BC26CD00B700B35E43 /* Boot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F0371BB26CD00B700B35E43 /* Boot.swift */; };
 		4F080D1D26C50D2800686786 /* ParetoSecurityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FC81A4B26C41DC8006EABA8 /* ParetoSecurityTests.swift */; };
+		4F0BD11F284891670098316A /* ClipButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F0BD11E284891670098316A /* ClipButton.swift */; };
+		4F0BD120284891670098316A /* ClipButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F0BD11E284891670098316A /* ClipButton.swift */; };
 		4F103008269EE136008C1E86 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F103007269EE135008C1E86 /* SettingsView.swift */; };
 		4F103012269F1C65008C1E86 /* LaunchAtLogin in Frameworks */ = {isa = PBXBuildFile; productRef = 4F103011269F1C65008C1E86 /* LaunchAtLogin */; };
 		4F14487426D8EA5E00A5BA34 /* Updater.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F14487326D8EA5E00A5BA34 /* Updater.swift */; };
@@ -256,6 +258,7 @@
 /* Begin PBXFileReference section */
 		4F0371BB26CD00B700B35E43 /* Boot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Boot.swift; sourceTree = "<group>"; };
 		4F04C278273E9CC400AD635F /* setapp-bridge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "setapp-bridge.h"; path = "libSetapp/setapp-bridge.h"; sourceTree = SOURCE_ROOT; };
+		4F0BD11E284891670098316A /* ClipButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipButton.swift; sourceTree = "<group>"; };
 		4F103007269EE135008C1E86 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		4F14487326D8EA5E00A5BA34 /* Updater.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Updater.swift; sourceTree = "<group>"; };
 		4F14487B26D8EDB000A5BA34 /* Bundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bundle.swift; sourceTree = "<group>"; };
@@ -432,6 +435,7 @@
 				4FAAD324277B154300AA5CEF /* Settings */,
 				4F38D8C6273AC57500671756 /* Welcome */,
 				4F41831627707B0800EBAE4A /* StatusBarIcon.swift */,
+				4F0BD11E284891670098316A /* ClipButton.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1047,6 +1051,7 @@
 				4F37E72D2718122E00A2B254 /* AirPlay.swift in Sources */,
 				4FFDC5A2282153B50092B7BF /* TimeMachineBackup.swift in Sources */,
 				4F37E72E2718122E00A2B254 /* Screensaver.swift in Sources */,
+				4F0BD120284891670098316A /* ClipButton.swift in Sources */,
 				4F37E72F2718122E00A2B254 /* NSBackgroundActivityScheduler.swift in Sources */,
 				4F3DCFEF274FE73600F1CB55 /* WireGuard.swift in Sources */,
 				4F3DCFE2274FE4E000F1CB55 /* 1Password7.swift in Sources */,
@@ -1174,6 +1179,7 @@
 				4F1AE89226FA026D0084A381 /* AirPlay.swift in Sources */,
 				4FFDC5A1282153B50092B7BF /* TimeMachineBackup.swift in Sources */,
 				4F868DD326A5C751005B876E /* Screensaver.swift in Sources */,
+				4F0BD11F284891670098316A /* ClipButton.swift in Sources */,
 				4F84531226D638C0007C3B04 /* NSBackgroundActivityScheduler.swift in Sources */,
 				4F3DCFEE274FE73600F1CB55 /* WireGuard.swift in Sources */,
 				4F3DCFE1274FE4E000F1CB55 /* 1Password7.swift in Sources */,

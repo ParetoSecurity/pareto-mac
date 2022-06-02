@@ -67,9 +67,9 @@ enum Claims {
             OpenWiFiCheck.sharedInstance,
             TimeMachineCheck.sharedInstance,
             SecureTerminalCheck.sharedInstance,
-            SecureiTermCheck.sharedInstance
-            // TimeMachineHasBackupCheck.sharedInstance,
-            // TimeMachineIsEncryptedCheck.sharedInstance
+            SecureiTermCheck.sharedInstance,
+            TimeMachineHasBackupCheck.sharedInstance,
+            TimeMachineIsEncryptedCheck.sharedInstance
         ]),
         Claim(withTitle: "Software Updates", withChecks: updateChecks + [AutoUpdateAppCheck.sharedInstance])
     ]

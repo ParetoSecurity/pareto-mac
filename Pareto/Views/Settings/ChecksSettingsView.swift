@@ -34,7 +34,7 @@ struct ChecksSettingsView: View {
                             check.isInstalled
                         }, id: \.self) { check in
                             VStack(alignment: .leading) {
-                                LazyHStack {
+                                HStack {
                                     if check.teamEnforced {
                                         Text("✴")
                                         Text(check.TitleON)
@@ -49,16 +49,18 @@ struct ChecksSettingsView: View {
                                         )).disabled(!check.showSettings)
                                     }
                                 }
-
                                 if check.showSettingsWarnDiskAccess && !check.isRunnable {
-                                    Text("Requires full disk access permission.").font(.footnote)
-                                    Button {
-                                        NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_AllFiles")!)
+                                    HStack {
+                                        Text("Requires full disk access permission.").font(.footnote)
+                                        Button {
+                                            NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_AllFiles")!)
 
-                                    } label: {
-                                        Text("Authorize")
+                                        } label: {
+                                            Text("Authorise").font(.footnote)
+                                        }
                                     }
                                 }
+
                             }.padding(.vertical, 5.0)
                         }
                     }

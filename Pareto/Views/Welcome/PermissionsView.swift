@@ -88,25 +88,25 @@ struct PermissionsView: View {
                 }).disabled(checker.osaAuthorized)
 
             }.frame(width: 350, alignment: .center)
-//            HStack {
-//                VStack(alignment: .leading) {
-//                    Text("Full Disk Access").font(.title2)
-//                    Text("App requires full disk access if you want to use the Time Machine checks.").font(.footnote)
-//                }
-//
-//                Button(action: authorizeFDAClick, label: {
-//                    if checker.ran {
-//                        if checker.fdaAuthorized {
-//                            Text("Authorised")
-//                        } else {
-//                            Text("Authorise")
-//                        }
-//                    } else {
-//                        Text("Verifying")
-//                    }
-//                }).disabled(checker.fdaAuthorized)
-//
-//            }.frame(width: 350, alignment: .center)
+            HStack {
+                VStack(alignment: .leading) {
+                    Text("Full Disk Access").font(.title2)
+                    Text("App requires full disk access if you want to use the Time Machine checks.").font(.footnote)
+                }
+
+                Button(action: authorizeFDAClick, label: {
+                    if checker.ran {
+                        if checker.fdaAuthorized {
+                            Text("Authorised")
+                        } else {
+                            Text("Authorise")
+                        }
+                    } else {
+                        Text("Verifying")
+                    }
+                }).disabled(checker.fdaAuthorized)
+
+            }.frame(width: 350, alignment: .center)
             Spacer(minLength: 40)
             Button("Continue") {
                 #if SETAPP_ENABLED
