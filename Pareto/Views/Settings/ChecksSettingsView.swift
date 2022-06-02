@@ -56,7 +56,9 @@ struct ChecksSettingsView: View {
                                             NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_AllFiles")!)
 
                                         } label: {
-                                            Text("Authorise").font(.footnote)
+                                            Text("Authorize").font(.footnote)
+                                            Link("?",
+                                                 destination: URL(string: "https://paretosecurity.com/security-checks?utm_source=\(AppInfo.utmSource)")!)
                                         }
                                     }
                                 }

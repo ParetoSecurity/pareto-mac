@@ -13,6 +13,10 @@ class ParetoSecurityTests: XCTestCase {
     override class func setUp() {
         super.setUp()
     }
+    
+    override class func tearDown() {
+        super.tearDown()
+    }
 
     func testThatUUIDsAreUnique() throws {
         var uuids: [String] = []
@@ -27,7 +31,6 @@ class ParetoSecurityTests: XCTestCase {
     }
 
     func testAppInfo() throws {
-        XCTAssertTrue(AppInfo.getVersions().contains("HW"))
         XCTAssertTrue(AppInfo.bugReportURL().absoluteString.contains("paretosecurity.com"))
     }
 

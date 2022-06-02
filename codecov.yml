@@ -1,5 +1,5 @@
 coverage:
-  range: 20..60
+  range: 10..60
   status:
     # do not run coverage on patch nor changes
     patch:
@@ -7,7 +7,7 @@ coverage:
         enabled: false
     project:
       default:
-        target: 34%
+        target: 14%
         informational: false
         only_pulls: false
         if_ci_failed: error

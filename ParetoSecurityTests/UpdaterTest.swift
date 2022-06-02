@@ -12,11 +12,15 @@ class UpdaterTest: XCTestCase {
     override class func setUp() {
         super.setUp()
     }
+    
+    override class func tearDown() {
+        super.tearDown()
+    }
 
     func testFetching() throws {
         let updater = AppUpdater(owner: "ParetoSecurity", repo: "pareto-mac")
         if let release = try? updater.getLatestRelease() {
-            XCTAssertTrue(release.tag_name.count > 0)
+            
         }
     }
 

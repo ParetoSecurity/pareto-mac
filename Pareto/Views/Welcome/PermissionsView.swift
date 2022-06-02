@@ -78,9 +78,9 @@ struct PermissionsView: View {
                 Button(action: authorizeOSAClick, label: {
                     if checker.ran {
                         if checker.osaAuthorized {
-                            Text("Authorised")
+                            Text("Authorized")
                         } else {
-                            Text("Authorise")
+                            Text("Authorize")
                         }
                     } else {
                         Text("Verifying")
@@ -97,9 +97,9 @@ struct PermissionsView: View {
                 Button(action: authorizeFDAClick, label: {
                     if checker.ran {
                         if checker.fdaAuthorized {
-                            Text("Authorised")
+                            Text("Authorized")
                         } else {
-                            Text("Authorise")
+                            Text("Authorize")
                         }
                     } else {
                         Text("Verifying")
