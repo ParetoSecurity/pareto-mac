@@ -15,7 +15,11 @@ enum ReportingRoles: String, Defaults.Serializable {
     case personal
 }
 
-let extensionDefaults = UserDefaults.standard
+#if DEBUG
+    let extensionDefaults = UserDefaults(suiteName: "debug-paretosecurity")!
+#else
+    let extensionDefaults = UserDefaults.standard
+#endif
 
 extension Defaults.Keys {
     // Teams

@@ -35,7 +35,7 @@ jobs:
         run: make lint
   test:
     name: Unit and UI Tests
-    runs-on: macos-12
+    runs-on: self-hosted
     needs: lint
     timeout-minutes: 30
     concurrency:
@@ -67,15 +67,6 @@ jobs:
             ${{ runner.os }}-mint-${{ env.cache-name }}-
       - name: Install mint and packages
         run: brew install mint && mint bootstrap
-      - name: Cache DerivedData
-        uses: actions/cache@v2
-        env:
-          cache-name: test-derived-data-v1
-        with:
-          path: ~/Library/Developer/Xcode/DerivedData
-          key: ${{ runner.os }}-${{ env.cache-name }}
-          restore-keys: |
-            ${{ runner.os }}-${{ env.cache-name }}-
       - name: Cache SPM modules
         uses: actions/cache@v2
         env:
@@ -172,7 +163,7 @@ jobs:
       - name: Cache DerivedData
         uses: actions/cache@v2
         env:
-          cache-name: build-derived-data-v1
+          cache-name: build-derived-data-v2
         with:
           path: ~/Library/Developer/Xcode/DerivedData
           key: ${{ runner.os }}-${{ env.cache-name }}
@@ -303,7 +294,7 @@ jobs:
       - name: Cache DerivedData
         uses: actions/cache@v2
         env:
-          cache-name: setapp-build-derived-data-v1
+          cache-name: setapp-build-derived-data-v2
         with:
           path: ~/Library/Developer/Xcode/DerivedData
           key: ${{ runner.os }}-${{ env.cache-name }}

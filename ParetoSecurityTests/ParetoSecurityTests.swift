@@ -13,6 +13,10 @@ class ParetoSecurityTests: XCTestCase {
     override class func setUp() {
         super.setUp()
     }
+    
+    override class func tearDown() {
+        super.tearDown()
+    }
 
     func testThatUUIDsAreUnique() throws {
         var uuids: [String] = []

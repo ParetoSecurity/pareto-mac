@@ -12,6 +12,10 @@ class SoftwareUpdatesTest: XCTestCase {
     override class func setUp() {
         super.setUp()
     }
+    
+    override class func tearDown() {
+        super.tearDown()
+    }
 
     func testAppVersionFetchers() throws {
         var redirects = [String]()
