@@ -16,7 +16,7 @@ class WelcomeTest: XCTestCase {
     override class func setUp() {
         super.setUp()
     }
-    
+
     override class func tearDown() {
         super.tearDown()
     }

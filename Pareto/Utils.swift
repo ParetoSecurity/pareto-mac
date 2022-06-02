@@ -26,10 +26,10 @@ func runCMD(app: String, args: [String]) -> String {
 
 func runOSA(appleScript: String) -> String? {
     #if !DEBUG
-    let out = runCMD(app: "/usr/bin/osascript", args: ["-e", appleScript])
-    return out
+        let out = runCMD(app: "/usr/bin/osascript", args: ["-e", appleScript])
+        return out
     #else
-    return "debug"
+        return "debug"
     #endif
 }
 

@@ -13,10 +13,11 @@ class SettingsViewTests: XCTestCase {
     override class func setUp() {
         super.setUp()
     }
-    
+
     override class func tearDown() {
         super.tearDown()
     }
+
     func testSettingsView() throws {
         let subject = SettingsView(selected: SettingsView.Tabs.general)
         let sub = try subject.inspect().tabView().count

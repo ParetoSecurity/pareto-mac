@@ -57,9 +57,9 @@ struct ChecksSettingsView: View {
 
                                         } label: {
                                             Text("Authorize").font(.footnote)
-                                            Link("?",
-                                                 destination: URL(string: "https://paretosecurity.com/security-checks?utm_source=\(AppInfo.utmSource)")!)
                                         }
+                                        Link("?",
+                                             destination: URL(string: "https://help.paretosecurity.com/article/312-app-permissions?utm_source=\(AppInfo.utmSource)")!)
                                     }
                                 }
 

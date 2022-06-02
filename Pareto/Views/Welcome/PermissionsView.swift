@@ -91,7 +91,11 @@ struct PermissionsView: View {
             HStack {
                 VStack(alignment: .leading) {
                     Text("Full Disk Access").font(.title2)
-                    Text("App requires full disk access if you want to use the Time Machine checks.").font(.footnote)
+                    HStack {
+                        Text("App requires full disk access if you want to use the Time Machine checks.").font(.footnote)
+                        Link("?",
+                             destination: URL(string: "https://help.paretosecurity.com/article/312-app-permissions?utm_source=\(AppInfo.utmSource)")!)
+                    }
                 }
 
                 Button(action: authorizeFDAClick, label: {
