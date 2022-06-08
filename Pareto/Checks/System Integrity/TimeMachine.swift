@@ -31,12 +31,12 @@ class TimeMachineCheck: ParetoCheck {
     }
 
     override func checkPasses() -> Bool {
-        if dict == nil {
+        guard let settings = dict else {
             os_log("/Library/Preferences/com.apple.TimeMachine.plist use fallabck")
             let status = runCMD(app: "/usr/bin/tmutil", args: ["status"])
             return isConfigured && !status.contains("Stopping = 1")
         }
-        let tmConf = TimeMachineConfig(obj: dict!)
+        let tmConf = TimeMachineConfig(obj: settings)
         return tmConf.AutoBackup && !tmConf.Destinations.isEmpty && !tmConf.LastDestinationID.isEmpty
     }
 }

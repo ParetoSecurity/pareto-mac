@@ -16,7 +16,7 @@ class UpdaterTest: XCTestCase {
     override class func tearDown() {
         super.tearDown()
     }
-    
+
     func testParsing() throws {
         let asset = [Release.Asset(name: "", browser_download_url: URL(string: "foo://")!, size: 1, content_type: Release.Asset.ContentType.zip)]
         let releases = [

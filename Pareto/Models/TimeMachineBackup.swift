@@ -16,10 +16,17 @@ struct TimeMachineDestinations {
     let DestinationID: String
     let ConsistencyScanDate: Date // Last time of backup
 
-    init(obj: NSDictionary) {
-        LastKnownEncryptionState = EncryptionState(rawValue: obj.value(forKey: "LastKnownEncryptionState") as? String ?? "") ?? EncryptionState.Unknown
-        DestinationID = obj.value(forKey: "DestinationID") as? String ?? ""
-        ConsistencyScanDate = obj.value(forKey: "ConsistencyScanDate") as? Date ?? Date.distantPast
+    init(obj: [String: Any]?) {
+        guard let dict = obj else {
+            LastKnownEncryptionState = EncryptionState.Unknown
+            DestinationID = ""
+            ConsistencyScanDate = Date.distantPast
+            return
+        }
+
+        LastKnownEncryptionState = EncryptionState(rawValue: dict["LastKnownEncryptionState"] as? String ?? "") ?? EncryptionState.Unknown
+        DestinationID = dict["DestinationID"] as? String ?? ""
+        ConsistencyScanDate = dict["ConsistencyScanDate"] as? Date ?? Date.distantPast
     }
 
     var isEncrypted: Bool {
@@ -34,15 +41,19 @@ struct TimeMachineDestinations {
 
 struct TimeMachineConfig {
     let AutoBackup: Bool
-    let HostUUIDs: [String]
     let Destinations: [TimeMachineDestinations]
     let LastDestinationID: String
 
     init(obj: NSDictionary) {
-        AutoBackup = (obj.value(forKey: "AutoBackup") as? Int ?? 0) != 0
-        HostUUIDs = obj.mutableArrayValue(forKey: "HostUUIDs") as? [String] ?? []
-        LastDestinationID = obj.value(forKey: "LastDestinationID") as? String ?? ""
-        Destinations = (obj.mutableArrayValue(forKey: "Destinations") as? [NSDictionary] ?? []).map { dict in
+        guard let dict = obj as? [String: Any]? else {
+            AutoBackup = false
+            Destinations = []
+            LastDestinationID = ""
+            return
+        }
+        AutoBackup = dict?["AutoBackup"] as? Bool ?? false
+        LastDestinationID = dict?["LastDestinationID"] as? String ?? ""
+        Destinations = (dict?["Destinations"] as? [[String: Any]?] ?? []).map { dict in
             TimeMachineDestinations(obj: dict)
         }
     }

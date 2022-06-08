@@ -38,11 +38,11 @@ class TimeMachineHasBackupCheck: ParetoCheck {
     }
 
     override func checkPasses() -> Bool {
-        if dict == nil {
+        guard let settings = dict else {
             os_log("/Library/Preferences/com.apple.TimeMachine.plist is empty")
             return false
         }
-        let tmConf = TimeMachineConfig(obj: dict!)
+        let tmConf = TimeMachineConfig(obj: settings)
         return tmConf.AutoBackup && tmConf.upToDateBackup
     }
 }
