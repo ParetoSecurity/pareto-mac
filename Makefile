@@ -1,4 +1,5 @@
 test:
+	@rm -rf test.xcresult
 	xcodebuild -project "Pareto Security.xcodeproj" -clonedSourcePackagesDirPath SourcePackages -scheme "Pareto Security" -configuration Debug -resultBundlePath test.xcresult -destination platform=macOS test 
 
 build:

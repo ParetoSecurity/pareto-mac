@@ -71,7 +71,7 @@ class AppCheck: ParetoCheck, AppCheckProtocol {
         "Current: \(currentVersion.description), Latest: \(latestVersion)"
     }
 
-    static let queue = DispatchQueue(label: "co.pareto.check_versions", qos: .utility, attributes: .concurrent)
+    static let queue = DispatchQueue(label: "co.pareto.check_versions", qos: .userInteractive, attributes: .concurrent)
     public var latestVersion: Version {
         if try! AppInfo.versionStorage.existsObject(forKey: appBundle) {
             return try! AppInfo.versionStorage.object(forKey: appBundle)
