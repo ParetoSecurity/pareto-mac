@@ -16,15 +16,7 @@ class UpdaterTest: XCTestCase {
     override class func tearDown() {
         super.tearDown()
     }
-
-    func testFetching() throws {
-        let updater = AppUpdater(owner: "ParetoSecurity", repo: "pareto-mac")
-        if let release = try? updater.getLatestRelease() {
-            XCTAssertNotNil(release)
-        }
-        
-    }
-
+    
     func testParsing() throws {
         let asset = [Release.Asset(name: "", browser_download_url: URL(string: "foo://")!, size: 1, content_type: Release.Asset.ContentType.zip)]
         let releases = [
