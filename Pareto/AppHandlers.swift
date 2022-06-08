@@ -213,6 +213,7 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
             NSApp.sendAction(Selector(("showPreferencesWindow:")), to: nil, from: nil)
         }
         NSApp.activate(ignoringOtherApps: true)
+
     }
 
     @objc func quitApp() {
