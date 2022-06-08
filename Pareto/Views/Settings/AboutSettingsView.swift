@@ -103,7 +103,7 @@ struct AboutSettingsView: View {
 
     private func fetch() {
         #if !SETAPP_ENABLED
-            DispatchQueue.global(qos: .userInitiated).async {
+            DispatchQueue.global(qos: .userInteractive).async {
                 isLoading = true
                 status = UpdateStates.Checking
                 let updater = AppUpdater(owner: "ParetoSecurity", repo: "pareto-mac")

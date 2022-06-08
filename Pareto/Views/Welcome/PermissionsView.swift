@@ -52,7 +52,12 @@ struct PermissionsView: View {
     }
 
     func authorizeFDAClick() {
-        NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_AllFiles")!)
+        if #available(macOS 13.0, *) {
+            NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_FullDisk")!)
+        } else {
+            NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_AllFiles")!)
+        }
+        NSApp.activate(ignoringOtherApps: true)
     }
 
     var body: some View {
@@ -91,13 +96,10 @@ struct PermissionsView: View {
             HStack {
                 VStack(alignment: .leading) {
                     Text("Full Disk Access").font(.title2)
-                    HStack {
-                        Text("App requires full disk access if you want to use the Time Machine checks.").font(.footnote)
-                        Link("?",
-                             destination: URL(string: "https://help.paretosecurity.com/article/312-app-permissions?utm_source=\(AppInfo.utmSource)")!)
-                    }
+                    Text("App requires full disk access if you want to use the Time Machine checks.").font(.footnote)
                 }
-
+                Link("?",
+                     destination: URL(string: "https://help.paretosecurity.com/article/312-app-permissions?utm_source=\(AppInfo.utmSource)")!)
                 Button(action: authorizeFDAClick, label: {
                     if checker.ran {
                         if checker.fdaAuthorized {

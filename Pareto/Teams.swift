@@ -141,7 +141,7 @@ struct Report: Encodable {
 enum Team {
     public static let defaultAPI = "https://dash.paretosecurity.com/api/v1/team"
     private static let base = Defaults[.teamAPI]
-    private static let queue = DispatchQueue(label: "co.pareto.api", qos: .utility, attributes: .concurrent)
+    private static let queue = DispatchQueue(label: "co.pareto.api", qos: .userInteractive, attributes: .concurrent)
 
     static func link(withDevice device: ReportingDevice) -> DataRequest {
         let headers: HTTPHeaders = [

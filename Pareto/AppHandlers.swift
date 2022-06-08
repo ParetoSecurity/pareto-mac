@@ -53,11 +53,11 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
             // schedule update on startup
             if Defaults.shouldDoUpdateCheck() {
                 os_log("Running update check from startup")
-                DispatchQueue.global(qos: .background).async {
+                DispatchQueue.global(qos: .userInteractive).async {
                     if Defaults.shouldDoUpdateCheck() {
                         if self.networkHandler.currentStatus == .satisfied {
                             os_log("Running update check from startup")
-                            DispatchQueue.global(qos: .background).async {
+                            DispatchQueue.global(qos: .userInteractive).async {
                                 self.checkForRelease()
                                 Defaults.doneUpdateCheck()
                             }
@@ -82,7 +82,7 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
                 if Defaults.shouldDoUpdateCheck() {
                     if self.networkHandler.currentStatus == .satisfied {
                         os_log("Running update check from wakeup")
-                        DispatchQueue.global(qos: .background).async {
+                        DispatchQueue.global(qos: .userInteractive).async {
                             self.checkForRelease()
                             Defaults.doneUpdateCheck()
                         }
@@ -96,7 +96,7 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
         // Schedule hourly claim updates
         NSBackgroundActivityScheduler.repeating(withName: "ClaimRunner", withInterval: 60 * 60) { (completion: NSBackgroundActivityScheduler.CompletionHandler) in
             os_log("Running checks")
-            DispatchQueue.global(qos: .background).async {
+            DispatchQueue.global(qos: .userInteractive).async {
                 self.statusBar?.runChecks(isInteractive: false)
             }
             completion(.finished)
@@ -106,7 +106,7 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
                 if Defaults.shouldDoUpdateCheck() {
                     if self.networkHandler.currentStatus == .satisfied {
                         os_log("Running update check")
-                        DispatchQueue.global(qos: .background).async {
+                        DispatchQueue.global(qos: .userInteractive).async {
                             self.checkForRelease()
                             Defaults.doneUpdateCheck()
                         }
@@ -133,7 +133,7 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
         #endif
 
         NSBackgroundActivityScheduler.repeating(withName: "FlagsRunner", withInterval: 60 * 5) { (completion: NSBackgroundActivityScheduler.CompletionHandler) in
-            DispatchQueue.global(qos: .background).async {
+            DispatchQueue.global(qos: .userInteractive).async {
                 if self.networkHandler.currentStatus == .satisfied {
                     os_log("Running flags update")
                     AppInfo.Flags.update()
@@ -144,7 +144,7 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
             completion(.finished)
         }
         NSBackgroundActivityScheduler.repeating(withName: "TeamsRunner", withInterval: 60 * 59) { (completion: NSBackgroundActivityScheduler.CompletionHandler) in
-            DispatchQueue.global(qos: .background).async {
+            DispatchQueue.global(qos: .userInteractive).async {
                 if self.networkHandler.currentStatus == .satisfied {
                     if !Defaults[.teamID].isEmpty {
                         os_log("Running flags update")
@@ -170,12 +170,12 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
 
         if status == .satisfied {
             os_log("network condtions changed to: connected")
-            // wait 30 second of stable conenction before running checks
-            DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + 30) {
+            // wait 30 second of stable connection before running checks
+            DispatchQueue.global(qos: .userInteractive).asyncAfter(deadline: .now() + 30) {
                 self.statusBar?.runChecks(isInteractive: false)
             }
         } else {
-            os_log("network condtions changed to: disconnected")
+            os_log("network conditions changed to: disconnected")
         }
     }
 
@@ -197,13 +197,21 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
     }
 
     @objc func doUpdate() {
-        NSApp.sendAction(Selector(("showPreferencesWindow:")), to: nil, from: nil)
+        if #available(macOS 13.0, *) {
+            NSApp.sendAction(Selector(("showSettingsWindow:")), to: nil, from: nil)
+        } else {
+            NSApp.sendAction(Selector(("showPreferencesWindow:")), to: nil, from: nil)
+        }
         NSApp.activate(ignoringOtherApps: true)
     }
 
     @objc func showPrefs() {
         Defaults[.updateNag] = false
-        NSApp.sendAction(Selector(("showPreferencesWindow:")), to: nil, from: nil)
+        if #available(macOS 13.0, *) {
+            NSApp.sendAction(Selector(("showSettingsWindow:")), to: nil, from: nil)
+        } else {
+            NSApp.sendAction(Selector(("showPreferencesWindow:")), to: nil, from: nil)
+        }
         NSApp.activate(ignoringOtherApps: true)
     }
 
@@ -216,7 +224,7 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
     }
 
     @objc func runChecksDelayed() {
-        DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + 2) {
+        DispatchQueue.global(qos: .userInteractive).asyncAfter(deadline: .now() + 2) {
             self.statusBar?.runChecks(isInteractive: false)
         }
     }
@@ -233,14 +241,14 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
             case NSApplication.ModalResponse.alertFirstButtonReturn:
                 NSWorkspace.shared.open(URL(string: "https://paretosecurity.com/pricing")!)
             case NSApplication.ModalResponse.alertSecondButtonReturn:
-                DispatchQueue.global(qos: .background).async {
+                DispatchQueue.global(qos: .userInteractive).async {
                     self.statusBar?.runChecks()
                 }
             default:
                 os_log("Unknown")
             }
         } else {
-            DispatchQueue.global(qos: .background).async {
+            DispatchQueue.global(qos: .userInteractive).async {
                 self.statusBar?.runChecks()
             }
         }
@@ -386,7 +394,7 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
                                 #endif
                             }
                             if !Defaults.firstLaunch() {
-                                DispatchQueue.global(qos: .background).async {
+                                DispatchQueue.global(qos: .userInteractive).async {
                                     self.statusBar?.runChecks()
                                 }
                             }

@@ -153,7 +153,7 @@ class StatusBarController: NSObject, NSMenuDelegate {
             if Defaults[.reportingRole] == .team, AppInfo.Flags.teamAPI {
                 if Defaults.shouldDoTeamUpdate() || interactive {
                     let report = Report.now()
-                    DispatchQueue.global(qos: .utility).async {
+                    DispatchQueue.global(qos: .userInteractive).async {
                         Team.update(withReport: report).response { response in
                             switch response.result {
                             case .success:
@@ -171,7 +171,7 @@ class StatusBarController: NSObject, NSMenuDelegate {
         }
 
         // guard to prevent long running tasks
-        DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + 90) {
+        DispatchQueue.global(qos: .userInteractive).asyncAfter(deadline: .now() + 90) {
             // checks are still running kill them
             if self.statusBarModel.isRunning {
                 self.workItem?.cancel()
@@ -180,7 +180,7 @@ class StatusBarController: NSObject, NSMenuDelegate {
         }
 
         // run tasks
-        DispatchQueue.global(qos: .background).async(execute: workItem!)
+        DispatchQueue.global(qos: .userInteractive).async(execute: workItem!)
         os_log("Running check scheduler", log: Log.app)
     }
 
