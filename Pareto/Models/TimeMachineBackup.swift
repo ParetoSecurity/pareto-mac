@@ -34,13 +34,11 @@ struct TimeMachineDestinations {
 
 struct TimeMachineConfig {
     let AutoBackup: Bool
-    let HostUUIDs: [String]
     let Destinations: [TimeMachineDestinations]
     let LastDestinationID: String
 
     init(obj: NSDictionary) {
         AutoBackup = (obj.value(forKey: "AutoBackup") as? Int ?? 0) != 0
-        HostUUIDs = obj.mutableArrayValue(forKey: "HostUUIDs") as? [String] ?? []
         LastDestinationID = obj.value(forKey: "LastDestinationID") as? String ?? ""
         Destinations = (obj.mutableArrayValue(forKey: "Destinations") as? [NSDictionary] ?? []).map { dict in
             TimeMachineDestinations(obj: dict)
