@@ -32,11 +32,9 @@ class SystemUpdatesCheck: ParetoCheck {
         var ConfigDataInstall = true
 
         if let CriticalUpdateInstallRaw = readDefaultsNative(path: path, key: "CriticalUpdateInstall") {
-            os_log("CriticalUpdateInstall, status %{enabled}s", log: Log.check, CriticalUpdateInstallRaw)
             CriticalUpdateInstall = (CriticalUpdateInstallRaw == "1")
         }
         if let ConfigDataInstallRaw = readDefaultsNative(path: path, key: "ConfigDataInstall") {
-            os_log("ConfigDataInstall, status %{enabled}s", log: Log.check, ConfigDataInstallRaw)
             ConfigDataInstall = (ConfigDataInstallRaw == "1")
         }
 
