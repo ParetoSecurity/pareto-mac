@@ -16,4 +16,17 @@ extension URL {
         } ?? []
         return Dictionary(uniqueKeysWithValues: queryTuples)
     }
+
+    var attributes: [FileAttributeKey: Any]? {
+        do {
+            return try FileManager.default.attributesOfItem(atPath: path)
+        } catch let error as NSError {
+            print("FileAttribute error: \(error)")
+        }
+        return nil
+    }
+
+    var fileSize: Int {
+        return attributes?[.size] as? Int ?? Int(0)
+    }
 }

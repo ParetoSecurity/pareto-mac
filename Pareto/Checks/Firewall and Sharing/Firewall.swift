@@ -23,12 +23,42 @@ class FirewallCheck: ParetoCheck {
         return true
     }
 
+    func extensionActive(name: String) -> Bool {
+        let list = runCMD(app: "/usr/bin/systemextensionsctl", args: ["list", "com.apple.system_extension.network_extension"])
+        for app in list.split(separator: "\n") {
+            if app.contains(name) {
+                return app.contains("activated enabled")
+            }
+        }
+        return false
+    }
+
+    var isLittleSnitchActive: Bool {
+        extensionActive(name: "at.obdev.littlesnitch.networkextension")
+    }
+
+    var isLuluActive: Bool {
+        extensionActive(name: "com.objective-see.lulu.extension")
+    }
+
     override func checkPasses() -> Bool {
-        let dictionary = readDefaultsFile(path: "/Library/Preferences/com.apple.alf.plist")
-        if let globalstate = dictionary?.value(forKey: "globalstate") as? Int {
-            // os_log("globalstate: %{public}s", log: Log.check, globalstate)
+        let native = readDefaultsFile(path: "/Library/Preferences/com.apple.alf.plist")
+
+        if isLuluActive {
+            let lulu = readDefaultsFile(path: "/Library/Objective-See/LuLu/preferences.plist")
+            if let disabled = lulu?.value(forKey: "disabled") as? Bool {
+                return !disabled
+            }
+        }
+
+        if isLittleSnitchActive {
+            return true
+        }
+
+        if let globalstate = native?.value(forKey: "globalstate") as? Int {
             return globalstate >= 1
         }
+
         return false
     }
 }

@@ -97,52 +97,61 @@ public class AppUpdater {
         #else
             let lock = DispatchSemaphore(value: 0)
             var state = false
-            let tmpdir = try! FileManager.default.url(for: .itemReplacementDirectory, in: .userDomainMask, appropriateFor: Bundle.main.bundleURL, create: true)
+            let tmpDir = try! FileManager.default.url(for: .itemReplacementDirectory, in: .userDomainMask, appropriateFor: Bundle.main.bundleURL, create: true)
             URLSession.shared.downloadTask(with: asset.browser_download_url) { tempLocalUrl, response, error in
+
                 if error != nil {
                     os_log("Error took place while downloading a file: \(error!.localizedDescription)")
                     lock.signal()
                     return
                 }
 
-                if let tempLocalUrl = tempLocalUrl {
-                    // Success
-                    if let statusCode = (response as? HTTPURLResponse)?.statusCode {
-                        if statusCode != 200 {
-                            os_log("Failed to download \(asset.browser_download_url). Status code: \(statusCode)")
-                            lock.signal()
-                            return
-                        }
-
-                        os_log("Successfully downloaded \(asset.browser_download_url). Status code: \(statusCode)")
-                        let downloadPath = tmpdir.appendingPathComponent("download")
-                        do {
-                            try FileManager.default.copyItem(at: tempLocalUrl, to: downloadPath)
-                        } catch let writeError {
-                            os_log("Error moving a file \(tempLocalUrl) to \(downloadPath): \(writeError.localizedDescription)")
-                            lock.signal()
-                        }
-
-                        os_log("Doing update from \(tempLocalUrl)")
-                        do {
-                            try self.update(withApp: downloadPath, withAsset: asset)
-                            state = true
-                            lock.signal()
-                        } catch let writeError {
-                            os_log("Error updating with file \(downloadPath) : \(writeError.localizedDescription)")
-                            lock.signal()
-                        }
-                    } else {
-                        os_log("Could not parse response of \(asset.browser_download_url)")
-                        lock.signal()
-                    }
-                } else {
+                guard let localUrl = tempLocalUrl else {
                     os_log("Error updating from \(asset.browser_download_url), missing local file")
                     lock.signal()
+                    return
                 }
+
+                guard let statusCode = (response as? HTTPURLResponse)?.statusCode else {
+                    os_log("Could not parse response of \(asset.browser_download_url)")
+                    lock.signal()
+                    return
+                }
+
+                if statusCode != 200 {
+                    os_log("Failed to download \(asset.browser_download_url). Status code: \(statusCode)")
+                    lock.signal()
+                    return
+                }
+
+                guard localUrl.fileSize == asset.size else {
+                    os_log("Error updating from \(asset.browser_download_url), wrong file size")
+                    lock.signal()
+                    return
+                }
+
+                os_log("Successfully downloaded \(asset.browser_download_url). Status code: \(statusCode)")
+                let downloadPath = tmpDir.appendingPathComponent("download")
+                do {
+                    try FileManager.default.copyItem(at: localUrl, to: downloadPath)
+                } catch let writeError {
+                    os_log("Error moving a file \(localUrl) to \(downloadPath): \(writeError.localizedDescription)")
+                    lock.signal()
+                }
+
+                os_log("Doing update from \(localUrl)")
+                do {
+                    try self.update(withApp: downloadPath, withAsset: asset)
+                    state = true
+                    lock.signal()
+                } catch let writeError {
+                    os_log("Error updating with file \(downloadPath) : \(writeError.localizedDescription)")
+                    lock.signal()
+                }
+
             }.resume()
             lock.wait()
-            try? FileManager.default.removeItem(at: tmpdir)
+            try? FileManager.default.removeItem(at: tmpDir)
             return state
         #endif
     }
