@@ -38,6 +38,14 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
         "ParetoCheck-" + UUID + "-TS"
     }
 
+    public var hasDebug: Bool {
+        false
+    }
+
+    public func debugInfo() -> String {
+        ""
+    }
+
     var Title: String {
         checkPassed ? TitleON : TitleOFF
     }

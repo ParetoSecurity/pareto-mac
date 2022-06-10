@@ -23,6 +23,15 @@ class FirewallCheck: ParetoCheck {
         return true
     }
 
+    override public var hasDebug: Bool {
+        return true
+    }
+
+    override public func debugInfo() -> String {
+        let systemextensionsctl = runCMD(app: "/usr/bin/systemextensionsctl", args: ["list", "com.apple.system_extension.network_extension"])
+        return "systemextensionsctl:\n\(systemextensionsctl)"
+    }
+
     func extensionActive(name: String) -> Bool {
         let list = runCMD(app: "/usr/bin/systemextensionsctl", args: ["list", "com.apple.system_extension.network_extension"])
         for app in list.split(separator: "\n") {

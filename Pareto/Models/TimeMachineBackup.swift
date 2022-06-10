@@ -44,16 +44,10 @@ struct TimeMachineConfig {
     let Destinations: [TimeMachineDestinations]
     let LastDestinationID: String
 
-    init(obj: NSDictionary) {
-        guard let dict = obj as? [String: Any]? else {
-            AutoBackup = false
-            Destinations = []
-            LastDestinationID = ""
-            return
-        }
-        AutoBackup = dict?["AutoBackup"] as? Bool ?? false
-        LastDestinationID = dict?["LastDestinationID"] as? String ?? ""
-        Destinations = (dict?["Destinations"] as? [[String: Any]?] ?? []).map { dict in
+    init(dict: [String: Any]) {
+        AutoBackup = dict["AutoBackup"] as? Bool ?? false
+        LastDestinationID = dict["LastDestinationID"] as? String ?? ""
+        Destinations = (dict["Destinations"] as? [[String: Any]?] ?? []).map { dict in
             TimeMachineDestinations(obj: dict)
         }
     }

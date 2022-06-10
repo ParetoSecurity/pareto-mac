@@ -21,8 +21,8 @@ class TimeMachineHasBackupCheck: ParetoCheck {
         "Time Machine is missing up to date backup"
     }
 
-    private var dict: NSDictionary? {
-        readDefaultsFile(path: "/Library/Preferences/com.apple.TimeMachine.plist")
+    private var dict: [String: Any]? {
+        readDefaultsFile(path: "/Library/Preferences/com.apple.TimeMachine.plist") as! [String: Any]?
     }
 
     override public var isRunnable: Bool {
@@ -42,7 +42,7 @@ class TimeMachineHasBackupCheck: ParetoCheck {
             os_log("/Library/Preferences/com.apple.TimeMachine.plist is empty")
             return false
         }
-        let tmConf = TimeMachineConfig(obj: settings)
+        let tmConf = TimeMachineConfig(dict: settings)
         return tmConf.AutoBackup && tmConf.upToDateBackup
     }
 }

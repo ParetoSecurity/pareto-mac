@@ -23,6 +23,7 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
     var statusBar: StatusBarController?
     var updater: AppUpdater?
     var welcomeWindow: NSWindow?
+    var debugWindow: NSWindow?
     var enrolledHandler = false
     var networkHandler = NetworkHandler.sharedInstance()
 
@@ -284,6 +285,24 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
         welcomeWindow!.makeKeyAndOrderFront(nil)
     }
 
+    @objc func showDebug() {
+        var data = ""
+        for claim in Claims.sorted {
+            for check in claim.checksSorted.filter({ check in
+                check.hasDebug
+            }) {
+                data.append("Check \(check.Title):\n\(check.debugInfo())\n\n")
+            }
+        }
+        NSPasteboard.general.clearContents()
+        NSPasteboard.general.setString(data, forType: .string)
+        let alert = NSAlert()
+        alert.messageText = "Debug info has been copied to the clipboard."
+        alert.alertStyle = NSAlert.Style.informational
+        alert.addButton(withTitle: "OK")
+        alert.runModal()
+    }
+
     func resetSettings() {
         Defaults.removeAll()
         UserDefaults.standard.removeAll()
@@ -435,6 +454,9 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
             NSApp.activate(ignoringOtherApps: true)
         case "welcome":
             NSApp.sendAction(#selector(showWelcome), to: nil, from: nil)
+            NSApp.activate(ignoringOtherApps: true)
+        case "debug":
+            NSApp.sendAction(#selector(showDebug), to: nil, from: nil)
             NSApp.activate(ignoringOtherApps: true)
         case "runChecks":
             NSApp.sendAction(#selector(runChecks), to: nil, from: nil)
