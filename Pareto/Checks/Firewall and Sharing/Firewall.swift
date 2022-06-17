@@ -53,17 +53,6 @@ class FirewallCheck: ParetoCheck {
     override func checkPasses() -> Bool {
         let native = readDefaultsFile(path: "/Library/Preferences/com.apple.alf.plist")
 
-        if isLuluActive {
-            let lulu = readDefaultsFile(path: "/Library/Objective-See/LuLu/preferences.plist")
-            if let disabled = lulu?.value(forKey: "disabled") as? Bool {
-                return !disabled
-            }
-        }
-
-        if isLittleSnitchActive {
-            return true
-        }
-
         if let globalstate = native?.value(forKey: "globalstate") as? Int {
             return globalstate >= 1
         }
