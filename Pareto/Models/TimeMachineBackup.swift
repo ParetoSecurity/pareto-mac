@@ -14,19 +14,25 @@ enum EncryptionState: String {
 struct TimeMachineDestinations {
     let LastKnownEncryptionState: EncryptionState
     let DestinationID: String
-    let ConsistencyScanDate: Date // Last time of backup
+    let ReferenceLocalSnapshotDate: Date // Last time of backup
+    let BackupAlias: Data
+    let IsNAS: Bool
 
     init(obj: [String: Any]?) {
         guard let dict = obj else {
             LastKnownEncryptionState = EncryptionState.Unknown
             DestinationID = ""
-            ConsistencyScanDate = Date.distantPast
+            ReferenceLocalSnapshotDate = Date.distantPast
+            BackupAlias = Data(capacity: 0)
+            IsNAS = false
             return
         }
-
+        BackupAlias = dict["BackupAlias"] as? Data ?? Data(capacity: 0)
+        let backup = String(decoding: BackupAlias, as: UTF8.self)
+        IsNAS = backup.contains("afp://") || backup.contains("smb://")
         LastKnownEncryptionState = EncryptionState(rawValue: dict["LastKnownEncryptionState"] as? String ?? "") ?? EncryptionState.Unknown
         DestinationID = dict["DestinationID"] as? String ?? ""
-        ConsistencyScanDate = dict["ConsistencyScanDate"] as? Date ?? Date.distantPast
+        ReferenceLocalSnapshotDate = dict["ReferenceLocalSnapshotDate"] as? Date ?? Date.distantPast
     }
 
     var isEncrypted: Bool {
@@ -35,7 +41,7 @@ struct TimeMachineDestinations {
 
     var isUpToDateBackup: Bool {
         let weekAgo = Date().addingTimeInterval(-(7 * 24 * 60 * 60))
-        return ConsistencyScanDate >= weekAgo
+        return ReferenceLocalSnapshotDate >= weekAgo
     }
 }
 
@@ -76,5 +82,18 @@ struct TimeMachineConfig {
         }
 
         return lastBackupDestination.first?.isEncrypted ?? false
+    }
+
+    var canCheckIsEncryptedBackup: Bool {
+        // no backup made yet
+        if LastDestinationID.isEmpty {
+            return false
+        }
+
+        let lastBackupDestination = Destinations.filter { dests in
+            dests.DestinationID == LastDestinationID
+        }
+
+        return !(lastBackupDestination.first?.IsNAS ?? false)
     }
 }

@@ -26,7 +26,15 @@ class TimeMachineIsEncryptedCheck: ParetoCheck {
     }
 
     override public var isRunnable: Bool {
-        return dict != nil && isActive
+        guard let settings = dict else {
+            return false
+        }
+
+        if isActive {
+            let tmConf = TimeMachineConfig(dict: settings)
+            return tmConf.canCheckIsEncryptedBackup
+        }
+        return false
     }
 
     override public var showSettings: Bool {
