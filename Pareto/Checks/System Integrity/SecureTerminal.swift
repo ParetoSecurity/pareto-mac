@@ -27,9 +27,8 @@ class SecureTerminalCheck: ParetoCheck {
     override func checkPasses() -> Bool {
         if let enabled = readDefaultsNative(path: "com.apple.Terminal", key: "SecureKeyboardEntry") {
             os_log("SecureKeyboardEntry, status %{enabled}s", log: Log.check, enabled)
-            return enabled == "1"
+            return enabled.contains("1")
         }
-        // can also be missing if it never changed, but defaults to false
         return false
     }
 }
