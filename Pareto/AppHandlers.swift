@@ -23,7 +23,6 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
     var statusBar: StatusBarController?
     var updater: AppUpdater?
     var welcomeWindow: NSWindow?
-    var debugWindow: NSWindow?
     var enrolledHandler = false
     var networkHandler = NetworkHandler.sharedInstance()
 
@@ -285,11 +284,11 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
         welcomeWindow!.makeKeyAndOrderFront(nil)
     }
 
-    @objc func showDebug() {
+    func copyDebug(_ onlyCheck: String) {
         var data = ""
         for claim in Claims.sorted {
             for check in claim.checksSorted.filter({ check in
-                check.hasDebug
+                check.hasDebug || (!onlyCheck.isEmpty && check.hasDebug && check.UUID == onlyCheck)
             }) {
                 data.append("Check \(check.Title):\n\(check.debugInfo())\n\n")
             }
@@ -456,8 +455,8 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
             NSApp.sendAction(#selector(showWelcome), to: nil, from: nil)
             NSApp.activate(ignoringOtherApps: true)
         case "debug":
-            NSApp.sendAction(#selector(showDebug), to: nil, from: nil)
-            NSApp.activate(ignoringOtherApps: true)
+            let check = url.queryParams()["check"] ?? ""
+            copyDebug(check)
         case "runChecks":
             NSApp.sendAction(#selector(runChecks), to: nil, from: nil)
             NSApp.activate(ignoringOtherApps: true)

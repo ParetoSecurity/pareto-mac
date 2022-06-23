@@ -64,9 +64,6 @@ struct GeneralSettingsView: View {
                         Button("Show Welcome") {
                             NSApp.sendAction(#selector(AppDelegate.showWelcome), to: nil, from: nil)
                         }
-                        Button("Show Debug") {
-                            NSApp.sendAction(#selector(AppDelegate.showDebug), to: nil, from: nil)
-                        }
                         Button("Notify") {
                             registerNotifications()
                             showNotification(check: OpenWiFiCheck.sharedInstance)
