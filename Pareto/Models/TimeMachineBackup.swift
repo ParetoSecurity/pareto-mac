@@ -64,24 +64,15 @@ struct TimeMachineConfig {
             return false
         }
 
-        let lastBackupDestination = Destinations.filter { dests in
-            dests.DestinationID == LastDestinationID
+        return Destinations.contains { d in
+            d.isUpToDateBackup
         }
-
-        return lastBackupDestination.first?.isUpToDateBackup ?? false
     }
 
     var isEncryptedBackup: Bool {
-        // no backup made yet
-        if LastDestinationID.isEmpty {
-            return false
+        return Destinations.allSatisfy { d in
+            d.isEncrypted
         }
-
-        let lastBackupDestination = Destinations.filter { dests in
-            dests.DestinationID == LastDestinationID
-        }
-
-        return lastBackupDestination.first?.isEncrypted ?? false
     }
 
     var canCheckIsEncryptedBackup: Bool {
