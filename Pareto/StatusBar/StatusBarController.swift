@@ -157,9 +157,9 @@ class StatusBarController: NSObject, NSMenuDelegate {
                         Team.update(withReport: report).response { response in
                             switch response.result {
                             case .success:
-                                os_log("Check status was updated", log: Log.app)
+                                os_log("Team status was updated", log: Log.app)
                             case let .failure(err):
-                                os_log("Check status update failed: %s", log: Log.app, err.localizedDescription)
+                                os_log("Team status update failed: %s", log: Log.app, err.localizedDescription)
                             }
                         }
                     }

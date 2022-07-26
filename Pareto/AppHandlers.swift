@@ -284,6 +284,18 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
         welcomeWindow!.makeKeyAndOrderFront(nil)
     }
 
+    func copyLogs() {
+        NSPasteboard.general.clearContents()
+        if let data = try? AppInfo.logEntries().joined(separator: "\n") {
+            NSPasteboard.general.setString(data, forType: .string)
+        }
+        let alert = NSAlert()
+        alert.messageText = "Logs have been copied to the clipboard."
+        alert.alertStyle = NSAlert.Style.informational
+        alert.addButton(withTitle: "OK")
+        alert.runModal()
+    }
+
     func copyDebug(_ onlyCheck: String) {
         var data = ""
         for claim in Claims.sorted {
@@ -457,6 +469,8 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
         case "debug":
             let check = url.queryParams()["check"] ?? ""
             copyDebug(check)
+        case "logs":
+            copyLogs()
         case "runChecks":
             NSApp.sendAction(#selector(runChecks), to: nil, from: nil)
             NSApp.activate(ignoringOtherApps: true)

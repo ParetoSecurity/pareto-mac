@@ -103,7 +103,7 @@ enum AppInfo {
 
     static let bugReportURL = { () -> URL in
         let baseURL = "https://paretosecurity.com/report-bug?"
-        let logs = logEntries().joined(separator: "\n").addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
+        let logs = try? logEntries().joined(separator: "\n").addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
         let versions = getVersions().addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
         if let url = URL(string: baseURL + "&logs=" + logs! + "&version=" + versions!) {
             return url
@@ -119,7 +119,28 @@ enum AppInfo {
         logs.append("Build: \(AppInfo.utmSource)")
 
         logs.append("\nLogs:")
-        logs.append("Please copy the logs from the Console app by searching for the ParetoSecurity.")
+
+        if #available(macOS 12.0, *) {
+            let logStore = try OSLogStore(scope: .currentProcessIdentifier)
+            // Get all the logs from the last hour.
+            let oneHourAgo = logStore.position(date: Date().addingTimeInterval(-3600))
+
+            // Fetch log objects.
+            let allEntries = try logStore.getEntries(at: oneHourAgo)
+
+            // Filter the log to be relevant for our specific subsystem
+            // and remove other elements (signposts, etc).
+            for log in allEntries
+                .compactMap({ $0 as? OSLogEntryLog })
+                .filter({ entry in
+                    entry.subsystem == "niteo.co.Pareto"
+                }) {
+                logs.append("\(log.subsystem): \(log.composedMessage)")
+            }
+        } else {
+            logs.append("Please copy the logs from the Console app by searching for the ParetoSecurity.")
+        }
+
         return logs
     }
 

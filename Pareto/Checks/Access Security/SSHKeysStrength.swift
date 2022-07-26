@@ -92,7 +92,7 @@ class SSHKeysStrengthCheck: ParetoCheck {
     func isKeyStrong(withKey path: String) -> Bool {
         let output = runCMD(app: "/usr/bin/ssh-keygen", args: ["-l", "-f", path])
         let info = KeyInfo(stringLiteral: output.strip())
-        os_log("%s has %d", log: Log.check, path, info.strength)
+        os_log("%{public}s has %d", log: Log.check, path, info.strength)
         // https://nvlpubs.nist.gov/nistpubs/specialpublications/nist.sp.800-57pt3r1.pdf
         switch info.cipher {
         case .RSA:

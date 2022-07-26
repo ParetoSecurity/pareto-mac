@@ -147,8 +147,10 @@ enum Team {
         let headers: HTTPHeaders = [
             "X-Device-Auth": Defaults[.teamAuth]
         ]
+        let url = base + "/\(Defaults[.teamID])/device"
+        os_log("Requesting %{public}s", url)
         return AF.request(
-            base + "/\(Defaults[.teamID])/device",
+            url,
             method: .put,
             parameters: device,
             encoder: JSONParameterEncoder.default,
@@ -156,7 +158,7 @@ enum Team {
         ).validate().cURLDescription { cmd in
             debugPrint(cmd)
         }.response(queue: queue) { data in
-            os_log("%s", log: Log.api, data.debugDescription)
+            os_log("%{public}s", log: Log.api, data.debugDescription)
         }
     }
 
@@ -164,8 +166,10 @@ enum Team {
         let headers: HTTPHeaders = [
             "X-Device-Auth": Defaults[.teamAuth]
         ]
+        let url = base + "/\(Defaults[.teamID])/device"
+        os_log("Requesting %{public}s", url)
         return AF.request(
-            base + "/\(Defaults[.teamID])/device",
+            url,
             method: .patch,
             parameters: report,
             encoder: JSONParameterEncoder.default,
@@ -188,7 +192,7 @@ enum Team {
                     os_log("Move detected, ticket parsing failed", log: Log.api)
                 }
             } else {
-                os_log("%s", log: Log.api, data.debugDescription)
+                os_log("%{public}s", log: Log.api, data.debugDescription)
             }
         }
     }
