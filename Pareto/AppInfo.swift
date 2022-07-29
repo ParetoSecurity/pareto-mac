@@ -103,9 +103,8 @@ enum AppInfo {
 
     static let bugReportURL = { () -> URL in
         let baseURL = "https://paretosecurity.com/report-bug?"
-        let logs = try? logEntries().joined(separator: "\n").addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
         let versions = getVersions().addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
-        if let url = URL(string: baseURL + "&logs=" + logs! + "&version=" + versions!) {
+        if let url = URL(string: baseURL + "&version=" + versions!) {
             return url
         }
 
@@ -133,7 +132,7 @@ enum AppInfo {
             for log in allEntries
                 .compactMap({ $0 as? OSLogEntryLog })
                 .filter({ entry in
-                    entry.subsystem == "niteo.co.Pareto"
+                    entry.subsystem == Bundle.main.bundleIdentifier
                 }) {
                 logs.append("\(log.subsystem): \(log.composedMessage)")
             }
@@ -145,7 +144,7 @@ enum AppInfo {
     }
 
     static let getVersions = { () -> String in
-        "HW: \(AppInfo.hwModelName)\nmacOS: \(AppInfo.macOSVersionString)\nApp Version: \(AppInfo.appVersion)\nBuild: \(AppInfo.buildVersion)"
+        "HW: \(AppInfo.hwModelName) macOS: \(AppInfo.macOSVersionString) App: Pareto Auditor App Version: \(AppInfo.appVersion) Build: \(AppInfo.buildVersion)"
     }
 
     public static func getSystemUUID() -> String? {

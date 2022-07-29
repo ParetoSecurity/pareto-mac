@@ -22,37 +22,20 @@ struct AboutSettingsView: View {
         case Failed = "Failed to update, download manually"
     }
 
-    func copy() {
-        var logs = [String]()
-        logs.append("Version: \(AppInfo.getVersions())")
-        logs.append("Location: \(Bundle.main.path)")
-        logs.append("Build: \(AppInfo.utmSource)")
-
-        NSPasteboard.general.clearContents()
-        NSPasteboard.general.setString(logs.joined(separator: "\n"), forType: .string)
-    }
-
     var body: some View {
         HStack {
             Image("Logo").resizable()
                 .aspectRatio(contentMode: .fit).onTapGesture {
-                    if !showBeta {
-                        konami += 1
-                        if konami == 3 {
-                            showBeta = true
-                            konami = 0
+                    konami += 1
+                    if konami >= 3 {
+                        showBeta.toggle()
+                        konami = 0
+                        if showBeta {
                             let alert = NSAlert()
                             alert.messageText = "You are now part of a secret society seeing somewhat mysterious things."
                             alert.alertStyle = NSAlert.Style.informational
                             alert.addButton(withTitle: "Let me in")
                             alert.runModal()
-                        }
-
-                    } else {
-                        konami += 1
-                        if konami >= 3 {
-                            showBeta = false
-                            konami = 0
                         }
                     }
                 }
@@ -81,10 +64,7 @@ struct AboutSettingsView: View {
                             }
                         }
                     #endif
-                }.contextMenu(ContextMenu(menuItems: {
-                    Button("Copy diagnostic data", action: copy)
-                }))
-
+                }
                 HStack(spacing: 0) {
                     Text("We’d love to ")
                     Link("hear from you!",
