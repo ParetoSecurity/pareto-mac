@@ -5,16 +5,11 @@ test:
 build:
 	xcodebuild -project "Pareto Security.xcodeproj" -clonedSourcePackagesDirPath SourcePackages -scheme "Pareto Security" -configuration Debug -destination platform=macOS build
 
-libSetapp:
-	wget "https://developer-api.setapp.com/v1/applications/496/kevlar?token=${SETAPP_TOKEN}&type=libsetapp_silicon" -O libsetapp.zip
-	unzip libsetapp.zip
-	rm libsetapp.zip
-
 archive-debug:
 	xcodebuild -project "Pareto Security.xcodeproj" -clonedSourcePackagesDirPath SourcePackages -scheme "Pareto Security" -destination platform=macOS archive -archivePath app.xcarchive -configuration Debug -allowProvisioningUpdates
 	xcodebuild -exportArchive -archivePath app.xcarchive -exportPath Export -exportOptionsPlist exportOptionsDev.plist
 
-archive-debug-setapp: libSetapp
+archive-debug-setapp:
 	xcodebuild -project "Pareto Security.xcodeproj" -clonedSourcePackagesDirPath SourcePackages -scheme "Pareto Security SetApp" -destination platform=macOS archive -archivePath setapp.xcarchive -configuration Debug -allowProvisioningUpdates
 	xcodebuild -exportArchive -archivePath setapp.xcarchive -exportPath SetAppExport -exportOptionsPlist exportOptionsDev.plist
 	mv SetAppExport/Pareto\ Security\ SetApp.app SetAppExport/Pareto\ Security.app
@@ -24,7 +19,7 @@ archive-release:
 	xcodebuild -exportArchive -archivePath app.xcarchive -exportPath Export -exportOptionsPlist exportOptions.plist
 
 
-archive-release-setapp: libSetapp
+archive-release-setapp:
 	rm -rf SetAppExport
 	xcodebuild -project "Pareto Security.xcodeproj" -clonedSourcePackagesDirPath SourcePackages -scheme "Pareto Security SetApp" -destination platform=macOS archive -archivePath setapp.xcarchive -configuration Release -allowProvisioningUpdates
 	xcodebuild -exportArchive -archivePath setapp.xcarchive -exportPath SetAppExport -exportOptionsPlist exportOptions.plist

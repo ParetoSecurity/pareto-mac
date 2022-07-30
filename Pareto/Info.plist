@@ -26,7 +26,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>4877</string>
+	<string>4885</string>
 	<key>LSApplicationCategoryType</key>
 	<string>public.app-category.utilities</string>
 	<key>LSMinimumSystemVersion</key>
@@ -43,6 +43,16 @@
 	<true/>
 	<key>NSSystemAdministrationUsageDescription</key>
 	<string>The requested operation in Pareto Security requires elevation to be executed</string>
+	<key>NSUpdateSecurityPolicy</key>
+	<dict>
+		<key>AllowProcesses</key>
+		<dict>
+			<key>MEHY5QF425</key>
+			<array>
+				<string>com.setapp.DesktopClient.SetappAgent</string>
+			</array>
+		</dict>
+	</dict>
 	<key>com.apple.security.files.bookmarks.app-scope</key>
 	<true/>
 	<key>com.apple.security.files.user-selected.read-write</key>
