@@ -258,14 +258,14 @@ class StatusBarController: NSObject, NSMenuDelegate {
                 statusItemMenu.addItem(unsnoozeItem)
             }
         }
-
-        if (!Defaults[.teamID].isEmpty && AppInfo.Flags.dashboardMenu) || Defaults[.isTeamOwner] {
-            statusItemMenu.addItem(NSMenuItem.separator())
-            let teamsItem = NSMenuItem(title: "Team Dashboard", action: #selector(AppDelegate.teamsDasboard), keyEquivalent: "t")
-            teamsItem.target = NSApp.delegate
-            statusItemMenu.addItem(teamsItem)
-        }
-
+        #if !SETAPP_ENABLED
+            if (!Defaults[.teamID].isEmpty && AppInfo.Flags.dashboardMenu) || Defaults[.isTeamOwner] {
+                statusItemMenu.addItem(NSMenuItem.separator())
+                let teamsItem = NSMenuItem(title: "Team Dashboard", action: #selector(AppDelegate.teamsDasboard), keyEquivalent: "t")
+                teamsItem.target = NSApp.delegate
+                statusItemMenu.addItem(teamsItem)
+            }
+        #endif
         let preferencesItem = NSMenuItem(title: "Preferences", action: #selector(AppDelegate.showPrefs), keyEquivalent: ",")
         preferencesItem.target = NSApp.delegate
         statusItemMenu.addItem(preferencesItem)

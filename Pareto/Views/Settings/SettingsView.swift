@@ -24,11 +24,13 @@ struct SettingsView: View {
                     Label("General", systemImage: "gear")
                 }
                 .tag(Tabs.general)
-            TeamSettingsView(teamSettings: AppInfo.TeamSettings)
-                .tabItem {
-                    Label("Teams", systemImage: "person.3.fill")
-                }
-                .tag(Tabs.teams)
+            #if !SETAPP_ENABLED
+                TeamSettingsView(teamSettings: AppInfo.TeamSettings)
+                    .tabItem {
+                        Label("Teams", systemImage: "person.3.fill")
+                    }
+                    .tag(Tabs.teams)
+            #endif
             ChecksSettingsView()
                 .tabItem {
                     Label("Checks", systemImage: "checkmark.seal")
