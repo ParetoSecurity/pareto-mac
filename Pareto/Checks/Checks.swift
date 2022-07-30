@@ -71,10 +71,19 @@ enum Claims {
             TimeMachineHasBackupCheck.sharedInstance,
             TimeMachineIsEncryptedCheck.sharedInstance
         ]),
-        Claim(withTitle: "Software Updates", withChecks: updateChecks + [AutoUpdateAppCheck.sharedInstance])
+        Claim(withTitle: "Software Updates", withChecks: updateChecks + [AutoUpdateAppCheck.sharedInstance]),
+        Claim(withTitle: "My Checks", withChecks: customChecks)
     ]
 
     static var sorted: [Claim] {
         Claims.all.sorted(by: { $0.title.lowercased() < $1.title.lowercased() })
+    }
+
+    static var customChecks: [ParetoCheck] {
+        var myChecks: [ParetoCheck] = []
+        for rule in CustomCheck.getRules() {
+            myChecks.append(MyCheck(check: rule))
+        }
+        return myChecks
     }
 }
