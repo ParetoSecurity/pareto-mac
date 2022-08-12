@@ -23,6 +23,15 @@ class FirewallStealthCheck: ParetoCheck {
         return FirewallCheck.sharedInstance.isActive && isActive
     }
 
+    override public var hasDebug: Bool {
+        return true
+    }
+
+    override public func debugInfo() -> String {
+        let dictionary = readDefaultsFile(path: "/Library/Preferences/com.apple.alf.plist")
+        return "com.apple.alf.plist:\n\(dictionary.debugDescription)"
+    }
+
     override public var showSettings: Bool {
         if teamEnforced {
             return false

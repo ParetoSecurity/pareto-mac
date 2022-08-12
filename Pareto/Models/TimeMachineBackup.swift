@@ -14,6 +14,7 @@ enum EncryptionState: String {
 struct TimeMachineDestinations {
     let LastKnownEncryptionState: EncryptionState
     let DestinationID: String
+    let DiskImageKeychainUUID: String
     let ReferenceLocalSnapshotDate: Date // Last time of backup
     let BackupAlias: Data
     let IsNAS: Bool
@@ -22,6 +23,7 @@ struct TimeMachineDestinations {
         guard let dict = obj else {
             LastKnownEncryptionState = EncryptionState.Unknown
             DestinationID = ""
+            DiskImageKeychainUUID = ""
             ReferenceLocalSnapshotDate = Date.distantPast
             BackupAlias = Data(capacity: 0)
             IsNAS = false
@@ -32,11 +34,12 @@ struct TimeMachineDestinations {
         IsNAS = backup.contains("afp://") || backup.contains("smb://")
         LastKnownEncryptionState = EncryptionState(rawValue: dict["LastKnownEncryptionState"] as? String ?? "") ?? EncryptionState.Unknown
         DestinationID = dict["DestinationID"] as? String ?? ""
+        DiskImageKeychainUUID = dict["DiskImageKeychainUUID"] as? String ?? ""
         ReferenceLocalSnapshotDate = dict["ReferenceLocalSnapshotDate"] as? Date ?? Date.distantPast
     }
 
     var isEncrypted: Bool {
-        return LastKnownEncryptionState == EncryptionState.Encrypted
+        return LastKnownEncryptionState == EncryptionState.Encrypted || !DiskImageKeychainUUID.isEmpty
     }
 
     var isUpToDateBackup: Bool {
