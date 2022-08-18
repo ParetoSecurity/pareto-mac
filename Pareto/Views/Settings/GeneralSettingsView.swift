@@ -16,7 +16,7 @@ struct GeneralSettingsView: View {
     @Default(.showNotifications) var showNotifications
     @Default(.checkForUpdatesRecentOnly) var checkForUpdatesRecentOnly
     @Default(.disableChecksEvents) var disableChecksEvents
-
+    @Default(.myChecks) var myChecks
     var body: some View {
         Form {
             Section(
@@ -29,6 +29,12 @@ struct GeneralSettingsView: View {
                 footer: Text("Only scan for updates for recently used apps.").font(.footnote)) {
                     VStack(alignment: .leading) {
                         Toggle("Update check only for apps used in the last week", isOn: $checkForUpdatesRecentOnly)
+                    }
+                }
+            Section(
+                footer: Text("Enables custom checks, that are configured by YAML rules. [Learn more](https://paretosecurity.com/custom-check/)").font(.footnote)) {
+                    VStack(alignment: .leading) {
+                        Toggle("Enable My Checks", isOn: $myChecks)
                     }
                 }
             if showBeta {

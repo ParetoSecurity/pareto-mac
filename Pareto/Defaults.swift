@@ -48,6 +48,7 @@ extension Defaults.Keys {
     static let snoozeTime = Key<Int>("snoozeTime", default: 0, suite: extensionDefaults)
     static let lastCheck = Key<Int>("lastCheck", default: 0, suite: extensionDefaults)
     static let checksPassed = Key<Bool>("checksPassed", default: false, suite: extensionDefaults)
+    static let myChecks = Key<Bool>("myChecks", default: false, suite: extensionDefaults)
     static let disableChecksEvents = Key<Bool>("disableChecksEvents", default: false, suite: extensionDefaults)
     static let lastNagShown = Key<Int>("lastNagShown", default: Date().currentTimeMs(), suite: extensionDefaults)
     static let checkForUpdatesRecentOnly = Key<Bool>("checkForUpdatesRecentOnly", default: true, suite: extensionDefaults)

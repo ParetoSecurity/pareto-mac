@@ -178,8 +178,6 @@
 		4F7739F7271EBC2F008B1584 /* Sentry in Frameworks */ = {isa = PBXBuildFile; productRef = 4F7739F6271EBC2F008B1584 /* Sentry */; };
 		4F79F78D273BF6300082A5EB /* ChecksView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F79F78C273BF6300082A5EB /* ChecksView.swift */; };
 		4F79F78E273BF6300082A5EB /* ChecksView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F79F78C273BF6300082A5EB /* ChecksView.swift */; };
-		4F7F3E7D27C4E545003A035D /* AppProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F7F3E7C27C4E545003A035D /* AppProtocol.swift */; };
-		4F7F3E7E27C4E545003A035D /* AppProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F7F3E7C27C4E545003A035D /* AppProtocol.swift */; };
 		4F81C10826EB5D270065F548 /* URL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F81C10726EB5D270065F548 /* URL.swift */; };
 		4F84531026D634E5007C3B04 /* NSWorkspace.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F84530F26D634E5007C3B04 /* NSWorkspace.swift */; };
 		4F84531226D638C0007C3B04 /* NSBackgroundActivityScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F84531126D638C0007C3B04 /* NSBackgroundActivityScheduler.swift */; };
@@ -207,6 +205,8 @@
 		4F9982FD281FC46600C5F54F /* Defaults+Workaround.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F9982FB281FC46600C5F54F /* Defaults+Workaround.swift */; };
 		4FAAD326277B156200AA5CEF /* NewsletterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FAAD325277B156200AA5CEF /* NewsletterView.swift */; };
 		4FAAD327277B156200AA5CEF /* NewsletterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FAAD325277B156200AA5CEF /* NewsletterView.swift */; };
+		4FAF5BBF2895573F004E9615 /* setappPublicKey.pem in Resources */ = {isa = PBXBuildFile; fileRef = 4FAF5BBE2895573F004E9615 /* setappPublicKey.pem */; };
+		4FAF5BC22895583A004E9615 /* Setapp in Frameworks */ = {isa = PBXBuildFile; productRef = 4FAF5BC12895583A004E9615 /* Setapp */; };
 		4FB0416126F71CC0003657BE /* ButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB0416026F71CC0003657BE /* ButtonStyle.swift */; };
 		4FB51A5727A94457003F528E /* SecurityUpdateCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB51A5627A94457003F528E /* SecurityUpdateCheck.swift */; };
 		4FB51A5827A94457003F528E /* SecurityUpdateCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB51A5627A94457003F528E /* SecurityUpdateCheck.swift */; };
@@ -266,7 +266,6 @@
 /* Begin PBXFileReference section */
 		4F020DDE2853503400D8D4E9 /* DebugView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugView.swift; sourceTree = "<group>"; };
 		4F0371BB26CD00B700B35E43 /* Boot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Boot.swift; sourceTree = "<group>"; };
-		4F04C278273E9CC400AD635F /* setapp-bridge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "setapp-bridge.h"; path = "libSetapp/setapp-bridge.h"; sourceTree = SOURCE_ROOT; };
 		4F0BD11E284891670098316A /* ClipButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipButton.swift; sourceTree = "<group>"; };
 		4F103007269EE135008C1E86 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		4F14487326D8EA5E00A5BA34 /* Updater.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Updater.swift; sourceTree = "<group>"; };
@@ -337,7 +336,6 @@
 		4F74B7D4275114EA00F1FC11 /* Dashlane.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Dashlane.swift; path = "Software Updates/Dashlane.swift"; sourceTree = "<group>"; };
 		4F74B7D5275114EA00F1FC11 /* Enpass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Enpass.swift; path = "Software Updates/Enpass.swift"; sourceTree = "<group>"; };
 		4F79F78C273BF6300082A5EB /* ChecksView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChecksView.swift; sourceTree = "<group>"; };
-		4F7F3E7C27C4E545003A035D /* AppProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppProtocol.swift; sourceTree = "<group>"; };
 		4F81C10726EB5D270065F548 /* URL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URL.swift; sourceTree = "<group>"; };
 		4F84530F26D634E5007C3B04 /* NSWorkspace.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSWorkspace.swift; sourceTree = "<group>"; };
 		4F84531126D638C0007C3B04 /* NSBackgroundActivityScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSBackgroundActivityScheduler.swift; sourceTree = "<group>"; };
@@ -355,6 +353,7 @@
 		4F9791C026F5DB4F00E668F4 /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
 		4F9982FB281FC46600C5F54F /* Defaults+Workaround.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Defaults+Workaround.swift"; sourceTree = "<group>"; };
 		4FAAD325277B156200AA5CEF /* NewsletterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsletterView.swift; sourceTree = "<group>"; };
+		4FAF5BBE2895573F004E9615 /* setappPublicKey.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = setappPublicKey.pem; sourceTree = "<group>"; };
 		4FB0416026F71CC0003657BE /* ButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonStyle.swift; sourceTree = "<group>"; };
 		4FB51A5627A94457003F528E /* SecurityUpdateCheck.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SecurityUpdateCheck.swift; sourceTree = "<group>"; };
 		4FB51A5927A94F27003F528E /* SystemUpdatesCheck.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SystemUpdatesCheck.swift; sourceTree = "<group>"; };
@@ -401,6 +400,7 @@
 				4F37E73B2718122E00A2B254 /* Defaults in Frameworks */,
 				4F37E73C2718122E00A2B254 /* SwiftSocket in Frameworks */,
 				4F37E73D2718122E00A2B254 /* LaunchAtLogin in Frameworks */,
+				4FAF5BC22895583A004E9615 /* Setapp in Frameworks */,
 				4F37E73E2718122E00A2B254 /* JWTDecode in Frameworks */,
 				4F3EF0A728AEA07400D83F4E /* Yams in Frameworks */,
 				4F923CF527569E6300070551 /* Cache in Frameworks */,
@@ -671,8 +671,8 @@
 		4FEBA2F0269CD48F009B2469 /* Pareto */ = {
 			isa = PBXGroup;
 			children = (
+				4FAF5BBE2895573F004E9615 /* setappPublicKey.pem */,
 				4FFDC59F2821539F0092B7BF /* Models */,
-				4F7F3E7C27C4E545003A035D /* AppProtocol.swift */,
 				4F10300A269F0568008C1E86 /* Checks */,
 				4FB7C67F26AFF22C00FB1C41 /* Extensions */,
 				4F103009269F054C008C1E86 /* StatusBar */,
@@ -691,7 +691,6 @@
 				4F14487326D8EA5E00A5BA34 /* Updater.swift */,
 				4FF22A6426F0CFA500500213 /* Flags.swift */,
 				4FDAD88E26EB784A00F64E61 /* License.swift */,
-				4F04C278273E9CC400AD635F /* setapp-bridge.h */,
 				4F577B4127A448CE008119F9 /* Notifications.swift */,
 			);
 			path = Pareto;
@@ -885,6 +884,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4FAF5BBF2895573F004E9615 /* setappPublicKey.pem in Resources */,
 				4F37E7402718122E00A2B254 /* Preview Assets.xcassets in Resources */,
 				4F37E7412718122E00A2B254 /* Assets.xcassets in Resources */,
 			);
@@ -1043,7 +1043,6 @@
 				4F38D8C9273AC5AE00671756 /* IntroView.swift in Sources */,
 				4F37E71D2718122E00A2B254 /* Defaults.swift in Sources */,
 				4F37E71E2718122E00A2B254 /* Autologin.swift in Sources */,
-				4F7F3E7E27C4E545003A035D /* AppProtocol.swift in Sources */,
 				4F38D8CF273AC62500671756 /* EndView.swift in Sources */,
 				4F8ECA382798262F00361728 /* FirewallStealth.swift in Sources */,
 				4F37E71F2718122E00A2B254 /* MediaShare.swift in Sources */,
@@ -1174,7 +1173,6 @@
 				4F38D8C8273AC5AE00671756 /* IntroView.swift in Sources */,
 				4F47221026B08A0E0071CE2A /* Defaults.swift in Sources */,
 				4F868DD126A5C51C005B876E /* Autologin.swift in Sources */,
-				4F7F3E7D27C4E545003A035D /* AppProtocol.swift in Sources */,
 				4F38D8CE273AC62500671756 /* EndView.swift in Sources */,
 				4F8ECA372798262F00361728 /* FirewallStealth.swift in Sources */,
 				4F1AE89026F9FFA60084A381 /* MediaShare.swift in Sources */,
@@ -1269,6 +1267,7 @@
 					"DEBUG=1",
 				);
 				INFOPLIST_FILE = Pareto/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -1277,23 +1276,13 @@
 				MARKETING_VERSION = 0.0.17;
 				OTHER_LDFLAGS = (
 					"-force_load",
-					"\"$(PROJECT_DIR)/libSetapp/libSetapp.a\"",
-					"-framework",
-					Security,
-					"-framework",
-					IOKit,
-					"-framework",
-					QuartzCore,
-					"-framework",
-					Cocoa,
-					"-fprofile-instr-generate",
+					"\"$(BUILT_PRODUCTS_DIR)/libSetapp.a\"",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "niteo.co.Pareto-setapp";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "SETAPP_ENABLED DEBUG";
 				SWIFT_COMPILATION_MODE = singlefile;
-				SWIFT_OBJC_BRIDGING_HEADER = "libSetapp/setapp-bridge.h";
 				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
@@ -1316,6 +1305,7 @@
 				ENABLE_PREVIEWS = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = "SETAPP_ENABLED=1";
 				INFOPLIST_FILE = Pareto/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -1324,23 +1314,13 @@
 				MARKETING_VERSION = 0.0.17;
 				OTHER_LDFLAGS = (
 					"-force_load",
-					"\"$(PROJECT_DIR)/libSetapp/libSetapp.a\"",
-					"-framework",
-					Security,
-					"-framework",
-					IOKit,
-					"-framework",
-					QuartzCore,
-					"-framework",
-					Cocoa,
-					"-fprofile-instr-generate",
+					"\"$(BUILT_PRODUCTS_DIR)/libSetapp.a\"",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "niteo.co.Pareto-setapp";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = SETAPP_ENABLED;
 				SWIFT_COMPILATION_MODE = wholemodule;
-				SWIFT_OBJC_BRIDGING_HEADER = "libSetapp/setapp-bridge.h";
 				SWIFT_VERSION = 5.0;
 			};
 			name = Release;

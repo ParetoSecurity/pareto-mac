@@ -18,6 +18,8 @@ struct CustomCheck: Codable {
     var title: String
     var check: String
     var url: String?
+    var discussion: String?
+    var fix: String?
     var result: CustomCheckResult
 
     var command: String {

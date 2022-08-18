@@ -10,6 +10,10 @@ import Defaults
 import os.log
 import SwiftUI
 
+#if SETAPP_ENABLED
+    import Setapp
+#endif
+
 class StatusBarController: NSObject, NSMenuDelegate {
     var statusItem: NSStatusItem!
     var statusItemMenu: NSMenu!
@@ -186,12 +190,15 @@ class StatusBarController: NSObject, NSMenuDelegate {
 
     func menuDidClose(_: NSMenu) {
         updateMenu(partial: true)
+        #if SETAPP_ENABLED
+            SetappManager.shared.reportUsageEvent(.userInteraction)
+        #endif
     }
 
     func menuWillOpen(_: NSMenu) {
         updateMenu()
         #if SETAPP_ENABLED
-            SCReportUsageEvent("user-interaction", nil)
+            SetappManager.shared.reportUsageEvent(.userInteraction)
         #endif
     }
 

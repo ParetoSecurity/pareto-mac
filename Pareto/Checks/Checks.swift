@@ -5,6 +5,7 @@
 //  Created by Janez Troha on 21/12/2021.
 //
 
+import Defaults
 import Foundation
 
 enum Claims {
@@ -81,6 +82,11 @@ enum Claims {
 
     static var customChecks: [ParetoCheck] {
         var myChecks: [ParetoCheck] = []
+
+        if !Defaults[.myChecks] {
+            return myChecks
+        }
+
         for rule in CustomCheck.getRules() {
             myChecks.append(MyCheck(check: rule))
         }
