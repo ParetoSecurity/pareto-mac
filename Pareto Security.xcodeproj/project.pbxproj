@@ -123,12 +123,18 @@
 		4F3DCFEA274FE61200F1CB55 /* Brave Browser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F3DCFE7274FE61200F1CB55 /* Brave Browser.swift */; };
 		4F3DCFEE274FE73600F1CB55 /* WireGuard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F3DCFED274FE73600F1CB55 /* WireGuard.swift */; };
 		4F3DCFEF274FE73600F1CB55 /* WireGuard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F3DCFED274FE73600F1CB55 /* WireGuard.swift */; };
+		4F3EF09F28AEA01400D83F4E /* Setapp in Frameworks */ = {isa = PBXBuildFile; productRef = 4FAF5BC12895583A004E9615 /* Setapp */; };
+		4F3EF0A128AEA02800D83F4E /* CustomCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F3EF0A028AEA02800D83F4E /* CustomCheck.swift */; };
+		4F3EF0A228AEA02800D83F4E /* CustomCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F3EF0A028AEA02800D83F4E /* CustomCheck.swift */; };
+		4F3EF0A528AEA05F00D83F4E /* Yams in Frameworks */ = {isa = PBXBuildFile; productRef = 4F3EF0A428AEA05F00D83F4E /* Yams */; };
+		4F3EF0A728AEA07400D83F4E /* Yams in Frameworks */ = {isa = PBXBuildFile; productRef = 4F3EF0A628AEA07400D83F4E /* Yams */; };
 		4F3EF24326CA859500841375 /* Claim.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F3EF24226CA859500841375 /* Claim.swift */; };
 		4F41831727707B0800EBAE4A /* StatusBarIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F41831627707B0800EBAE4A /* StatusBarIcon.swift */; };
 		4F41831827707B0800EBAE4A /* StatusBarIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F41831627707B0800EBAE4A /* StatusBarIcon.swift */; };
 		4F41831A2770F19D00EBAE4A /* macOSVersion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F4183192770F19D00EBAE4A /* macOSVersion.swift */; };
 		4F41831B2770F19D00EBAE4A /* macOSVersion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F4183192770F19D00EBAE4A /* macOSVersion.swift */; };
 		4F47221026B08A0E0071CE2A /* Defaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F47220F26B08A0E0071CE2A /* Defaults.swift */; };
+		4F49640D28AD244C00C98950 /* ParetoCustomCheckTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F49640C28AD244C00C98950 /* ParetoCustomCheckTest.swift */; };
 		4F4B6E84282E4C5C00FAC103 /* AirDrop.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F4B6E83282E4C5C00FAC103 /* AirDrop.swift */; };
 		4F4B6E85282E4C5C00FAC103 /* AirDrop.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F4B6E83282E4C5C00FAC103 /* AirDrop.swift */; };
 		4F4E286027BD748D006A18C1 /* PasswordAfterSleep.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F4E285F27BD748D006A18C1 /* PasswordAfterSleep.swift */; };
@@ -296,10 +302,12 @@
 		4F3DCFDA274FE4E000F1CB55 /* NordLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NordLayer.swift; path = "Software Updates/NordLayer.swift"; sourceTree = "<group>"; };
 		4F3DCFE7274FE61200F1CB55 /* Brave Browser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Brave Browser.swift"; path = "Software Updates/Brave Browser.swift"; sourceTree = "<group>"; };
 		4F3DCFED274FE73600F1CB55 /* WireGuard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WireGuard.swift; path = "Software Updates/WireGuard.swift"; sourceTree = "<group>"; };
+		4F3EF0A028AEA02800D83F4E /* CustomCheck.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomCheck.swift; sourceTree = "<group>"; };
 		4F3EF24226CA859500841375 /* Claim.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Claim.swift; sourceTree = "<group>"; };
 		4F41831627707B0800EBAE4A /* StatusBarIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusBarIcon.swift; sourceTree = "<group>"; };
 		4F4183192770F19D00EBAE4A /* macOSVersion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = macOSVersion.swift; sourceTree = "<group>"; };
 		4F47220F26B08A0E0071CE2A /* Defaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Defaults.swift; sourceTree = "<group>"; };
+		4F49640C28AD244C00C98950 /* ParetoCustomCheckTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParetoCustomCheckTest.swift; sourceTree = "<group>"; };
 		4F4B6E83282E4C5C00FAC103 /* AirDrop.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AirDrop.swift; sourceTree = "<group>"; };
 		4F4E285F27BD748D006A18C1 /* PasswordAfterSleep.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PasswordAfterSleep.swift; sourceTree = "<group>"; };
 		4F56AB5A278C57F1001CAAEF /* TimeMachine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimeMachine.swift; sourceTree = "<group>"; };
@@ -383,6 +391,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4F3EF09F28AEA01400D83F4E /* Setapp in Frameworks */,
 				4F1E6DDB2760081300FD3F01 /* Regex in Frameworks */,
 				4F37E7382718122E00A2B254 /* Version in Frameworks */,
 				4F37E7392718122E00A2B254 /* Path in Frameworks */,
@@ -393,6 +402,7 @@
 				4F37E73D2718122E00A2B254 /* LaunchAtLogin in Frameworks */,
 				4FAF5BC22895583A004E9615 /* Setapp in Frameworks */,
 				4F37E73E2718122E00A2B254 /* JWTDecode in Frameworks */,
+				4F3EF0A728AEA07400D83F4E /* Yams in Frameworks */,
 				4F923CF527569E6300070551 /* Cache in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -425,6 +435,7 @@
 				4F1AE88B26F9FC150084A381 /* SwiftSocket in Frameworks */,
 				4F103012269F1C65008C1E86 /* LaunchAtLogin in Frameworks */,
 				4F196CD62714B51900A2A7B8 /* JWTDecode in Frameworks */,
+				4F3EF0A528AEA05F00D83F4E /* Yams in Frameworks */,
 				4F923CED2756918E00070551 /* Cache in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -626,6 +637,7 @@
 				4F57135226F8A6AC004B4359 /* LicenseTest.swift */,
 				4F57135426F8ACCC004B4359 /* WelcomeTest.swift */,
 				4F57135626F8BF84004B4359 /* ParetoAppTest.swift */,
+				4F49640C28AD244C00C98950 /* ParetoCustomCheckTest.swift */,
 				4F57135C26F8C921004B4359 /* TeamsTest.swift */,
 				4F6EF8982760046100752559 /* SoftwareUpdatesTest.swift */,
 			);
@@ -695,6 +707,7 @@
 		4FFDC59F2821539F0092B7BF /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				4F3EF0A028AEA02800D83F4E /* CustomCheck.swift */,
 				4FFDC5A0282153B50092B7BF /* TimeMachineBackup.swift */,
 			);
 			path = Models;
@@ -730,6 +743,7 @@
 				4F923CF427569E6300070551 /* Cache */,
 				4F1E6DDA2760081300FD3F01 /* Regex */,
 				4FAF5BC12895583A004E9615 /* Setapp */,
+				4F3EF0A628AEA07400D83F4E /* Yams */,
 			);
 			productName = Pareto;
 			productReference = 4F37E7472718122E00A2B254 /* Pareto Security SetApp.app */;
@@ -800,6 +814,7 @@
 				4F7739F3271EB3AD008B1584 /* Sentry */,
 				4F923CEC2756918E00070551 /* Cache */,
 				4F6EF891275FEE6C00752559 /* Regex */,
+				4F3EF0A428AEA05F00D83F4E /* Yams */,
 			);
 			productName = Pareto;
 			productReference = 4FEBA2EE269CD48F009B2469 /* Pareto Security.app */;
@@ -850,6 +865,7 @@
 				4F923CEB2756918E00070551 /* XCRemoteSwiftPackageReference "Cache" */,
 				4F6EF890275FEE6C00752559 /* XCRemoteSwiftPackageReference "Regex" */,
 				4FAF5BC02895583A004E9615 /* XCRemoteSwiftPackageReference "Setapp-framework" */,
+				4F3EF0A328AEA05F00D83F4E /* XCRemoteSwiftPackageReference "Yams" */,
 			);
 			productRefGroup = 4FEBA2EF269CD48F009B2469 /* Products */;
 			projectDirPath = "";
@@ -1008,6 +1024,7 @@
 				4F37E7142718122E00A2B254 /* Utils.swift in Sources */,
 				4F56AB5C278C57F1001CAAEF /* TimeMachine.swift in Sources */,
 				4FB51A5B27A94F27003F528E /* SystemUpdatesCheck.swift in Sources */,
+				4F3EF0A228AEA02800D83F4E /* CustomCheck.swift in Sources */,
 				4F37E7152718122E00A2B254 /* Updater.swift in Sources */,
 				4FFDC59E282148530092B7BF /* TimeMachineHasBackup.swift in Sources */,
 				4F37E7162718122E00A2B254 /* Firewall.swift in Sources */,
@@ -1103,6 +1120,7 @@
 				4F57135D26F8C921004B4359 /* TeamsTest.swift in Sources */,
 				4FF13D9D26DE235700E4084E /* UpdaterTest.swift in Sources */,
 				4F080D1D26C50D2800686786 /* ParetoSecurityTests.swift in Sources */,
+				4F49640D28AD244C00C98950 /* ParetoCustomCheckTest.swift in Sources */,
 				4F6A92E626C521BE006C2F2D /* CheckIntegrationTest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1136,6 +1154,7 @@
 				4FF13D9726DCCB9900E4084E /* Utils.swift in Sources */,
 				4F56AB5B278C57F1001CAAEF /* TimeMachine.swift in Sources */,
 				4FB51A5A27A94F27003F528E /* SystemUpdatesCheck.swift in Sources */,
+				4F3EF0A128AEA02800D83F4E /* CustomCheck.swift in Sources */,
 				4F14487426D8EA5E00A5BA34 /* Updater.swift in Sources */,
 				4FFDC59D282148530092B7BF /* TimeMachineHasBackup.swift in Sources */,
 				4F868DCF26A591E6005B876E /* Firewall.swift in Sources */,
@@ -1309,11 +1328,11 @@
 		4F6A92F626C555C6006C2F2D /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = PM784W7B8X;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -1323,7 +1342,7 @@
 					"@loader_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 0.0.17;
 				PRODUCT_BUNDLE_IDENTIFIER = niteo.co.ParetoSecurityUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1337,11 +1356,11 @@
 		4F6A92F726C555C6006C2F2D /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = PM784W7B8X;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -1351,7 +1370,7 @@
 					"@loader_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 0.0.17;
 				PRODUCT_BUNDLE_IDENTIFIER = niteo.co.ParetoSecurityUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1754,6 +1773,14 @@
 				minimumVersion = 2.6.0;
 			};
 		};
+		4F3EF0A328AEA05F00D83F4E /* XCRemoteSwiftPackageReference "Yams" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/jpsim/Yams.git";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
 		4F6A0E1126CE608C003B00A3 /* XCRemoteSwiftPackageReference "Defaults" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/sindresorhus/Defaults";
@@ -1877,6 +1904,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 4F37E7082718122E00A2B254 /* XCRemoteSwiftPackageReference "JWTDecode.swift" */;
 			productName = JWTDecode;
+		};
+		4F3EF0A428AEA05F00D83F4E /* Yams */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4F3EF0A328AEA05F00D83F4E /* XCRemoteSwiftPackageReference "Yams" */;
+			productName = Yams;
+		};
+		4F3EF0A628AEA07400D83F4E /* Yams */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4F3EF0A328AEA05F00D83F4E /* XCRemoteSwiftPackageReference "Yams" */;
+			productName = Yams;
 		};
 		4F6A0E1226CE608C003B00A3 /* Defaults */ = {
 			isa = XCSwiftPackageProductDependency;

@@ -24,6 +24,26 @@ func runCMD(app: String, args: [String]) -> String {
     return output
 }
 
+func runShell(args: [String]) -> String {
+    let task = Process()
+    let pipe = Pipe()
+
+    task.standardOutput = pipe
+    task.arguments = args
+    task.standardInput = nil
+    task.executableURL = URL(fileURLWithPath: "/bin/bash")
+    do {
+        try task.run()
+        task.waitUntilExit()
+    } catch {
+        return error.localizedDescription
+    }
+
+    let data = pipe.fileHandleForReading.readDataToEndOfFile()
+    let output = String(data: data, encoding: .utf8)!
+    return output
+}
+
 func runOSA(appleScript: String) -> String? {
     #if !DEBUG
         let out = runCMD(app: "/usr/bin/osascript", args: ["-e", appleScript])

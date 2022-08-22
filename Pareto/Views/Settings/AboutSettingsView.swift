@@ -49,11 +49,8 @@ struct AboutSettingsView: View {
                     #if !SETAPP_ENABLED
                         HStack(spacing: 10) {
                             if status == UpdateStates.Failed {
-                                HStack(spacing: 0) {
-                                    Text("Failed to update ")
-                                    Link("download manually",
-                                         destination: URL(string: "https://github.com/ParetoSecurity/pareto-mac/releases/latest/download/ParetoSecurity.dmg")!)
-                                }
+                                Text("Failed to update, [download update](https://github.com/ParetoSecurity/pareto-mac/releases/latest/download/ParetoSecurity.dmg)")
+
                             } else {
                                 Text(status.rawValue)
                             }
@@ -65,17 +62,10 @@ struct AboutSettingsView: View {
                         }
                     #endif
                 }
-                HStack(spacing: 0) {
-                    Text("We’d love to ")
-                    Link("hear from you!",
-                         destination: URL(string: "https://paretosecurity.com/contact")!)
-                }
-
-                HStack(spacing: 0) {
-                    Text("Made with ❤️ at ")
-                    Link("Niteo",
-                         destination: URL(string: "https://paretosecurity.com/about")!)
-                }
+                Spacer()
+                Text("We’d love to [hear from you!](https://paretosecurity.com/contact)")
+                Spacer()
+                Text("Made with ❤️ at [Niteo](https://paretosecurity.com/about)")
             }
 
         }.frame(width: 350).padding(25).onAppear(perform: fetch)
