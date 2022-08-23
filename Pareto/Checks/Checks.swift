@@ -77,7 +77,7 @@ enum Claims {
     ]
 
     static var sorted: [Claim] {
-        Claims.all.sorted(by: { $0.title.lowercased() < $1.title.lowercased() })
+        return Claims.all.sorted(by: { $0.title.lowercased() < $1.title.lowercased() })
     }
 
     static var customChecks: [ParetoCheck] {

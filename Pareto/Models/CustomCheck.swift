@@ -5,6 +5,7 @@
 //  Created by Janez Troha on 30/07/2022.
 //
 
+import CryptoKit
 import Foundation
 import Yams
 
@@ -15,7 +16,9 @@ struct CustomCheckResult: Codable {
 
 struct CustomCheck: Codable {
     var id: String
-    var title: String
+    var title: String?
+    var titlePass: String?
+    var titleFail: String?
     var check: String
     var url: String?
     var discussion: String?
@@ -25,7 +28,12 @@ struct CustomCheck: Codable {
     var command: String {
         check.trim()
     }
-
+    var safeTitle: String {
+        if let t = title {
+            return t
+        }
+        return id
+    }
     func passes() -> Bool {
         let res = runShell(args: ["-c", command]).trim()
         if let asInt = result.integer {
@@ -82,15 +90,29 @@ class MyCheck: ParetoCheck {
     }
 
     override var UUID: String {
-        customCheck.id
+        if let data = ("my-check" + customCheck.id + customCheck.check).data(using: .utf8) {
+            let digest = SHA512.hash(data: data).map {
+                String(format: "%02hhx", $0)
+            }.joined()
+            if let uuid = Foundation.UUID(uuidString: digest)?.uuidString {
+                return uuid
+            }
+        }
+        return customCheck.id
     }
 
     override var TitleON: String {
-        "\(customCheck.title) is passing"
+        if let title = customCheck.titlePass {
+            return title
+        }
+        return "\(customCheck.safeTitle) is passing"
     }
 
     override var TitleOFF: String {
-        "\(customCheck.title) is failing"
+        if let title = customCheck.titleFail {
+            return title
+        }
+        return "\(customCheck.safeTitle) is failing"
     }
 
     override func checkPasses() -> Bool {
