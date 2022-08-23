@@ -1,3 +1,10 @@
+SHELL := bash
+.ONESHELL:
+.SHELLFLAGS := -eu -o pipefail -c
+.DELETE_ON_ERROR:
+MAKEFLAGS += --warn-undefined-variables
+MAKEFLAGS += --no-builtin-rules
+
 test:
 	@rm -rf test.xcresult
 	xcodebuild -project "Pareto Security.xcodeproj" -clonedSourcePackagesDirPath SourcePackages -scheme "Pareto Security" -configuration Debug -resultBundlePath test.xcresult -destination platform=macOS test 
