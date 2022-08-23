@@ -68,7 +68,7 @@ struct AboutSettingsView: View {
                 Text("Made with ❤️ at [Niteo](https://paretosecurity.com/about)")
             }
 
-        }.frame(width: 350).padding(25).onAppear(perform: fetch)
+        }.frame(width: 350, height: 150).padding(25).onAppear(perform: fetch)
     }
 
     private func fetch() {

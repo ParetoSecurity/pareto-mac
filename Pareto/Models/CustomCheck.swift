@@ -28,12 +28,14 @@ struct CustomCheck: Codable {
     var command: String {
         check.trim()
     }
+
     var safeTitle: String {
         if let t = title {
             return t
         }
         return id
     }
+
     func passes() -> Bool {
         let res = runShell(args: ["-c", command]).trim()
         if let asInt = result.integer {
