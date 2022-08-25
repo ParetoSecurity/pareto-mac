@@ -23,6 +23,10 @@ class AppDelegate: AppHandlers, NSApplicationDelegate {
             var export: [String: [String: [String]]] = [:]
 
             for claim in Claims.sorted {
+                // skip empty claims
+                if claim.checks.count == 0 {
+                    continue
+                }
                 var claimExport: [String: [String]] = [:]
                 for check in claim.checksSorted {
                     claimExport[check.UUID] = [check.TitleON, check.TitleOFF]

@@ -72,6 +72,11 @@ struct AboutSettingsView: View {
     }
 
     private func fetch() {
+        if !User.current.isAdmin {
+            status = UpdateStates.Failed
+            return
+        }
+
         #if !SETAPP_ENABLED
             DispatchQueue.global(qos: .userInteractive).async {
                 isLoading = true

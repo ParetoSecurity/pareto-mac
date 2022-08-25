@@ -116,7 +116,7 @@ enum AppInfo {
 
         logs.append("Location: \(Bundle.main.path)")
         logs.append("Build: \(AppInfo.utmSource)")
-
+        logs.append("IsAdmin: \(User.current.isAdmin.description)")
         logs.append("\nLogs:")
 
         if #available(macOS 12.0, *) {

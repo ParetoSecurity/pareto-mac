@@ -180,19 +180,26 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
     }
 
     func checkForRelease() {
-        let currentVersion = Bundle.main.version
-        if let release = try? updater!.getLatestRelease() {
-            #if !SETAPP_ENABLED
-                if currentVersion < release.version {
-                    if let zipURL = release.assets.filter({ $0.browser_download_url.path.hasSuffix(".zip") }).first {
-                        let done = updater!.downloadAndUpdate(withAsset: zipURL)
-                        // Failed to update
-                        if !done {
-                            Defaults[.updateNag] = true
+        if !User.current.isAdmin {
+            Defaults[.updateNag] = true
+            return
+        }
+
+        DispatchQueue.global(qos: .userInteractive).async { [self] in
+            let currentVersion = Bundle.main.version
+            if let release = try? updater!.getLatestRelease() {
+                #if !SETAPP_ENABLED
+                    if currentVersion < release.version {
+                        if let zipURL = release.assets.filter({ $0.browser_download_url.path.hasSuffix(".zip") }).first {
+                            let done = updater!.downloadAndUpdate(withAsset: zipURL)
+                            // Failed to update
+                            if !done {
+                                Defaults[.updateNag] = true
+                            }
                         }
                     }
-                }
-            #endif
+                #endif
+            }
         }
     }
 
