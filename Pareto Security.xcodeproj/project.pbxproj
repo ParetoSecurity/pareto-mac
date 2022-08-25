@@ -230,6 +230,8 @@
 		4FDAD88F26EB784A00F64E61 /* License.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FDAD88E26EB784A00F64E61 /* License.swift */; };
 		4FE23EED276BB13700CA9BA0 /* FollowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FE23EEC276BB13700CA9BA0 /* FollowView.swift */; };
 		4FE23EEE276BB13700CA9BA0 /* FollowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FE23EEC276BB13700CA9BA0 /* FollowView.swift */; };
+		4FE9C35A28B76117002C28FE /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FE9C35928B76117002C28FE /* User.swift */; };
+		4FE9C35B28B76117002C28FE /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FE9C35928B76117002C28FE /* User.swift */; };
 		4FEBA2F2269CD48F009B2469 /* ParetoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEBA2F1269CD48F009B2469 /* ParetoApp.swift */; };
 		4FEBA2F6269CD48F009B2469 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4FEBA2F5269CD48F009B2469 /* Assets.xcassets */; };
 		4FEBA2F9269CD48F009B2469 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4FEBA2F8269CD48F009B2469 /* Preview Assets.xcassets */; };
@@ -371,6 +373,7 @@
 		4FDA93A22771D9FC00F9D8B4 /* Checks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Checks.swift; sourceTree = "<group>"; };
 		4FDAD88E26EB784A00F64E61 /* License.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = License.swift; sourceTree = "<group>"; };
 		4FE23EEC276BB13700CA9BA0 /* FollowView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FollowView.swift; sourceTree = "<group>"; };
+		4FE9C35928B76117002C28FE /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		4FEBA2EE269CD48F009B2469 /* Pareto Security.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Pareto Security.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4FEBA2F1269CD48F009B2469 /* ParetoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParetoApp.swift; sourceTree = "<group>"; };
 		4FEBA2F5269CD48F009B2469 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -616,6 +619,7 @@
 				4FB0416026F71CC0003657BE /* ButtonStyle.swift */,
 				4F5B20C2270316DB0015642A /* NetworkHandler.swift */,
 				4F9982FB281FC46600C5F54F /* Defaults+Workaround.swift */,
+				4FE9C35928B76117002C28FE /* User.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -1031,6 +1035,7 @@
 				4F37E7172718122E00A2B254 /* Color.swift in Sources */,
 				4F79F78E273BF6300082A5EB /* ChecksView.swift in Sources */,
 				4F37E7182718122E00A2B254 /* LicenseSettingsView.swift in Sources */,
+				4FE9C35B28B76117002C28FE /* User.swift in Sources */,
 				4F37E7192718122E00A2B254 /* RemoteManagment.swift in Sources */,
 				4F37E71A2718122E00A2B254 /* Date.swift in Sources */,
 				4F56AB5F278C6DF5001CAAEF /* AdobeReader.swift in Sources */,
@@ -1161,6 +1166,7 @@
 				4F9791C126F5DB4F00E668F4 /* Color.swift in Sources */,
 				4F79F78D273BF6300082A5EB /* ChecksView.swift in Sources */,
 				4F24A08E26EB734A0036F748 /* LicenseSettingsView.swift in Sources */,
+				4FE9C35A28B76117002C28FE /* User.swift in Sources */,
 				4F35395526E8AD4C008F5DD3 /* RemoteManagment.swift in Sources */,
 				4FB7C68126AFF25300FB1C41 /* Date.swift in Sources */,
 				4F56AB5E278C6DF5001CAAEF /* AdobeReader.swift in Sources */,
