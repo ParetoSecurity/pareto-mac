@@ -16,7 +16,11 @@ struct AboutSettingsView: View {
 
     enum UpdateStates: String {
         case Checking = "Checking for updates"
-        case NewVersion = "New version found"
+        #if !SETAPP_ENABLED
+            case NewVersion = "New version found"
+        #else
+            case NewVersion = "New version found, please update app via Setapp"
+        #endif
         case Installing = "Installing new update"
         case Updated = "App is up to date"
         case Failed = "Failed to update, download manually"
@@ -46,21 +50,20 @@ struct AboutSettingsView: View {
                 VStack(alignment: .leading, spacing: 0) {
                     Text("Version: \(AppInfo.appVersion) - \(AppInfo.buildVersion)")
                     Text("Channel: \(AppInfo.utmSource)")
-                    #if !SETAPP_ENABLED
-                        HStack(spacing: 10) {
-                            if status == UpdateStates.Failed {
-                                Text("Failed to update, [download update](https://github.com/ParetoSecurity/pareto-mac/releases/latest/download/ParetoSecurity.dmg)")
 
-                            } else {
-                                Text(status.rawValue)
-                            }
+                    HStack(spacing: 10) {
+                        if status == UpdateStates.Failed {
+                            Text("Failed to update, [download update](https://github.com/ParetoSecurity/pareto-mac/releases/latest/download/ParetoSecurity.dmg)")
 
-                            if self.isLoading {
-                                ProgressView().frame(width: 5.0, height: 5.0)
-                                    .scaleEffect(x: 0.5, y: 0.5, anchor: .center)
-                            }
+                        } else {
+                            Text(status.rawValue)
                         }
-                    #endif
+
+                        if self.isLoading {
+                            ProgressView().frame(width: 5.0, height: 5.0)
+                                .scaleEffect(x: 0.5, y: 0.5, anchor: .center)
+                        }
+                    }
                 }
                 Spacer()
                 Text("We’d love to [hear from you!](https://paretosecurity.com/contact)")
@@ -72,35 +75,34 @@ struct AboutSettingsView: View {
     }
 
     private func fetch() {
-        if !SystemUser.current.isAdmin {
-            status = UpdateStates.Failed
-            return
-        }
+        DispatchQueue.global(qos: .userInteractive).async {
+            isLoading = true
+            status = UpdateStates.Checking
+            let updater = AppUpdater(owner: "ParetoSecurity", repo: "pareto-mac")
+            let currentVersion = Bundle.main.version
+            if let release = try? updater.getLatestRelease() {
+                isLoading = false
+                if currentVersion < release.version {
+                    status = UpdateStates.NewVersion
+                    #if SETAPP_ENABLED
+                        Defaults[.updateNag] = true
+                        return
+                    #endif
+                    if !SystemUser.current.isAdmin {
+                        Defaults[.updateNag] = true
+                        return
+                    }
 
-        #if !SETAPP_ENABLED
-            DispatchQueue.global(qos: .userInteractive).async {
-                isLoading = true
-                status = UpdateStates.Checking
-                let updater = AppUpdater(owner: "ParetoSecurity", repo: "pareto-mac")
-                let currentVersion = Bundle.main.version
-                if let release = try? updater.getLatestRelease() {
-                    isLoading = false
-                    if currentVersion < release.version {
-                        status = UpdateStates.NewVersion
-                        if let zipURL = release.assets.filter({ $0.browser_download_url.path.hasSuffix(".zip") }).first {
-                            status = UpdateStates.Installing
-                            isLoading = true
+                    if let zipURL = release.assets.filter({ $0.browser_download_url.path.hasSuffix(".zip") }).first {
+                        status = UpdateStates.Installing
+                        isLoading = true
 
-                            let done = updater.downloadAndUpdate(withAsset: zipURL)
-                            if !done {
-                                status = UpdateStates.Failed
-                                isLoading = false
-                            }
-
-                        } else {
-                            status = UpdateStates.Updated
+                        let done = updater.downloadAndUpdate(withAsset: zipURL)
+                        if !done {
+                            status = UpdateStates.Failed
                             isLoading = false
                         }
+
                     } else {
                         status = UpdateStates.Updated
                         isLoading = false
@@ -108,9 +110,13 @@ struct AboutSettingsView: View {
                 } else {
                     status = UpdateStates.Updated
                     isLoading = false
+                    Defaults[.updateNag] = false
                 }
+            } else {
+                status = UpdateStates.Updated
+                isLoading = false
             }
-        #endif
+        }
     }
 }
 
