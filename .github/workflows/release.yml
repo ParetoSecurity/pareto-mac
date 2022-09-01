@@ -81,7 +81,7 @@ jobs:
         run: |
           sed -E -i '' 's/MARKETING_VERSION = .*;/MARKETING_VERSION = ${{ steps.release.outputs.tag }};/g' Pareto\ Security.xcodeproj/project.pbxproj
       - name: "Archive for dist"
-        run: set -o pipefail && make archive-release | mint run xcbeautify
+        run: make archive-release
 
       - name: Compress app for storage
         run: ditto -V -c -k --keepParent Export/Pareto\ Security.app ParetoSecurity.app.zip
@@ -234,7 +234,7 @@ jobs:
         run: |
           sed -E -i '' 's/MARKETING_VERSION = .*;/MARKETING_VERSION = ${{ steps.release.outputs.tag }};/g' Pareto\ Security.xcodeproj/project.pbxproj
       - name: "Archive for dist"
-        run: set -o pipefail && make archive-release-setapp | mint run xcbeautify
+        run: make archive-release-setapp
 
       - name: "Upload debug symbols"
         run: make sentry-debug-upload-setapp
