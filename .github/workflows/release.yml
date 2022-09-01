@@ -37,12 +37,12 @@ jobs:
           certificate-data: ${{ secrets.APPLICATION_CERTIFICATE_DATA }}
           certificate-passphrase: ${{ secrets.APPLICATION_CERTIFICATE_PASSPHRASE }}
           keychain-password: ${{ secrets.KEYCHAIN_PASSWORD }}
-      - name: "Import Certificate: Developer ID Installer"
-        uses: devbotsxyz/xcode-import-certificate@master
-        with:
-          certificate-data: ${{ secrets.INSTALLER_CERTIFICATE_DATA }}
-          certificate-passphrase: ${{ secrets.INSTALLER_CERTIFICATE_PASSPHRASE }}
-          keychain-password: ${{ secrets.KEYCHAIN_PASSWORD }}
+      # - name: "Import Certificate: Developer ID Installer"
+      #   uses: devbotsxyz/xcode-import-certificate@master
+      #   with:
+      #     certificate-data: ${{ secrets.INSTALLER_CERTIFICATE_DATA }}
+      #     certificate-passphrase: ${{ secrets.INSTALLER_CERTIFICATE_PASSPHRASE }}
+      #     keychain-password: ${{ secrets.KEYCHAIN_PASSWORD }}
       - name: Repository checkout
         uses: actions/checkout@v2
       - name: Expose release info to actions
