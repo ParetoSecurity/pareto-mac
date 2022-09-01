@@ -16,11 +16,7 @@ struct AboutSettingsView: View {
 
     enum UpdateStates: String {
         case Checking = "Checking for updates"
-        #if !SETAPP_ENABLED
-            case NewVersion = "New version found"
-        #else
-            case NewVersion = "New version found, please update app via Setapp"
-        #endif
+        case NewVersion = "New version found, please update app"
         case Installing = "Installing new update"
         case Updated = "App is up to date"
         case Failed = "Failed to update, download manually"
