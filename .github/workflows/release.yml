@@ -18,13 +18,6 @@ jobs:
       - uses: maxim-lobanov/setup-xcode@v1
         with:
           xcode-version: "14.0-beta"
-
-      - name: "Import Certificate: Development"
-        uses: devbotsxyz/xcode-import-certificate@master
-        with:
-          certificate-data: ${{ secrets.DEVELOPMENT_CERTIFICATE_DATA }}
-          certificate-passphrase: ${{ secrets.DEVELOPMENT_CERTIFICATE_PASSPHRASE }}
-          keychain-password: ${{ secrets.KEYCHAIN_PASSWORD }}
       - name: "Import Certificate: Release"
         uses: devbotsxyz/xcode-import-certificate@master
         with:
@@ -178,12 +171,6 @@ jobs:
           xcode-version: "14.0-beta"
       - name: Install sentry-cli
         run: brew install getsentry/tools/sentry-cli
-      - name: "Import Certificate: Development"
-        uses: devbotsxyz/xcode-import-certificate@master
-        with:
-          certificate-data: ${{ secrets.DEVELOPMENT_CERTIFICATE_DATA }}
-          certificate-passphrase: ${{ secrets.DEVELOPMENT_CERTIFICATE_PASSPHRASE }}
-          keychain-password: ${{ secrets.KEYCHAIN_PASSWORD }}
       - name: "Import Certificate: Release"
         uses: devbotsxyz/xcode-import-certificate@master
         with:
