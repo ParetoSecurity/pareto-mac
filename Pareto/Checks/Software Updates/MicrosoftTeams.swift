@@ -28,19 +28,17 @@ class AppMicrosoftTeamsCheck: AppCheck {
     }
 
     override func getLatestVersion(completion: @escaping (String) -> Void) {
-        let url = viaEdgeCache("https://macadmins.software/latest.xml")
-        let packageRegex = Regex("<package>(.*)</package>")
-        let versionRegex = Regex("<cfbundleversion>(\\d+)</cfbundleversion>")
-
+        let url = "https://teams.microsoft.com/downloads/desktopurl?env=production&plat=osx&download=true"
+        let versionRegex = Regex("x/?([\\.\\d]+)/T") // x/1.5.00.22362/T
         os_log("Requesting %{public}s", url)
-        AF.request(url).responseString(queue: AppCheck.queue, completionHandler: { response in
-            if response.error == nil {
-                let fallback = "<package><cfbundleidentifier>com.microsoft.teams</cfbundleidentifier><cfbundleversion>435562</cfbundleversion></package>"
-                let html = response.value?.trim() ?? fallback
-                let app = packageRegex.allMatches(in: html).filter { $0.value.contains(self.appBundle) }.first
-                let version = versionRegex.firstMatch(in: app?.value ?? fallback)?.groups.first?.value ?? "135562"
+
+        AF.request(url, method: .head).responseString(queue: AppCheck.queue, completionHandler: { response in
+            if let url = response.response?.url, response.error == nil {
+                let cdn = versionRegex.firstMatch(in: url.description)?.groups.first?.value ?? "1.5.00.22362"
+                let nibbles = cdn.components(separatedBy: ".")
+                let version = "\(nibbles[0]).00.\(nibbles[1])\(nibbles[nibbles.endIndex - 1])"
                 os_log("%{public}s version=%{public}s", self.appBundle, version)
-                completion("1.00.\(version)")
+                completion(version)
             } else {
                 os_log("%{public}s failed: %{public}s", self.appBundle, response.error.debugDescription)
                 completion("0.0.0")
