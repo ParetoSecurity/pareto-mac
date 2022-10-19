@@ -7,6 +7,7 @@
 
 import CryptoKit
 import Foundation
+import os.log
 import Yams
 
 struct CustomCheckResult: Codable {
@@ -38,10 +39,14 @@ struct CustomCheck: Codable {
 
     func passes() -> Bool {
         let res = runShell(args: ["-c", command]).trim()
+        os_log("%{public}s: shell=%{public}s", log: Log.check, safeTitle, command)
+
         if let asInt = result.integer {
+            os_log("%{public}s: integer=%{public}s, required=%{public}s", log: Log.check, safeTitle, res, asInt)
             return Int(res) == asInt
         }
         if let asString = result.string {
+            os_log("%{public}s: string=%{public}s, required=%{public}s", log: Log.check, safeTitle, res, asString)
             return res == asString
         }
         return false
@@ -58,7 +63,6 @@ struct CustomCheck: Codable {
                 create: true
             ).appendingPathComponent("ParetoAuditor", conformingTo: .directory)
 
-            print("documentDirectory", documentDirectory.path)
             // Get the directory contents urls (including subfolders urls)
             let directoryContents = try FileManager.default.contentsOfDirectory(
                 at: documentDirectory,
@@ -72,12 +76,12 @@ struct CustomCheck: Codable {
                     let decoded = try decoder.decode(CustomCheck.self, from: data)
                     checks.append(decoded)
                 } catch {
-                    print(error)
+                    os_log("getRules, error %{public}s", log: Log.app, error.localizedDescription)
                 }
             }
 
         } catch {
-            print(error)
+            os_log("getRules, error %{public}s", log: Log.app, error.localizedDescription)
         }
 
         return checks

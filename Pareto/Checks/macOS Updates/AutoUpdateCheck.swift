@@ -27,7 +27,7 @@ class AutoUpdateCheck: ParetoCheck {
     override func checkPasses() -> Bool {
         let path = "/Library/Preferences/com.apple.SoftwareUpdate"
         if let enabled = readDefaultsNative(path: path, key: "AutomaticallyInstallMacOSUpdates") {
-            os_log("AutomaticallyInstallMacOSUpdates, status %{enabled}s", log: Log.check, enabled)
+            os_log("AutomaticallyInstallMacOSUpdates, status %{public}s", log: Log.check, enabled)
             return enabled == "1"
         }
         // can also be missing if it never changed, but defaults to true
