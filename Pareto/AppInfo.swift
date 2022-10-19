@@ -27,9 +27,9 @@ struct SPHardwareWrapper: Codable {
 // MARK: - SPHardwareDataType
 
 struct SPHardware: Codable {
-    let name, activationLockStatus, bootROMVersion, chipType: String
-    let machineModel, machineName, modelNumber, numberProcessors: String
-    let osLoaderVersion, physicalMemory, platformUUID, provisioningUDID: String
+    let name, activationLockStatus, bootROMVersion, chipType: String?
+    let machineModel, machineName, modelNumber, numberProcessors: String?
+    let osLoaderVersion, physicalMemory, platformUUID, provisioningUDID: String?
     let serialNumber: String
 
     enum CodingKeys: String, CodingKey {
@@ -117,7 +117,10 @@ enum AppInfo {
     #endif
 
     static var hwModelName: String {
-        "\(HWInfo?.machineName ?? "Unknown") (\(HWInfo?.modelNumber ?? "Unknown"))"
+        if let modelNumber = HWInfo?.modelNumber {
+            return "\(HWInfo?.machineName ?? "Unknown") (\(modelNumber))"
+        }
+        return "\(HWInfo?.machineName ?? "Unknown") (\(HWInfo?.machineModel ?? "Unknown"))"
     }
 
     static var hwSerial: String {

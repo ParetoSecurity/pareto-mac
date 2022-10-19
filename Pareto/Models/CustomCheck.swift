@@ -42,7 +42,7 @@ struct CustomCheck: Codable {
         os_log("%{public}s: shell=%{public}s", log: Log.check, safeTitle, command)
 
         if let asInt = result.integer {
-            os_log("%{public}s: integer=%{public}s, required=%{public}s", log: Log.check, safeTitle, res, asInt)
+            os_log("%{public}s: integer=%{public}s, required=%{public}d", log: Log.check, safeTitle, res, asInt)
             return Int(res) == asInt
         }
         if let asString = result.string {
