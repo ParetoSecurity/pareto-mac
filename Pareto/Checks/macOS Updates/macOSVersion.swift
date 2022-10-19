@@ -24,10 +24,6 @@ class MacOSVersionCheck: ParetoCheck {
         "macOS is not up-to-date"
     }
 
-    override var help: String? {
-        "Current version: \(currentVersion.description), Latest: \(latestXX)"
-    }
-
     var currentVersion: Version {
         let os = ProcessInfo.processInfo.operatingSystemVersion
         return Version(os.majorVersion, os.minorVersion, os.patchVersion)
