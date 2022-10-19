@@ -10,7 +10,6 @@ jobs:
   lint:
     name: Lint
     runs-on: macos-12
-    timeout-minutes: 15
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}-lint
       cancel-in-progress: true
