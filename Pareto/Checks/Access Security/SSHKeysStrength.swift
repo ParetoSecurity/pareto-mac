@@ -8,9 +8,13 @@ import Foundation
 import os.log
 import Regex
 
-private extension String {
+extension String {
     func strip() -> String {
         replacingAllMatches(of: Regex("[\n()]"), with: "")
+    }
+
+    func strip(_ string: String) -> String {
+        replacingOccurrences(of: string, with: "")
     }
 }
 

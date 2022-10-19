@@ -195,22 +195,21 @@ class AppDelegate: AppHandlers, NSApplicationDelegate {
             AppInfo.Licensed = true
         #endif
         statusBar = StatusBarController()
-        DispatchQueue.global(qos: .userInteractive).async { [self] in
 
-            statusBar?.configureChecks()
-            statusBar?.updateMenu()
+        statusBar?.configureChecks()
+        statusBar?.updateMenu()
 
-            #if DEBUG
-                // don't do anything else if running tests
-                if AppInfo.isRunningTests {
-                    return
-                }
-            #endif
+        #if DEBUG
+            // don't do anything else if running tests
+            if AppInfo.isRunningTests {
+                return
+            }
+        #endif
 
-            updater = AppUpdater(owner: "ParetoSecurity", repo: "pareto-mac")
+        updater = AppUpdater(owner: "ParetoSecurity", repo: "pareto-mac")
 
-            runApp()
-        }
+        runApp()
+
         if Defaults[.showNotifications] {
             registerNotifications()
         }

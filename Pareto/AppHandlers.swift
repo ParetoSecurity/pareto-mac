@@ -342,6 +342,7 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
         switch url.host {
         #if !SETAPP_ENABLED
             case "enrollSingle":
+
                 let jwt = url.queryParams()["token"] ?? ""
                 do {
                     let license = try VerifyLicense(withLicense: jwt)
@@ -400,9 +401,6 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
                 }
 
             case "enrollTeam":
-                if AppInfo.Licensed || !Defaults[.teamAuth].isEmpty {
-                    return
-                }
 
                 let jwt = url.queryParams()["token"] ?? ""
                 do {

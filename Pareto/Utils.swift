@@ -63,17 +63,6 @@ func lsof(withCommand cmd: String, withPort port: Int) -> Bool {
     return false
 }
 
-func HWInfo(forKey key: String) -> String {
-    let service = IOServiceGetMatchingService(kIOMasterPortDefault,
-                                              IOServiceMatching("IOPlatformExpertDevice"))
-
-    guard let info = (IORegistryEntryCreateCFProperty(service, key as CFString, kCFAllocatorDefault, 0).takeUnretainedValue() as? String)?.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines) else {
-        return "Unknown"
-    }
-    IOObjectRelease(service)
-    return info
-}
-
 func memoize<Input: Hashable, Output>(_ function: @escaping (Input) -> Output) -> (Input) -> Output {
     // our item cache
     var storage = [Input: Output]()

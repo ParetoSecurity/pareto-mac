@@ -14,6 +14,47 @@ import Regex
 import SwiftUI
 import Version
 
+// MARK: - SPHardwareWrapper
+
+struct SPHardwareWrapper: Codable {
+    let spHardwareDataType: [SPHardware]
+
+    enum CodingKeys: String, CodingKey {
+        case spHardwareDataType = "SPHardwareDataType"
+    }
+}
+
+// MARK: - SPHardwareDataType
+
+struct SPHardware: Codable {
+    let name, activationLockStatus, bootROMVersion, chipType: String
+    let machineModel, machineName, modelNumber, numberProcessors: String
+    let osLoaderVersion, physicalMemory, platformUUID, provisioningUDID: String
+    let serialNumber: String
+
+    enum CodingKeys: String, CodingKey {
+        case name = "_name"
+        case activationLockStatus = "activation_lock_status"
+        case bootROMVersion = "boot_rom_version"
+        case chipType = "chip_type"
+        case machineModel = "machine_model"
+        case machineName = "machine_name"
+        case modelNumber = "model_number"
+        case numberProcessors = "number_processors"
+        case osLoaderVersion = "os_loader_version"
+        case physicalMemory = "physical_memory"
+        case platformUUID = "platform_UUID"
+        case provisioningUDID = "provisioning_UDID"
+        case serialNumber = "serial_number"
+    }
+
+    static func gather() -> SPHardware? {
+        guard let jsonData = runCMD(app: "/usr/sbin/system_profiler", args: ["SPHardwareDataType", "-json"]).data(using: .utf8) else { return nil }
+        let info: SPHardwareWrapper = try! JSONDecoder().decode(SPHardwareWrapper.self, from: jsonData)
+        return info.spHardwareDataType.first
+    }
+}
+
 enum AppInfo {
     static let appVersion: String = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as! String
     static let buildVersion: String = Bundle.main.infoDictionary?["CFBundleVersion"] as! String
@@ -27,6 +68,7 @@ enum AppInfo {
     static var Licensed = false
     static var secExp = false
     static let Flags = FlagsUpdater()
+    static let HWInfo = SPHardware.gather()
     static let TeamSettings = TeamSettingsUpdater()
     static var utmSource: String {
         var source = "app"
@@ -74,26 +116,12 @@ enum AppInfo {
         )
     #endif
 
-    static var hwModel: String {
-        HWInfo(forKey: "model")
-    }
-
     static var hwModelName: String {
-        // Depending on if your serial number is 11 or 12 characters long take the last 3 or 4 characters, respectively, and feed that to the following URL after the ?cc=XXXX part.
-        let nameRegex = Regex("<configCode>(.+)</configCode>")
-        let cc = AppInfo.hwSerial.count <= 11 ? AppInfo.hwSerial.suffix(3) : AppInfo.hwSerial.suffix(4)
-        let url = URL(string: "https://support-sp.apple.com/sp/product?cc=\(cc)")!
-        let data = try? String(contentsOf: url)
-        if data != nil {
-            let nameResult = nameRegex.firstMatch(in: data ?? "")
-            return nameResult?.groups.first?.value ?? AppInfo.hwModel
-        }
-
-        return AppInfo.hwModel
+        "\(HWInfo?.machineName ?? "Unknown") (\(HWInfo?.modelNumber ?? "Unknown"))"
     }
 
     static var hwSerial: String {
-        HWInfo(forKey: "IOPlatformSerialNumber")
+        HWInfo?.serialNumber ?? "Unknown"
     }
 
     static let teamsURL = { () -> URL in
