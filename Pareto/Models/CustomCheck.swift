@@ -40,13 +40,13 @@ struct CustomCheck: Codable {
     func passes() -> Bool {
         let res = runShell(args: ["-c", command]).trim()
         os_log("%{public}s: shell=%{public}s", log: Log.check, safeTitle, command)
-
+        os_log("%{public}s: out=%{public}s", log: Log.check, safeTitle, res)
         if let asInt = result.integer {
-            os_log("%{public}s: integer=%{public}s, required=%{public}d", log: Log.check, safeTitle, res, asInt)
+            // os_log("%{public}s: integer=%{public}s, required=%{public}d", log: Log.check, safeTitle, res, asInt)
             return Int(res) == asInt
         }
         if let asString = result.string {
-            os_log("%{public}s: string=%{public}s, required=%{public}s", log: Log.check, safeTitle, res, asString)
+            // os_log("%{public}s: string=%{public}s, required=%{public}s", log: Log.check, safeTitle, res, asString)
             return res == asString
         }
         return false

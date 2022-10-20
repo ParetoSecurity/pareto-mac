@@ -27,24 +27,13 @@ struct SPHardwareWrapper: Codable {
 // MARK: - SPHardwareDataType
 
 struct SPHardware: Codable {
-    let name, activationLockStatus, bootROMVersion, chipType: String?
-    let machineModel, machineName, modelNumber, numberProcessors: String?
-    let osLoaderVersion, physicalMemory, platformUUID, provisioningUDID: String?
+    let machineModel, machineName, modelNumber: String?
     let serialNumber: String
 
     enum CodingKeys: String, CodingKey {
-        case name = "_name"
-        case activationLockStatus = "activation_lock_status"
-        case bootROMVersion = "boot_rom_version"
-        case chipType = "chip_type"
         case machineModel = "machine_model"
         case machineName = "machine_name"
         case modelNumber = "model_number"
-        case numberProcessors = "number_processors"
-        case osLoaderVersion = "os_loader_version"
-        case physicalMemory = "physical_memory"
-        case platformUUID = "platform_UUID"
-        case provisioningUDID = "provisioning_UDID"
         case serialNumber = "serial_number"
     }
 
