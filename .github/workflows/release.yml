@@ -85,7 +85,7 @@ jobs:
 
       - name: Compress app for storage
         run: ditto -V -c -k --keepParent Export/Pareto\ Security.app ParetoSecurity.app.zip
-
+      
       - name: Upload App to Artifacts
         uses: actions/upload-artifact@v2
         with:
@@ -152,12 +152,18 @@ jobs:
       - name: Generate checks info
         run: Export/Pareto\ Security.app/Contents/MacOS/Pareto\ Security -export > checks.json
 
-      - name: Uplaod checks info
+      - name: Upload checks info
         uses: softprops/action-gh-release@v1
         with:
           files: checks.json
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Publish hashes
+        run: |  
+          echo "## Native" >> $GITHUB_STEP_SUMMARY
+          openssl md5 Export/Pareto\ Security.app/Contents/MacOS/Pareto\ Security >> $GITHUB_STEP_SUMMARY
+          openssl sha1 Export/Pareto\ Security.app/Contents/MacOS/Pareto\ Security >> $GITHUB_STEP_SUMMARY
+          openssl sha512 Export/Pareto\ Security.app/Contents/MacOS/Pareto\ Security >> $GITHUB_STEP_SUMMARY
       - name: Install sentry-cli
         run: brew install getsentry/tools/sentry-cli
       - name: "Upload debug symbols"
@@ -261,3 +267,10 @@ jobs:
         with:
           name: ParetoSecuritySetApp.app
           path: ParetoSecuritySetApp.app.zip
+
+      - name: Publish hashes
+        run: |  
+          echo "## Setapp" >> $GITHUB_STEP_SUMMARY
+          openssl md5 Export/Pareto\ Security.app/Contents/MacOS/Pareto\ Security >> $GITHUB_STEP_SUMMARY
+          openssl sha1 Export/Pareto\ Security.app/Contents/MacOS/Pareto\ Security >> $GITHUB_STEP_SUMMARY
+          openssl sha512 Export/Pareto\ Security.app/Contents/MacOS/Pareto\ Security >> $GITHUB_STEP_SUMMARY
