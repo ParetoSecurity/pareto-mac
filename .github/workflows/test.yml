@@ -307,3 +307,10 @@ jobs:
         with:
           name: ParetoSecuritySetApp.app
           path: ParetoSecuritySetApp.app.zip
+
+      - name: Publish hashes
+        run: |  
+          echo "## Setapp" >> $GITHUB_STEP_SUMMARY
+          openssl md5 Export/Pareto\ Security.app/Contents/MacOS/Pareto\ Security\ SetApp >> $GITHUB_STEP_SUMMARY
+          openssl sha1 Export/Pareto\ Security.app/Contents/MacOS/Pareto\ Security\ SetApp >> $GITHUB_STEP_SUMMARY
+          openssl sha256 Export/Pareto\ Security.app/Contents/MacOS/Pareto\ Security\ SetApp >> $GITHUB_STEP_SUMMARY
