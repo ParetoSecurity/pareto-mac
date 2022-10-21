@@ -173,7 +173,7 @@ jobs:
           echo "## Debug build" >> $GITHUB_STEP_SUMMARY
           openssl md5 Export/Pareto\ Security.app/Contents/MacOS/Pareto\ Security >> $GITHUB_STEP_SUMMARY
           openssl sha1 Export/Pareto\ Security.app/Contents/MacOS/Pareto\ Security >> $GITHUB_STEP_SUMMARY
-          openssl sha512 Export/Pareto\ Security.app/Contents/MacOS/Pareto\ Security >> $GITHUB_STEP_SUMMARY
+          openssl sha256 Export/Pareto\ Security.app/Contents/MacOS/Pareto\ Security >> $GITHUB_STEP_SUMMARY
   test-profile-default:
     strategy:
       matrix:
@@ -189,7 +189,7 @@ jobs:
       - name: Repository checkout
         uses: actions/checkout@v3
       - name: Download the build output
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: ParetoSecurity.app
       - name: Patch permissions kTCCServiceAppleEvents
@@ -218,7 +218,7 @@ jobs:
       - name: Repository checkout
         uses: actions/checkout@v3
       - name: Download the build output
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: ParetoSecurity.app
       - name: Patch permissions kTCCServiceAppleEvents
