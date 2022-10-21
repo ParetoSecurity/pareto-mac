@@ -311,6 +311,6 @@ jobs:
       - name: Publish hashes
         run: |  
           echo "## Setapp" >> $GITHUB_STEP_SUMMARY
-          openssl md5 Export/Pareto\ Security.app/Contents/MacOS/Pareto\ Security\ SetApp >> $GITHUB_STEP_SUMMARY
-          openssl sha1 Export/Pareto\ Security.app/Contents/MacOS/Pareto\ Security\ SetApp >> $GITHUB_STEP_SUMMARY
-          openssl sha256 Export/Pareto\ Security.app/Contents/MacOS/Pareto\ Security\ SetApp >> $GITHUB_STEP_SUMMARY
+          openssl md5 SetAppExport/Pareto\ Security.app/Contents/MacOS/Pareto\ Security\ SetApp >> $GITHUB_STEP_SUMMARY
+          openssl sha1 SetAppExport/Pareto\ Security.app/Contents/MacOS/Pareto\ Security\ SetApp >> $GITHUB_STEP_SUMMARY
+          openssl sha256 SetAppExport/Pareto\ Security.app/Contents/MacOS/Pareto\ Security\ SetApp >> $GITHUB_STEP_SUMMARY
