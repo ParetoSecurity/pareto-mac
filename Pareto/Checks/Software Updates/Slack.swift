@@ -21,6 +21,12 @@ class AppSlackCheck: AppCheck {
     }
 
     override func getLatestVersion(completion: @escaping (String) -> Void) {
+        // If installed from the app store, assume it's managed via releases API
+        if fromAppStore {
+            getLatestVersionAppStore(completion: completion)
+            return
+        }
+
         let url = viaEdgeCache("https://slack.com/release-notes/mac")
         let versionRegex = Regex("<h2>Slack ?([\\.\\d]+)</h2>")
         os_log("Requesting %{public}s", url)

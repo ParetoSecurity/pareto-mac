@@ -67,6 +67,40 @@ class AppCheck: ParetoCheck, AppCheckProtocol {
         return true
     }
 
+    public var fromAppStore: Bool {
+        if let appPath = applicationPath {
+            let attributes = NSMetadataItem(url: URL(fileURLWithPath: appPath))
+            guard let hasReceipt = attributes?.value(forAttribute: "kMDItemAppStoreHasReceipt") as? Bool else { return false }
+            return hasReceipt
+        }
+        return false
+    }
+
+    func getLatestVersionAppStore(completion: @escaping (String) -> Void) {
+        let languageCode = Locale.current.regionCode ?? "US"
+        var url = URLComponents(url: URL(string: "https://itunes.apple.com/lookup")!, resolvingAgainstBaseURL: false)
+        url?.queryItems = [
+            URLQueryItem(name: "limit", value: "1"),
+            URLQueryItem(name: "entity", value: "desktopSoftware"),
+            URLQueryItem(name: "country", value: languageCode),
+            URLQueryItem(name: "bundleId", value: appBundle)
+        ]
+        if let request = url?.url {
+            os_log("Requesting %{public}s", request.debugDescription)
+            AF.request(viaEdgeCache(request.description)).responseDecodable(of: AppStoreResponse.self, queue: AppCheck.queue, completionHandler: { response in
+                if let version = response.value?.results.first, response.error == nil {
+                    completion(version.version)
+                    return
+                } else {
+                    os_log("%{public}s failed: %{public}s", self.appBundle, response.error.debugDescription)
+                    completion("0.0.0")
+                    return
+                }
+            })
+        }
+        completion("0.0.0")
+    }
+
     override var help: String? {
         "Current: \(currentVersion.description), Latest: \(latestVersion)"
     }
@@ -155,20 +189,9 @@ class AppCheck: ParetoCheck, AppCheckProtocol {
     }
 
     func getLatestVersion(completion: @escaping (String) -> Void) {
-        if sparkleURL.isEmpty {
-            let url = viaEdgeCache("https://itunes.apple.com/lookup?bundleId=\(appBundle)&country=us&entity=macSoftware&limit=1")
-            os_log("Requesting %{public}s", url)
-            AF.request(url).responseDecodable(of: AppStoreResponse.self, queue: AppCheck.queue, completionHandler: { response in
-                if response.error == nil {
-                    let version = response.value?.results.first?.version ?? "0.0.0"
-                    os_log("%{public}s version=%{public}s", self.appBundle, version)
-                    completion(version)
-                } else {
-                    os_log("%{public}s failed: %{public}s", self.appBundle, response.error.debugDescription)
-                    completion("0.0.0")
-                }
-            })
-
+        if fromAppStore {
+            getLatestVersionAppStore(completion: completion)
+            return
         } else {
             os_log("Requesting %{public}s", sparkleURL)
             let versionRegex = Regex("sparkle:shortVersionString=\"([\\.\\d]+)\"")
