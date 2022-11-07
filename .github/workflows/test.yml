@@ -98,7 +98,7 @@ jobs:
   build:
     name: Build and Archive Native
     needs: lint
-    runs-on: macos-12
+    runs-on: apple-silicon
     timeout-minutes: 15
     permissions:
       issues: write
@@ -234,7 +234,7 @@ jobs:
         run: .github/bin/profile bad
   build-setapp:
     name: Build and Archive SetApp
-    runs-on: macos-12
+    runs-on: apple-silicon
     timeout-minutes: 15
     needs: lint
     permissions:
