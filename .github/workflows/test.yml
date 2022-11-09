@@ -76,7 +76,9 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-spm-${{ env.cache-name }}-
       - name: Tests
-        run: set -o pipefail && make test 2>&1 | mint run xcbeautify
+        run: make test
+      - name: Upload BlueRacer reports
+        run: bash <(curl -s https://app.blueracer.io/upload) || true
       - name: Update coverage
         run: bash <(curl -s https://codecov.io/bash)
       - name: Gather screenshots

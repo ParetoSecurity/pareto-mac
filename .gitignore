@@ -16,3 +16,4 @@ SetAppExport
 SourcePackages
 xcuserdata/
 *.zip
+junit.xml
