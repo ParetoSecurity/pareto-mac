@@ -22,25 +22,6 @@ class AppSlackCheck: AppCheck {
 
     override func getLatestVersion(completion: @escaping (String) -> Void) {
         // If installed from the app store, assume it's managed via releases API
-        if fromAppStore {
-            getLatestVersionAppStore(completion: completion)
-            return
-        }
-
-        let url = viaEdgeCache("https://slack.com/release-notes/mac")
-        let versionRegex = Regex("<h2>Slack ?([\\.\\d]+)</h2>")
-        os_log("Requesting %{public}s", url)
-        AF.request(url).responseString(queue: AppCheck.queue, completionHandler: { response in
-            if response.error == nil {
-                let html = response.value ?? "<h2>Slack 1.23.0</h2>"
-                let version = versionRegex.firstMatch(in: html)?.groups.first?.value ?? "1.23.0"
-                os_log("%{public}s version=%{public}s", self.appBundle, version)
-                completion(version)
-            } else {
-                os_log("%{public}s failed: %{public}s", self.appBundle, response.error.debugDescription)
-                completion("0.0.0")
-            }
-
-        })
+        getLatestVersionAppStore(completion: completion)
     }
 }
