@@ -79,6 +79,8 @@ jobs:
         run: make test
       - name: Upload BlueRacer reports
         run: bash <(curl -s https://app.blueracer.io/upload) || true
+        env:
+          BLUERACER_TOKEN: ${{ secrets.BLUERACER_TOKEN }}
       - name: Update coverage
         run: bash <(curl -s https://codecov.io/bash)
       - name: Gather screenshots
