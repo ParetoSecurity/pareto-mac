@@ -11,6 +11,8 @@ import Foundation
 enum Claims {
     static let updateChecks = [
         App1Password7Check.sharedInstance,
+        App1Password8Check.sharedInstance,
+        AppGrammarlyCheck.sharedInstance,
         AppBitwardenCheck.sharedInstance,
         AppCyberduckCheck.sharedInstance,
         AppDashlaneCheck.sharedInstance,
