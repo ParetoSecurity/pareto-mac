@@ -17,6 +17,7 @@ struct DeviceSettings: Codable {
     let requiredChecks: [APICheck]
     let name: String
     let admin: String
+    let forceSerialPush: Bool
 
     var ignoredList: [String] {
         ignoredChecks.map { $0.id }
@@ -71,13 +72,20 @@ struct ReportingDevice: Encodable {
     let modelSerial: String
 
     static func current() -> ReportingDevice {
+        let reason = "Disabled"
+
+        var sendSerial = false
+        if Defaults[.sendHWInfo] || AppInfo.TeamSettings.forceSerialPush {
+            sendSerial = true
+        }
+
         return ReportingDevice(
             machineUUID: Defaults[.machineUUID],
             machineName: AppInfo.machineName,
             auth: Defaults[.teamAuth],
             macOSVersion: AppInfo.macOSVersionString,
-            modelName: Defaults[.sendHWInfo] ? AppInfo.hwModelName : "Disabled",
-            modelSerial: Defaults[.sendHWInfo] ? AppInfo.hwSerial : "Disabled"
+            modelName: sendSerial ? AppInfo.hwModelName : reason,
+            modelSerial: sendSerial ? AppInfo.hwSerial : reason
         )
     }
 }
@@ -264,6 +272,7 @@ class TeamSettingsUpdater: ObservableObject {
     @Published var enforcedChecks: [String] = []
     @Published var name: String = "Default Team"
     @Published var admin: String = "admin@niteo.co"
+    @Published var forceSerialPush: Bool = false
 
     func update(completion: @escaping () -> Void) {
         Team.settings { res in
@@ -271,6 +280,7 @@ class TeamSettingsUpdater: ObservableObject {
             self.enforcedChecks = res?.enforcedList ?? []
             self.name = res?.name ?? "Default Team"
             self.admin = res?.admin ?? "admin@niteo.co"
+            self.forceSerialPush = res?.forceSerialPush ?? false
             os_log("Team ignored checks: %s", self.ignoredChecks.debugDescription)
             os_log("Team enforced checks: %s", self.enforcedChecks.debugDescription)
             completion()
@@ -290,6 +300,7 @@ class TeamSettingsUpdater: ObservableObject {
                 }
             }
         }
+
         os_log("Team ignored checks applied.")
         Defaults[.appliedIgnoredChecks] = true
     }

@@ -147,7 +147,7 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
             DispatchQueue.global(qos: .userInteractive).async {
                 if self.networkHandler.currentStatus == .satisfied {
                     if !Defaults[.teamID].isEmpty {
-                        os_log("Running flags update")
+                        os_log("Running team flags update")
                         AppInfo.TeamSettings.update {
                             os_log("Updated teams settings")
                         }
