@@ -157,6 +157,22 @@ class StatusBarController: NSObject, NSMenuDelegate {
             if Defaults[.reportingRole] == .team, AppInfo.Flags.teamAPI {
                 if Defaults.shouldDoTeamUpdate() || interactive {
                     let report = Report.now()
+                    if !Defaults[.sendHWInfo], AppInfo.TeamSettings.forceSerialPush, Defaults.shouldAskForHWAllow() {
+                        let alert = NSAlert()
+                        alert.messageText = "Send device model and serial"
+                        alert.informativeText = "Your team manager has indicated desire to collect device info. Do you allow it?"
+                        alert.alertStyle = NSAlert.Style.warning
+                        alert.addButton(withTitle: "OK")
+                        alert.addButton(withTitle: "Don't Allow")
+                        if alert.runModal() == .alertFirstButtonReturn {
+                            Defaults[.sendHWInfo] = true
+                            Defaults[.lastHWAsk] = Date().currentTimeMs()
+                        } else {
+                            Defaults[.sendHWInfo] = false
+                            Defaults[.lastHWAsk] = Date().currentTimeMs()
+                        }
+                    }
+
                     DispatchQueue.global(qos: .userInteractive).async {
                         Team.update(withReport: report).response { response in
                             switch response.result {

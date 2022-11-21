@@ -30,6 +30,7 @@ extension Defaults.Keys {
     static let teamAuth = Key<String>("teamAuth", default: "", suite: extensionDefaults)
     static let machineUUID = Key<String>("machineUUID", default: AppInfo.getSystemUUID() ?? UUID().uuidString, suite: extensionDefaults)
     static let sendHWInfo = Key<Bool>("sendHWInfo", default: false, suite: extensionDefaults)
+    static let lastHWAsk = Key<Int>("lastHWAsk", default: 0, suite: extensionDefaults)
     static let appliedIgnoredChecks = Key<Bool>("appliedIgnoredChecksv1", default: false, suite: extensionDefaults)
 
     // License
@@ -81,6 +82,10 @@ public extension Defaults {
     static func doneUpdateCheck() {
         Defaults[.lastUpdateCheck] = Date().currentTimeMs()
         Defaults[.updateNag] = false
+    }
+
+    static func shouldAskForHWAllow() -> Bool {
+        return Defaults[.lastHWAsk] + Date.HourInMs * 24 * 7 < Date().currentTimeMs()
     }
 
     static func shouldDoTeamUpdate() -> Bool {

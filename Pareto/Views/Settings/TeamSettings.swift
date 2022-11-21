@@ -10,6 +10,7 @@ import SwiftUI
 
 struct TeamSettingsView: View {
     @StateObject var teamSettings: TeamSettingsUpdater
+
     @Default(.teamID) var teamID
     @Default(.machineUUID) var machineUUID
     @Default(.sendHWInfo) var sendHWInfo
@@ -69,9 +70,9 @@ struct TeamSettingsView: View {
                 Section(
                     footer: Text("When enabled, send model name and serial number.").font(.footnote)) {
                         VStack(alignment: .leading) {
-                            if AppInfo.TeamSettings.forceSerialPush {
-                                Text("✴")
-                                Text("Sending device info is enforced by team settings")
+                            if teamSettings.forceSerialPush {
+                                Toggle("Send inventory info on update", isOn: $sendHWInfo)
+                                Text("Sending device info is required by team settings").font(.footnote)
                             } else {
                                 Toggle("Send inventory info on update", isOn: $sendHWInfo)
                             }
