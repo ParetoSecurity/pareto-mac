@@ -65,10 +65,16 @@ struct TeamSettingsView: View {
                         }
                     }
                 Spacer(minLength: 2)
+
                 Section(
                     footer: Text("When enabled, send model name and serial number.").font(.footnote)) {
                         VStack(alignment: .leading) {
-                            Toggle("Send inventory info on update", isOn: $sendHWInfo)
+                            if AppInfo.TeamSettings.forceSerialPush {
+                                Text("✴")
+                                Text("Sending device info is enforced by team settings")
+                            } else {
+                                Toggle("Send inventory info on update", isOn: $sendHWInfo)
+                            }
                         }
                     }
 
