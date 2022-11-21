@@ -112,7 +112,7 @@ struct Report: Encodable {
         var failedSeed = "\(Defaults[.machineUUID])"
         var checkStates: [String: String] = [:]
 
-        for claim in Claims.sorted {
+        for claim in Claims.global.all {
             for check in claim.checks {
                 if check.isRunnable {
                     if check.checkPassed {
@@ -293,7 +293,7 @@ class TeamSettingsUpdater: ObservableObject {
             return
         }
 
-        for claim in Claims.all {
+        for claim in Claims.global.all {
             for check in claim.checks {
                 if ignoredChecks.contains(where: { $0 == check.UUID }) {
                     check.isActive = false

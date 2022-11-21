@@ -49,6 +49,7 @@ extension Defaults.Keys {
     static let lastCheck = Key<Int>("lastCheck", default: 0, suite: extensionDefaults)
     static let checksPassed = Key<Bool>("checksPassed", default: false, suite: extensionDefaults)
     static let myChecks = Key<Bool>("myChecks", default: false, suite: extensionDefaults)
+    static let myChecksURL = Key<URL?>("myChecksURL", default: nil, suite: extensionDefaults)
     static let disableChecksEvents = Key<Bool>("disableChecksEvents", default: false, suite: extensionDefaults)
     static let lastNagShown = Key<Int>("lastNagShown", default: Date().currentTimeMs(), suite: extensionDefaults)
     static let checkForUpdatesRecentOnly = Key<Bool>("checkForUpdatesRecentOnly", default: true, suite: extensionDefaults)
@@ -58,6 +59,19 @@ extension Defaults.Keys {
 public extension Defaults {
     static func firstLaunch() -> Bool {
         return Defaults[.lastCheck] == 0
+    }
+
+    static func customChecksPath() -> URL {
+        if let path = Defaults[.myChecksURL] {
+            return path
+        }
+
+        return try! FileManager.default.url(
+            for: .documentDirectory,
+            in: .userDomainMask,
+            appropriateFor: nil,
+            create: true
+        ).appendingPathComponent("ParetoAuditor", conformingTo: .directory)
     }
 
     static func shouldDoUpdateCheck() -> Bool {

@@ -6,6 +6,7 @@
 //
 
 import CryptoKit
+import Defaults
 import Foundation
 import os.log
 import Yams
@@ -56,12 +57,7 @@ struct CustomCheck: Codable {
         var checks = [CustomCheck]()
         do {
             // Get the document directory url
-            let documentDirectory = try FileManager.default.url(
-                for: .documentDirectory,
-                in: .userDomainMask,
-                appropriateFor: nil,
-                create: true
-            ).appendingPathComponent("ParetoAuditor", conformingTo: .directory)
+            let documentDirectory = Defaults.customChecksPath()
 
             // Get the directory contents urls (including subfolders urls)
             let directoryContents = try FileManager.default.contentsOfDirectory(

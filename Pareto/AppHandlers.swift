@@ -304,7 +304,7 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
 
     func copyDebug(_ onlyCheck: String) {
         var data = ""
-        for claim in Claims.sorted {
+        for claim in Claims.global.all {
             for check in claim.checksSorted.filter({ check in
                 check.hasDebug || (!onlyCheck.isEmpty && check.hasDebug && check.UUID == onlyCheck)
             }) {

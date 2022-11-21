@@ -104,7 +104,7 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
     func menu() -> NSMenuItem {
         let item = NSMenuItem(title: Title, action: #selector(moreInfo), keyEquivalent: "")
         item.target = self
-        item.toolTip = help
+
         if isRunnable {
             if Defaults[.snoozeTime] > 0 {
                 item.image = NSImage.SF(name: "seal.fill").tint(color: .systemGray)

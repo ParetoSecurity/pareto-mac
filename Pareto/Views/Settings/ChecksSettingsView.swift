@@ -20,7 +20,7 @@ struct ChecksSettingsView: View {
                     Text("Checks with asterisk (✴) are required by your team.")
                 }
                 VStack(alignment: .leading, spacing: 0.0) {
-                    ForEach(Claims.sorted, id: \.self) { claim in
+                    ForEach(Claims.global.all, id: \.self) { claim in
 
                         // Hack to force update view
                         // see https://developer.apple.com/forums/thread/131577

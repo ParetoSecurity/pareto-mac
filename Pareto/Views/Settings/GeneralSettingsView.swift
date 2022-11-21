@@ -7,6 +7,7 @@
 
 import Defaults
 import LaunchAtLogin
+import os.log
 import SwiftUI
 
 struct GeneralSettingsView: View {
@@ -17,6 +18,8 @@ struct GeneralSettingsView: View {
     @Default(.checkForUpdatesRecentOnly) var checkForUpdatesRecentOnly
     @Default(.disableChecksEvents) var disableChecksEvents
     @Default(.myChecks) var myChecks
+    @Default(.myChecksURL) var myChecksURL
+
     var body: some View {
         Form {
             Section(
@@ -34,7 +37,12 @@ struct GeneralSettingsView: View {
             Section(
                 footer: Text("Enables custom checks, that are configured by YAML rules. [Learn more](https://paretosecurity.com/custom-check/)").font(.footnote)) {
                     VStack(alignment: .leading) {
-                        Toggle("Enable My Checks", isOn: $myChecks)
+                        HStack {
+                            Toggle("Enable My Checks", isOn: $myChecks)
+                            Button("Select folder") {
+                                selectFolder()
+                            }
+                        }
                     }
                 }
             if showBeta {
@@ -83,6 +91,26 @@ struct GeneralSettingsView: View {
         #else
             .frame(width: 350).padding(25)
         #endif
+    }
+
+    func selectFolder() {
+        let openPanel = NSOpenPanel()
+        openPanel.title = "Select a folder to watch for custom checks"
+        openPanel.message = "Location of the customs checks you wish to run"
+        openPanel.showsResizeIndicator = true
+        openPanel.canChooseDirectories = true
+        openPanel.canChooseFiles = false
+        openPanel.allowsMultipleSelection = false
+        openPanel.canCreateDirectories = true
+
+        openPanel.begin { result in
+            if result == .OK {
+                let path = openPanel.url
+                os_log("selected folder is %{public}s", path!.absoluteString)
+                myChecksURL = path
+                Claims.global.refresh()
+            }
+        }
     }
 }
 

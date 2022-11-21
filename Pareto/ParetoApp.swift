@@ -22,7 +22,7 @@ class AppDelegate: AppHandlers, NSApplicationDelegate {
         if CommandLine.arguments.contains("-export") {
             var export: [String: [String: [String]]] = [:]
 
-            for claim in Claims.sorted {
+            for claim in Claims.global.all {
                 // skip empty claims
                 if claim.checks.count == 0 {
                     continue
@@ -45,7 +45,7 @@ class AppDelegate: AppHandlers, NSApplicationDelegate {
             // invalidate possible expired cache
             try! AppInfo.versionStorage.removeAll()
 
-            for claim in Claims.sorted {
+            for claim in Claims.global.all {
                 claim.configure()
                 for check in claim.checksSorted {
                     check.run()
@@ -58,7 +58,7 @@ class AppDelegate: AppHandlers, NSApplicationDelegate {
             // invalidate possible expired cache
             try! AppInfo.versionStorage.removeAll()
             print("[")
-            for claim in Claims.sorted {
+            for claim in Claims.global.all {
                 claim.configure()
                 for check in claim.checksSorted {
                     check.run()

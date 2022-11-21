@@ -62,7 +62,7 @@ class StatusBarController: NSObject, NSMenuDelegate {
 
     var claimsPassed: Bool {
         var passed = true
-        for claim in Claims.sorted {
+        for claim in Claims.global.all {
             passed = passed && claim.checksPassed
         }
         return passed
@@ -98,7 +98,7 @@ class StatusBarController: NSObject, NSMenuDelegate {
     }
 
     func configureChecks() {
-        for claim in Claims.sorted {
+        for claim in Claims.global.all {
             claim.configure()
         }
     }
@@ -132,7 +132,7 @@ class StatusBarController: NSObject, NSMenuDelegate {
         }
 
         workItem = DispatchWorkItem {
-            for claim in Claims.sorted {
+            for claim in Claims.global.all {
                 claim.run()
             }
         }
@@ -294,7 +294,7 @@ class StatusBarController: NSObject, NSMenuDelegate {
     }
 
     func addChecksMenuItems() {
-        for claim in Claims.sorted {
+        for claim in Claims.global.all {
             let menu = claim.menu()
             if !(menu.submenu?.items.isEmpty ?? false) {
                 statusItemMenu.addItem(menu)

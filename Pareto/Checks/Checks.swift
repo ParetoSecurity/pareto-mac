@@ -8,7 +8,62 @@
 import Defaults
 import Foundation
 
-enum Claims {
+class Claims: ObservableObject {
+    var customChecks: [ParetoCheck] = []
+    var all: [Claim] = []
+
+    static let global = Claims()
+
+    init() {
+        refresh()
+    }
+
+    func refresh() {
+        customChecks = initCustomChecks()
+        all = [
+            Claim(withTitle: "macOS Updates", withChecks: [
+                MacOSVersionCheck.sharedInstance,
+                SecurityUpdateCheck.sharedInstance,
+                AutomaticDownloadCheck.sharedInstance,
+                SystemUpdatesCheck.sharedInstance,
+                AutoUpdateCheck.sharedInstance
+            ]),
+            Claim(withTitle: "Access Security", withChecks: [
+                AutologinCheck.sharedInstance,
+                RequirePasswordToUnlock.sharedInstance,
+                ScreensaverCheck.sharedInstance,
+                SSHKeysCheck.sharedInstance,
+                SSHKeysStrengthCheck.sharedInstance,
+                PasswordAfterSleepCheck.sharedInstance
+            ]),
+            Claim(withTitle: "Firewall & Sharing", withChecks: [
+                FirewallCheck.sharedInstance,
+                FirewallStealthCheck.sharedInstance,
+                FileSharingCheck.sharedInstance,
+                PrinterSharingCheck.sharedInstance,
+                RemoteManagementCheck.sharedInstance,
+                RemoteLoginCheck.sharedInstance,
+                AirPlayCheck.sharedInstance,
+                AirDropCheck.sharedInstance,
+                MediaShareCheck.sharedInstance,
+                InternetShareCheck.sharedInstance
+            ]),
+            Claim(withTitle: "System Integrity", withChecks: [
+                GatekeeperCheck.sharedInstance,
+                FileVaultCheck.sharedInstance,
+                BootCheck.sharedInstance,
+                OpenWiFiCheck.sharedInstance,
+                TimeMachineCheck.sharedInstance,
+                SecureTerminalCheck.sharedInstance,
+                SecureiTermCheck.sharedInstance,
+                TimeMachineHasBackupCheck.sharedInstance,
+                TimeMachineIsEncryptedCheck.sharedInstance
+            ]),
+            Claim(withTitle: "Software Updates", withChecks: Claims.updateChecks + [AutoUpdateAppCheck.sharedInstance]),
+            Claim(withTitle: "My Checks", withChecks: customChecks)
+        ].sorted(by: { $0.title.lowercased() < $1.title.lowercased() })
+    }
+
     static let updateChecks = [
         App1Password7Check.sharedInstance,
         App1Password8Check.sharedInstance,
@@ -35,54 +90,7 @@ enum Claims {
         AppMicrosoftTeamsCheck.sharedInstance
     ]
 
-    static let all = [
-        Claim(withTitle: "macOS Updates", withChecks: [
-            MacOSVersionCheck.sharedInstance,
-            SecurityUpdateCheck.sharedInstance,
-            AutomaticDownloadCheck.sharedInstance,
-            SystemUpdatesCheck.sharedInstance,
-            AutoUpdateCheck.sharedInstance
-        ]),
-        Claim(withTitle: "Access Security", withChecks: [
-            AutologinCheck.sharedInstance,
-            RequirePasswordToUnlock.sharedInstance,
-            ScreensaverCheck.sharedInstance,
-            SSHKeysCheck.sharedInstance,
-            SSHKeysStrengthCheck.sharedInstance,
-            PasswordAfterSleepCheck.sharedInstance
-        ]),
-        Claim(withTitle: "Firewall & Sharing", withChecks: [
-            FirewallCheck.sharedInstance,
-            FirewallStealthCheck.sharedInstance,
-            FileSharingCheck.sharedInstance,
-            PrinterSharingCheck.sharedInstance,
-            RemoteManagementCheck.sharedInstance,
-            RemoteLoginCheck.sharedInstance,
-            AirPlayCheck.sharedInstance,
-            AirDropCheck.sharedInstance,
-            MediaShareCheck.sharedInstance,
-            InternetShareCheck.sharedInstance
-        ]),
-        Claim(withTitle: "System Integrity", withChecks: [
-            GatekeeperCheck.sharedInstance,
-            FileVaultCheck.sharedInstance,
-            BootCheck.sharedInstance,
-            OpenWiFiCheck.sharedInstance,
-            TimeMachineCheck.sharedInstance,
-            SecureTerminalCheck.sharedInstance,
-            SecureiTermCheck.sharedInstance,
-            TimeMachineHasBackupCheck.sharedInstance,
-            TimeMachineIsEncryptedCheck.sharedInstance
-        ]),
-        Claim(withTitle: "Software Updates", withChecks: updateChecks + [AutoUpdateAppCheck.sharedInstance]),
-        Claim(withTitle: "My Checks", withChecks: customChecks)
-    ]
-
-    static var sorted: [Claim] {
-        return Claims.all.sorted(by: { $0.title.lowercased() < $1.title.lowercased() })
-    }
-
-    static var customChecks: [ParetoCheck] {
+    func initCustomChecks() -> [ParetoCheck] {
         var myChecks: [ParetoCheck] = []
 
         if !Defaults[.myChecks] {
@@ -90,7 +98,9 @@ enum Claims {
         }
 
         for rule in CustomCheck.getRules() {
-            myChecks.append(MyCheck(check: rule))
+            let check = MyCheck(check: rule)
+            check.configure()
+            myChecks.append(check)
         }
         return myChecks
     }
