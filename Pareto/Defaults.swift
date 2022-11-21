@@ -85,7 +85,7 @@ public extension Defaults {
     }
 
     static func shouldAskForHWAllow() -> Bool {
-        return Defaults[.lastHWAsk] + Date.HourInMs * 24 * 7 < Date().currentTimeMs()
+        return Defaults[.lastHWAsk] + Date.HourInMs * 24 * 7 * 30 * 6 < Date().currentTimeMs()
     }
 
     static func shouldDoTeamUpdate() -> Bool {
