@@ -160,7 +160,7 @@ class StatusBarController: NSObject, NSMenuDelegate {
                     if !Defaults[.sendHWInfo], AppInfo.TeamSettings.forceSerialPush, Defaults.shouldAskForHWAllow() {
                         let alert = NSAlert()
                         alert.messageText = "Send device model and serial"
-                        alert.informativeText = "Your team manager has indicated desire to collect device info. Do you allow it?"
+                        alert.informativeText = "Your team policy enables collection of serial number and hardware model name from this device. Do you allow it?"
                         alert.alertStyle = NSAlert.Style.warning
                         alert.addButton(withTitle: "OK")
                         alert.addButton(withTitle: "Don't Allow")

@@ -72,7 +72,7 @@ struct TeamSettingsView: View {
                         VStack(alignment: .leading) {
                             if teamSettings.forceSerialPush {
                                 Toggle("Send inventory info on update", isOn: $sendHWInfo)
-                                Text("Sending device info is required by team settings").font(.footnote)
+                                Text("Sending is requested by the team policy.").font(.footnote)
                             } else {
                                 Toggle("Send inventory info on update", isOn: $sendHWInfo)
                             }
