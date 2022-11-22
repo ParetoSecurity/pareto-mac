@@ -41,7 +41,7 @@ struct GeneralSettingsView: View {
                             Toggle("Enable My Checks", isOn: $myChecks)
                             Button("Select folder") {
                                 selectFolder()
-                            }
+                            }.disabled(!myChecks)
                         }
                     }
                 }

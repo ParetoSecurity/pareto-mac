@@ -112,7 +112,9 @@ struct Report: Encodable {
         var failedSeed = "\(Defaults[.machineUUID])"
         var checkStates: [String: String] = [:]
 
-        for claim in Claims.global.all {
+        for claim in Claims.global.all.filter({ claim in
+            claim.title != "My Checks"
+        }) {
             for check in claim.checks {
                 if check.isRunnable {
                     if check.checkPassed {
