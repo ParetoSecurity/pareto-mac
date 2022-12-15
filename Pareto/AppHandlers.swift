@@ -264,8 +264,12 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
         NSWorkspace.shared.open(AppInfo.bugReportURL())
     }
 
-    @objc func teamsDasboard() {
+    @objc func teamsDashboard() {
         NSWorkspace.shared.open(AppInfo.teamsURL())
+    }
+
+    @objc func promoteUpdater() {
+        NSWorkspace.shared.open(URL(string: "https://paretosecurity.com/updater?utm_source=auditor-app")!)
     }
 
     @objc func showWelcome() {
