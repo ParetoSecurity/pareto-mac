@@ -157,7 +157,7 @@ class AppDelegate: AppHandlers, NSApplicationDelegate {
 
         // Terminate any older versions of process if not running tests
         #if !DEBUG
-            if !AppInfo.isRunningTests {
+            if !AppInfo.isRunningTests && Defaults[.sendCrashReports] {
                 SentrySDK.start { options in
                     options.dsn = "https://9caf590fe06b4f5b940adfb59623d457@o32789.ingest.sentry.io/6013471"
                     options.enableAutoSessionTracking = true

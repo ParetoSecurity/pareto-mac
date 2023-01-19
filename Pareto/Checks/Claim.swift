@@ -98,14 +98,14 @@ class ClaimWithNudge: Claim {
                 }
             }
         }
-        //#if !SETAPP_ENABLED
-            if !allPassed {
-                let nudge = NSMenuItem(title: "Enable one-click bulk updates of apps", action: #selector(AppDelegate.promoteUpdater), keyEquivalent: "")
+        // #if !SETAPP_ENABLED
+        if !allPassed {
+            let nudge = NSMenuItem(title: "Enable one-click bulk updates of apps", action: #selector(AppDelegate.promoteUpdater), keyEquivalent: "")
 
-                nudge.image = NSImage.SF(name: "sparkles").tint(color: .systemYellow)
-                submenu.addItem(nudge)
-            }
-        //#endif
+            nudge.image = NSImage.SF(name: "sparkles").tint(color: .systemYellow)
+            submenu.addItem(nudge)
+        }
+        // #endif
 
         // item.submenu = submenu
         item.submenu = submenu

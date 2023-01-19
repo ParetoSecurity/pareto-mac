@@ -19,6 +19,7 @@ struct GeneralSettingsView: View {
     @Default(.disableChecksEvents) var disableChecksEvents
     @Default(.myChecks) var myChecks
     @Default(.myChecksURL) var myChecksURL
+    @Default(.sendCrashReports) var sendCrashReports
 
     var body: some View {
         Form {
@@ -69,7 +70,12 @@ struct GeneralSettingsView: View {
                             Toggle("Update app to pre-release builds", isOn: $betaChannel)
                         }
                     }
-
+                Section(
+                    footer: Text("Helps us to spot issues with the app.").font(.footnote)) {
+                        VStack(alignment: .leading) {
+                            Toggle("Send crash reports", isOn: $sendCrashReports)
+                        }
+                    }
                 #if DEBUG
                     HStack {
                         Button("Reset Settings") {

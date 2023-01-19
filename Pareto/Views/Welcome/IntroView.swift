@@ -5,12 +5,14 @@
 //  Created by Janez Troha on 09/11/2021.
 //
 
+import Defaults
 import LaunchAtLogin
 import SwiftUI
 
 struct IntroView: View {
     @Binding var step: Steps
     @ObservedObject private var atLogin = LaunchAtLogin.observable
+    @Default(.sendCrashReports) var sendCrashReports
 
     var body: some View {
         VStack {
@@ -37,9 +39,10 @@ struct IntroView: View {
             Form {
                 VStack(alignment: .leading) {
                     Toggle("Automatically launch on system startup", isOn: $atLogin.isEnabled)
+                    Toggle("Send crash reports", isOn: $sendCrashReports)
                 }
             }
-            Spacer(minLength: 40)
+            Spacer(minLength: 20)
             Button("Get Started") {
                 step = Steps.Permissions
             }.buttonStyle(HighlightButtonStyle(color: .mainColor))

@@ -247,7 +247,11 @@ class StatusBarController: NSObject, NSMenuDelegate {
     func addApplicationItems() {
         if !statusBarModel.isRunning {
             if Defaults[.snoozeTime] == 0 {
-                let lastItem = NSMenuItem(title: "Last check \(Date.fromTimeStamp(timeStamp: Defaults[.lastCheck]).timeAgoDisplay())", action: nil, keyEquivalent: "")
+                var title = "Last check \(Date.fromTimeStamp(timeStamp: Defaults[.lastCheck]).timeAgoDisplay())"
+                if Defaults[.lastCheck] == 0 {
+                    title = "Not checked yet"
+                }
+                let lastItem = NSMenuItem(title: title, action: nil, keyEquivalent: "")
                 lastItem.target = NSApp.delegate
                 statusItemMenu.addItem(lastItem)
             } else {

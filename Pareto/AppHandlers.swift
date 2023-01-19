@@ -285,7 +285,9 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
             welcomeWindow!.titlebarAppearsTransparent = true
             welcomeWindow!.center()
             welcomeWindow!.setFrameAutosaveName("welcomeView")
-            welcomeWindow!.isReleasedWhenClosed = false
+            welcomeWindow!.isReleasedWhenClosed = true
+            welcomeWindow?.level = .floating
+
             let hosting = NSHostingView(rootView: welcome)
             hosting.autoresizingMask = [NSView.AutoresizingMask.width, NSView.AutoresizingMask.height]
             welcomeWindow!.contentView = hosting
