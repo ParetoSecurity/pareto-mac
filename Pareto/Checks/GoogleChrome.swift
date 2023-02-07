@@ -16,14 +16,14 @@ import Version
 // MARK: - GoogleResponse
 
 private struct GoogleResponse: Codable {
-    let versions: [ChromeVersion]
-    let nextPageToken: String
+    let releases: [ChromeVersion]
 }
 
 // MARK: - Version
 
 private struct ChromeVersion: Codable {
-    let name, version: String
+    let version: String
+    let fraction: Float
 }
 
 class AppGoogleChromeCheck: AppCheck {
@@ -50,11 +50,13 @@ class AppGoogleChromeCheck: AppCheck {
     }
 
     override func getLatestVersion(completion: @escaping (String) -> Void) {
-        let url = viaEdgeCache("https://versionhistory.googleapis.com/v1/chrome/platforms/mac/channels/stable/versions")
+        let url = viaEdgeCache("https://versionhistory.googleapis.com/v1/chrome/platforms/mac/channels/stable/versions/all/releases?filter=endtime=none")
         os_log("Requesting %{public}s", url)
         AF.request(url).responseDecodable(of: GoogleResponse.self, queue: AppCheck.queue, completionHandler: { response in
             if response.error == nil {
-                let v = response.value?.versions.first?.version.split(separator: ".") ?? ["0", "0", "0"]
+                let v = response.value?.releases.filter({ v in
+                    v.fraction >= 0.9
+                }).first?.version.split(separator: ".") ?? ["0", "0", "0"]
                 completion("\(v[0]).\(v[1]).\(v[2])")
             } else {
                 os_log("%{public}s failed: %{public}s", self.appBundle, response.error.debugDescription)
