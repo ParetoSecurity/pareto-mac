@@ -54,9 +54,9 @@ class AppGoogleChromeCheck: AppCheck {
         os_log("Requesting %{public}s", url)
         AF.request(url).responseDecodable(of: GoogleResponse.self, queue: AppCheck.queue, completionHandler: { response in
             if response.error == nil {
-                let v = response.value?.releases.filter({ v in
+                let v = response.value?.releases.filter { v in
                     v.fraction >= 0.9
-                }).first?.version.split(separator: ".") ?? ["0", "0", "0"]
+                }.first?.version.split(separator: ".") ?? ["0", "0", "0"]
                 completion("\(v[0]).\(v[1]).\(v[2])")
             } else {
                 os_log("%{public}s failed: %{public}s", self.appBundle, response.error.debugDescription)

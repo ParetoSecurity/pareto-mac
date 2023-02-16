@@ -49,6 +49,7 @@ extension Defaults.Keys {
     static let snoozeTime = Key<Int>("snoozeTime", default: 0, suite: extensionDefaults)
     static let lastCheck = Key<Int>("lastCheck", default: 0, suite: extensionDefaults)
     static let checksPassed = Key<Bool>("checksPassed", default: false, suite: extensionDefaults)
+    static let hideWhenNoFailures = Key<Bool>("hideWhenNoFailures", default: false, suite: extensionDefaults)
     static let myChecks = Key<Bool>("myChecks", default: false, suite: extensionDefaults)
     static let myChecksURL = Key<URL?>("myChecksURL", default: nil, suite: extensionDefaults)
     static let disableChecksEvents = Key<Bool>("disableChecksEvents", default: false, suite: extensionDefaults)

@@ -6,6 +6,7 @@
 //
 
 import Alamofire
+import Combine
 import Defaults
 import Foundation
 import LaunchAtLogin
@@ -25,6 +26,16 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
     var welcomeWindow: NSWindow?
     var enrolledHandler = false
     var networkHandler = NetworkHandler.sharedInstance()
+    private var idleSink: AnyCancellable?
+    var finishedLaunch: Bool = false
+
+    @Default(.hideWhenNoFailures) var hideWhenNoFailures
+
+    func updateHiddenState() {
+        if hideWhenNoFailures {
+            statusBar?.statusItem?.isVisible = !(statusBar?.claimsPassed ?? true)
+        }
+    }
 
     public indirect enum Error: Swift.Error {
         case teamLinkinFailed
@@ -32,6 +43,12 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
 
     func runApp() {
         networkHandler.addObserver(observer: self)
+
+        idleSink = statusBar?.statusBarModel.$state.sink { [self] state in
+            if state == .idle {
+                updateHiddenState()
+            }
+        }
 
         if !Defaults[.teamID].isEmpty {
             AppInfo.TeamSettings.update { os_log("Updated teams settings") }

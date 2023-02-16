@@ -18,6 +18,17 @@ import SwiftUI
 import UserNotifications
 
 class AppDelegate: AppHandlers, NSApplicationDelegate {
+    func applicationDidBecomeActive(_: Notification) {
+        if hideWhenNoFailures {
+            statusBar?.statusItem?.isVisible = true
+            DispatchQueue.main.asyncAfter(deadline: .now() + 10) { [self] in
+                if statusBar?.statusBarModel.state == .idle {
+                    updateHiddenState()
+                }
+            }
+        }
+    }
+
     func applicationWillFinishLaunching(_: Notification) {
         if CommandLine.arguments.contains("-export") {
             var export: [String: [String: [String]]] = [:]

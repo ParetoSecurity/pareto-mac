@@ -12,6 +12,7 @@ import SwiftUI
 
 struct GeneralSettingsView: View {
     @ObservedObject private var atLogin = LaunchAtLogin.observable
+
     @Default(.betaChannel) var betaChannel
     @Default(.showBeta) var showBeta
     @Default(.showNotifications) var showNotifications
@@ -20,6 +21,7 @@ struct GeneralSettingsView: View {
     @Default(.myChecks) var myChecks
     @Default(.myChecksURL) var myChecksURL
     @Default(.sendCrashReports) var sendCrashReports
+    @Default(.hideWhenNoFailures) var hideWhenNoFailures
 
     var body: some View {
         Form {
@@ -33,6 +35,12 @@ struct GeneralSettingsView: View {
                 footer: Text("Only scan for updates for recently used apps.").font(.footnote)) {
                     VStack(alignment: .leading) {
                         Toggle("Update check only for apps used in the last week", isOn: $checkForUpdatesRecentOnly)
+                    }
+                }
+            Section(
+                footer: Text("App is running checks even when the icon is hidden.").font(.footnote)) {
+                    VStack(alignment: .leading) {
+                        Toggle("Only show in menu bar when the checks are failing", isOn: $hideWhenNoFailures)
                     }
                 }
             Section(

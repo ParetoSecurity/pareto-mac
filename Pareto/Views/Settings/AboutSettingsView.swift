@@ -12,6 +12,7 @@ struct AboutSettingsView: View {
     @State private var isLoading = false
     @State private var status = UpdateStates.Checking
     @State private var konami = 0
+
     @Default(.showBeta) var showBeta
 
     enum UpdateStates: String {

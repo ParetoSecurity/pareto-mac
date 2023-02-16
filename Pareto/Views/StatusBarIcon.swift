@@ -8,13 +8,14 @@
 import SwiftUI
 
 enum StatusBarState: String {
+    case initial = "Icon"
     case idle = "IconGray"
     case warning = "IconOrange"
     case allOk = "IconGreen"
 }
 
 class StatusBarModel: ObservableObject {
-    @Published var state = StatusBarState.idle
+    @Published var state = StatusBarState.initial
     @Published var isRunning = false
 }
 
