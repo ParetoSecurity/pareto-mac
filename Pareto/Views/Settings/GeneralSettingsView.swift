@@ -155,7 +155,7 @@ struct GeneralSettingsView: View {
                 }).disabled(checker.fdaAuthorized)
 
             }.frame(width: 350, alignment: .leading)
-        }.frame(width: 350).padding(25).onAppear {
+        }.frame(minWidth: 350, minHeight: 400).padding(25).onAppear {
             checker.start()
         }.onDisappear {
             checker.stop()
