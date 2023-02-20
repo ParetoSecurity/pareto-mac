@@ -170,7 +170,6 @@ public class AppUpdater {
                 os_log("Delete installedAppBundle: \(installedAppBundle)")
                 try downloadedAppBundle.path.move(to: installedAppBundle.path)
                 os_log("Move new app to installedAppBundle: \(installedAppBundle)")
-                // runOSA(appleScript: "activate application \"Pareto Security\"")
 
                 let proc = Process()
                 if #available(OSX 10.13, *) {

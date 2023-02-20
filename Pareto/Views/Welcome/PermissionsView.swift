@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-private class PermissionsChecker: ObservableObject {
+class PermissionsChecker: ObservableObject {
     /// The timer
     private var timer: Timer?
     @Published var osaAuthorized = false
@@ -48,7 +48,7 @@ struct PermissionsView: View {
     @ObservedObject fileprivate var checker = PermissionsChecker()
 
     func authorizeOSAClick() {
-        NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.preference.security?AppleEvents")!)
+        NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Automation")!)
     }
 
     func authorizeFDAClick() {
@@ -77,7 +77,7 @@ struct PermissionsView: View {
             HStack {
                 VStack(alignment: .leading) {
                     Text("System Events Access").font(.title2)
-                    Text("App requires read-only access to system events so that it can react on connectivity changes, settings changes, and to run checks.").font(.footnote)
+                    Text("App requires read-only access to system events so that it can react on connectivity changes, settings changes, and to run checks. [Learn more](https://help.paretosecurity.com/article/312-app-permissions)").font(.footnote)
                 }
 
                 Button(action: authorizeOSAClick, label: {
@@ -92,14 +92,12 @@ struct PermissionsView: View {
                     }
                 }).disabled(checker.osaAuthorized)
 
-            }.frame(width: 350, alignment: .center)
+            }.frame(width: 350, alignment: .leading)
             HStack {
                 VStack(alignment: .leading) {
                     Text("Full Disk Access").font(.title2)
-                    Text("App requires full disk access if you want to use the Time Machine checks.").font(.footnote)
+                    Text("App requires full disk access if you want to use the Time Machine checks. [Learn more](https://help.paretosecurity.com/article/312-app-permissions)").font(.footnote)
                 }
-                Link("?",
-                     destination: URL(string: "https://help.paretosecurity.com/article/312-app-permissions?utm_source=\(AppInfo.utmSource)")!)
                 Button(action: authorizeFDAClick, label: {
                     if checker.ran {
                         if checker.fdaAuthorized {
@@ -112,7 +110,7 @@ struct PermissionsView: View {
                     }
                 }).disabled(checker.fdaAuthorized)
 
-            }.frame(width: 350, alignment: .center)
+            }.frame(width: 350, alignment: .leading)
             Spacer(minLength: 40)
             Button("Continue") {
                 #if SETAPP_ENABLED

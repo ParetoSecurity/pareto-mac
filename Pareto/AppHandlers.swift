@@ -50,6 +50,16 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
             }
         }
 
+        Task {
+            for await hideWhenNoFailures in Defaults.updates(.hideWhenNoFailures) {
+                if !hideWhenNoFailures {
+                    statusBar?.statusItem?.isVisible = true
+                } else {
+                    updateHiddenState()
+                }
+            }
+        }
+
         if !Defaults[.teamID].isEmpty {
             AppInfo.TeamSettings.update { os_log("Updated teams settings") }
         }
