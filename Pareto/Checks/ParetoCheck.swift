@@ -87,6 +87,10 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
         return false
     }
 
+    public var showSettingsWarnEvents: Bool {
+        return false
+    }
+
     var checkTimestamp: Int {
         get { UserDefaults.standard.integer(forKey: TimestampKey) }
         set { UserDefaults.standard.set(newValue, forKey: TimestampKey) }
@@ -160,10 +164,10 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
         """
     }
 
-    func run() {
+    func run() -> Bool {
         if !isRunnable {
             os_log("Disabled check %{public}s - %{public}s", log: Log.app, UUID, Title)
-            return
+            return false
         }
 
         os_log("Running check for %{public}s - %{public}s", log: Log.app, UUID, Title)
@@ -173,6 +177,7 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
         if isCritical, !checkPassed {
             showNotification(check: self)
         }
+        return checkPassed
     }
 
     var infoURL: URL {

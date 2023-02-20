@@ -19,6 +19,10 @@ class RequirePasswordToUnlock: ParetoCheck {
         "No password to unlock preferences"
     }
 
+    override public var showSettingsWarnEvents: Bool {
+        return true
+    }
+
     override func checkPasses() -> Bool {
         // possible:{require password to wake:false, class:security preferences object, secure virtual memory:false, require password to unlock:false, automatic login:false, log out when inactive:false, log out when inactive interval:60}
         let script = "tell application \"System Events\" to tell security preferences to get require password to unlock"

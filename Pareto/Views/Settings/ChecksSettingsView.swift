@@ -62,7 +62,19 @@ struct ChecksSettingsView: View {
                                              destination: URL(string: "https://help.paretosecurity.com/article/312-app-permissions?utm_source=\(AppInfo.utmSource)")!)
                                     }
                                 }
+                                if check.showSettingsWarnEvents && !check.isRunnable {
+                                    HStack {
+                                        Text("Requires System Events access permission.").font(.footnote)
+                                        Button {
+                                            NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Automation")!)
 
+                                        } label: {
+                                            Text("Authorize").font(.footnote)
+                                        }
+                                        Link("?",
+                                             destination: URL(string: "https://help.paretosecurity.com/article/312-app-permissions?utm_source=\(AppInfo.utmSource)")!)
+                                    }
+                                }
                             }.padding(.vertical, 5.0)
                         }
                     }

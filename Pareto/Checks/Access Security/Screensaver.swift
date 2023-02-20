@@ -19,6 +19,10 @@ class ScreensaverCheck: ParetoCheck {
         "Screensaver shows in more than 20min"
     }
 
+    override public var showSettingsWarnEvents: Bool {
+        return true
+    }
+
     override func checkPasses() -> Bool {
         let script = "tell application \"System Events\" to tell screen saver preferences to get delay interval"
         let out = Int(runOSA(appleScript: script)?.trim() ?? "0") ?? 0

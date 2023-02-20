@@ -201,8 +201,6 @@
 		4F923CF32756920C00070551 /* iTerm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F923CF12756920C00070551 /* iTerm.swift */; };
 		4F923CF527569E6300070551 /* Cache in Frameworks */ = {isa = PBXBuildFile; productRef = 4F923CF427569E6300070551 /* Cache */; };
 		4F9791C126F5DB4F00E668F4 /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F9791C026F5DB4F00E668F4 /* Color.swift */; };
-		4F9982FC281FC46600C5F54F /* Defaults+Workaround.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F9982FB281FC46600C5F54F /* Defaults+Workaround.swift */; };
-		4F9982FD281FC46600C5F54F /* Defaults+Workaround.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F9982FB281FC46600C5F54F /* Defaults+Workaround.swift */; };
 		4F9A444C29264FC10095BB6C /* 1Password8.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F9A444B29264FC10095BB6C /* 1Password8.swift */; };
 		4F9A444D29264FC10095BB6C /* 1Password8.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F9A444B29264FC10095BB6C /* 1Password8.swift */; };
 		4F9A444F29265C5F0095BB6C /* Grammarly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F9A444E29265C5F0095BB6C /* Grammarly.swift */; };
@@ -357,7 +355,6 @@
 		4F923CEE275691A700070551 /* Docker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Docker.swift; path = "Software Updates/Docker.swift"; sourceTree = "<group>"; };
 		4F923CF12756920C00070551 /* iTerm.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = iTerm.swift; path = "Software Updates/iTerm.swift"; sourceTree = "<group>"; };
 		4F9791C026F5DB4F00E668F4 /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
-		4F9982FB281FC46600C5F54F /* Defaults+Workaround.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Defaults+Workaround.swift"; sourceTree = "<group>"; };
 		4F9A444B29264FC10095BB6C /* 1Password8.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = 1Password8.swift; path = "Software Updates/1Password8.swift"; sourceTree = "<group>"; };
 		4F9A444E29265C5F0095BB6C /* Grammarly.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Grammarly.swift; path = "Software Updates/Grammarly.swift"; sourceTree = "<group>"; };
 		4FAAD325277B156200AA5CEF /* NewsletterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsletterView.swift; sourceTree = "<group>"; };
@@ -626,7 +623,6 @@
 				4F9791C026F5DB4F00E668F4 /* Color.swift */,
 				4FB0416026F71CC0003657BE /* ButtonStyle.swift */,
 				4F5B20C2270316DB0015642A /* NetworkHandler.swift */,
-				4F9982FB281FC46600C5F54F /* Defaults+Workaround.swift */,
 				4FE9C35928B76117002C28FE /* User.swift */,
 			);
 			path = Extensions;
@@ -1014,7 +1010,6 @@
 				4F923CF32756920C00070551 /* iTerm.swift in Sources */,
 				4F4E286127BD748D006A18C1 /* PasswordAfterSleep.swift in Sources */,
 				4F37E70A2718122E00A2B254 /* ButtonStyle.swift in Sources */,
-				4F9982FD281FC46600C5F54F /* Defaults+Workaround.swift in Sources */,
 				4F37E70B2718122E00A2B254 /* ParetoCheck.swift in Sources */,
 				4FE23EEE276BB13700CA9BA0 /* FollowView.swift in Sources */,
 				4F28A97E27566D8500E34F7B /* Firefox.swift in Sources */,
@@ -1147,7 +1142,6 @@
 				4F923CF22756920C00070551 /* iTerm.swift in Sources */,
 				4F4E286027BD748D006A18C1 /* PasswordAfterSleep.swift in Sources */,
 				4FB0416126F71CC0003657BE /* ButtonStyle.swift in Sources */,
-				4F9982FC281FC46600C5F54F /* Defaults+Workaround.swift in Sources */,
 				4F5E888026A053A9005271FB /* ParetoCheck.swift in Sources */,
 				4FE23EED276BB13700CA9BA0 /* FollowView.swift in Sources */,
 				4F28A97D27566D8500E34F7B /* Firefox.swift in Sources */,
@@ -1803,8 +1797,8 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/sindresorhus/Defaults";
 			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 6.0.0;
+				branch = main;
+				kind = branch;
 			};
 		};
 		4F6EF890275FEE6C00752559 /* XCRemoteSwiftPackageReference "Regex" */ = {
