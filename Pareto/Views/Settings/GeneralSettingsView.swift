@@ -120,37 +120,37 @@ struct GeneralSettingsView: View {
             Text("Permissions").fontWeight(.bold).font(.system(size: 15)).padding([.top, .bottom], 10)
             HStack {
                 VStack(alignment: .leading) {
-                    Text("System Events Access").font(.title2)
-                    Text("App requires read-only access to system events so that it can react on connectivity changes, settings changes, and to run checks. [Learn more](https://help.paretosecurity.com/article/312-app-permissions)").font(.footnote)
+                    Text("System Events Access").font(.headline)
+                    Text("App requires read-only access to system events so that it can react on connectivity changes, settings changes, and to run checks. [Learn more](https://help.paretosecurity.com/article/312-app-permissions)").font(.footnote).padding([.top], 1)
                 }
 
                 Button(action: authorizeOSAClick, label: {
                     if checker.ran {
                         if checker.osaAuthorized {
-                            Text("Authorized")
+                            Text("Authorized").frame(width: 70)
                         } else {
-                            Text("Authorize")
+                            Text("Authorize").frame(width: 70)
                         }
                     } else {
-                        Text("Verifying")
+                        Text("Verifying").frame(width: 70)
                     }
                 }).disabled(checker.osaAuthorized)
 
             }.frame(width: 350, alignment: .leading)
             HStack {
                 VStack(alignment: .leading) {
-                    Text("Full Disk Access").font(.title2)
-                    Text("App requires full disk access if you want to use the Time Machine checks. [Learn more](https://help.paretosecurity.com/article/312-app-permissions)").font(.footnote)
+                    Text("Full Disk Access").font(.headline)
+                    Text("App requires full disk access if you want to use the Time Machine checks. [Learn more](https://help.paretosecurity.com/article/312-app-permissions)").font(.footnote).padding([.top], 1)
                 }
                 Button(action: authorizeFDAClick, label: {
                     if checker.ran {
                         if checker.fdaAuthorized {
-                            Text("Authorized")
+                            Text("Authorized").frame(width: 70)
                         } else {
-                            Text("Authorize")
+                            Text("Authorize").frame(width: 70)
                         }
                     } else {
-                        Text("Verifying")
+                        Text("Verifying").frame(width: 70)
                     }
                 }).disabled(checker.fdaAuthorized)
 
