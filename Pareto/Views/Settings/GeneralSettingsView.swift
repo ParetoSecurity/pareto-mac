@@ -55,7 +55,7 @@ struct GeneralSettingsView: View {
                         }
                     }
                 Section(
-                    footer: Text("App is running checks even when the icon is hidden. To show the menubar icon, lunch the app again.").font(.footnote)) {
+                    footer: Text("To show the menu bar icon, launch the app again.").font(.footnote) ){
                         VStack(alignment: .leading) {
                             Toggle("Only show in menu bar when the checks are failing", isOn: $hideWhenNoFailures)
                         }
@@ -155,7 +155,7 @@ struct GeneralSettingsView: View {
                 }).disabled(checker.fdaAuthorized)
 
             }.frame(width: 350, alignment: .leading)
-        }.frame(minWidth: 350, minHeight: 400).padding(25).onAppear {
+        }.frame(maxWidth: 350, minHeight: 400).padding(25).onAppear {
             checker.start()
         }.onDisappear {
             checker.stop()
