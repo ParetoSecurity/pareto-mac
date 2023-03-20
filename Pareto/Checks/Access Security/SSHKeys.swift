@@ -7,9 +7,8 @@
 import Foundation
 import os.log
 
-class SSHKeysCheck: ParetoCheck {
+class SSHKeysCheck: SSHCheck {
     static let sharedInstance = SSHKeysCheck()
-    private let sshPath = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent(".ssh").resolvingSymlinksInPath()
     private var sshKey = ""
 
     override var UUID: String {
@@ -27,22 +26,8 @@ class SSHKeysCheck: ParetoCheck {
         return "SSH key \(sshKey) is missing a password"
     }
 
-    func itExists(_ path: String) -> Bool {
-        FileManager.default.fileExists(atPath: path)
-    }
-
-    override var isRunnable: Bool {
-        if !itExists("/usr/bin/ssh-keygen") {
-            os_log("Not found /usr/bin/ssh-keygen, check disabled", log: Log.check)
-        }
-        if !itExists(sshPath.path) {
-            os_log("Not found ~/.ssh, check disabled", log: Log.check)
-        }
-        return itExists("/usr/bin/ssh-keygen") && itExists(sshPath.path) && isActive
-    }
-
     func isPasswordEnabled(withKey path: String) -> Bool {
-        let output = runCMD(app: "/usr/bin/ssh-keygen", args: ["-P", "''", "-y", "-f", path])
+        let output = runCMD(app: getSSHKeygenPath(), args: ["-P", "''", "-y", "-f", path])
         return output.contains("incorrect passphrase supplied")
     }
 

@@ -59,9 +59,8 @@ struct KeyInfo: Equatable, ExpressibleByStringLiteral {
     }
 }
 
-class SSHKeysStrengthCheck: ParetoCheck {
+class SSHKeysStrengthCheck: SSHCheck {
     static let sharedInstance = SSHKeysStrengthCheck()
-    private let sshPath = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent(".ssh").resolvingSymlinksInPath()
     private var sshKey = ""
 
     override var UUID: String {
@@ -78,23 +77,9 @@ class SSHKeysStrengthCheck: ParetoCheck {
         }
         return "SSH key \(sshKey) is using weak encryption"
     }
-
-    func itExists(_ path: String) -> Bool {
-        FileManager.default.fileExists(atPath: path)
-    }
-
-    override var isRunnable: Bool {
-        if !itExists("/usr/bin/ssh-keygen") {
-            os_log("Not found /usr/bin/ssh-keygen, check disabled", log: Log.check)
-        }
-        if !itExists(sshPath.path) {
-            os_log("Not found ~/.ssh, check disabled", log: Log.check)
-        }
-        return itExists("/usr/bin/ssh-keygen") && itExists(sshPath.path) && isActive
-    }
-
+    
     func isKeyStrong(withKey path: String) -> Bool {
-        let output = runCMD(app: "/usr/bin/ssh-keygen", args: ["-l", "-f", path])
+        let output = runCMD(app: getSSHKeygenPath(), args: ["-l", "-f", path])
         let info = KeyInfo(stringLiteral: output.strip())
         os_log("%{public}s has %d", log: Log.check, path, info.strength)
         // https://nvlpubs.nist.gov/nistpubs/specialpublications/nist.sp.800-57pt3r1.pdf
