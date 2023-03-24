@@ -29,7 +29,8 @@ class FirewallStealthCheck: ParetoCheck {
 
     override public func debugInfo() -> String {
         let dictionary = readDefaultsFile(path: "/Library/Preferences/com.apple.alf.plist")
-        return "com.apple.alf.plist:\n\(dictionary.debugDescription)"
+        let out = runCMD(app: "/usr/libexec/ApplicationFirewall/socketfilterfw", args: ["--getstealthmode"])
+        return "com.apple.alf.plist:\n\(dictionary.debugDescription)\nsocketfilterfw:\n\(out)"
     }
 
     override public var showSettings: Bool {
@@ -40,11 +41,7 @@ class FirewallStealthCheck: ParetoCheck {
     }
 
     override func checkPasses() -> Bool {
-        let dictionary = readDefaultsFile(path: "/Library/Preferences/com.apple.alf.plist")
-        if let stealthenabled = dictionary?.value(forKey: "stealthenabled") as? Int {
-            // os_log("globalstate: %{public}s", log: Log.check, globalstate)
-            return stealthenabled >= 1
-        }
-        return false
+        let out = runCMD(app: "/usr/libexec/ApplicationFirewall/socketfilterfw", args: ["--getstealthmode"])
+        return out.contains("enabled")
     }
 }
