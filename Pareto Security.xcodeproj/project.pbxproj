@@ -158,6 +158,8 @@
 		4F6A0E0E26CE484A003B00A3 /* PrinterSharingCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F6A0E0D26CE484A003B00A3 /* PrinterSharingCheck.swift */; };
 		4F6A0E1026CE4868003B00A3 /* FileSharingCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F6A0E0F26CE4868003B00A3 /* FileSharingCheck.swift */; };
 		4F6A0E1326CE608C003B00A3 /* Defaults in Frameworks */ = {isa = PBXBuildFile; productRef = 4F6A0E1226CE608C003B00A3 /* Defaults */; };
+		4F6A2CE629CDC7C800B653C2 /* SSHCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F6A2CE529CDC7C800B653C2 /* SSHCheck.swift */; };
+		4F6A2CE729CDC7C800B653C2 /* SSHCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F6A2CE529CDC7C800B653C2 /* SSHCheck.swift */; };
 		4F6A92E626C521BE006C2F2D /* CheckIntegrationTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F6A92E526C521BE006C2F2D /* CheckIntegrationTest.swift */; };
 		4F6A92E826C52210006C2F2D /* IntegrationCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F6A92E726C52210006C2F2D /* IntegrationCheck.swift */; };
 		4F6A92EA26C54AB7006C2F2D /* AppInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F6A92E926C54AB7006C2F2D /* AppInfo.swift */; };
@@ -328,6 +330,7 @@
 		4F5E887F26A053A9005271FB /* ParetoCheck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParetoCheck.swift; sourceTree = "<group>"; };
 		4F6A0E0D26CE484A003B00A3 /* PrinterSharingCheck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrinterSharingCheck.swift; sourceTree = "<group>"; };
 		4F6A0E0F26CE4868003B00A3 /* FileSharingCheck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileSharingCheck.swift; sourceTree = "<group>"; };
+		4F6A2CE529CDC7C800B653C2 /* SSHCheck.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SSHCheck.swift; path = Pareto/Extensions/SSHCheck.swift; sourceTree = SOURCE_ROOT; };
 		4F6A92E526C521BE006C2F2D /* CheckIntegrationTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckIntegrationTest.swift; sourceTree = "<group>"; };
 		4F6A92E726C52210006C2F2D /* IntegrationCheck.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntegrationCheck.swift; sourceTree = "<group>"; };
 		4F6A92E926C54AB7006C2F2D /* AppInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppInfo.swift; sourceTree = "<group>"; };
@@ -614,6 +617,7 @@
 		4FB7C67F26AFF22C00FB1C41 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				4F6A2CE529CDC7C800B653C2 /* SSHCheck.swift */,
 				4FB7C68026AFF25300FB1C41 /* Date.swift */,
 				4FB7C68626AFF29A00FB1C41 /* NSImage.swift */,
 				4F84530F26D634E5007C3B04 /* NSWorkspace.swift */,
@@ -836,7 +840,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
 				LastSwiftUpdateCheck = 1300;
-				LastUpgradeCheck = 1400;
+				LastUpgradeCheck = 1420;
 				TargetAttributes = {
 					4F6A92EE26C555C6006C2F2D = {
 						CreatedOnToolsVersion = 13.0;
@@ -1102,6 +1106,7 @@
 				4F41831B2770F19D00EBAE4A /* macOSVersion.swift in Sources */,
 				4F91060427623E4C00D1A348 /* SSHKeys.swift in Sources */,
 				4F41831827707B0800EBAE4A /* StatusBarIcon.swift in Sources */,
+				4F6A2CE729CDC7C800B653C2 /* SSHCheck.swift in Sources */,
 				4FB51A5827A94457003F528E /* SecurityUpdateCheck.swift in Sources */,
 				4F3DCFDE274FE4E000F1CB55 /* Bitwarden.swift in Sources */,
 				4F37E7352718122E00A2B254 /* AppInfo.swift in Sources */,
@@ -1234,6 +1239,7 @@
 				4F41831A2770F19D00EBAE4A /* macOSVersion.swift in Sources */,
 				4F91060327623E4C00D1A348 /* SSHKeys.swift in Sources */,
 				4F41831727707B0800EBAE4A /* StatusBarIcon.swift in Sources */,
+				4F6A2CE629CDC7C800B653C2 /* SSHCheck.swift in Sources */,
 				4FB51A5727A94457003F528E /* SecurityUpdateCheck.swift in Sources */,
 				4F3DCFDD274FE4E000F1CB55 /* Bitwarden.swift in Sources */,
 				4F6A92EA26C54AB7006C2F2D /* AppInfo.swift in Sources */,
@@ -1332,7 +1338,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = SETAPP_ENABLED;
-				SWIFT_COMPILATION_MODE = singlefile;
+				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
@@ -1633,7 +1639,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = niteo.co.Pareto;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_COMPILATION_MODE = singlefile;
+				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
