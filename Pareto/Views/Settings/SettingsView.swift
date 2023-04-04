@@ -14,7 +14,7 @@ struct SettingsView: View {
     @Default(.teamID) var teamID
 
     enum Tabs: Hashable {
-        case general, about, teams, checks, license, newsletter
+        case general, about, teams, checks, license, permissions
     }
 
     var body: some View {
@@ -24,6 +24,11 @@ struct SettingsView: View {
                     Label("General", systemImage: "gear")
                 }
                 .tag(Tabs.general)
+            PermissionsSettingsView()
+                .tabItem {
+                    Label("Permissions", systemImage: "hand.raised.square.fill")
+                }
+                .tag(Tabs.permissions)
             #if !SETAPP_ENABLED
                 TeamSettingsView(teamSettings: AppInfo.TeamSettings)
                     .tabItem {
@@ -44,13 +49,6 @@ struct SettingsView: View {
                         }
                         .tag(Tabs.license)
                 }
-            #else
-                NewsletterView()
-                    .tabItem {
-                        Label("Newsletter", systemImage: "mail.stack.fill")
-                    }
-                    .tag(Tabs.newsletter)
-
             #endif
             AboutSettingsView()
                 .tabItem {

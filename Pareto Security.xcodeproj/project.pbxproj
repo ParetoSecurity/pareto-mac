@@ -186,6 +186,8 @@
 		4F84A94426CBBA6900A1579D /* SettingsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F84A94326CBBA6900A1579D /* SettingsTests.swift */; };
 		4F84A94926CBE21300A1579D /* PasswordtoUnlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F84A94826CBE21300A1579D /* PasswordtoUnlock.swift */; };
 		4F84A94C26CBE4AE00A1579D /* ViewInspector in Frameworks */ = {isa = PBXBuildFile; productRef = 4F84A94B26CBE4AE00A1579D /* ViewInspector */; };
+		4F84EC9229DC3A030047C79C /* PermissionsSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F84EC9129DC3A030047C79C /* PermissionsSettingsView.swift */; };
+		4F84EC9329DC3A030047C79C /* PermissionsSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F84EC9129DC3A030047C79C /* PermissionsSettingsView.swift */; };
 		4F868DCF26A591E6005B876E /* Firewall.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F868DCE26A591E6005B876E /* Firewall.swift */; };
 		4F868DD126A5C51C005B876E /* Autologin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F868DD026A5C51C005B876E /* Autologin.swift */; };
 		4F868DD326A5C751005B876E /* Screensaver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F868DD226A5C751005B876E /* Screensaver.swift */; };
@@ -207,8 +209,6 @@
 		4F9A444D29264FC10095BB6C /* 1Password8.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F9A444B29264FC10095BB6C /* 1Password8.swift */; };
 		4F9A444F29265C5F0095BB6C /* Grammarly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F9A444E29265C5F0095BB6C /* Grammarly.swift */; };
 		4F9A445029265C5F0095BB6C /* Grammarly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F9A444E29265C5F0095BB6C /* Grammarly.swift */; };
-		4FAAD326277B156200AA5CEF /* NewsletterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FAAD325277B156200AA5CEF /* NewsletterView.swift */; };
-		4FAAD327277B156200AA5CEF /* NewsletterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FAAD325277B156200AA5CEF /* NewsletterView.swift */; };
 		4FAF5BBF2895573F004E9615 /* setappPublicKey.pem in Resources */ = {isa = PBXBuildFile; fileRef = 4FAF5BBE2895573F004E9615 /* setappPublicKey.pem */; };
 		4FAF5BC22895583A004E9615 /* Setapp in Frameworks */ = {isa = PBXBuildFile; productRef = 4FAF5BC12895583A004E9615 /* Setapp */; };
 		4FB0416126F71CC0003657BE /* ButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB0416026F71CC0003657BE /* ButtonStyle.swift */; };
@@ -348,6 +348,7 @@
 		4F84531126D638C0007C3B04 /* NSBackgroundActivityScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSBackgroundActivityScheduler.swift; sourceTree = "<group>"; };
 		4F84A94326CBBA6900A1579D /* SettingsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTests.swift; sourceTree = "<group>"; };
 		4F84A94826CBE21300A1579D /* PasswordtoUnlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordtoUnlock.swift; sourceTree = "<group>"; };
+		4F84EC9129DC3A030047C79C /* PermissionsSettingsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PermissionsSettingsView.swift; sourceTree = "<group>"; };
 		4F868DCE26A591E6005B876E /* Firewall.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Firewall.swift; sourceTree = "<group>"; };
 		4F868DD026A5C51C005B876E /* Autologin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Autologin.swift; sourceTree = "<group>"; };
 		4F868DD226A5C751005B876E /* Screensaver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Screensaver.swift; sourceTree = "<group>"; };
@@ -360,7 +361,6 @@
 		4F9791C026F5DB4F00E668F4 /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
 		4F9A444B29264FC10095BB6C /* 1Password8.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = 1Password8.swift; path = "Software Updates/1Password8.swift"; sourceTree = "<group>"; };
 		4F9A444E29265C5F0095BB6C /* Grammarly.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Grammarly.swift; path = "Software Updates/Grammarly.swift"; sourceTree = "<group>"; };
-		4FAAD325277B156200AA5CEF /* NewsletterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsletterView.swift; sourceTree = "<group>"; };
 		4FAF5BBE2895573F004E9615 /* setappPublicKey.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = setappPublicKey.pem; sourceTree = "<group>"; };
 		4FB0416026F71CC0003657BE /* ButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonStyle.swift; sourceTree = "<group>"; };
 		4FB51A5627A94457003F528E /* SecurityUpdateCheck.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SecurityUpdateCheck.swift; sourceTree = "<group>"; };
@@ -596,7 +596,7 @@
 				4F24A09126EB73980036F748 /* AboutSettingsView.swift */,
 				4F24A09326EB73C80036F748 /* ChecksSettingsView.swift */,
 				4F24A09526EB73F30036F748 /* GeneralSettingsView.swift */,
-				4FAAD325277B156200AA5CEF /* NewsletterView.swift */,
+				4F84EC9129DC3A030047C79C /* PermissionsSettingsView.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -1027,7 +1027,6 @@
 				4F37E7102718122E00A2B254 /* TeamSettings.swift in Sources */,
 				4F37E7112718122E00A2B254 /* URL.swift in Sources */,
 				4F6EF88F275FE5D400752559 /* Zoom.swift in Sources */,
-				4FAAD327277B156200AA5CEF /* NewsletterView.swift in Sources */,
 				4F38D8CC273AC5F200671756 /* PermissionsView.swift in Sources */,
 				4FFDC5A528215A8F0092B7BF /* TimeMachineIsEncrypted.swift in Sources */,
 				4F37E7122718122E00A2B254 /* NetworkHandler.swift in Sources */,
@@ -1111,6 +1110,7 @@
 				4F3DCFDE274FE4E000F1CB55 /* Bitwarden.swift in Sources */,
 				4F37E7352718122E00A2B254 /* AppInfo.swift in Sources */,
 				4F37E7362718122E00A2B254 /* License.swift in Sources */,
+				4F84EC9329DC3A030047C79C /* PermissionsSettingsView.swift in Sources */,
 				4F923CF0275691A700070551 /* Docker.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1160,7 +1160,6 @@
 				4F24A09026EB735F0036F748 /* TeamSettings.swift in Sources */,
 				4F81C10826EB5D270065F548 /* URL.swift in Sources */,
 				4F6EF88E275FE5D400752559 /* Zoom.swift in Sources */,
-				4FAAD326277B156200AA5CEF /* NewsletterView.swift in Sources */,
 				4F38D8CB273AC5F200671756 /* PermissionsView.swift in Sources */,
 				4FFDC5A428215A8F0092B7BF /* TimeMachineIsEncrypted.swift in Sources */,
 				4F5B20C3270316DB0015642A /* NetworkHandler.swift in Sources */,
@@ -1244,6 +1243,7 @@
 				4F3DCFDD274FE4E000F1CB55 /* Bitwarden.swift in Sources */,
 				4F6A92EA26C54AB7006C2F2D /* AppInfo.swift in Sources */,
 				4FDAD88F26EB784A00F64E61 /* License.swift in Sources */,
+				4F84EC9229DC3A030047C79C /* PermissionsSettingsView.swift in Sources */,
 				4F923CEF275691A700070551 /* Docker.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
