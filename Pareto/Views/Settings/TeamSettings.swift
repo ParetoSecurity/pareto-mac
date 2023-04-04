@@ -86,7 +86,7 @@ struct TeamSettingsView: View {
                     Link("Team Dashboard »",
                          destination: AppInfo.teamsURL())
                 }
-            }.frame(width: 350, height: 250).padding(25).onAppear {
+            }.frame(width: 380, height: 250).padding(25).onAppear {
                 DispatchQueue.main.async {
                     teamSettings.update {}
                 }
@@ -96,7 +96,7 @@ struct TeamSettingsView: View {
                 Text("The Teams subscription will give you a web dashboard for an overview of the company’s devices.")
                 Link("Learn more »",
                      destination: URL(string: "https://paretosecurity.com/pricing?utm_source=\(AppInfo.utmSource)&utm_medium=teams-link")!)
-            }.frame(width: 350).padding(25)
+            }.frame(width: 380).padding(25)
         }
     }
 }

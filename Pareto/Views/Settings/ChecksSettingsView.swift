@@ -86,7 +86,7 @@ struct ChecksSettingsView: View {
                 }.padding(0)
             }.padding(.all, 20).frame(minWidth: 480, minHeight: 480)
 
-        }.frame(width: 500, height: 400)
+        }.frame(width: 420, height: 400)
     }
 }
 

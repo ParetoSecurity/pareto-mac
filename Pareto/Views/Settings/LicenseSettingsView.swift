@@ -20,7 +20,7 @@ struct LicenseSettingsView: View {
                     Spacer()
                     Text("The app is licensed under the Teams account.")
                     Spacer()
-                }.frame(width: 350, height: 50).padding(5)
+                }.frame(width: 380, height: 50).padding(5)
             } else {
                 VStack(alignment: .leading) {
                     Text("Thanks for purchasing the Personal license. The app is licensed to \(userEmail).")
@@ -33,7 +33,7 @@ struct LicenseSettingsView: View {
                             NSPasteboard.general.setString("paretosecurity://enrollSingle/?token=\(license)", forType: .string)
                         }
                     }
-                }.frame(width: 350).padding(25)
+                }.frame(width: 380).padding(25)
             }
 
         } else {
@@ -41,7 +41,7 @@ struct LicenseSettingsView: View {
                 Text("You are running the free version of the app. Please consider purchasing the Personal lifetime license for unlimited devices!")
                 Link("Learn more »",
                      destination: URL(string: "https://paretosecurity.com/pricing?utm_source=\(AppInfo.utmSource)&utm_medium=license-link")!)
-            }.frame(width: 350).padding(25)
+            }.frame(width: 380).padding(25)
         }
     }
 }
