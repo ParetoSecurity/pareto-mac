@@ -59,7 +59,7 @@ class Claims: ObservableObject {
                 TimeMachineHasBackupCheck.sharedInstance,
                 TimeMachineIsEncryptedCheck.sharedInstance
             ]),
-            ClaimWithNudge(withTitle: "Software Updates", withChecks: Claims.updateChecks + [AutoUpdateAppCheck.sharedInstance]),
+            Claim(withTitle: "Software Updates", withChecks: Claims.updateChecks + [AutoUpdateAppCheck.sharedInstance]),
             Claim(withTitle: "My Checks", withChecks: customChecks)
         ].sorted(by: { $0.title.lowercased() < $1.title.lowercased() })
     }
