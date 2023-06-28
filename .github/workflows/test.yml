@@ -9,7 +9,7 @@ on:
 jobs:
   lint:
     name: Lint
-    runs-on: macos-12
+    runs-on: macos-13
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}-lint
       cancel-in-progress: true
@@ -58,7 +58,7 @@ jobs:
   #         KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
 
   #         # import certificate and provisioning profile from secrets
-  #         echo -n "$DEVELOPMENT_CERTIFICATE_DATA" | base64 --decode --output $CERTIFICATE_PATH
+  #         echo -n "$DEVELOPMENT_CERTIFICATE_DATA" | base64 --decode >$CERTIFICATE_PATH
 
   #         # create temporary keychain
   #         security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH || true
@@ -79,7 +79,7 @@ jobs:
   #         KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
 
   #         # import certificate and provisioning profile from secrets
-  #         echo -n "$APPLICATION_CERTIFICATE_DATA" | base64 --decode --output $CERTIFICATE_PATH
+  #         echo -n "$APPLICATION_CERTIFICATE_DATA" | base64 --decode >$CERTIFICATE_PATH
 
   #         # create temporary keychain
   #         security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH || true
@@ -139,7 +139,7 @@ jobs:
   build:
     name: Build and Archive Native
     needs: lint
-    runs-on: macos-12
+    runs-on: macos-13
     timeout-minutes: 15
     permissions:
       issues: write
@@ -168,7 +168,7 @@ jobs:
           KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
 
           # import certificate and provisioning profile from secrets
-          echo -n "$DEVELOPMENT_CERTIFICATE_DATA" | base64 --decode --output $CERTIFICATE_PATH
+          echo -n "$DEVELOPMENT_CERTIFICATE_DATA" | base64 --decode >$CERTIFICATE_PATH
 
           # create temporary keychain
           security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH || true
@@ -189,7 +189,7 @@ jobs:
           KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
 
           # import certificate and provisioning profile from secrets
-          echo -n "$APPLICATION_CERTIFICATE_DATA" | base64 --decode --output $CERTIFICATE_PATH
+          echo -n "$APPLICATION_CERTIFICATE_DATA" | base64 --decode >$CERTIFICATE_PATH
 
           # create temporary keychain
           security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH || true
@@ -231,7 +231,8 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-${{ env.cache-name }}-
       - name: Build
-        run: set -o pipefail && make archive-debug 2>&1 | mint run xcbeautify
+        # run: set -o pipefail && make archive-debug 2>&1 | mint run xcbeautify
+        run: make archive-debug
       - name: Compress app for storage
         run: ditto -V -c -k --keepParent Export/Pareto\ Security.app ParetoSecurity.app.zip
       - name: Upload App to Artifacts
@@ -248,7 +249,7 @@ jobs:
   test-profile-default:
     strategy:
       matrix:
-        os: [macos-11, macos-12]
+        os: [macos-11, macos-13]
     runs-on: ${{ matrix.os }}
     name: Profile - Default
     timeout-minutes: 3
@@ -277,7 +278,7 @@ jobs:
   test-profile-bad:
     strategy:
       matrix:
-        os: [macos-11, macos-12]
+        os: [macos-11, macos-13]
     runs-on: ${{ matrix.os }}
     name: Profile - Bad
     timeout-minutes: 3
@@ -305,7 +306,7 @@ jobs:
         run: .github/bin/profile bad
   build-setapp:
     name: Build and Archive SetApp
-    runs-on: macos-12
+    runs-on: macos-13
     timeout-minutes: 15
     needs: lint
     permissions:
@@ -335,7 +336,7 @@ jobs:
           KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
 
           # import certificate and provisioning profile from secrets
-          echo -n "$DEVELOPMENT_CERTIFICATE_DATA" | base64 --decode --output $CERTIFICATE_PATH
+          echo -n "$DEVELOPMENT_CERTIFICATE_DATA" | base64 --decode >$CERTIFICATE_PATH
 
           # create temporary keychain
           security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH || true
@@ -356,7 +357,7 @@ jobs:
           KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
 
           # import certificate and provisioning profile from secrets
-          echo -n "$APPLICATION_CERTIFICATE_DATA" | base64 --decode --output $CERTIFICATE_PATH
+          echo -n "$APPLICATION_CERTIFICATE_DATA" | base64 --decode >$CERTIFICATE_PATH
 
           # create temporary keychain
           security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH || true
@@ -398,7 +399,8 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-${{ env.cache-name }}-
       - name: Build
-        run: set -o pipefail && make archive-debug-setapp 2>&1 | mint run xcbeautify
+        #run: set -o pipefail && make archive-debug-setapp 2>&1 | mint run xcbeautify
+        run: make archive-debug-setapp
 
       - name: Compress app for storage
         run: ditto -V -c -k --keepParent SetAppExport/Pareto\ Security.app ParetoSecuritySetApp.app.zip
