@@ -91,20 +91,18 @@ public extension Defaults {
     
     static func OKColor() -> NSColor {
         if Defaults[.alternativeColor] {
-            let light = NSColor.init(red: 0, green: 64, blue: 221, alpha: 1)
-            let dark = NSColor.init(red: 64, green: 156, blue: 255, alpha: 1)
+            let light = NSColor.init(red: 255, green: 179, blue: 64, alpha: 1)
+            let dark = NSColor.init(red: 255, green: 179, blue: 64, alpha: 1)
             let isDark = UserDefaults.standard.string(forKey: "AppleInterfaceStyle") == "Dark"
-            
             return isDark ? dark : light
         }
         return NSColor.systemGreen
     }
     static func FailColor() -> NSColor {
         if Defaults[.alternativeColor] {
-            let light = NSColor.init(red: 173, green: 58, blue: 0, alpha: 1)
-            let dark = NSColor.init(red: 255, green: 179, blue: 64, alpha: 1)
+            let light = NSColor.init(red: 64, green: 156, blue: 255, alpha: 1)
+            let dark = NSColor.init(red: 64, green: 156, blue: 255, alpha: 1)
             let isDark = UserDefaults.standard.string(forKey: "AppleInterfaceStyle") == "Dark"
-            
             return isDark ? dark : light
         }
         return NSColor.systemOrange
