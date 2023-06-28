@@ -8,6 +8,8 @@
 import Combine
 import Defaults
 import Foundation
+import AppKit
+import SwiftUI
 
 enum ReportingRoles: String, Defaults.Serializable {
     case free
@@ -56,7 +58,8 @@ extension Defaults.Keys {
     static let lastNagShown = Key<Int>("lastNagShown", default: Date().currentTimeMs(), suite: extensionDefaults)
     static let checkForUpdatesRecentOnly = Key<Bool>("checkForUpdatesRecentOnly", default: true, suite: extensionDefaults)
     static let showNotifications = Key<Bool>("showNotifications", default: false, suite: extensionDefaults)
-    static let sendCrashReports = Key<Bool>("showNotifications", default: false, suite: extensionDefaults)
+    static let sendCrashReports = Key<Bool>("sendCrashReports", default: false, suite: extensionDefaults)
+    static let alternativeColor = Key<Bool>("alternativeColor", default: false, suite: extensionDefaults)
 }
 
 public extension Defaults {
@@ -85,7 +88,27 @@ public extension Defaults {
         Defaults[.lastUpdateCheck] = Date().currentTimeMs()
         Defaults[.updateNag] = false
     }
-
+    
+    static func OKColor() -> NSColor {
+        if Defaults[.alternativeColor] {
+            let light = NSColor.init(red: 0, green: 64, blue: 221, alpha: 1)
+            let dark = NSColor.init(red: 64, green: 156, blue: 255, alpha: 1)
+            let isDark = UserDefaults.standard.string(forKey: "AppleInterfaceStyle") == "Dark"
+            
+            return isDark ? dark : light
+        }
+        return NSColor.systemGreen
+    }
+    static func FailColor() -> NSColor {
+        if Defaults[.alternativeColor] {
+            let light = NSColor.init(red: 173, green: 58, blue: 0, alpha: 1)
+            let dark = NSColor.init(red: 255, green: 179, blue: 64, alpha: 1)
+            let isDark = UserDefaults.standard.string(forKey: "AppleInterfaceStyle") == "Dark"
+            
+            return isDark ? dark : light
+        }
+        return NSColor.systemOrange
+    }
     static func shouldAskForHWAllow() -> Bool {
         return Defaults[.lastHWAsk] + Date.HourInMs * 24 * 7 * 30 * 6 < Date().currentTimeMs()
     }

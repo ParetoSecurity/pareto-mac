@@ -59,6 +59,12 @@ struct GeneralSettingsView: View {
                             }
                         }
                     }
+                Section(
+                    footer: Text("Improve default colors for accessibility.").font(.footnote) ){
+                        VStack(alignment: .leading) {
+                            Toggle("Use alternative color scheme", isOn: $hideWhenNoFailures)
+                        }
+                    }
                 if showBeta {
                     Section(
                         footer: Text("When priority check fails show notification.").font(.footnote)) {

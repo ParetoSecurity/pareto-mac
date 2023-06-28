@@ -230,7 +230,9 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
     }
 
     @objc func doUpdate() {
-        if #available(macOS 13.0, *) {
+        if #available(macOS 14.0, *) {
+            NSApp.sendAction(Selector(("showSettingsWindow:")), to: nil, from: nil)
+        } else if #available(macOS 13.0, *) {
             NSApp.sendAction(Selector(("showSettingsWindow:")), to: nil, from: nil)
         } else {
             NSApp.sendAction(Selector(("showPreferencesWindow:")), to: nil, from: nil)
@@ -240,7 +242,9 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
 
     @objc func showPrefs() {
         Defaults[.updateNag] = false
-        if #available(macOS 13.0, *) {
+        if #available(macOS 14.0, *) {
+            NSApp.sendAction(Selector(("showSettingsWindow:")), to: nil, from: nil)
+        } else if #available(macOS 13.0, *) {
             NSApp.sendAction(Selector(("showSettingsWindow:")), to: nil, from: nil)
         } else {
             NSApp.sendAction(Selector(("showPreferencesWindow:")), to: nil, from: nil)

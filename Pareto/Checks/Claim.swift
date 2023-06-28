@@ -50,9 +50,9 @@ class Claim: Hashable {
                     item.image = NSImage.SF(name: "shield.fill").tint(color: .systemGray)
                 } else {
                     if checksPassed {
-                        item.image = NSImage.SF(name: "checkmark.circle.fill").tint(color: .systemGreen)
+                        item.image = NSImage.SF(name: "checkmark.circle.fill").tint(color: Defaults.OKColor())
                     } else {
-                        item.image = NSImage.SF(name: "xmark.diamond.fill").tint(color: .systemOrange)
+                        item.image = NSImage.SF(name: "xmark.diamond.fill").tint(color: Defaults.FailColor())
                     }
                 }
             }
