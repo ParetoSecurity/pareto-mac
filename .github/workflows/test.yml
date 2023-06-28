@@ -36,7 +36,7 @@ jobs:
   #   name: Unit and UI Tests
   #   runs-on: apple-silicon
   #   needs: lint
-  #   timeout-minutes: 30
+  #   timeout-minutes: 60
   #   concurrency:
   #     group: ${{ github.workflow }}-${{ github.ref }}-test
   #     cancel-in-progress: true
@@ -231,8 +231,8 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-${{ env.cache-name }}-
       - name: Build
-        # run: set -o pipefail && make archive-debug 2>&1 | mint run xcbeautify
-        run: make archive-debug
+        run: set -o pipefail && make archive-debug 2>&1 | mint run xcbeautify
+        # run: make archive-debug
       - name: Compress app for storage
         run: ditto -V -c -k --keepParent Export/Pareto\ Security.app ParetoSecurity.app.zip
       - name: Upload App to Artifacts
@@ -249,14 +249,13 @@ jobs:
   test-profile-default:
     strategy:
       matrix:
-        os: [macos-11, macos-13]
+        os: [macos-12, macos-13]
     runs-on: ${{ matrix.os }}
     name: Profile - Default
-    timeout-minutes: 3
+    timeout-minutes: 6
     needs: build
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}-test-profile-default
-      cancel-in-progress: true
     steps:
       - name: Repository checkout
         uses: actions/checkout@v3
@@ -278,14 +277,13 @@ jobs:
   test-profile-bad:
     strategy:
       matrix:
-        os: [macos-11, macos-13]
+        os: [macos-12, macos-13]
     runs-on: ${{ matrix.os }}
     name: Profile - Bad
-    timeout-minutes: 3
+    timeout-minutes: 6
     needs: build
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}-test-profile-bad
-      cancel-in-progress: true
     steps:
       - name: Repository checkout
         uses: actions/checkout@v3
@@ -399,8 +397,8 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-${{ env.cache-name }}-
       - name: Build
-        #run: set -o pipefail && make archive-debug-setapp 2>&1 | mint run xcbeautify
-        run: make archive-debug-setapp
+        run: set -o pipefail && make archive-debug-setapp 2>&1 | mint run xcbeautify
+        #run: make archive-debug-setapp
 
       - name: Compress app for storage
         run: ditto -V -c -k --keepParent SetAppExport/Pareto\ Security.app ParetoSecuritySetApp.app.zip
