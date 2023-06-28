@@ -185,7 +185,6 @@
 		4F84531226D638C0007C3B04 /* NSBackgroundActivityScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F84531126D638C0007C3B04 /* NSBackgroundActivityScheduler.swift */; };
 		4F84A94426CBBA6900A1579D /* SettingsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F84A94326CBBA6900A1579D /* SettingsTests.swift */; };
 		4F84A94926CBE21300A1579D /* PasswordtoUnlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F84A94826CBE21300A1579D /* PasswordtoUnlock.swift */; };
-		4F84A94C26CBE4AE00A1579D /* ViewInspector in Frameworks */ = {isa = PBXBuildFile; productRef = 4F84A94B26CBE4AE00A1579D /* ViewInspector */; };
 		4F84EC9229DC3A030047C79C /* PermissionsSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F84EC9129DC3A030047C79C /* PermissionsSettingsView.swift */; };
 		4F84EC9329DC3A030047C79C /* PermissionsSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F84EC9129DC3A030047C79C /* PermissionsSettingsView.swift */; };
 		4F868DCF26A591E6005B876E /* Firewall.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F868DCE26A591E6005B876E /* Firewall.swift */; };
@@ -427,7 +426,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4F84A94C26CBE4AE00A1579D /* ViewInspector in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -794,7 +792,6 @@
 			);
 			name = ParetoSecurityTests;
 			packageProductDependencies = (
-				4F84A94B26CBE4AE00A1579D /* ViewInspector */,
 			);
 			productName = ParetoSecurityTests;
 			productReference = 4FC81A4926C41DC8006EABA8 /* ParetoSecurityTests.xctest */;
@@ -866,7 +863,6 @@
 			mainGroup = 4FEBA2E5269CD48F009B2469;
 			packageReferences = (
 				4F103010269F1C65008C1E86 /* XCRemoteSwiftPackageReference "LaunchAtLogin" */,
-				4F84A94A26CBE4AE00A1579D /* XCRemoteSwiftPackageReference "ViewInspector" */,
 				4F6A0E1126CE608C003B00A3 /* XCRemoteSwiftPackageReference "Defaults" */,
 				4F14487526D8EB2E00A5BA34 /* XCRemoteSwiftPackageReference "Version" */,
 				4F14487826D8EB7A00A5BA34 /* XCRemoteSwiftPackageReference "Path.swift" */,
@@ -878,6 +874,7 @@
 				4F6EF890275FEE6C00752559 /* XCRemoteSwiftPackageReference "Regex" */,
 				4FAF5BC02895583A004E9615 /* XCRemoteSwiftPackageReference "Setapp-framework" */,
 				4F3EF0A328AEA05F00D83F4E /* XCRemoteSwiftPackageReference "Yams" */,
+				4FC0F2EC2A4C47FD004E7359 /* XCRemoteSwiftPackageReference "ViewInspector" */,
 			);
 			productRefGroup = 4FEBA2EF269CD48F009B2469 /* Products */;
 			projectDirPath = "";
@@ -1823,14 +1820,6 @@
 				minimumVersion = 7.0.0;
 			};
 		};
-		4F84A94A26CBE4AE00A1579D /* XCRemoteSwiftPackageReference "ViewInspector" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/nalexn/ViewInspector";
-			requirement = {
-				branch = master;
-				kind = branch;
-			};
-		};
 		4F923CEB2756918E00070551 /* XCRemoteSwiftPackageReference "Cache" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/hyperoslo/Cache";
@@ -1845,6 +1834,14 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 3.0.0;
+			};
+		};
+		4FC0F2EC2A4C47FD004E7359 /* XCRemoteSwiftPackageReference "ViewInspector" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/nalexn/ViewInspector";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.9.7;
 			};
 		};
 		4FF515BF26F7B362008D135E /* XCRemoteSwiftPackageReference "Alamofire" */ = {
@@ -1952,11 +1949,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 4F7739F2271EB3AD008B1584 /* XCRemoteSwiftPackageReference "sentry-cocoa" */;
 			productName = Sentry;
-		};
-		4F84A94B26CBE4AE00A1579D /* ViewInspector */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 4F84A94A26CBE4AE00A1579D /* XCRemoteSwiftPackageReference "ViewInspector" */;
-			productName = ViewInspector;
 		};
 		4F923CEC2756918E00070551 /* Cache */ = {
 			isa = XCSwiftPackageProductDependency;

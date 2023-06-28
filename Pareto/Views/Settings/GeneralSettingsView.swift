@@ -22,7 +22,7 @@ struct GeneralSettingsView: View {
     @Default(.myChecksURL) var myChecksURL
     @Default(.sendCrashReports) var sendCrashReports
     @Default(.hideWhenNoFailures) var hideWhenNoFailures
-
+    @Default(.alternativeColor) var alternativeColor
     @ObservedObject fileprivate var checker = PermissionsChecker()
 
     var body: some View {
@@ -62,7 +62,7 @@ struct GeneralSettingsView: View {
                 Section(
                     footer: Text("Improve default colors for accessibility.").font(.footnote) ){
                         VStack(alignment: .leading) {
-                            Toggle("Use alternative color scheme", isOn: $hideWhenNoFailures)
+                            Toggle("Use alternative color scheme", isOn: $alternativeColor)
                         }
                     }
                 if showBeta {
