@@ -34,7 +34,8 @@ class Claims: ObservableObject {
                 ScreensaverCheck.sharedInstance,
                 SSHKeysCheck.sharedInstance,
                 SSHKeysStrengthCheck.sharedInstance,
-                PasswordAfterSleepCheck.sharedInstance
+                PasswordAfterSleepCheck.sharedInstance,
+                NoUnusedUsers.sharedInstance
             ]),
             Claim(withTitle: "Firewall & Sharing", withChecks: [
                 FirewallCheck.sharedInstance,
