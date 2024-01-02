@@ -208,6 +208,8 @@
 		4F9A444D29264FC10095BB6C /* 1Password8.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F9A444B29264FC10095BB6C /* 1Password8.swift */; };
 		4F9A444F29265C5F0095BB6C /* Grammarly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F9A444E29265C5F0095BB6C /* Grammarly.swift */; };
 		4F9A445029265C5F0095BB6C /* Grammarly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F9A444E29265C5F0095BB6C /* Grammarly.swift */; };
+		4FA8E5EC2B44428400B7EA9C /* NoUnusedUsers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FA8E5EB2B44428400B7EA9C /* NoUnusedUsers.swift */; };
+		4FA8E5ED2B44428400B7EA9C /* NoUnusedUsers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FA8E5EB2B44428400B7EA9C /* NoUnusedUsers.swift */; };
 		4FAF5BBF2895573F004E9615 /* setappPublicKey.pem in Resources */ = {isa = PBXBuildFile; fileRef = 4FAF5BBE2895573F004E9615 /* setappPublicKey.pem */; };
 		4FAF5BC22895583A004E9615 /* Setapp in Frameworks */ = {isa = PBXBuildFile; productRef = 4FAF5BC12895583A004E9615 /* Setapp */; };
 		4FB0416126F71CC0003657BE /* ButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB0416026F71CC0003657BE /* ButtonStyle.swift */; };
@@ -360,6 +362,7 @@
 		4F9791C026F5DB4F00E668F4 /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
 		4F9A444B29264FC10095BB6C /* 1Password8.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = 1Password8.swift; path = "Software Updates/1Password8.swift"; sourceTree = "<group>"; };
 		4F9A444E29265C5F0095BB6C /* Grammarly.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Grammarly.swift; path = "Software Updates/Grammarly.swift"; sourceTree = "<group>"; };
+		4FA8E5EB2B44428400B7EA9C /* NoUnusedUsers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NoUnusedUsers.swift; sourceTree = "<group>"; };
 		4FAF5BBE2895573F004E9615 /* setappPublicKey.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = setappPublicKey.pem; sourceTree = "<group>"; };
 		4FB0416026F71CC0003657BE /* ButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonStyle.swift; sourceTree = "<group>"; };
 		4FB51A5627A94457003F528E /* SecurityUpdateCheck.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SecurityUpdateCheck.swift; sourceTree = "<group>"; };
@@ -522,6 +525,7 @@
 			children = (
 				4F0371BB26CD00B700B35E43 /* Boot.swift */,
 				4FB7C68C26AFFD2600FB1C41 /* FileVault.swift */,
+				4FA8E5EB2B44428400B7EA9C /* NoUnusedUsers.swift */,
 				4F56AB5A278C57F1001CAAEF /* TimeMachine.swift */,
 				4F1E6C5D2834F5D200C8AFAB /* SecureTerminal.swift */,
 				4F1E6C602834F98A00C8AFAB /* SecureiTerm.swift */,
@@ -1015,6 +1019,7 @@
 				4FE23EEE276BB13700CA9BA0 /* FollowView.swift in Sources */,
 				4F28A97E27566D8500E34F7B /* Firefox.swift in Sources */,
 				4F37E70C2718122E00A2B254 /* RemoteLogin.swift in Sources */,
+				4FA8E5ED2B44428400B7EA9C /* NoUnusedUsers.swift in Sources */,
 				4F3DCFCF274FD1AE00F1CB55 /* AppCheck.swift in Sources */,
 				4F3DCFEA274FE61200F1CB55 /* Brave Browser.swift in Sources */,
 				4F6EF8952760013600752559 /* Signal.swift in Sources */,
@@ -1148,6 +1153,7 @@
 				4FE23EED276BB13700CA9BA0 /* FollowView.swift in Sources */,
 				4F28A97D27566D8500E34F7B /* Firefox.swift in Sources */,
 				4F35395726E8AE02008F5DD3 /* RemoteLogin.swift in Sources */,
+				4FA8E5EC2B44428400B7EA9C /* NoUnusedUsers.swift in Sources */,
 				4F3DCFCE274FD1AE00F1CB55 /* AppCheck.swift in Sources */,
 				4F3DCFE9274FE61200F1CB55 /* Brave Browser.swift in Sources */,
 				4F6EF8942760013600752559 /* Signal.swift in Sources */,
