@@ -1,5 +1,5 @@
 //
-//  CheckSettingsView.swift
+//  ChecksSettingsView.swift
 //  CheckSettingsView
 //
 //  Created by Janez Troha on 10/09/2021.

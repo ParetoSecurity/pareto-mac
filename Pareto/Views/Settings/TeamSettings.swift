@@ -34,50 +34,50 @@ struct TeamSettingsView: View {
             VStack(alignment: .leading) {
                 Section(
                     footer: Text("Team Name").font(.caption)) {
-                        VStack(alignment: .leading) {
-                            Text("\(teamSettings.name)")
-                        }
+                    VStack(alignment: .leading) {
+                        Text("\(teamSettings.name)")
                     }
+                }
                 Spacer(minLength: 1)
                 Section(
                     footer: Text("Team Admin").font(.caption)) {
-                        VStack(alignment: .leading) {
-                            Link(teamSettings.admin, destination: URL(string: "mailto:\(teamSettings.admin)")!).contextMenu(ContextMenu(menuItems: {
-                                Button("Copy", action: copyMail)
-                            }))
-                        }
+                    VStack(alignment: .leading) {
+                        Link(teamSettings.admin, destination: URL(string: "mailto:\(teamSettings.admin)")!).contextMenu(ContextMenu(menuItems: {
+                            Button("Copy", action: copyMail)
+                        }))
                     }
+                }
                 Spacer(minLength: 1)
                 Section(
                     footer: Text("Device Name").font(.caption)) {
-                        VStack(alignment: .leading) {
-                            Text("\(AppInfo.machineName)").contextMenu(ContextMenu(menuItems: {
-                                Button("How to change", action: help)
-                            }))
-                        }
+                    VStack(alignment: .leading) {
+                        Text("\(AppInfo.machineName)").contextMenu(ContextMenu(menuItems: {
+                            Button("How to change", action: help)
+                        }))
                     }
+                }
                 Spacer(minLength: 1)
                 Section(
                     footer: Text("Device ID").font(.caption)) {
-                        VStack(alignment: .leading) {
-                            Text("\(machineUUID)").contextMenu(ContextMenu(menuItems: {
-                                Button("Copy", action: copy)
-                            }))
-                        }
+                    VStack(alignment: .leading) {
+                        Text("\(machineUUID)").contextMenu(ContextMenu(menuItems: {
+                            Button("Copy", action: copy)
+                        }))
                     }
+                }
                 Spacer(minLength: 2)
 
                 Section(
                     footer: Text("When enabled, send model name and serial number.").font(.footnote)) {
-                        VStack(alignment: .leading) {
-                            if teamSettings.forceSerialPush {
-                                Toggle("Send inventory info on update", isOn: $sendHWInfo)
-                                Text("Sending is requested by the team policy.").font(.footnote)
-                            } else {
-                                Toggle("Send inventory info on update", isOn: $sendHWInfo)
-                            }
+                    VStack(alignment: .leading) {
+                        if teamSettings.forceSerialPush {
+                            Toggle("Send inventory info on update", isOn: $sendHWInfo)
+                            Text("Sending is requested by the team policy.").font(.footnote)
+                        } else {
+                            Toggle("Send inventory info on update", isOn: $sendHWInfo)
                         }
                     }
+                }
 
                 HStack {
                     Button("Unlink this device") {

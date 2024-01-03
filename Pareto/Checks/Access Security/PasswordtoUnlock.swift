@@ -1,6 +1,6 @@
 //
-//  PasswordFromLock.swift.swift
-//  PasswordFromLock.swift
+//  PasswordtoUnlock.swift
+//  PasswordtoUnlock.swift
 //
 //  Created by Janez Troha on 17/08/2021.
 //

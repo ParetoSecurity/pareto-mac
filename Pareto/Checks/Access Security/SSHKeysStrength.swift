@@ -35,7 +35,7 @@ struct KeyInfo: Equatable, ExpressibleByStringLiteral {
     // MARK: - Equatable Methods
 
     public static func == (lhs: KeyInfo, rhs: KeyInfo) -> Bool {
-        return (lhs.signature == rhs.signature)
+        return lhs.signature == rhs.signature
     }
 
     // MARK: - ExpressibleByStringLiteral Methods
@@ -77,7 +77,7 @@ class SSHKeysStrengthCheck: SSHCheck {
         }
         return "SSH key \(sshKey) is using weak encryption"
     }
-    
+
     func isKeyStrong(withKey path: String) -> Bool {
         let output = runCMD(app: getSSHKeygenPath(), args: ["-l", "-f", path])
         let info = KeyInfo(stringLiteral: output.strip())

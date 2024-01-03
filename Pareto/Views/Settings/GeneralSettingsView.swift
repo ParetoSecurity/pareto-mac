@@ -27,68 +27,66 @@ struct GeneralSettingsView: View {
 
     var body: some View {
         VStack {
-
-            
             Form {
                 Section(
                     footer: Text("To enable continuous monitoring and reporting.").font(.footnote)) {
-                        VStack(alignment: .leading) {
-                            Toggle("Automatically launch on system startup", isOn: $atLogin.isEnabled)
-                        }
+                    VStack(alignment: .leading) {
+                        Toggle("Automatically launch on system startup", isOn: $atLogin.isEnabled)
                     }
+                }
                 Section(
                     footer: Text("Only scan for updates for recently used apps.").font(.footnote)) {
-                        VStack(alignment: .leading) {
-                            Toggle("Update check only for apps used in the last week", isOn: $checkForUpdatesRecentOnly)
-                        }
+                    VStack(alignment: .leading) {
+                        Toggle("Update check only for apps used in the last week", isOn: $checkForUpdatesRecentOnly)
                     }
+                }
                 Section(
-                    footer: Text("To show the menu bar icon, launch the app again.").font(.footnote) ){
-                        VStack(alignment: .leading) {
-                            Toggle("Only show in menu bar when the checks are failing", isOn: $hideWhenNoFailures)
-                        }
+                    footer: Text("To show the menu bar icon, launch the app again.").font(.footnote)) {
+                    VStack(alignment: .leading) {
+                        Toggle("Only show in menu bar when the checks are failing", isOn: $hideWhenNoFailures)
                     }
+                }
                 Section(
                     footer: Text("Enables custom checks, that are configured by YAML rules. [Learn more](https://paretosecurity.com/custom-check/)").font(.footnote)) {
-                        VStack(alignment: .leading) {
-                            HStack {
-                                Toggle("Enable My Checks", isOn: $myChecks)
-                                Button("Select folder") {
-                                    selectFolder()
-                                }.disabled(!myChecks)
-                            }
+                    VStack(alignment: .leading) {
+                        HStack {
+                            Toggle("Enable My Checks", isOn: $myChecks)
+                            Button("Select folder") {
+                                selectFolder()
+                            }.disabled(!myChecks)
                         }
                     }
+                }
                 Section(
-                    footer: Text("Improve default colors for accessibility.").font(.footnote) ){
-                        VStack(alignment: .leading) {
-                            Toggle("Use alternative color scheme", isOn: $alternativeColor)
-                        }
+                    footer: Text("Improve default colors for accessibility.").font(.footnote)) {
+                    VStack(alignment: .leading) {
+                        Toggle("Use alternative color scheme", isOn: $alternativeColor)
                     }
+                }
                 if showBeta {
                     Section(
                         footer: Text("When priority check fails show notification.").font(.footnote)) {
-                            VStack(alignment: .leading) {
-                                Toggle("Show priority check failures as notifications", isOn: $showNotifications).onChange(of: showNotifications) { isEnabled in
-                                    if isEnabled {
-                                        registerNotifications()
-                                    }
+                        VStack(alignment: .leading) {
+                            Toggle("Show priority check failures as notifications", isOn: $showNotifications).onChange(of: showNotifications) { isEnabled in
+                                if isEnabled {
+                                    registerNotifications()
                                 }
                             }
                         }
+                    }
                     Section(
                         footer: Text("Skip all processing after wakeup, network changes.").font(.footnote)) {
-                            VStack(alignment: .leading) {
-                                Toggle("Skip running checks on events", isOn: $disableChecksEvents)
-                            }
+                        VStack(alignment: .leading) {
+                            Toggle("Skip running checks on events", isOn: $disableChecksEvents)
                         }
+                    }
 
                     Section(
                         footer: Text("Latest features but potentially bugs to report.").font(.footnote)) {
-                            VStack(alignment: .leading) {
-                                Toggle("Update app to pre-release builds", isOn: $betaChannel)
-                            }
+                        VStack(alignment: .leading) {
+                            Toggle("Update app to pre-release builds", isOn: $betaChannel)
                         }
+                    }
                     #if DEBUG
                         HStack {
                             Button("Reset Settings") {

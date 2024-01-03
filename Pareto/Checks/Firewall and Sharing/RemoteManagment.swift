@@ -1,5 +1,5 @@
 //
-//  RemoteManagementCheck.swift
+//  RemoteManagment.swift
 //  RemoteManagementCheck
 //
 //  Created by Janez Troha on 08/09/2021.

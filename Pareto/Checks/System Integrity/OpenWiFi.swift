@@ -1,5 +1,5 @@
 //
-//  OpenWIFI.swift
+//  OpenWiFi.swift
 //  Pareto Security
 //
 //  Created by Janez Troha on 28/09/2021.

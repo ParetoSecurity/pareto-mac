@@ -1,5 +1,5 @@
 //
-//  SublimeText.swift
+//  VSCode.swift
 //  Pareto Security
 //
 //  Created by Janez Troha on 11/11/2021.

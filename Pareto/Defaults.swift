@@ -1,14 +1,14 @@
 //
-//  Settings.swift
+//  Defaults.swift
 //  Settings
 //
 //  Created by Janez Troha on 27/07/2021.
 //
 
+import AppKit
 import Combine
 import Defaults
 import Foundation
-import AppKit
 import SwiftUI
 
 enum ReportingRoles: String, Defaults.Serializable {
@@ -88,25 +88,27 @@ public extension Defaults {
         Defaults[.lastUpdateCheck] = Date().currentTimeMs()
         Defaults[.updateNag] = false
     }
-    
+
     static func OKColor() -> NSColor {
         if Defaults[.alternativeColor] {
-            let light = NSColor.init(red: 255, green: 179, blue: 64, alpha: 1)
-            let dark = NSColor.init(red: 255, green: 179, blue: 64, alpha: 1)
+            let light = NSColor(red: 255, green: 179, blue: 64, alpha: 1)
+            let dark = NSColor(red: 255, green: 179, blue: 64, alpha: 1)
             let isDark = UserDefaults.standard.string(forKey: "AppleInterfaceStyle") == "Dark"
             return isDark ? dark : light
         }
         return NSColor.systemGreen
     }
+
     static func FailColor() -> NSColor {
         if Defaults[.alternativeColor] {
-            let light = NSColor.init(red: 64, green: 156, blue: 255, alpha: 1)
-            let dark = NSColor.init(red: 64, green: 156, blue: 255, alpha: 1)
+            let light = NSColor(red: 64, green: 156, blue: 255, alpha: 1)
+            let dark = NSColor(red: 64, green: 156, blue: 255, alpha: 1)
             let isDark = UserDefaults.standard.string(forKey: "AppleInterfaceStyle") == "Dark"
             return isDark ? dark : light
         }
         return NSColor.systemOrange
     }
+
     static func shouldAskForHWAllow() -> Bool {
         return Defaults[.lastHWAsk] + Date.HourInMs * 24 * 7 * 30 * 6 < Date().currentTimeMs()
     }

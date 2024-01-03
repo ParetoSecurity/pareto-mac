@@ -1,5 +1,5 @@
 //
-//  InternetShare.swift
+//  InternetSharing.swift
 //  InternetShare
 //
 //  Created by Janez Troha on 21/09/2021.

@@ -1,5 +1,5 @@
 //
-//  PermissiosView.swift
+//  FollowView.swift
 //  Pareto Security
 //
 //  Created by Janez Troha on 09/11/2021.

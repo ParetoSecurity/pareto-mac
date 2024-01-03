@@ -1,5 +1,5 @@
 //
-//  Settings.swift
+//  SettingsTests.swift
 //  Settings
 //
 //  Created by Janez Troha on 17/08/2021.

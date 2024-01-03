@@ -1,5 +1,5 @@
 //
-//  ParetoApp.swift
+//  AppInfo.swift
 //  Pareto
 //
 //  Created by Janez Troha on 12/07/2021.

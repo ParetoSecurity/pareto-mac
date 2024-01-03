@@ -1,5 +1,5 @@
 //
-//  ParetoAppTest.swift
+//  ParetoCustomCheckTest.swift
 //  ParetoAppTest
 //
 //  Created by Janez Troha on 20/09/2021.

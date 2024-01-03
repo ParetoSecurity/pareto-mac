@@ -1,5 +1,5 @@
 //
-//  AppStoreUpdatesCheck.swift
+//  AutoUpdateCheck.swift
 //  Pareto Security
 //
 //  Created by Janez Troha on 15/07/2021.

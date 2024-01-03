@@ -1,5 +1,5 @@
 //
-//  GeneralSettingsView.swift
+//  PermissionsSettingsView.swift
 //  GeneralSettingsView
 //
 //  Created by Janez Troha on 10/09/2021.
@@ -40,7 +40,6 @@ struct PermissionsSettingsView: View {
 
     var body: some View {
         VStack {
-            
             HStack {
                 VStack(alignment: .leading) {
                     Text("System Events Access").font(.headline)
@@ -84,7 +83,6 @@ struct PermissionsSettingsView: View {
             checker.stop()
         }
     }
-
 }
 
 struct PermissionsSettingsView_Previews: PreviewProvider {

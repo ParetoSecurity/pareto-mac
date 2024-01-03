@@ -1,5 +1,5 @@
 //
-//  Team.swift
+//  Teams.swift
 //  Team
 //
 //  Created by Janez Troha on 16/09/2021.

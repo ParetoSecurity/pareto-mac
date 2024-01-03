@@ -1,5 +1,5 @@
 //
-//  LicenseView.swift
+//  LicenseSettingsView.swift
 //  LicenseView
 //
 //  Created by Janez Troha on 10/09/2021.
