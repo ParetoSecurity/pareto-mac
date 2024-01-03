@@ -11,9 +11,6 @@ import Foundation
 import LaunchAtLogin
 import os.log
 import OSLog
-#if !DEBUG
-    import Sentry
-#endif
 import SwiftUI
 import UserNotifications
 
@@ -168,17 +165,7 @@ class AppDelegate: AppHandlers, NSApplicationDelegate {
 
         // Terminate any older versions of process if not running tests
         #if !DEBUG
-            if !AppInfo.isRunningTests && Defaults[.sendCrashReports] {
-                SentrySDK.start { options in
-                    options.dsn = "https://9caf590fe06b4f5b940adfb59623d457@o32789.ingest.sentry.io/6013471"
-                    options.enableAutoSessionTracking = true
-                    options.enableAutoPerformanceTracking = true
-                    options.tracesSampleRate = 1.0
-
-                    let user = User()
-                    user.userId = Defaults[.machineUUID]
-                    SentrySDK.setUser(user)
-                }
+            if !AppInfo.isRunningTests {
                 let procs = NSRunningApplication.runningApplications(withBundleIdentifier: Bundle.main.bundleIdentifier!)
                 if procs.count > 1 {
                     procs.first?.forceTerminate()
