@@ -35,7 +35,8 @@ class Claims: ObservableObject {
                 SSHKeysCheck.sharedInstance,
                 SSHKeysStrengthCheck.sharedInstance,
                 PasswordAfterSleepCheck.sharedInstance,
-                NoUnusedUsers.sharedInstance
+                NoUnusedUsers.sharedInstance,
+                NoAdminUser.sharedInstance
             ]),
             Claim(withTitle: "Firewall & Sharing", withChecks: [
                 FirewallCheck.sharedInstance,

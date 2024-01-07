@@ -22,9 +22,10 @@ class NoUnusedUsers: ParetoCheck {
     }
 
     var accounts: [String] {
+        let adminUsers = runCMD(app: "/usr/bin/dscl", args: [".", "-read", "/Groups/admin", "GroupMembership"]).components(separatedBy: " ")
         let output = runCMD(app: "/usr/bin/dscl", args: [".", "-list", "/Users"]).components(separatedBy: "\n")
         let local = output.filter { u in
-            !u.hasPrefix("_") && u.count > 1 && u != "root" && u != "nobody" && u != "daemon"
+            !u.hasPrefix("_") && u.count > 1 && u != "root" && u != "nobody" && u != "daemon" && !adminUsers.contains(u)
         }
         return local
     }

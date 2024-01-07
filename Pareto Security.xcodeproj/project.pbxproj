@@ -227,6 +227,8 @@
 		4FB7C68126AFF25300FB1C41 /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB7C68026AFF25300FB1C41 /* Date.swift */; };
 		4FB7C68726AFF29A00FB1C41 /* NSImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB7C68626AFF29A00FB1C41 /* NSImage.swift */; };
 		4FB7C68D26AFFD2600FB1C41 /* FileVault.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB7C68C26AFFD2600FB1C41 /* FileVault.swift */; };
+		4FCAA78B2B4AD7C300A62B4E /* NoAdminUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FCAA78A2B4AD7C300A62B4E /* NoAdminUser.swift */; };
+		4FCAA78C2B4AD7C300A62B4E /* NoAdminUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FCAA78A2B4AD7C300A62B4E /* NoAdminUser.swift */; };
 		4FD0A24126A024440070BED4 /* Gatekeeper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FD0A24026A024440070BED4 /* Gatekeeper.swift */; };
 		4FDA93A32771D9FC00F9D8B4 /* Checks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FDA93A22771D9FC00F9D8B4 /* Checks.swift */; };
 		4FDA93A42771D9FC00F9D8B4 /* Checks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FDA93A22771D9FC00F9D8B4 /* Checks.swift */; };
@@ -375,6 +377,7 @@
 		4FB7C68C26AFFD2600FB1C41 /* FileVault.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileVault.swift; sourceTree = "<group>"; };
 		4FC81A4926C41DC8006EABA8 /* ParetoSecurityTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ParetoSecurityTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4FC81A4B26C41DC8006EABA8 /* ParetoSecurityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParetoSecurityTests.swift; sourceTree = "<group>"; };
+		4FCAA78A2B4AD7C300A62B4E /* NoAdminUser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NoAdminUser.swift; sourceTree = "<group>"; };
 		4FD0A24026A024440070BED4 /* Gatekeeper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Gatekeeper.swift; sourceTree = "<group>"; };
 		4FDA93A22771D9FC00F9D8B4 /* Checks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Checks.swift; sourceTree = "<group>"; };
 		4FDAD88E26EB784A00F64E61 /* License.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = License.swift; sourceTree = "<group>"; };
@@ -492,6 +495,8 @@
 				4F91060227623E4B00D1A348 /* SSHKeys.swift */,
 				4F17270A2769F3410049B875 /* SSHKeysStrength.swift */,
 				4F868DD026A5C51C005B876E /* Autologin.swift */,
+				4FCAA78A2B4AD7C300A62B4E /* NoAdminUser.swift */,
+				4FA8E5EB2B44428400B7EA9C /* NoUnusedUsers.swift */,
 				4F868DD226A5C751005B876E /* Screensaver.swift */,
 				4F4E285F27BD748D006A18C1 /* PasswordAfterSleep.swift */,
 				4F84A94826CBE21300A1579D /* PasswordtoUnlock.swift */,
@@ -521,7 +526,6 @@
 			children = (
 				4F0371BB26CD00B700B35E43 /* Boot.swift */,
 				4FB7C68C26AFFD2600FB1C41 /* FileVault.swift */,
-				4FA8E5EB2B44428400B7EA9C /* NoUnusedUsers.swift */,
 				4F56AB5A278C57F1001CAAEF /* TimeMachine.swift */,
 				4F1E6C5D2834F5D200C8AFAB /* SecureTerminal.swift */,
 				4F1E6C602834F98A00C8AFAB /* SecureiTerm.swift */,
@@ -1066,6 +1070,7 @@
 				4F37E7242718122E00A2B254 /* WelcomeView.swift in Sources */,
 				4F17270C2769F3410049B875 /* SSHKeysStrength.swift in Sources */,
 				4FB5BD312760E846004E404C /* VSCode.swift in Sources */,
+				4FCAA78C2B4AD7C300A62B4E /* NoAdminUser.swift in Sources */,
 				4F37E7252718122E00A2B254 /* OpenWiFi.swift in Sources */,
 				4F905C4327B6C9B20012C661 /* AutoUpdateCheck.swift in Sources */,
 				4F37E7262718122E00A2B254 /* IntegrationCheck.swift in Sources */,
@@ -1200,6 +1205,7 @@
 				4F8B01B226F4A6CB00EDE14B /* WelcomeView.swift in Sources */,
 				4F17270B2769F3410049B875 /* SSHKeysStrength.swift in Sources */,
 				4FB5BD302760E846004E404C /* VSCode.swift in Sources */,
+				4FCAA78B2B4AD7C300A62B4E /* NoAdminUser.swift in Sources */,
 				4F5B20C127030BEB0015642A /* OpenWiFi.swift in Sources */,
 				4F905C4227B6C9B20012C661 /* AutoUpdateCheck.swift in Sources */,
 				4F6A92E826C52210006C2F2D /* IntegrationCheck.swift in Sources */,
