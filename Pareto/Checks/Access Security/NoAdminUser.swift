@@ -19,11 +19,11 @@ class NoAdminUser: ParetoCheck {
         "Current user is admin"
     }
 
-    var currentCroups: [String] {
-        return runCMD(app: "/usr/bin/id", args: ["-Gn"]).components(separatedBy: " ")
+    var isAdmin: Bool {
+        return runCMD(app: "/usr/bin/id", args: ["-Gn"]).components(separatedBy: " ").contains("admin")
     }
 
     override func checkPasses() -> Bool {
-        return !currentCroups.contains("admin")
+        return !isAdmin
     }
 }

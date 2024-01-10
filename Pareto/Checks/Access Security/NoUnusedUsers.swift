@@ -29,6 +29,10 @@ class NoUnusedUsers: ParetoCheck {
         }
         return local
     }
+    
+    var isAdmin: Bool {
+        return runCMD(app: "/usr/bin/id", args: ["-Gn"]).components(separatedBy: " ").contains("admin")
+    }
 
     func lastLoginRecent(user: String) -> Bool {
         let output = runCMD(app: "/usr/bin/last", args: ["-w", "-y", user]).components(separatedBy: "\n")
@@ -66,6 +70,9 @@ class NoUnusedUsers: ParetoCheck {
     }
 
     override func checkPasses() -> Bool {
+        if !isAdmin{
+            return true
+        }
         return accounts.allSatisfy { u in
             lastLoginRecent(user: u)
         }

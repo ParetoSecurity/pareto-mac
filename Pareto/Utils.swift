@@ -45,12 +45,10 @@ func runShell(args: [String]) -> String {
 }
 
 func runOSA(appleScript: String) -> String? {
-    #if !DEBUG
+
         let out = runCMD(app: "/usr/bin/osascript", args: ["-e", appleScript])
         return out
-    #else
-        return "debug"
-    #endif
+
 }
 
 func lsof(withCommand cmd: String, withPort port: Int) -> Bool {
