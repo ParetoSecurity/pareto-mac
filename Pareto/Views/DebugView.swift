@@ -14,8 +14,6 @@ struct DebugView: View {
     }
 }
 
-struct DebugView_Previews: PreviewProvider {
-    static var previews: some View {
-        DebugView()
-    }
+#Preview {
+    DebugView()
 }

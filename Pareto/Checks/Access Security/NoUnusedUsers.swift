@@ -22,14 +22,17 @@ class NoUnusedUsers: ParetoCheck {
     }
 
     var accounts: [String] {
-        let adminUsers = runCMD(app: "/usr/bin/dscl", args: [".", "-read", "/Groups/admin", "GroupMembership"]).components(separatedBy: " ")
+        let adminUsers = runCMD(app: "/usr/bin/dscl", args: [".", "-read", "/Groups/admin", "GroupMembership"]).replacingAllMatches(of: "\n", with: "").components(separatedBy: " ")
         let output = runCMD(app: "/usr/bin/dscl", args: [".", "-list", "/Users"]).components(separatedBy: "\n")
         let local = output.filter { u in
-            !u.hasPrefix("_") && u.count > 1 && u != "root" && u != "nobody" && u != "daemon" && !adminUsers.contains(u)
+            !u.hasPrefix("_") && u.count > 1 && u != "root" && u != "nobody" && u != "daemon"
         }
-        return local
+        let users = local.filter { u in
+            !adminUsers.contains(u)
+        }
+        return users
     }
-    
+
     var isAdmin: Bool {
         return runCMD(app: "/usr/bin/id", args: ["-Gn"]).components(separatedBy: " ").contains("admin")
     }
@@ -70,8 +73,8 @@ class NoUnusedUsers: ParetoCheck {
     }
 
     override func checkPasses() -> Bool {
-        if !isAdmin{
-            return true
+        if !isAdmin {
+            return accounts.count == 1
         }
         return accounts.allSatisfy { u in
             lastLoginRecent(user: u)

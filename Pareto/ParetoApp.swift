@@ -11,6 +11,7 @@ import Foundation
 import LaunchAtLogin
 import os.log
 import OSLog
+import SettingsAccess
 import SwiftUI
 import UserNotifications
 
@@ -133,19 +134,6 @@ class AppDelegate: AppHandlers, NSApplicationDelegate {
                 exit(1)
             }
         }
-
-        #if !DEBUG
-            #if !SETAPP_ENABLED
-                if !Bundle.main.path.string.hasPrefix("/Applications/") {
-                    let alert = NSAlert()
-                    alert.messageText = "Please install application by moving it into the Applications folder."
-                    alert.alertStyle = NSAlert.Style.critical
-                    alert.addButton(withTitle: "Close")
-                    alert.runModal()
-                    NSApplication.shared.terminate(self)
-                }
-            #endif
-        #endif
     }
 
     func application(_: NSApplication, open urls: [URL]) {
@@ -217,6 +205,7 @@ class AppDelegate: AppHandlers, NSApplicationDelegate {
 @main
 struct Pareto: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+    @Environment(\.openSettings) private var openSettings
 
     var body: some Scene {
         Settings {

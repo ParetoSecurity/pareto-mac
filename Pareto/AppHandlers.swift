@@ -7,6 +7,7 @@
 
 import Alamofire
 import Combine
+import CoreGraphics
 import Defaults
 import Foundation
 import LaunchAtLogin
@@ -166,6 +167,7 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
             }
             completion(.finished)
         }
+
         NSBackgroundActivityScheduler.repeating(withName: "TeamsRunner", withInterval: 60 * 59) { (completion: NSBackgroundActivityScheduler.CompletionHandler) in
             DispatchQueue.global(qos: .userInteractive).async {
                 if self.networkHandler.currentStatus == .satisfied {
@@ -227,7 +229,7 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
 
     @objc func doUpdate() {
         if #available(macOS 14.0, *) {
-            NSApp.sendAction(Selector(("showSettingsWindow:")), to: nil, from: nil)
+            showSettingsFallback()
         } else if #available(macOS 13.0, *) {
             NSApp.sendAction(Selector(("showSettingsWindow:")), to: nil, from: nil)
         } else {
@@ -239,7 +241,7 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
     @objc func showPrefs() {
         Defaults[.updateNag] = false
         if #available(macOS 14.0, *) {
-            NSApp.sendAction(Selector(("showSettingsWindow:")), to: nil, from: nil)
+            showSettingsFallback()
         } else if #available(macOS 13.0, *) {
             NSApp.sendAction(Selector(("showSettingsWindow:")), to: nil, from: nil)
         } else {
@@ -265,20 +267,22 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
     @objc func runChecks() {
         if !Defaults.firstLaunch(), !AppInfo.Licensed, !enrolledHandler, Defaults.shouldShowNag() {
             Defaults.shownNag()
-            let alert = NSAlert()
-            alert.messageText = "You are running the free version of the app. Please consider purchasing the Personal lifetime license for unlimited devices."
-            alert.alertStyle = NSAlert.Style.informational
-            alert.addButton(withTitle: "Purchase")
-            alert.addButton(withTitle: "Later")
-            switch alert.runModal() {
-            case NSApplication.ModalResponse.alertFirstButtonReturn:
-                NSWorkspace.shared.open(URL(string: "https://paretosecurity.com/pricing")!)
-            case NSApplication.ModalResponse.alertSecondButtonReturn:
-                DispatchQueue.global(qos: .userInteractive).async {
-                    self.statusBar?.runChecks()
+            DispatchQueue.main.async {
+                let alert = NSAlert()
+                alert.messageText = "You are running the free version of the app. Please consider purchasing the Personal lifetime license for unlimited devices."
+                alert.alertStyle = NSAlert.Style.informational
+                alert.addButton(withTitle: "Purchase")
+                alert.addButton(withTitle: "Later")
+                switch alert.runModal() {
+                case NSApplication.ModalResponse.alertFirstButtonReturn:
+                    NSWorkspace.shared.open(URL(string: "https://paretosecurity.com/pricing")!)
+                case NSApplication.ModalResponse.alertSecondButtonReturn:
+                    DispatchQueue.global(qos: .userInteractive).async {
+                        self.statusBar?.runChecks()
+                    }
+                default:
+                    os_log("Unknown")
                 }
-            default:
-                os_log("Unknown")
             }
         } else {
             DispatchQueue.global(qos: .userInteractive).async {
@@ -300,27 +304,57 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
     }
 
     @objc func showWelcome() {
-        if welcomeWindow == nil {
-            let welcome = WelcomeView()
-            // Create the preferences window and set content
-            welcomeWindow = NSWindow(
-                contentRect: NSRect(x: 0, y: 0, width: 640, height: 480),
-                styleMask: [.closable, .titled],
-                backing: .buffered,
-                defer: false
-            )
-            welcomeWindow!.titlebarAppearsTransparent = true
-            welcomeWindow!.center()
-            welcomeWindow!.setFrameAutosaveName("welcomeView")
-            welcomeWindow!.isReleasedWhenClosed = true
-            welcomeWindow?.level = .floating
+        DispatchQueue.main.async { [self] in
+            if welcomeWindow == nil {
+                let welcome = WelcomeView()
+                // Create the preferences window and set content
+                welcomeWindow = NSWindow(
+                    contentRect: NSRect(x: 0, y: 0, width: 640, height: 480),
+                    styleMask: [.closable, .titled],
+                    backing: .buffered,
+                    defer: false
+                )
+                welcomeWindow!.titlebarAppearsTransparent = true
+                welcomeWindow!.center()
+                welcomeWindow!.setFrameAutosaveName("welcomeView")
+                welcomeWindow!.isReleasedWhenClosed = true
+                welcomeWindow?.level = .floating
 
-            let hosting = NSHostingView(rootView: welcome)
-            hosting.autoresizingMask = [NSView.AutoresizingMask.width, NSView.AutoresizingMask.height]
-            welcomeWindow!.contentView = hosting
+                let hosting = NSHostingView(rootView: welcome)
+                hosting.autoresizingMask = [NSView.AutoresizingMask.width, NSView.AutoresizingMask.height]
+                welcomeWindow!.contentView = hosting
+            }
+
+            welcomeWindow!.makeKeyAndOrderFront(nil)
         }
+    }
 
-        welcomeWindow!.makeKeyAndOrderFront(nil)
+    @objc func showSettingsFallback() {
+        DispatchQueue.main.async { [self] in
+            if welcomeWindow == nil {
+                let settings = SettingsView(selected: SettingsView.Tabs.general)
+                // Create the preferences window and set content
+                welcomeWindow = NSWindow(
+                    contentRect: NSRect(x: 0, y: 0, width: 420, height: 280),
+                    styleMask: [.closable, .titled],
+                    backing: .buffered,
+                    defer: false
+                )
+
+                welcomeWindow!.titlebarAppearsTransparent = false
+                welcomeWindow!.center()
+                welcomeWindow!.setFrameAutosaveName("settingsView")
+                welcomeWindow!.isReleasedWhenClosed = false
+                welcomeWindow?.level = .floating
+
+                let hosting = NSHostingView(rootView: settings)
+                hosting.autoresizingMask = [NSView.AutoresizingMask.width, NSView.AutoresizingMask.height]
+                welcomeWindow!.contentView = hosting
+                welcomeWindow!.contentView?.translatesAutoresizingMaskIntoConstraints = true
+            }
+
+            welcomeWindow!.makeKeyAndOrderFront(nil)
+        }
     }
 
     func copyLogs() {

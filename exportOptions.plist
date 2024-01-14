@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
-<dict>
-	<key>compileBitcode</key>
-	<true/>
-	<key>embedOnDemandResourcesAssetPacksInBundle</key>
-	<true/>
-	<key>iCloudContainerEnvironment</key>
-	<string>Production</string>
-	<key>method</key>
-	<string>developer-id</string>
-	<key>onDemandResourcesAssetPacksBaseURL</key>
-	<string>0</string>
-	<key>teamID</key>
-	<string>PM784W7B8X</string>
-	<key>uploadBitcode</key>
-	<true/>
-	<key>uploadSymbols</key>
-	<true/>
-</dict>
+	<dict>
+		<key>compileBitcode</key>
+		<true />
+		<key>embedOnDemandResourcesAssetPacksInBundle</key>
+		<true />
+		<key>iCloudContainerEnvironment</key>
+		<string>Production</string>
+		<key>method</key>
+		<string>developer-id</string>
+		<key>onDemandResourcesAssetPacksBaseURL</key>
+		<string>0</string>
+		<key>teamID</key>
+		<string>JND55328G8</string>
+		<key>uploadBitcode</key>
+		<true />
+		<key>uploadSymbols</key>
+		<true />
+	</dict>
 </plist>

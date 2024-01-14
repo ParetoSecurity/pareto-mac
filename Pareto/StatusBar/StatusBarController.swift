@@ -158,18 +158,20 @@ class StatusBarController: NSObject, NSMenuDelegate {
                 if Defaults.shouldDoTeamUpdate() || interactive {
                     let report = Report.now()
                     if !Defaults[.sendHWInfo], AppInfo.TeamSettings.forceSerialPush, Defaults.shouldAskForHWAllow() {
-                        let alert = NSAlert()
-                        alert.messageText = "Send device model and serial"
-                        alert.informativeText = "Your team policy enables collection of serial number and hardware model name from this device. Do you allow it?"
-                        alert.alertStyle = NSAlert.Style.warning
-                        alert.addButton(withTitle: "OK")
-                        alert.addButton(withTitle: "Don't Allow")
-                        if alert.runModal() == .alertFirstButtonReturn {
-                            Defaults[.sendHWInfo] = true
-                            Defaults[.lastHWAsk] = Date().currentTimeMs()
-                        } else {
-                            Defaults[.sendHWInfo] = false
-                            Defaults[.lastHWAsk] = Date().currentTimeMs()
+                        DispatchQueue.main.async {
+                            let alert = NSAlert()
+                            alert.messageText = "Send device model and serial"
+                            alert.informativeText = "Your team policy enables collection of serial number and hardware model name from this device. Do you allow it?"
+                            alert.alertStyle = NSAlert.Style.warning
+                            alert.addButton(withTitle: "OK")
+                            alert.addButton(withTitle: "Don't Allow")
+                            if alert.runModal() == .alertFirstButtonReturn {
+                                Defaults[.sendHWInfo] = true
+                                Defaults[.lastHWAsk] = Date().currentTimeMs()
+                            } else {
+                                Defaults[.sendHWInfo] = false
+                                Defaults[.lastHWAsk] = Date().currentTimeMs()
+                            }
                         }
                     }
 
