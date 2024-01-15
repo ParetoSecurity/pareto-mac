@@ -330,30 +330,20 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
     }
 
     @objc func showSettingsFallback() {
-        DispatchQueue.main.async { [self] in
-            if welcomeWindow == nil {
-                let settings = SettingsView(selected: SettingsView.Tabs.general)
-                // Create the preferences window and set content
-                welcomeWindow = NSWindow(
-                    contentRect: NSRect(x: 0, y: 0, width: 420, height: 280),
-                    styleMask: [.closable, .titled],
-                    backing: .buffered,
-                    defer: false
-                )
-
-                welcomeWindow!.titlebarAppearsTransparent = false
-                welcomeWindow!.center()
-                welcomeWindow!.setFrameAutosaveName("settingsView")
-                welcomeWindow!.isReleasedWhenClosed = false
-                welcomeWindow?.level = .floating
-
-                let hosting = NSHostingView(rootView: settings)
-                hosting.autoresizingMask = [NSView.AutoresizingMask.width, NSView.AutoresizingMask.height]
-                welcomeWindow!.contentView = hosting
-                welcomeWindow!.contentView?.translatesAutoresizingMaskIntoConstraints = true
+        DispatchQueue.main.async {
+            let hostingController = NSHostingController(rootView: SettingsView(selected: SettingsView.Tabs.general))
+            hostingController.preferredContentSize = NSSize(width: 640, height: 280)
+            if #available(macOS 13.0, *) {
+                hostingController.sizingOptions = .preferredContentSize
             }
+            let window = NSWindow(contentViewController: hostingController)
+            window.title = "Preferences"
+            window.center()
+            window.titlebarAppearsTransparent = true
+            window.setContentSize(NSSize(width: 640, height: 280))
 
-            welcomeWindow!.makeKeyAndOrderFront(nil)
+            let controller = NSWindowController(window: window)
+            controller.showWindow(nil)
         }
     }
 

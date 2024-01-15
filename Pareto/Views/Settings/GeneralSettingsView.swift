@@ -103,7 +103,7 @@ struct GeneralSettingsView: View {
                     #endif
                 }
             }
-        }.frame(maxWidth: 380, minHeight: 210).padding(25)
+        }.frame(minWidth: 420, minHeight: 210).padding(25)
     }
 
     func selectFolder() {
