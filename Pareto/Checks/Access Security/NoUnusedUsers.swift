@@ -10,7 +10,7 @@ import Foundation
 class NoUnusedUsers: ParetoCheck {
     static let sharedInstance = NoUnusedUsers()
     override var UUID: String {
-        "018cca4b-bedc-7794-a45d-118b60424017"
+        "c6559a48-c7ad-450b-a9eb-765f031ef49e"
     }
 
     override var TitleON: String {

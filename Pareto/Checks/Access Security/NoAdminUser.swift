@@ -8,7 +8,7 @@
 class NoAdminUser: ParetoCheck {
     static let sharedInstance = NoAdminUser()
     override var UUID: String {
-        "0659aa04-b81f-7cb9-8000-f8e76dc9185a"
+        "b092ab27-c513-43cc-8b52-e89c4cb30114"
     }
 
     override var TitleON: String {
