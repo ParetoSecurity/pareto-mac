@@ -338,8 +338,9 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
             }
             let window = NSWindow(contentViewController: hostingController)
             window.title = "Preferences"
+            window.standardWindowButton(.zoomButton)?.isHidden = true
+            window.standardWindowButton(.miniaturizeButton)?.isHidden = true
             window.center()
-            window.titlebarAppearsTransparent = true
             window.setContentSize(NSSize(width: 640, height: 280))
 
             let controller = NSWindowController(window: window)
