@@ -13,8 +13,8 @@ struct ChecksSettingsView: View {
     @Default(.teamID) var teamID
 
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading) {
+        ScrollView(.vertical) {
+            Group {
                 Text("Deselect the checks you don't want the app to run.")
                 if !teamID.isEmpty {
                     Text("Checks with asterisk (✴) are required by your team.")
@@ -83,10 +83,10 @@ struct ChecksSettingsView: View {
                     Link("Learn more",
                          destination: URL(string: "https://paretosecurity.com/security-checks?utm_source=\(AppInfo.utmSource)")!)
                     Text(" about checks on our website.")
-                }.padding(0)
-            }.padding(.all, 20).frame(minWidth: 480, minHeight: 480)
+                }
+            }.frame(maxWidth: .infinity).padding(25)
 
-        }.frame(width: 420, height: 400)
+        }.frame(width: 480, height: 400)
     }
 }
 
