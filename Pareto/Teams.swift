@@ -290,20 +290,23 @@ class TeamSettingsUpdater: ObservableObject {
     }
 
     func updateIgnored() {
-        if Defaults[.appliedIgnoredChecks] {
-            os_log("Team ignored checks already applied once.")
-            return
-        }
-
         for claim in Claims.global.all {
             for check in claim.checks {
                 if ignoredChecks.contains(where: { $0 == check.UUID }) {
-                    check.isActive = false
+                    if !Defaults[.appliedIgnoredChecksIDs].contains(check.UUID) {
+                        // old version of sync
+                        if Defaults[.appliedIgnoredChecks] {
+                            NoUnusedUsers.sharedInstance.isActive = false
+                            NoAdminUser.sharedInstance.isActive = false
+                        }else {
+                            check.isActive = false
+                        }
+                        Defaults[.appliedIgnoredChecksIDs].append(check.UUID)
+                    }
+                    
                 }
             }
         }
-
         os_log("Team ignored checks applied.")
-        Defaults[.appliedIgnoredChecks] = true
     }
 }
