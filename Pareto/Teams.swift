@@ -103,6 +103,7 @@ struct Report: Encodable {
     let lastCheck: String
     let significantChange: String
     let state: [String: String]
+    let sbom: [PublicApp]
 
     static func now() -> Report {
         var passed = 0
@@ -135,6 +136,11 @@ struct Report: Encodable {
             }
         }
 
+        var sendSerial = false
+        if Defaults[.sendHWInfo] || AppInfo.TeamSettings.forceSerialPush {
+            sendSerial = true
+        }
+
         return Report(
             passedCount: passed,
             failedCount: failed,
@@ -143,7 +149,8 @@ struct Report: Encodable {
             version: AppInfo.appVersion,
             lastCheck: Date.fromTimeStamp(timeStamp: Defaults[.lastCheck]).as3339String(),
             significantChange: SHA256.hash(data: "\(disabledSeed).\(failedSeed)".data(using: .utf8)!).hexStr,
-            state: checkStates
+            state: checkStates,
+            sbom: sendSerial ? PublicApp.all : []
         )
     }
 }
