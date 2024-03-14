@@ -8,6 +8,77 @@
 import Defaults
 import SwiftUI
 
+struct PublicApp: Codable {
+    let name: String
+    let bundle: String
+    let version: String
+
+    static var all: [PublicApp] {
+        var detectedApps: [PublicApp] = []
+        let allApps = try! FileManager.default.contentsOfDirectory(at: URL(string: "/Applications")!, includingPropertiesForKeys: [.isApplicationKey])
+        for app in allApps {
+            let plist = PublicApp.readPlistFile(fileURL: app.appendingPathComponent("Contents/Info.plist"))
+            if let appName = plist?["CFBundleName"] as? String,
+               let appBundle = plist?["CFBundleIdentifier"] as? String {
+                let bundleApp = PublicApp(
+                    name: appName,
+                    bundle: appBundle,
+                    version: plist?["CFBundleShortVersionString"] as? String ?? "Unknown"
+                )
+                detectedApps.append(bundleApp)
+            }
+        }
+
+        // user apps
+        let homeDirURL = FileManager.default.homeDirectoryForCurrentUser
+        let localPath = URL(fileURLWithPath: "\(homeDirURL.path)/Applications/")
+        if (try? localPath.checkResourceIsReachable()) ?? false {
+            let userApps = try! FileManager.default.contentsOfDirectory(at: localPath, includingPropertiesForKeys: [.isApplicationKey])
+            for app in userApps {
+                let plist = PublicApp.readPlistFile(fileURL: app.appendingPathComponent("Contents/Info.plist"))
+                if let appName = plist?["CFBundleName"] as? String,
+                   let appBundle = plist?["CFBundleIdentifier"] as? String {
+                    let bundleApp = PublicApp(
+                        name: appName,
+                        bundle: appBundle,
+                        version: plist?["CFBundleShortVersionString"] as? String ?? "Unknown"
+                    )
+                    detectedApps.append(bundleApp)
+                }
+            }
+        }
+
+        return detectedApps
+    }
+
+    static func readPlistFile(fileURL: URL) -> [String: Any]? {
+        guard let data = try? Data(contentsOf: fileURL) else {
+            return nil
+        }
+        guard let result = try? PropertyListSerialization.propertyList(from: data, options: [], format: nil) as? [String: Any] else {
+            return nil
+        }
+        return result
+    }
+
+    static func asJSON() -> String? {
+        var export: [PublicApp] = []
+
+        for app in PublicApp.all.sorted(by: { lha, rha in
+            lha.name.lowercased() < rha.name.lowercased()
+        }) {
+            export.append(app)
+        }
+
+        let jsonEncoder = JSONEncoder()
+        jsonEncoder.outputFormatting = .prettyPrinted
+        let jsonData = try! jsonEncoder.encode(export)
+        guard let json = String(data: jsonData, encoding: String.Encoding.utf8) else { return nil }
+
+        return json
+    }
+}
+
 struct TeamSettingsView: View {
     @StateObject var teamSettings: TeamSettingsUpdater
 
@@ -23,6 +94,22 @@ struct TeamSettingsView: View {
     func copy() {
         NSPasteboard.general.clearContents()
         NSPasteboard.general.setString("Team ID: \(teamID)\nMachine UUID: \(machineUUID)", forType: .string)
+    }
+
+    func copyApps() {
+        var logs = [String]()
+        logs.append("Name, Bundle, Version")
+        for app in PublicApp.all {
+            logs.append("\(app.name), \(app.bundle), \(app.version)")
+        }
+
+        NSPasteboard.general.clearContents()
+        NSPasteboard.general.setString(logs.joined(separator: "\n"), forType: .string)
+        let alert = NSAlert()
+        alert.messageText = "List of installed apps has been copied to the clipboard."
+        alert.alertStyle = NSAlert.Style.informational
+        alert.addButton(withTitle: "OK")
+        alert.runModal()
     }
 
     func help() {
@@ -76,6 +163,11 @@ struct TeamSettingsView: View {
                         } else {
                             Toggle("Send inventory info on update", isOn: $sendHWInfo)
                         }
+                        HStack {
+                            Button("Copy App list") {
+                                copyApps()
+                            }
+                        }
                     }
                 }
 
@@ -86,7 +178,8 @@ struct TeamSettingsView: View {
                     Link("Team Dashboard »",
                          destination: AppInfo.teamsURL())
                 }
-            }.frame(width: 380, height: 250).padding(25).onAppear {
+                Spacer(minLength: 2)
+            }.frame(width: 380, height: 290).padding(25).onAppear {
                 DispatchQueue.main.async {
                     teamSettings.update {}
                 }

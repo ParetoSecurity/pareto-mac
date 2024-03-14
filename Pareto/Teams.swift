@@ -298,12 +298,11 @@ class TeamSettingsUpdater: ObservableObject {
                         if Defaults[.appliedIgnoredChecks] {
                             NoUnusedUsers.sharedInstance.isActive = false
                             NoAdminUser.sharedInstance.isActive = false
-                        }else {
+                        } else {
                             check.isActive = false
                         }
                         Defaults[.appliedIgnoredChecksIDs].append(check.UUID)
                     }
-                    
                 }
             }
         }
