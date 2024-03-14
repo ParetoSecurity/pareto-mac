@@ -33,7 +33,7 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
             statusBar?.statusItem?.isVisible = !(statusBar?.claimsPassed ?? true)
         }
     }
-
+    
     public indirect enum Error: Swift.Error {
         case teamLinkinFailed
     }
@@ -205,6 +205,12 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
     }
 
     func checkForRelease() {
+        
+        if !SystemUser.current.isAdmin {
+            os_log("non-admin user cannot update the app")
+            return
+        }
+        
         DispatchQueue.global(qos: .userInteractive).async { [self] in
             let currentVersion = Bundle.main.version
             if let release = try? updater!.getLatestRelease() {
@@ -217,7 +223,7 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
                         if let zipURL = release.assets.filter({ $0.browser_download_url.path.hasSuffix(".zip") }).first {
                             let done = updater!.downloadAndUpdate(withAsset: zipURL)
                             // Failed to update
-                            if !done {
+                            if !done && !SystemUser.current.isAdmin {
                                 Defaults[.updateNag] = true
                             }
                         }
