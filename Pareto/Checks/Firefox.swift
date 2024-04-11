@@ -13,7 +13,10 @@ import os.log
 import OSLog
 import Version
 
-private typealias FirefoxVersions = [String: String]
+
+struct FirefoxVersions: Decodable {
+    let LATEST_FIREFOX_VERSION: String
+}
 
 class AppFirefoxCheck: AppCheck {
     static let sharedInstance = AppFirefoxCheck()
@@ -38,11 +41,11 @@ class AppFirefoxCheck: AppCheck {
     }
 
     override func getLatestVersion(completion: @escaping (String) -> Void) {
-        let url = viaEdgeCache("https://product-details.mozilla.org/1.0/firefox_history_stability_releases.json")
+        let url = viaEdgeCache("https://product-details.mozilla.org/1.0/firefox_versions.json")
         os_log("Requesting %{public}s", url)
         AF.request(url).responseDecodable(of: FirefoxVersions.self, queue: AppCheck.queue) { response in
             if response.error == nil {
-                let version = response.value?.sorted(by: >).first?.0 ?? "0.0.0"
+                let version = response.value?.LATEST_FIREFOX_VERSION ?? "0.0.0"
                 os_log("%{public}s version=%{public}s", self.appBundle, version)
                 completion(version)
             } else {
