@@ -18,7 +18,7 @@ class NoUnusedUsers: ParetoCheck {
     }
 
     override var TitleOFF: String {
-        "Unused user accounts are present (" + accounts.joined(separator: ",") + ")"
+        "Unused user accounts are present"
     }
 
     var accounts: [String] {
