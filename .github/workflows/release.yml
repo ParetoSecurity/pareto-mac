@@ -8,7 +8,7 @@ on:
 jobs:
   release:
     name: Release and Archive Native
-    runs-on: macos-13
+    runs-on: macos-latest
     timeout-minutes: 30
     permissions:
       issues: write
@@ -212,7 +212,7 @@ jobs:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
   release-setapp:
     name: Release and Archive Setapp
-    runs-on: macos-13
+    runs-on: macos-latest
     timeout-minutes: 30
     permissions:
       issues: write

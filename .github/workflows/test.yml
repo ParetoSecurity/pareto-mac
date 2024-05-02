@@ -9,7 +9,7 @@ on:
 jobs:
   lint:
     name: Lint
-    runs-on: macos-13
+    runs-on: macos-latest
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}-lint
       cancel-in-progress: true
@@ -139,7 +139,7 @@ jobs:
   build:
     name: Build and Archive Native
     needs: lint
-    runs-on: macos-13
+    runs-on: macos-latest
     timeout-minutes: 15
     permissions:
       issues: write
@@ -249,7 +249,7 @@ jobs:
   test-profile-default:
     strategy:
       matrix:
-        os: [macos-12, macos-13]
+        os: [macos-12, macos-latest]
     runs-on: ${{ matrix.os }}
     name: Profile - Default
     timeout-minutes: 6
@@ -277,7 +277,7 @@ jobs:
   test-profile-bad:
     strategy:
       matrix:
-        os: [macos-12, macos-13]
+        os: [macos-12, macos-latest]
     runs-on: ${{ matrix.os }}
     name: Profile - Bad
     timeout-minutes: 6
@@ -304,7 +304,7 @@ jobs:
         run: .github/bin/profile bad
   build-setapp:
     name: Build and Archive SetApp
-    runs-on: macos-13
+    runs-on: macos-latest
     timeout-minutes: 15
     needs: lint
     permissions:
