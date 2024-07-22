@@ -80,4 +80,8 @@ class NoUnusedUsers: ParetoCheck {
             lastLoginRecent(user: u)
         }
     }
+    
+    override public var isRunnable: Bool {
+        isActive && isAdmin
+    }
 }
