@@ -139,6 +139,8 @@
 		4F49640D28AD244C00C98950 /* ParetoCustomCheckTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F49640C28AD244C00C98950 /* ParetoCustomCheckTest.swift */; };
 		4F4B6E84282E4C5C00FAC103 /* AirDrop.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F4B6E83282E4C5C00FAC103 /* AirDrop.swift */; };
 		4F4B6E85282E4C5C00FAC103 /* AirDrop.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F4B6E83282E4C5C00FAC103 /* AirDrop.swift */; };
+		4F4E23B52C4E484900484782 /* Trim.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F4E23B42C4E484500484782 /* Trim.swift */; };
+		4F4E23B62C4E484900484782 /* Trim.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F4E23B42C4E484500484782 /* Trim.swift */; };
 		4F4E286027BD748D006A18C1 /* PasswordAfterSleep.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F4E285F27BD748D006A18C1 /* PasswordAfterSleep.swift */; };
 		4F4E286127BD748D006A18C1 /* PasswordAfterSleep.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F4E285F27BD748D006A18C1 /* PasswordAfterSleep.swift */; };
 		4F56AB5B278C57F1001CAAEF /* TimeMachine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F56AB5A278C57F1001CAAEF /* TimeMachine.swift */; };
@@ -321,6 +323,7 @@
 		4F47220F26B08A0E0071CE2A /* Defaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Defaults.swift; sourceTree = "<group>"; };
 		4F49640C28AD244C00C98950 /* ParetoCustomCheckTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParetoCustomCheckTest.swift; sourceTree = "<group>"; };
 		4F4B6E83282E4C5C00FAC103 /* AirDrop.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AirDrop.swift; sourceTree = "<group>"; };
+		4F4E23B42C4E484500484782 /* Trim.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Trim.swift; sourceTree = "<group>"; };
 		4F4E285F27BD748D006A18C1 /* PasswordAfterSleep.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PasswordAfterSleep.swift; sourceTree = "<group>"; };
 		4F56AB5A278C57F1001CAAEF /* TimeMachine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimeMachine.swift; sourceTree = "<group>"; };
 		4F56AB5D278C6DF5001CAAEF /* AdobeReader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AdobeReader.swift; path = "Software Updates/AdobeReader.swift"; sourceTree = "<group>"; };
@@ -626,6 +629,7 @@
 		4FB7C67F26AFF22C00FB1C41 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				4F4E23B42C4E484500484782 /* Trim.swift */,
 				4F6A2CE529CDC7C800B653C2 /* SSHCheck.swift */,
 				4FB7C68026AFF25300FB1C41 /* Date.swift */,
 				4FB7C68626AFF29A00FB1C41 /* NSImage.swift */,
@@ -1084,6 +1088,7 @@
 				4FB5BD312760E846004E404C /* VSCode.swift in Sources */,
 				4FCAA78C2B4AD7C300A62B4E /* NoAdminUser.swift in Sources */,
 				4F37E7252718122E00A2B254 /* OpenWiFi.swift in Sources */,
+				4F4E23B52C4E484900484782 /* Trim.swift in Sources */,
 				4F905C4327B6C9B20012C661 /* AutoUpdateCheck.swift in Sources */,
 				4F37E7262718122E00A2B254 /* IntegrationCheck.swift in Sources */,
 				4F3DCFDC274FE4E000F1CB55 /* Slack.swift in Sources */,
@@ -1220,6 +1225,7 @@
 				4FB5BD302760E846004E404C /* VSCode.swift in Sources */,
 				4FCAA78B2B4AD7C300A62B4E /* NoAdminUser.swift in Sources */,
 				4F5B20C127030BEB0015642A /* OpenWiFi.swift in Sources */,
+				4F4E23B62C4E484900484782 /* Trim.swift in Sources */,
 				4F905C4227B6C9B20012C661 /* AutoUpdateCheck.swift in Sources */,
 				4F6A92E826C52210006C2F2D /* IntegrationCheck.swift in Sources */,
 				4F3DCFDB274FE4E000F1CB55 /* Slack.swift in Sources */,

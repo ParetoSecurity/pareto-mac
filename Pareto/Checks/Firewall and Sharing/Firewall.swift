@@ -51,12 +51,21 @@ class FirewallCheck: ParetoCheck {
     }
 
     override func checkPasses() -> Bool {
-        let native = readDefaultsFile(path: "/Library/Preferences/com.apple.alf.plist")
+        if #available(macOS 15, *) {
+            let out = runCMD(app: "/usr/libexec/ApplicationFirewall/socketfilterfw", args: ["--getglobalstate"])
+            return out.contains("enabled")
 
-        if let globalstate = native?.value(forKey: "globalstate") as? Int {
-            return globalstate >= 1
+        } else {
+            let native = readDefaultsFile(path: "/Library/Preferences/com.apple.alf.plist")
+
+            if let globalstate = native?.value(forKey: "globalstate") as? Int {
+                return globalstate >= 1
+            }
+
+            return false
         }
-
-        return false
     }
+    
+    
+    
 }

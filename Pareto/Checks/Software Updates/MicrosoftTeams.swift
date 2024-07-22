@@ -10,11 +10,26 @@ import Foundation
 import os.log
 import Regex
 
-extension String {
-    func trim() -> String {
-        return replacingOccurrences(of: "\n", with: "").replacingOccurrences(of: "\t", with: "")
-    }
+// MARK: - Welcome
+struct TeamsResponse: Codable {
+    let buildSettings: BuildSettings?
 }
+
+// MARK: - BuildSettings
+struct BuildSettings: Codable {
+    let webView2: WebView2?
+}
+
+// MARK: - WebView2
+struct WebView2: Codable {
+    let macOS: MACOSClass?
+}
+
+// MARK: - MACOSClass
+struct MACOSClass: Codable {
+    let latestVersion: String?
+}
+
 
 class AppMicrosoftTeamsCheck: AppCheck {
     static let sharedInstance = AppMicrosoftTeamsCheck()
@@ -28,22 +43,17 @@ class AppMicrosoftTeamsCheck: AppCheck {
     }
 
     override func getLatestVersion(completion: @escaping (String) -> Void) {
-        let url = "https://teams.microsoft.com/downloads/desktopurl?env=production&plat=osx&download=true"
-        let versionRegex = Regex("x/?([\\.\\d]+)/T") // x/1.5.00.22362/T
-        os_log("Requesting %{public}s", url)
+        let url = viaEdgeCache("https://config.teams.microsoft.com/config/v1/MicrosoftTeams/1415_1.0.0.0?environment=prod&audienceGroup=general&teamsRing=general&agent=TeamsBuilds")
 
-        AF.request(url, method: .head).responseString(queue: AppCheck.queue, completionHandler: { response in
-            if let url = response.response?.url, response.error == nil {
-                let cdn = versionRegex.firstMatch(in: url.description)?.groups.first?.value ?? "1.5.00.22362"
-                let nibbles = cdn.components(separatedBy: ".")
-                let version = "\(nibbles[0]).00.\(nibbles[1])\(nibbles[nibbles.endIndex - 1])"
-                os_log("%{public}s version=%{public}s", self.appBundle, version)
-                completion(version)
+        os_log("Requesting %{public}s", url)
+        AF.request(url).responseDecodable(of: TeamsResponse.self, queue: AppCheck.queue, completionHandler: { response in
+            if response.error == nil {
+                let v = response.value?.buildSettings?.webView2?.macOS?.latestVersion
+                completion(v ?? "0.0.0")
             } else {
                 os_log("%{public}s failed: %{public}s", self.appBundle, response.error.debugDescription)
                 completion("0.0.0")
             }
-
         })
     }
 }

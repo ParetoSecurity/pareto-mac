@@ -42,6 +42,6 @@ class FirewallStealthCheck: ParetoCheck {
 
     override func checkPasses() -> Bool {
         let out = runCMD(app: "/usr/libexec/ApplicationFirewall/socketfilterfw", args: ["--getstealthmode"])
-        return out.contains("enabled")
+        return out.contains("enabled") || out.contains("mode is on")
     }
 }
