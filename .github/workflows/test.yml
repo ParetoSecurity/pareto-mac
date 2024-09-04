@@ -260,7 +260,7 @@ jobs:
       - name: Repository checkout
         uses: actions/checkout@v3
       - name: Download the build output
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4.1.7
         with:
           name: ParetoSecurity.app
       - name: Patch permissions kTCCServiceAppleEvents
@@ -288,7 +288,7 @@ jobs:
       - name: Repository checkout
         uses: actions/checkout@v3
       - name: Download the build output
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4.1.7
         with:
           name: ParetoSecurity.app
       - name: Patch permissions kTCCServiceAppleEvents
