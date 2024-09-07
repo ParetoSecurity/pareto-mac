@@ -127,7 +127,7 @@ jobs:
         run: ditto -V -c -k --keepParent Export/Pareto\ Security.app ParetoSecurity.app.zip
       
       - name: Upload App to Artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: ParetoSecurity.app
           path: ParetoSecurity.app.zip
@@ -139,7 +139,7 @@ jobs:
         run: xcrun notarytool submit ParetoSecurity.dmg --password ${{ secrets.NOTARIZATION_PASSWORD }} --apple-id ${{ secrets.NOTARIZATION_USERNAME }} --team-id PM784W7B8X --progress --wait
 
       - name: Upload DMG to Artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: ParetoSecurity.dmg
           path: ParetoSecurity.dmg
@@ -349,7 +349,7 @@ jobs:
         run: make build-release-setapp
 
       - name: Upload App to Artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: ParetoSecuritySetApp.app
           path: ParetoSecuritySetApp.app.zip

@@ -236,7 +236,7 @@ jobs:
       - name: Compress app for storage
         run: ditto -V -c -k --keepParent Export/Pareto\ Security.app ParetoSecurity.app.zip
       - name: Upload App to Artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: ParetoSecurity.app
           path: ParetoSecurity.app.zip
@@ -260,7 +260,7 @@ jobs:
       - name: Repository checkout
         uses: actions/checkout@v3
       - name: Download the build output
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: ParetoSecurity.app
       - name: Patch permissions kTCCServiceAppleEvents
@@ -288,7 +288,7 @@ jobs:
       - name: Repository checkout
         uses: actions/checkout@v3
       - name: Download the build output
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: ParetoSecurity.app
       - name: Patch permissions kTCCServiceAppleEvents
@@ -404,7 +404,7 @@ jobs:
         run: ditto -V -c -k --keepParent SetAppExport/Pareto\ Security.app ParetoSecuritySetApp.app.zip
 
       - name: Upload App to Artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: ParetoSecuritySetApp.app
           path: ParetoSecuritySetApp.app.zip
