@@ -20,7 +20,8 @@ import SwiftUI
 class AppHandlers: NSObject, NetworkHandlerObserver {
     var statusBar: StatusBarController?
     var updater: AppUpdater?
-    var welcomeWindow: NSWindow?
+    var welcomeWindow: NSWindowController?
+    var preferencesWindow: NSWindowController?
     var enrolledHandler = false
     var networkHandler = NetworkHandler.sharedInstance()
     private var idleSink: AnyCancellable?
@@ -233,16 +234,6 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
         }
     }
 
-    @objc func doUpdate() {
-        if #available(macOS 14.0, *) {
-            showSettingsFallback()
-        } else if #available(macOS 13.0, *) {
-            NSApp.sendAction(Selector(("showSettingsWindow:")), to: nil, from: nil)
-        } else {
-            NSApp.sendAction(Selector(("showPreferencesWindow:")), to: nil, from: nil)
-        }
-        NSApp.activate(ignoringOtherApps: true)
-    }
 
     @objc func showPrefs() {
         Defaults[.updateNag] = false
@@ -312,45 +303,42 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
     @objc func showWelcome() {
         DispatchQueue.main.async { [self] in
             if welcomeWindow == nil {
-                let welcome = WelcomeView()
-                // Create the preferences window and set content
-                welcomeWindow = NSWindow(
-                    contentRect: NSRect(x: 0, y: 0, width: 640, height: 480),
-                    styleMask: [.closable, .titled],
-                    backing: .buffered,
-                    defer: false
-                )
-                welcomeWindow!.titlebarAppearsTransparent = true
-                welcomeWindow!.center()
-                welcomeWindow!.setFrameAutosaveName("welcomeView")
-                welcomeWindow!.isReleasedWhenClosed = true
-                welcomeWindow?.level = .floating
+                let hostingController = NSHostingController(rootView: WelcomeView())
+                hostingController.preferredContentSize = NSSize(width: 640, height: 480)
+                if #available(macOS 13.0, *) {
+                    hostingController.sizingOptions = .preferredContentSize
+                }
+                let window = NSWindow(contentViewController: hostingController)
+                window.title = "Preferences"
+                window.standardWindowButton(.zoomButton)?.isHidden = true
+                window.standardWindowButton(.miniaturizeButton)?.isHidden = true
+                window.center()
+                window.setContentSize(NSSize(width: 640, height: 480))
 
-                let hosting = NSHostingView(rootView: welcome)
-                hosting.autoresizingMask = [NSView.AutoresizingMask.width, NSView.AutoresizingMask.height]
-                welcomeWindow!.contentView = hosting
+                welcomeWindow = NSWindowController(window: window)
             }
-
-            welcomeWindow!.makeKeyAndOrderFront(nil)
+            welcomeWindow!.showWindow(nil)
         }
     }
 
     @objc func showSettingsFallback() {
-        DispatchQueue.main.async {
-            let hostingController = NSHostingController(rootView: SettingsView(selected: SettingsView.Tabs.general))
-            hostingController.preferredContentSize = NSSize(width: 640, height: 280)
-            if #available(macOS 13.0, *) {
-                hostingController.sizingOptions = .preferredContentSize
-            }
-            let window = NSWindow(contentViewController: hostingController)
-            window.title = "Preferences"
-            window.standardWindowButton(.zoomButton)?.isHidden = true
-            window.standardWindowButton(.miniaturizeButton)?.isHidden = true
-            window.center()
-            window.setContentSize(NSSize(width: 640, height: 280))
+        DispatchQueue.main.async { [self] in
+            if preferencesWindow == nil {
+                let hostingController = NSHostingController(rootView: SettingsView(selected: SettingsView.Tabs.general))
+                hostingController.preferredContentSize = NSSize(width: 640, height: 280)
+                if #available(macOS 13.0, *) {
+                    hostingController.sizingOptions = .preferredContentSize
+                }
+                let window = NSWindow(contentViewController: hostingController)
+                window.title = "Preferences"
+                window.standardWindowButton(.zoomButton)?.isHidden = true
+                window.standardWindowButton(.miniaturizeButton)?.isHidden = true
+                window.center()
+                window.setContentSize(NSSize(width: 640, height: 280))
 
-            let controller = NSWindowController(window: window)
-            controller.showWindow(nil)
+                preferencesWindow = NSWindowController(window: window)
+            }
+            preferencesWindow!.showWindow(nil)
         }
     }
 
