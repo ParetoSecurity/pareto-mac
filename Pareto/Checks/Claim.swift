@@ -65,8 +65,7 @@ class Claim: Hashable {
 
     func run() {
         for check in checks {
-            let state = check.run()
-            os_log("%{public}s: %{public}s", log: Log.check, check.Title , state)
+            check.run()
         }
     }
 
