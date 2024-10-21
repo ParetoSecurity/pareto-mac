@@ -9,6 +9,7 @@ import AppKit
 import Defaults
 import Foundation
 import os.log
+import OSLog
 import SwiftUI
 
 class Claim: Hashable {
@@ -65,7 +66,13 @@ class Claim: Hashable {
 
     func run() {
         for check in checks {
+            let startTime = Date()
             check.run()
+            let endTime = Date()
+            let timeInterval = endTime.timeIntervalSince(startTime)
+            Logger().log("uuid=\(check.UUID, privacy: .public) timeInterval=\(timeInterval, privacy: .public)")
+
+        
         }
     }
 
