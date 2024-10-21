@@ -49,6 +49,11 @@ func runOSA(appleScript: String) -> String? {
     return out
 }
 
+func runOSAJS(appleScript: String) -> String? {
+    let out = runCMD(app: "/usr/bin/osascript", args: ["-l", "JavaScript", "-e", appleScript])
+    return out
+}
+
 func lsof(withCommand cmd: String, withPort port: Int) -> Bool {
     let out = runCMD(app: "/usr/sbin/lsof", args: ["-i", "TCP:\(port)", "-P", "+L", "-O", "-T", "+c", "0", "-nPM"])
     for line in out.components(separatedBy: "\n") {
