@@ -12,10 +12,17 @@ class SSHCheck: ParetoCheck {
     let sshPath = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent(".ssh").resolvingSymlinksInPath()
     private var sshKeygenPath = ""
 
-    func itExists(_ path: String) -> Bool {
-        FileManager.default.fileExists(atPath: path)
-    }
+    private var itExistsCache = [String: Bool]()
 
+    func itExists(_ path: String) -> Bool {
+        if let cachedResult = itExistsCache[path] {
+            return cachedResult
+        }
+        let exists = FileManager.default.fileExists(atPath: path)
+        itExistsCache[path] = exists
+        return exists
+    }
+    
     func getSSHKeygenPath() -> String {
         if !sshKeygenPath.isEmpty {
             return sshKeygenPath
