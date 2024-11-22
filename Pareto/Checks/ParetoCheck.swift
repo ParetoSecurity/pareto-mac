@@ -181,7 +181,19 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
     }
 
     var infoURL: URL {
-        URL(string: "https://paretosecurity.com/check/" + UUID + "?utm_source=" + AppInfo.utmSource)!
+        var components = URLComponents()
+        components.scheme = "https"
+        components.host = "paretosecurity.com"
+        components.path = "/check/\(UUID)"
+        components.queryItems = [
+            URLQueryItem(name: "details", value: details),
+            URLQueryItem(name: "utm_source", value: AppInfo.utmSource)
+        ]
+        
+        guard let url = components.url else {
+            fatalError("Invalid URL constructed")
+        }
+        return url
     }
 
     @objc func moreInfo() {

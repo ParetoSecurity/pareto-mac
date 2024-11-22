@@ -9,7 +9,6 @@ import os.log
 
 class SSHKeysCheck: SSHCheck {
     static let sharedInstance = SSHKeysCheck()
-    private var sshKey = ""
 
     override var UUID: String {
         "ef69f752-0e89-46e2-a644-310429ae5f45"
@@ -20,18 +19,24 @@ class SSHKeysCheck: SSHCheck {
     }
 
     override var TitleOFF: String {
-        if sshKey.isEmpty {
-            return "SSH key is missing a password"
+        return "SSH key is missing a password"
+    }
+    
+    override var details: String {
+        let keys = keysWithNoPassword()
+        if keys.isEmpty {
+            return "None"
         }
-        return "SSH key \(sshKey) is missing a password"
+        return keys.map { "- \($0)" }.joined(separator: "\n")
     }
 
     func isPasswordEnabled(withKey path: String) -> Bool {
         let output = runCMD(app: getSSHKeygenPath(), args: ["-P", "''", "-y", "-f", path])
         return output.contains("incorrect passphrase supplied")
     }
-
-    override func checkPasses() -> Bool {
+    
+    func keysWithNoPassword() -> [String] {
+        var keys : [String] = []
         do {
             let files = try FileManager.default.contentsOfDirectory(at: sshPath, includingPropertiesForKeys: nil).filter { $0.pathExtension == "pub" }
             for pub in files {
@@ -41,14 +46,16 @@ class SSHKeysCheck: SSHCheck {
                 }
                 if !isPasswordEnabled(withKey: privateKey) {
                     os_log("Checking %{public}s", log: Log.check, pub.absoluteURL.path)
-                    sshKey = pub.lastPathComponent.replacingOccurrences(of: ".pub", with: "")
-                    return false
+                    keys.append(privateKey)
                 }
             }
-            return true
         } catch {
             os_log("Failed to check SSH keys %{public}s", error.localizedDescription)
-            return true
         }
+        return keys
+    }
+
+    override func checkPasses() -> Bool {
+        keysWithNoPassword().isEmpty
     }
 }

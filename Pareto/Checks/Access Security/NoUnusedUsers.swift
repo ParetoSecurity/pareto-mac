@@ -32,7 +32,15 @@ class NoUnusedUsers: ParetoCheck {
         }
         return users
     }
-
+    
+    override var details: String {
+        let accounts = self.accounts
+        if accounts.isEmpty {
+            return "None"
+        }
+        return accounts.map { "- \($0)" }.joined(separator: "\n")
+    }
+    
     var isAdmin: Bool {
         return runCMD(app: "/usr/bin/id", args: ["-Gn"]).components(separatedBy: " ").contains("admin")
     }
