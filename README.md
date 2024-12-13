@@ -55,3 +55,36 @@ Any other checks that you want? Let us know on [GitHub discussions](https://gith
 [Contact us through the form](https://paretosecurity.com/contact) on our website.
 
 Read more about the company behind the app: [niteo.co](https://niteo.co/)
+
+### Troubleshooting
+
+### Helper commands (1.2.0+)
+
+Copy/paste them into your browser address bar.
+
+```
+paretosecurity://reset > Default settings
+
+paretosecurity://showMenu > Open menu
+
+paretosecurity://update > Force update
+
+paretosecurity://welcome> Show welcome window
+
+paretosecurity://open > Start app
+
+paretosecurity://showPrefs > Show Preferences
+
+paretosecurity://runChecks > Run Checks
+
+paretosecurity://debug > Output detailed status of the checks
+
+paretosecurity://logs > Copy system logs for ParetoSecurity
+```
+
+### Reset AppleWvnets (Automation) permissions
+
+To reset privacy permissions run the following in Terminal: `tccutil reset AppleEvents`
+
+More info at https://apple.stackexchange.com/questions/339363/how-can-i-remove-applications-from-security-privacy.
+
