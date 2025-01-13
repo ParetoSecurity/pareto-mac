@@ -296,10 +296,6 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
         NSWorkspace.shared.open(AppInfo.teamsURL())
     }
 
-    @objc func promoteUpdater() {
-        NSWorkspace.shared.open(URL(string: "https://paretosecurity.com/updater?utm_source=auditor-app")!)
-    }
-
     @objc func showWelcome() {
         DispatchQueue.main.async { [self] in
             if welcomeWindow == nil {
