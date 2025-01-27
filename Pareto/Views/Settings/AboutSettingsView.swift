@@ -85,10 +85,7 @@ struct AboutSettingsView: View {
                         Defaults[.updateNag] = true
                         return
                     #endif
-                    if !SystemUser.current.isAdmin {
-                        Defaults[.updateNag] = true
-                        return
-                    }
+
 
                     if let zipURL = release.assets.filter({ $0.browser_download_url.path.hasSuffix(".zip") }).first {
                         status = UpdateStates.Installing
