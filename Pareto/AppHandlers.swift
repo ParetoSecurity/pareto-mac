@@ -204,7 +204,26 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
             os_log("network conditions changed to: disconnected")
         }
     }
-
+    func doUpdateCheck() {
+        let currentVersion = Bundle.main.version
+        if let release = try? updater!.getLatestRelease() {
+            if currentVersion < release.version {
+                if !SystemUser.current.isAdmin {
+                    Defaults[.updateNag] = true
+                    return
+                }
+                #if !SETAPP_ENABLED
+                    if let zipURL = release.assets.filter({ $0.browser_download_url.path.hasSuffix(".zip") }).first {
+                        let done = updater!.downloadAndUpdate(withAsset: zipURL)
+                        // Failed to update
+                        if !done && !SystemUser.current.isAdmin {
+                            Defaults[.updateNag] = true
+                        }
+                    }
+                #endif
+            }
+        }
+    }
     func checkForRelease() {
         
         if !SystemUser.current.isAdmin {
@@ -213,24 +232,7 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
         }
         
         DispatchQueue.global(qos: .userInteractive).async { [self] in
-            let currentVersion = Bundle.main.version
-            if let release = try? updater!.getLatestRelease() {
-                if currentVersion < release.version {
-                    if !SystemUser.current.isAdmin {
-                        Defaults[.updateNag] = true
-                        return
-                    }
-                    #if !SETAPP_ENABLED
-                        if let zipURL = release.assets.filter({ $0.browser_download_url.path.hasSuffix(".zip") }).first {
-                            let done = updater!.downloadAndUpdate(withAsset: zipURL)
-                            // Failed to update
-                            if !done && !SystemUser.current.isAdmin {
-                                Defaults[.updateNag] = true
-                            }
-                        }
-                    #endif
-                }
-            }
+            doUpdateCheck()
         }
     }
 

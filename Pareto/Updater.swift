@@ -156,6 +156,20 @@ public class AppUpdater {
         #endif
     }
 
+
+    static func runCMDasAdmin(cmd: String) -> Bool {
+        let myAppleScript = "do shell script \"\(cmd)\" with administrator privileges"
+        var error: NSDictionary?
+        if let scriptObject = NSAppleScript(source: myAppleScript) {
+            scriptObject.executeAndReturnError(&error)
+            if error != nil {
+                os_log("OSA Error: %{public}s", error.debugDescription)
+                return false
+            }
+        }
+        return true
+    }
+    
     func update(withApp dst: URL, withAsset asset: Release.Asset) throws {
         let bundlePath = unzip(dst, contentType: asset.content_type)
         let downloadedAppBundle = Bundle(url: bundlePath)!
@@ -166,20 +180,33 @@ public class AppUpdater {
         let finalExecutable = installedAppBundle.path / exe.relative(to: downloadedAppBundle.path)
         if validate(downloadedAppBundle, installedAppBundle) {
             do {
-                try installedAppBundle.path.delete()
-                os_log("Delete installedAppBundle: \(installedAppBundle)")
-                try downloadedAppBundle.path.move(to: installedAppBundle.path)
-                os_log("Move new app to installedAppBundle: \(installedAppBundle)")
-
-                let proc = Process()
-                if #available(OSX 10.13, *) {
-                    proc.executableURL = finalExecutable.url
+                if SystemUser.current.isAdmin {
+                    try installedAppBundle.path.delete()
+                    os_log("Delete installedAppBundle: \(installedAppBundle)")
+                    try downloadedAppBundle.path.move(to: installedAppBundle.path)
+                    os_log("Move new app to installedAppBundle: \(installedAppBundle)")
                 } else {
-                    proc.launchPath = finalExecutable.string
+                    AppUpdater.runCMDasAdmin(cmd: "'\(downloadedAppBundle.path)/MacOS/Pareto Security -update'")
+                    return
                 }
-                proc.launch()
-                DispatchQueue.main.async {
-                    NSApp.terminate(self)
+ 
+                let proc = Process()
+
+                // Check if the app is running in a command-line environment
+                let isRunningViaCommandLine = ProcessInfo.processInfo.environment["TERM"] != nil || CommandLine.arguments.contains("-update")
+
+                if !isRunningViaCommandLine {
+                    if #available(OSX 10.13, *) {
+                        proc.executableURL = finalExecutable.url
+                    } else {
+                        proc.launchPath = finalExecutable.string
+                    }
+                    proc.launch()
+                    DispatchQueue.main.async {
+                        NSApp.terminate(self)
+                    }
+                } else {
+                    os_log("Skipped launching because the process is running via the command line.")
                 }
 
             } catch {

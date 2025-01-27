@@ -49,7 +49,12 @@ class AppDelegate: AppHandlers, NSApplicationDelegate {
             print(json! as String)
             exit(0)
         }
-
+        
+        if CommandLine.arguments.contains("-update") {
+            doUpdateCheck()
+            exit(0)
+        }
+        
         if CommandLine.arguments.contains("-report") {
             // invalidate possible expired cache
             try! AppInfo.versionStorage.removeAll()
