@@ -30,6 +30,7 @@ class Claims: ObservableObject {
             ]),
             Claim(withTitle: "Access Security", withChecks: [
                 AutologinCheck.sharedInstance,
+                PasswordManager.sharedInstance,
                 RequirePasswordToUnlock.sharedInstance,
                 ScreensaverCheck.sharedInstance,
                 SSHKeysCheck.sharedInstance,
