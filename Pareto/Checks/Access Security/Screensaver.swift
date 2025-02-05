@@ -22,13 +22,13 @@ class ScreensaverCheck: ParetoCheck {
     override public var showSettingsWarnEvents: Bool {
         return true
     }
-    
+
     func checkScreensaver() -> Bool {
         let script = "tell application \"System Events\" to tell screen saver preferences to get delay interval"
         let out = Int(runOSA(appleScript: script)?.trim() ?? "0") ?? 0
         return out >= 0 && out <= 60 * 20
     }
-    
+
     // https://github.com/usnistgov/macos_security/blob/e22bb0bc02290c54cb968bc3749942fa37ad752b/rules/os/os_screensaver_timeout_loginwindow_enforce.yaml#L4
     func checkLock() -> Bool {
         let script = """
@@ -37,7 +37,7 @@ class ScreensaverCheck: ParetoCheck {
           .objectForKey('loginWindowIdleTime'))
             return timeout;
           }
-        """;
+        """
         let val = runOSAJS(appleScript: script)
         let out = Int(val?.trim() ?? "0") ?? 0
         return out >= 0 && out <= 60 * 20

@@ -21,7 +21,7 @@ class SSHKeysCheck: SSHCheck {
     override var TitleOFF: String {
         return "SSH key is missing a password"
     }
-    
+
     override var details: String {
         let keys = keysWithNoPassword()
         if keys.isEmpty {
@@ -34,9 +34,9 @@ class SSHKeysCheck: SSHCheck {
         let output = runCMD(app: getSSHKeygenPath(), args: ["-P", "''", "-y", "-f", path])
         return output.contains("incorrect passphrase supplied")
     }
-    
+
     func keysWithNoPassword() -> [String] {
-        var keys : [String] = []
+        var keys: [String] = []
         do {
             let files = try FileManager.default.contentsOfDirectory(at: sshPath, includingPropertiesForKeys: nil).filter { $0.pathExtension == "pub" }
             for pub in files {

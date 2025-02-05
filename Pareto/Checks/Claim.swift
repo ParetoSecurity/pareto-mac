@@ -71,8 +71,6 @@ class Claim: Hashable {
             let endTime = Date()
             let timeInterval = endTime.timeIntervalSince(startTime)
             Logger().log("uuid=\(check.UUID, privacy: .public) timeInterval=\(timeInterval, privacy: .public)")
-
-        
         }
     }
 

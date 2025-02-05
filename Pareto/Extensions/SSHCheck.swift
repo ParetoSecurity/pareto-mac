@@ -22,7 +22,7 @@ class SSHCheck: ParetoCheck {
         itExistsCache[path] = exists
         return exists
     }
-    
+
     func getSSHKeygenPath() -> String {
         if !sshKeygenPath.isEmpty {
             return sshKeygenPath

@@ -64,7 +64,4 @@ class FirewallCheck: ParetoCheck {
             return false
         }
     }
-    
-    
-    
 }

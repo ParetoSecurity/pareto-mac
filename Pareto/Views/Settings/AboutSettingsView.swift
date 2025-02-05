@@ -86,7 +86,6 @@ struct AboutSettingsView: View {
                         return
                     #endif
 
-
                     if let zipURL = release.assets.filter({ $0.browser_download_url.path.hasSuffix(".zip") }).first {
                         status = UpdateStates.Installing
                         isLoading = true

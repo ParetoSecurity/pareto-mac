@@ -61,7 +61,7 @@ class PasswordManager: ParetoCheck {
             "Bitwarden",
             "1Password",
             "KeePass",
-            "Dashlane",
+            "Dashlane"
         ]
 
         let browsers = [

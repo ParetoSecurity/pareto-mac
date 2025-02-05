@@ -32,7 +32,7 @@ class NoUnusedUsers: ParetoCheck {
         }
         return users
     }
-    
+
     override var details: String {
         let accounts = self.accounts
         if accounts.isEmpty {
@@ -40,7 +40,7 @@ class NoUnusedUsers: ParetoCheck {
         }
         return accounts.map { "- \($0)" }.joined(separator: "\n")
     }
-    
+
     var isAdmin: Bool {
         return runCMD(app: "/usr/bin/id", args: ["-Gn"]).components(separatedBy: " ").contains("admin")
     }
@@ -88,7 +88,7 @@ class NoUnusedUsers: ParetoCheck {
             lastLoginRecent(user: u)
         }
     }
-    
+
     override public var isRunnable: Bool {
         isActive && isAdmin
     }

@@ -189,7 +189,7 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
             URLQueryItem(name: "details", value: details),
             URLQueryItem(name: "utm_source", value: AppInfo.utmSource)
         ]
-        
+
         guard let url = components.url else {
             fatalError("Invalid URL constructed")
         }

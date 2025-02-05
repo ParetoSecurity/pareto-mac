@@ -13,7 +13,6 @@ import os.log
 import OSLog
 import Version
 
-
 struct FirefoxVersions: Decodable {
     let LATEST_FIREFOX_VERSION: String
 }

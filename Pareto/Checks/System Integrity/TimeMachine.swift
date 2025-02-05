@@ -35,8 +35,6 @@ class TimeMachineCheck: ParetoCheck {
         return status.contains("ID") && status.contains("Name")
     }
 
-
-
     override func checkPasses() -> Bool {
         guard let settings = readDefaultsFile(path: "/Library/Preferences/com.apple.TimeMachine.plist") as! [String: Any]? else {
             os_log("/Library/Preferences/com.apple.TimeMachine.plist use fallback")

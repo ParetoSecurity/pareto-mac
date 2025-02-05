@@ -11,25 +11,28 @@ import os.log
 import Regex
 
 // MARK: - Welcome
+
 struct TeamsResponse: Codable {
     let buildSettings: BuildSettings?
 }
 
 // MARK: - BuildSettings
+
 struct BuildSettings: Codable {
     let webView2: WebView2?
 }
 
 // MARK: - WebView2
+
 struct WebView2: Codable {
     let macOS: MACOSClass?
 }
 
 // MARK: - MACOSClass
+
 struct MACOSClass: Codable {
     let latestVersion: String?
 }
-
 
 class AppMicrosoftTeamsCheck: AppCheck {
     static let sharedInstance = AppMicrosoftTeamsCheck()

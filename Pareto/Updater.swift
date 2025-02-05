@@ -156,12 +156,11 @@ public class AppUpdater {
         #endif
     }
 
-
     static func runCMDasAdmin(cmd: String) -> Bool {
         let code =
-        """
-        do shell script "\(cmd)" with administrator privileges
-        """
+            """
+            do shell script "\(cmd)" with administrator privileges
+            """
         os_log("\(code)")
         var error: NSDictionary?
         if let scriptObject = NSAppleScript(source: code) {
@@ -173,7 +172,7 @@ public class AppUpdater {
         }
         return true
     }
-    
+
     func update(withApp dst: URL, withAsset asset: Release.Asset) throws {
         let bundlePath = unzip(dst, contentType: asset.content_type)
         let downloadedAppBundle = Bundle(url: bundlePath)!
@@ -192,26 +191,18 @@ public class AppUpdater {
                 } else {
                     let path = "\(downloadedAppBundle.path)/Contents/MacOS/Pareto Security".shellEscaped()
                     AppUpdater.runCMDasAdmin(cmd: "\(path) -update")
-                    return
                 }
- 
+
                 let proc = Process()
 
-                // Check if the app is running in a command-line environment
-                let isRunningViaCommandLine = ProcessInfo.processInfo.environment["TERM"] != nil || CommandLine.arguments.contains("-update")
-
-                if !isRunningViaCommandLine {
-                    if #available(OSX 10.13, *) {
-                        proc.executableURL = finalExecutable.url
-                    } else {
-                        proc.launchPath = finalExecutable.string
-                    }
-                    proc.launch()
-                    DispatchQueue.main.async {
-                        NSApp.terminate(self)
-                    }
+                if #available(OSX 10.13, *) {
+                    proc.executableURL = finalExecutable.url
                 } else {
-                    os_log("Skipped launching because the process is running via the command line.")
+                    proc.launchPath = finalExecutable.string
+                }
+                proc.launch()
+                DispatchQueue.main.async {
+                    NSApp.terminate(self)
                 }
 
             } catch {
