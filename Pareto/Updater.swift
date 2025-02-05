@@ -158,9 +158,13 @@ public class AppUpdater {
 
 
     static func runCMDasAdmin(cmd: String) -> Bool {
-        let myAppleScript = "do shell script \"\(cmd)\" with administrator privileges"
+        let code =
+        """
+        do shell script "\(cmd)" with administrator privileges
+        """
+        os_log("\(code)")
         var error: NSDictionary?
-        if let scriptObject = NSAppleScript(source: myAppleScript) {
+        if let scriptObject = NSAppleScript(source: code) {
             scriptObject.executeAndReturnError(&error)
             if error != nil {
                 os_log("OSA Error: %{public}s", error.debugDescription)
@@ -186,7 +190,8 @@ public class AppUpdater {
                     try downloadedAppBundle.path.move(to: installedAppBundle.path)
                     os_log("Move new app to installedAppBundle: \(installedAppBundle)")
                 } else {
-                    AppUpdater.runCMDasAdmin(cmd: "'\(downloadedAppBundle.path)/MacOS/Pareto Security -update'")
+                    let path = "\(downloadedAppBundle.path)/Contents/MacOS/Pareto Security".shellEscaped()
+                    AppUpdater.runCMDasAdmin(cmd: "\(path) -update")
                     return
                 }
  

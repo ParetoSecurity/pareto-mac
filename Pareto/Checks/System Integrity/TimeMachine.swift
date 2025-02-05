@@ -27,7 +27,7 @@ class TimeMachineCheck: ParetoCheck {
 
     override public func debugInfo() -> String {
         let tmutil = runCMD(app: "/usr/bin/tmutil", args: ["destinationinfo"])
-        return "tmutil:\n\(tmutil)\nTimeMachine: \(dict as AnyObject)"
+        return "tmutil:\n\(tmutil)\nTimeMachine: \(readDefaultsFile(path: "/Library/Preferences/com.apple.TimeMachine.plist") as! [String: Any]? as AnyObject)"
     }
 
     var isConfigured: Bool {
@@ -35,12 +35,10 @@ class TimeMachineCheck: ParetoCheck {
         return status.contains("ID") && status.contains("Name")
     }
 
-    private var dict: [String: Any]? {
-        readDefaultsFile(path: "/Library/Preferences/com.apple.TimeMachine.plist") as! [String: Any]?
-    }
+
 
     override func checkPasses() -> Bool {
-        guard let settings = dict else {
+        guard let settings = readDefaultsFile(path: "/Library/Preferences/com.apple.TimeMachine.plist") as! [String: Any]? else {
             os_log("/Library/Preferences/com.apple.TimeMachine.plist use fallback")
             let status = runCMD(app: "/usr/bin/tmutil", args: ["status"])
             return isConfigured && !status.contains("Stopping = 1")

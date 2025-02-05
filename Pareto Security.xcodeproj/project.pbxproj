@@ -239,6 +239,10 @@
 		4FDA93A32771D9FC00F9D8B4 /* Checks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FDA93A22771D9FC00F9D8B4 /* Checks.swift */; };
 		4FDA93A42771D9FC00F9D8B4 /* Checks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FDA93A22771D9FC00F9D8B4 /* Checks.swift */; };
 		4FDAD88F26EB784A00F64E61 /* License.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FDAD88E26EB784A00F64E61 /* License.swift */; };
+		4FDDE1972D53BA3200D9E853 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FDDE1962D53BA3200D9E853 /* String.swift */; };
+		4FDDE1982D53BA3200D9E853 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FDDE1962D53BA3200D9E853 /* String.swift */; };
+		4FDDE1992D53BA3200D9E853 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FDDE1962D53BA3200D9E853 /* String.swift */; };
+		4FDDE19A2D53BA3200D9E853 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FDDE1962D53BA3200D9E853 /* String.swift */; };
 		4FE23EED276BB13700CA9BA0 /* FollowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FE23EEC276BB13700CA9BA0 /* FollowView.swift */; };
 		4FE23EEE276BB13700CA9BA0 /* FollowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FE23EEC276BB13700CA9BA0 /* FollowView.swift */; };
 		4FE9C35A28B76117002C28FE /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FE9C35928B76117002C28FE /* User.swift */; };
@@ -392,6 +396,7 @@
 		4FD0A24026A024440070BED4 /* Gatekeeper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Gatekeeper.swift; sourceTree = "<group>"; };
 		4FDA93A22771D9FC00F9D8B4 /* Checks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Checks.swift; sourceTree = "<group>"; };
 		4FDAD88E26EB784A00F64E61 /* License.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = License.swift; sourceTree = "<group>"; };
+		4FDDE1962D53BA3200D9E853 /* String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
 		4FE23EEC276BB13700CA9BA0 /* FollowView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FollowView.swift; sourceTree = "<group>"; };
 		4FE9C35928B76117002C28FE /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		4FEBA2EE269CD48F009B2469 /* Pareto Security.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Pareto Security.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -633,6 +638,7 @@
 		4FB7C67F26AFF22C00FB1C41 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				4FDDE1962D53BA3200D9E853 /* String.swift */,
 				4F4E23B42C4E484500484782 /* Trim.swift */,
 				4F6A2CE529CDC7C800B653C2 /* SSHCheck.swift */,
 				4FB7C68026AFF25300FB1C41 /* Date.swift */,
@@ -1074,6 +1080,7 @@
 				4F38D8C9273AC5AE00671756 /* IntroView.swift in Sources */,
 				4F9A444D29264FC10095BB6C /* 1Password8.swift in Sources */,
 				4F37E71D2718122E00A2B254 /* Defaults.swift in Sources */,
+				4FDDE1982D53BA3200D9E853 /* String.swift in Sources */,
 				4F37E71E2718122E00A2B254 /* Autologin.swift in Sources */,
 				4F38D8CF273AC62500671756 /* EndView.swift in Sources */,
 				4F8ECA382798262F00361728 /* FirewallStealth.swift in Sources */,
@@ -1141,6 +1148,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4FDDE1972D53BA3200D9E853 /* String.swift in Sources */,
 				4F6A92F226C555C6006C2F2D /* ParetoSecurityUITests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1150,6 +1158,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4F84A94426CBBA6900A1579D /* SettingsTests.swift in Sources */,
+				4FDDE19A2D53BA3200D9E853 /* String.swift in Sources */,
 				4F57135326F8A6AC004B4359 /* LicenseTest.swift in Sources */,
 				4F6EF8992760046100752559 /* SoftwareUpdatesTest.swift in Sources */,
 				4F57135526F8ACCC004B4359 /* WelcomeTest.swift in Sources */,
@@ -1212,6 +1221,7 @@
 				4F38D8C8273AC5AE00671756 /* IntroView.swift in Sources */,
 				4F9A444C29264FC10095BB6C /* 1Password8.swift in Sources */,
 				4F47221026B08A0E0071CE2A /* Defaults.swift in Sources */,
+				4FDDE1992D53BA3200D9E853 /* String.swift in Sources */,
 				4F868DD126A5C51C005B876E /* Autologin.swift in Sources */,
 				4F38D8CE273AC62500671756 /* EndView.swift in Sources */,
 				4F8ECA372798262F00361728 /* FirewallStealth.swift in Sources */,

@@ -26,7 +26,53 @@ class AppDelegate: AppHandlers, NSApplicationDelegate {
             }
         }
     }
+    
+    func killOtherInstances() {
+        let bundleID = Bundle.main.bundleIdentifier!
+        let currentProcessID = ProcessInfo.processInfo.processIdentifier
 
+        let runningApps = NSRunningApplication.runningApplications(withBundleIdentifier: bundleID)
+
+        for app in runningApps {
+            if app.processIdentifier != currentProcessID {
+                app.forceTerminate()
+                print("Terminated instance with PID: \(app.processIdentifier)")
+            }
+        }
+    }
+    
+    func moveToApplicationsFolderIfNeeded() {
+        let fileManager = FileManager.default
+        let bundlePath = Bundle.main.bundlePath
+        let destinationPath = "/Applications/\(bundlePath.components(separatedBy: "/").last!)"
+
+        // Check if the app is already in /Applications
+        if bundlePath == destinationPath {
+            killOtherInstances()
+        }
+
+        // Ensure that the destination does not already exist
+        if fileManager.fileExists(atPath: destinationPath) {
+            try? fileManager.removeItem(atPath: destinationPath)
+        }
+
+        do {
+            try fileManager.moveItem(atPath: bundlePath, toPath: destinationPath)
+            print("Moved app to /Applications")
+            
+            // Relaunch from the new location
+            let task = Process()
+            task.launchPath = "/usr/bin/open"
+            task.arguments = [destinationPath]
+            task.launch()
+
+
+        } catch {
+            print("Failed to move the app: \(error)")
+        }
+        exit(0) // Terminate old instance
+    }
+    
     func applicationWillFinishLaunching(_: Notification) {
         if CommandLine.arguments.contains("-export") {
             var export: [String: [String: [String]]] = [:]
@@ -51,8 +97,7 @@ class AppDelegate: AppHandlers, NSApplicationDelegate {
         }
         
         if CommandLine.arguments.contains("-update") {
-            doUpdateCheck()
-            exit(0)
+            moveToApplicationsFolderIfNeeded()
         }
         
         if CommandLine.arguments.contains("-report") {

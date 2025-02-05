@@ -21,24 +21,16 @@ class TimeMachineHasBackupCheck: ParetoCheck {
         "Time Machine is missing up to date backup"
     }
 
-    private var dict: [String: Any]? {
-        readDefaultsFile(path: "/Library/Preferences/com.apple.TimeMachine.plist") as! [String: Any]?
-    }
-
-    override public var isRunnable: Bool {
-        return dict != nil && isActive
-    }
-
     override public var showSettings: Bool {
-        return dict != nil
+        return readDefaultsFile(path: "/Library/Preferences/com.apple.TimeMachine.plist") as! [String: Any]? != nil
     }
 
     override public var showSettingsWarnDiskAccess: Bool {
-        return true && dict == nil
+        return true && readDefaultsFile(path: "/Library/Preferences/com.apple.TimeMachine.plist") as! [String: Any]? == nil
     }
 
     override func checkPasses() -> Bool {
-        guard let settings = dict else {
+        guard let settings = readDefaultsFile(path: "/Library/Preferences/com.apple.TimeMachine.plist") as! [String: Any]? else {
             os_log("/Library/Preferences/com.apple.TimeMachine.plist is empty")
             return false
         }
