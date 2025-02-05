@@ -158,7 +158,7 @@ public class AppUpdater {
 
 
     static func runCMDasAdmin(cmd: String) -> Bool {
-        let myAppleScript = "do shell script \"\(cmd)\" with administrator privileges"
+        let myAppleScript = "do shell script '\(cmd)' with administrator privileges"
         var error: NSDictionary?
         if let scriptObject = NSAppleScript(source: myAppleScript) {
             scriptObject.executeAndReturnError(&error)
@@ -187,6 +187,8 @@ public class AppUpdater {
                     os_log("Move new app to installedAppBundle: \(installedAppBundle)")
                 } else {
                     AppUpdater.runCMDasAdmin(cmd: "'\(downloadedAppBundle.path)/MacOS/Pareto Security -update'")
+                    let path = "\(downloadedAppBundle.path)/Contents/MacOS/Pareto Security"
+                    AppUpdater.runCMDasAdmin(cmd: "\"\(path)\" -update")
                     return
                 }
  

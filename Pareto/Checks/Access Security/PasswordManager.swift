@@ -57,7 +57,11 @@ class PasswordManager: ParetoCheck {
         let browserExtensions = [
             "LastPass",
             "ProtonPass",
-            "NordPass"
+            "NordPass",
+            "Bitwarden",
+            "1Password",
+            "KeePass",
+            "Dashlane",
         ]
 
         let browsers = [
