@@ -22,7 +22,16 @@ class TimeMachineIsEncryptedCheck: ParetoCheck {
     }
 
     override public var isRunnable: Bool {
-        return TimeMachineCheck.sharedInstance.isRunnable && isActive
+        if TimeMachineCheck.sharedInstance.isRunnable && isActive {
+            let dict = readDefaultsFile(path: "/Library/Preferences/com.apple.TimeMachine.plist") as! [String: Any]?
+            guard let settings = dict else {
+                return false
+            }
+            let tmConf = TimeMachineConfig(dict: settings)
+            return tmConf.canCheckIsEncryptedBackup
+        }
+
+        return false
     }
 
     override public var showSettings: Bool {
