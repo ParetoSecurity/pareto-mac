@@ -18,6 +18,10 @@ class PasswordManager: ParetoCheck {
     }
 
     override func checkPasses() -> Bool {
+        return checkInstalledApplications() || checkForBrowserExtensions()
+    }
+
+    private func checkInstalledApplications() -> Bool {
         let passwordManagers = [
             "1Password.app",
             "1Password 8.app",
@@ -28,10 +32,6 @@ class PasswordManager: ParetoCheck {
             "KeePassX.app"
         ]
 
-        return checkInstalledApplications(appNames: passwordManagers) || checkForBrowserExtensions()
-    }
-
-    private func checkInstalledApplications(appNames: [String]) -> Bool {
         let searchPaths = [
             "/Applications",
             "/System/Applications",
@@ -43,7 +43,7 @@ class PasswordManager: ParetoCheck {
             let appDirectory = URL(fileURLWithPath: path)
             if let contents = try? FileManager.default.contentsOfDirectory(at: appDirectory, includingPropertiesForKeys: nil) {
                 for app in contents {
-                    if appNames.contains(app.lastPathComponent) {
+                    if passwordManagers.contains(app.lastPathComponent) {
                         os_log(.info, "Found %{public}@", app.lastPathComponent)
                         return true
                     }
@@ -55,28 +55,27 @@ class PasswordManager: ParetoCheck {
 
     private func checkForBrowserExtensions() -> Bool {
         let browserExtensions = [
-            "LastPass",
-            "ProtonPass",
-            "NordPass",
-            "Bitwarden",
-            "1Password",
-            "KeePass",
-            "Dashlane"
+            "hdokiejnpimakedhajhdlcegeplioahd", // LastPass
+            "ghmbeldphafepmbegfdlkpapadhbakde", // ProtonPass
+            "eiaeiblijfjekdanodkjadfinkhbfgcd", // nordpass
+            "nngceckbapebfimnlniiiahkandclblb", // bitwarden
+            "aeblfdkhhhdcdjpifhhbdiojplfjncoa", // 1password
+            "fdjamakpfbbddfjaooikfcpapjohcfmg" // dashlane
         ]
 
         let browsers = [
-            "com.google.Chrome",
-            "org.mozilla.firefox",
-            "com.microsoft.edgemac",
-            "com.brave.Browser"
+            "Google/Chrome/Default/",
+            "BraveSoftware/Brave-Browser/Default/",
+            "Microsoft Edge/Default/",
+            "Arc/User Data/Default/"
         ]
 
         for browser in browsers {
-            if let browserURL = NSWorkspace.shared.urlForApplication(withBundleIdentifier: browser) {
-                let extensionsPath = browserURL.appendingPathComponent("Extensions").path
+            if let appSupportDirectory = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first {
+                let extensionsPath = appSupportDirectory.appendingPathComponent(browser).appendingPathComponent("Extensions").path
                 for ext in browserExtensions {
                     if FileManager.default.fileExists(atPath: extensionsPath + "/" + ext) {
-                        os_log(.info, "Found %{public}@", ext)
+                        os_log(.info, "Found %{public}@ %{public}@", browser, ext)
                         return true
                     }
                 }

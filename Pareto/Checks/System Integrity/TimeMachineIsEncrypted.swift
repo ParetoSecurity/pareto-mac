@@ -21,6 +21,10 @@ class TimeMachineIsEncryptedCheck: ParetoCheck {
         "Time Machine backup is not encrypted"
     }
 
+    override public var isRunnable: Bool {
+        return TimeMachineCheck.sharedInstance.isRunnable && isActive
+    }
+
     override public var showSettings: Bool {
         return readDefaultsFile(path: "/Library/Preferences/com.apple.TimeMachine.plist") as! [String: Any]? != nil
     }

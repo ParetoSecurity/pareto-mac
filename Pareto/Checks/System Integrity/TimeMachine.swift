@@ -30,6 +30,13 @@ class TimeMachineCheck: ParetoCheck {
         return "tmutil:\n\(tmutil)\nTimeMachine: \(readDefaultsFile(path: "/Library/Preferences/com.apple.TimeMachine.plist") as! [String: Any]? as AnyObject)"
     }
 
+    override public var isRunnable: Bool {
+        guard let config = readDefaultsFile(path: "/Library/Preferences/com.apple.TimeMachine.plist") as? [String: Any] else {
+            return false
+        }
+        return config.count > 1 && isActive
+    }
+
     var isConfigured: Bool {
         let status = runCMD(app: "/usr/bin/tmutil", args: ["destinationinfo"])
         return status.contains("ID") && status.contains("Name")
