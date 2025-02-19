@@ -341,6 +341,14 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
     }
 
     func copyLogs() {
+        if !SystemUser.current.isAdmin {
+            let alert = NSAlert()
+            alert.messageText = "Logs cannot be copied to the clipboard. Instead, you must use the Console app to capture the application logs by searching for “ParetoSecurity” and copying them to the clipboard."
+            alert.alertStyle = NSAlert.Style.informational
+            alert.addButton(withTitle: "OK")
+            alert.runModal()
+        }
+
         NSPasteboard.general.clearContents()
         if let data = try? AppInfo.logEntries().joined(separator: "\n") {
             NSPasteboard.general.setString(data, forType: .string)
