@@ -45,7 +45,7 @@ class Claim: Hashable {
         let item = NSMenuItem(title: title, action: nil, keyEquivalent: "")
         let submenu = NSMenu()
         for check in checksSorted {
-            if check.isRunnable {
+            if check.isRunnableCached() {
                 submenu.addItem(check.menu())
                 if Defaults[.snoozeTime] > 0 {
                     item.image = NSImage.SF(name: "shield.fill").tint(color: .systemGray)

@@ -25,7 +25,30 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
     private(set) var UUID = "UUID"
     private(set) var TitleON = "TitleON"
     private(set) var TitleOFF = "TitleOFF"
+    
+    // Add these properties to your ParetoCheck class:
+    private var cachedIsRunnableValue: Bool?
+    private var cachedIsRunnableTimestamp: Date?
 
+    // This function caches the result of isRunnable for 5 minutes (300 seconds).
+    public func isRunnableCached() -> Bool {
+        let cacheDuration: TimeInterval = 300 // 5 minutes in seconds
+        let now = Date()
+        
+        // If a cached value exists and is still valid, return it.
+        if let timestamp = cachedIsRunnableTimestamp,
+           let value = cachedIsRunnableValue,
+           now.timeIntervalSince(timestamp) < cacheDuration {
+            return value
+        }
+        
+        // Otherwise, compute the current state, cache it, and update the timestamp.
+        let currentValue = isRunnable
+        cachedIsRunnableValue = currentValue
+        cachedIsRunnableTimestamp = now
+        return currentValue
+    }
+    
     var EnabledKey: String {
         "ParetoCheck-" + UUID + "-Enabled"
     }
@@ -93,7 +116,11 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
 
     var checkTimestamp: Int {
         get { UserDefaults.standard.integer(forKey: TimestampKey) }
-        set { UserDefaults.standard.set(newValue, forKey: TimestampKey) }
+        set {
+            UserDefaults.standard.set(newValue, forKey: TimestampKey)
+            cachedIsRunnableValue = nil
+            cachedIsRunnableTimestamp = nil
+        }
     }
 
     var checkPassed: Bool {
