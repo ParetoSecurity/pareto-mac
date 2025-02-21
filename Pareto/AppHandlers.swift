@@ -349,12 +349,22 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
             alert.runModal()
         }
 
-        NSPasteboard.general.clearContents()
+        
         if let data = try? AppInfo.logEntries().joined(separator: "\n") {
-            NSPasteboard.general.setString(data, forType: .string)
+            if !data.isEmpty {
+                NSPasteboard.general.clearContents()
+                NSPasteboard.general.setString(data, forType: .string)
+                let alert = NSAlert()
+                alert.messageText = "Logs have been copied to the clipboard."
+                alert.alertStyle = NSAlert.Style.informational
+                alert.addButton(withTitle: "OK")
+                alert.runModal()
+                return
+            }
         }
+        
         let alert = NSAlert()
-        alert.messageText = "Logs have been copied to the clipboard."
+        alert.messageText = "Thre are no logs to copy. App logs are only available after the application has been running for a while."
         alert.alertStyle = NSAlert.Style.informational
         alert.addButton(withTitle: "OK")
         alert.runModal()
