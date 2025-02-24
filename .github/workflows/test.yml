@@ -45,7 +45,7 @@ jobs:
       group: ${{ github.workflow }}-${{ github.ref }}-build
       cancel-in-progress: true
     steps:
-      - uses: mshick/add-pr-comment@v1
+      - uses: mshick/add-pr-comment@v2
         with:
           message: |
             You can find the built app under the Artifacts at https://github.com/ParetoSecurity/pareto-mac/actions/runs/${{ github.run_id }}
@@ -156,7 +156,7 @@ jobs:
       group: ${{ github.workflow }}-${{ github.ref }}-build-setapp
       cancel-in-progress: true
     steps:
-      - uses: mshick/add-pr-comment@v1
+      - uses: mshick/add-pr-comment@v2
         with:
           message: |
             You can find the built app under the Artifacts at https://github.com/ParetoSecurity/pareto-mac/actions/runs/${{ github.run_id }}
