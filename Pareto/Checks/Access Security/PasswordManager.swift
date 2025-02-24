@@ -29,7 +29,8 @@ class PasswordManager: ParetoCheck {
             "Bitwarden.app",
             "Dashlane.app",
             "KeePassXC.app",
-            "KeePassX.app"
+            "KeePassX.app",
+            "KeePassium.app"
         ]
 
         let searchPaths = [
