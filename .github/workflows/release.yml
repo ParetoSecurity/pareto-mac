@@ -84,7 +84,7 @@ jobs:
           security list-keychain -d user -s $KEYCHAIN_PATH
           
       - name: Repository checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Expose release info to actions
         id: release
         run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
@@ -267,7 +267,7 @@ jobs:
           security list-keychain -d user -s $KEYCHAIN_PATH
           
       - name: Repository checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Expose release info to actions
         id: release
         run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
