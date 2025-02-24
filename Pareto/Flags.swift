@@ -20,5 +20,4 @@ class FlagsUpdater: ObservableObject {
     @Published var nagScreenDelayDays: Int = 30
     @Published var setappUpdate: Int = 4
 
-    func update() {}
 }

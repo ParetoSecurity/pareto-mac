@@ -15,12 +15,10 @@ struct GeneralSettingsView: View {
 
     @Default(.betaChannel) var betaChannel
     @Default(.showBeta) var showBeta
-    @Default(.showNotifications) var showNotifications
     @Default(.checkForUpdatesRecentOnly) var checkForUpdatesRecentOnly
     @Default(.disableChecksEvents) var disableChecksEvents
     @Default(.myChecks) var myChecks
     @Default(.myChecksURL) var myChecksURL
-    @Default(.sendCrashReports) var sendCrashReports
     @Default(.hideWhenNoFailures) var hideWhenNoFailures
     @Default(.alternativeColor) var alternativeColor
     @ObservedObject fileprivate var checker = PermissionsChecker()
@@ -64,16 +62,7 @@ struct GeneralSettingsView: View {
                     }
                 }
                 if showBeta {
-                    Section(
-                        footer: Text("When priority check fails show notification.").font(.footnote)) {
-                        VStack(alignment: .leading) {
-                            Toggle("Show priority check failures as notifications", isOn: $showNotifications).onChange(of: showNotifications) { isEnabled in
-                                if isEnabled {
-                                    registerNotifications()
-                                }
-                            }
-                        }
-                    }
+
                     Section(
                         footer: Text("Skip all processing after wakeup, network changes.").font(.footnote)) {
                         VStack(alignment: .leading) {
@@ -94,10 +83,6 @@ struct GeneralSettingsView: View {
                             }
                             Button("Show Welcome") {
                                 NSApp.sendAction(#selector(AppDelegate.showWelcome), to: nil, from: nil)
-                            }
-                            Button("Notify") {
-                                registerNotifications()
-                                showNotification(check: OpenWiFiCheck.sharedInstance)
                             }
                         }
                     #endif

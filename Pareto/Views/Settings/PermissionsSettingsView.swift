@@ -15,12 +15,10 @@ struct PermissionsSettingsView: View {
 
     @Default(.betaChannel) var betaChannel
     @Default(.showBeta) var showBeta
-    @Default(.showNotifications) var showNotifications
     @Default(.checkForUpdatesRecentOnly) var checkForUpdatesRecentOnly
     @Default(.disableChecksEvents) var disableChecksEvents
     @Default(.myChecks) var myChecks
     @Default(.myChecksURL) var myChecksURL
-    @Default(.sendCrashReports) var sendCrashReports
     @Default(.hideWhenNoFailures) var hideWhenNoFailures
 
     @ObservedObject fileprivate var checker = PermissionsChecker()

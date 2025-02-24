@@ -157,18 +157,6 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
             }
         #endif
 
-        NSBackgroundActivityScheduler.repeating(withName: "FlagsRunner", withInterval: 60 * 5) { (completion: NSBackgroundActivityScheduler.CompletionHandler) in
-            DispatchQueue.global(qos: .userInteractive).async {
-                if self.networkHandler.currentStatus == .satisfied {
-                    os_log("Running flags update")
-                    AppInfo.Flags.update()
-                } else {
-                    os_log("Skipping flags update, no connection")
-                }
-            }
-            completion(.finished)
-        }
-
         NSBackgroundActivityScheduler.repeating(withName: "TeamsRunner", withInterval: 60 * 59) { (completion: NSBackgroundActivityScheduler.CompletionHandler) in
             DispatchQueue.global(qos: .userInteractive).async {
                 if self.networkHandler.currentStatus == .satisfied {
@@ -402,65 +390,6 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
     public func processAction(_ url: URL) {
         switch url.host {
         #if !SETAPP_ENABLED
-            case "enrollSingle":
-
-                let jwt = url.queryParams()["token"] ?? ""
-                do {
-                    let license = try VerifyLicense(withLicense: jwt)
-                    enrolledHandler = true
-                    Defaults[.license] = jwt
-                    Defaults[.userEmail] = license.subject
-                    Defaults[.userID] = license.uuid
-                    AppInfo.Licensed = true
-                    Defaults[.reportingRole] = .personal
-
-                    // If we don't need to verify license return early
-                    if license.role != "verify" {
-                        return
-                    }
-                    let parameters: [String: String] = [
-                        "uuid": license.uuid,
-                        "machineUUID": Defaults[.machineUUID]
-                    ]
-                    let verifyURL = "https://dash.paretosecurity.com/api/v1/enroll/verify"
-                    AF.request(verifyURL, method: .post, parameters: parameters, encoder: JSONParameterEncoder.default).responseString(queue: AppCheck.queue, completionHandler: { response in
-                        if response.error == nil {
-                            DispatchQueue.main.async {
-                                let alert = NSAlert()
-                                alert.messageText = "Pareto Security is now licensed."
-                                alert.alertStyle = NSAlert.Style.informational
-                                alert.addButton(withTitle: "OK")
-                                #if !DEBUG
-                                    alert.runModal()
-                                #endif
-                            }
-                        } else {
-                            Defaults.toFree()
-                            DispatchQueue.main.async {
-                                let alert = NSAlert()
-                                alert.messageText = "No more licenses available for this account!"
-                                alert.alertStyle = NSAlert.Style.critical
-                                alert.addButton(withTitle: "OK")
-                                #if !DEBUG
-                                    alert.runModal()
-                                #endif
-                            }
-                        }
-                    })
-
-                } catch {
-                    Defaults.toFree()
-                    DispatchQueue.main.async {
-                        let alert = NSAlert()
-                        alert.messageText = "License is not valid. Please email support@paretosecurity.com."
-                        alert.alertStyle = NSAlert.Style.informational
-                        alert.addButton(withTitle: "OK")
-                        #if !DEBUG
-                            alert.runModal()
-                        #endif
-                    }
-                }
-
             case "enrollTeam":
 
                 let jwt = url.queryParams()["token"] ?? ""

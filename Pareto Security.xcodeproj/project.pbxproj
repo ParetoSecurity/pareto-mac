@@ -154,8 +154,6 @@
 		4F57135D26F8C921004B4359 /* TeamsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F57135C26F8C921004B4359 /* TeamsTest.swift */; };
 		4F577B3F27A43654008119F9 /* MicrosoftTeams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F577B3E27A43654008119F9 /* MicrosoftTeams.swift */; };
 		4F577B4027A43654008119F9 /* MicrosoftTeams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F577B3E27A43654008119F9 /* MicrosoftTeams.swift */; };
-		4F577B4227A448CE008119F9 /* Notifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F577B4127A448CE008119F9 /* Notifications.swift */; };
-		4F577B4327A448CE008119F9 /* Notifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F577B4127A448CE008119F9 /* Notifications.swift */; };
 		4F5B20C127030BEB0015642A /* OpenWiFi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F5B20C027030BEB0015642A /* OpenWiFi.swift */; };
 		4F5B20C3270316DB0015642A /* NetworkHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F5B20C2270316DB0015642A /* NetworkHandler.swift */; };
 		4F5E888026A053A9005271FB /* ParetoCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F5E887F26A053A9005271FB /* ParetoCheck.swift */; };
@@ -337,7 +335,6 @@
 		4F57135A26F8C5D7004B4359 /* AppHandlers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppHandlers.swift; sourceTree = "<group>"; };
 		4F57135C26F8C921004B4359 /* TeamsTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeamsTest.swift; sourceTree = "<group>"; };
 		4F577B3E27A43654008119F9 /* MicrosoftTeams.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MicrosoftTeams.swift; path = "Software Updates/MicrosoftTeams.swift"; sourceTree = "<group>"; };
-		4F577B4127A448CE008119F9 /* Notifications.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notifications.swift; sourceTree = "<group>"; };
 		4F5B20C027030BEB0015642A /* OpenWiFi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenWiFi.swift; sourceTree = "<group>"; };
 		4F5B20C2270316DB0015642A /* NetworkHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkHandler.swift; sourceTree = "<group>"; };
 		4F5E887F26A053A9005271FB /* ParetoCheck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParetoCheck.swift; sourceTree = "<group>"; };
@@ -722,7 +719,6 @@
 				4F14487326D8EA5E00A5BA34 /* Updater.swift */,
 				4FF22A6426F0CFA500500213 /* Flags.swift */,
 				4FDAD88E26EB784A00F64E61 /* License.swift */,
-				4F577B4127A448CE008119F9 /* Notifications.swift */,
 			);
 			path = Pareto;
 			sourceTree = "<group>";
@@ -1106,7 +1102,6 @@
 				4F37E7292718122E00A2B254 /* ChecksSettingsView.swift in Sources */,
 				4F28A97B2756445900E34F7B /* GoogleChrome.swift in Sources */,
 				4F9A445029265C5F0095BB6C /* Grammarly.swift in Sources */,
-				4F577B4327A448CE008119F9 /* Notifications.swift in Sources */,
 				4FDA93A42771D9FC00F9D8B4 /* Checks.swift in Sources */,
 				4F37E72A2718122E00A2B254 /* AboutSettingsView.swift in Sources */,
 				4F3DCFE0274FE4E000F1CB55 /* Tailscale.swift in Sources */,
@@ -1246,7 +1241,6 @@
 				4F24A09426EB73C80036F748 /* ChecksSettingsView.swift in Sources */,
 				4F28A97A2756445900E34F7B /* GoogleChrome.swift in Sources */,
 				4F9A444F29265C5F0095BB6C /* Grammarly.swift in Sources */,
-				4F577B4227A448CE008119F9 /* Notifications.swift in Sources */,
 				4FDA93A32771D9FC00F9D8B4 /* Checks.swift in Sources */,
 				4F24A09226EB73980036F748 /* AboutSettingsView.swift in Sources */,
 				4F3DCFDF274FE4E000F1CB55 /* Tailscale.swift in Sources */,

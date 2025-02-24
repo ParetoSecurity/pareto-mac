@@ -201,9 +201,6 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
         checkPassed = checkPasses()
         checkTimestamp = Int(Date().currentTimeMs())
 
-        if isCritical, !checkPassed {
-            showNotification(check: self)
-        }
         return checkPassed
     }
 

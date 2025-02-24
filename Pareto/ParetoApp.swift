@@ -13,7 +13,6 @@ import os.log
 import OSLog
 import SettingsAccess
 import SwiftUI
-import UserNotifications
 
 class AppDelegate: AppHandlers, NSApplicationDelegate {
     func applicationDidBecomeActive(_: Notification) {
@@ -219,10 +218,6 @@ class AppDelegate: AppHandlers, NSApplicationDelegate {
         updater = AppUpdater(owner: "ParetoSecurity", repo: "pareto-mac")
 
         runApp()
-
-        if Defaults[.showNotifications] {
-            registerNotifications()
-        }
     }
 }
 

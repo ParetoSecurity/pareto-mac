@@ -12,7 +12,6 @@ import SwiftUI
 struct IntroView: View {
     @Binding var step: Steps
     @ObservedObject private var atLogin = LaunchAtLogin.observable
-    @Default(.sendCrashReports) var sendCrashReports
 
     var body: some View {
         VStack {
@@ -39,7 +38,6 @@ struct IntroView: View {
             Form {
                 VStack(alignment: .leading) {
                     Toggle("Automatically launch on system startup", isOn: $atLogin.isEnabled)
-                    Toggle("Send crash reports", isOn: $sendCrashReports)
                 }
             }
             Spacer(minLength: 20)
