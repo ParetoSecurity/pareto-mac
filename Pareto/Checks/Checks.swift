@@ -19,7 +19,6 @@ class Claims: ObservableObject {
     }
 
     func refresh() {
-        customChecks = initCustomChecks()
         all = [
             Claim(withTitle: "macOS Updates", withChecks: [
                 MacOSVersionCheck.sharedInstance,
@@ -63,7 +62,6 @@ class Claims: ObservableObject {
                 TimeMachineIsEncryptedCheck.sharedInstance
             ]),
             Claim(withTitle: "Software Updates", withChecks: Claims.updateChecks + [AutoUpdateAppCheck.sharedInstance]),
-            Claim(withTitle: "My Checks", withChecks: customChecks)
         ].sorted(by: { $0.title.lowercased() < $1.title.lowercased() })
     }
 
@@ -92,19 +90,4 @@ class Claims: ObservableObject {
         AppLuLuCheck.sharedInstance,
         AppMicrosoftTeamsCheck.sharedInstance
     ]
-
-    func initCustomChecks() -> [ParetoCheck] {
-        var myChecks: [ParetoCheck] = []
-
-        if !Defaults[.myChecks] {
-            return myChecks
-        }
-
-        for rule in CustomCheck.getRules() {
-            let check = MyCheck(check: rule)
-            check.configure()
-            myChecks.append(check)
-        }
-        return myChecks
-    }
 }

@@ -45,17 +45,6 @@ struct GeneralSettingsView: View {
                     }
                 }
                 Section(
-                    footer: Text("Enables custom checks, that are configured by YAML rules. [Learn more](https://paretosecurity.com/custom-check/)").font(.footnote)) {
-                    VStack(alignment: .leading) {
-                        HStack {
-                            Toggle("Enable My Checks", isOn: $myChecks)
-                            Button("Select folder") {
-                                selectFolder()
-                            }.disabled(!myChecks)
-                        }
-                    }
-                }
-                Section(
                     footer: Text("Improve default colors for accessibility.").font(.footnote)) {
                     VStack(alignment: .leading) {
                         Toggle("Use alternative color scheme", isOn: $alternativeColor)

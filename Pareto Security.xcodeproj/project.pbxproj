@@ -126,8 +126,6 @@
 		4F3DCFEE274FE73600F1CB55 /* WireGuard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F3DCFED274FE73600F1CB55 /* WireGuard.swift */; };
 		4F3DCFEF274FE73600F1CB55 /* WireGuard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F3DCFED274FE73600F1CB55 /* WireGuard.swift */; };
 		4F3EF09F28AEA01400D83F4E /* Setapp in Frameworks */ = {isa = PBXBuildFile; productRef = 4FAF5BC12895583A004E9615 /* Setapp */; };
-		4F3EF0A128AEA02800D83F4E /* CustomCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F3EF0A028AEA02800D83F4E /* CustomCheck.swift */; };
-		4F3EF0A228AEA02800D83F4E /* CustomCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F3EF0A028AEA02800D83F4E /* CustomCheck.swift */; };
 		4F3EF0A528AEA05F00D83F4E /* Yams in Frameworks */ = {isa = PBXBuildFile; productRef = 4F3EF0A428AEA05F00D83F4E /* Yams */; };
 		4F3EF0A728AEA07400D83F4E /* Yams in Frameworks */ = {isa = PBXBuildFile; productRef = 4F3EF0A628AEA07400D83F4E /* Yams */; };
 		4F3EF24326CA859500841375 /* Claim.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F3EF24226CA859500841375 /* Claim.swift */; };
@@ -318,7 +316,6 @@
 		4F3DCFDA274FE4E000F1CB55 /* NordLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NordLayer.swift; path = "Software Updates/NordLayer.swift"; sourceTree = "<group>"; };
 		4F3DCFE7274FE61200F1CB55 /* Brave Browser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Brave Browser.swift"; path = "Software Updates/Brave Browser.swift"; sourceTree = "<group>"; };
 		4F3DCFED274FE73600F1CB55 /* WireGuard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WireGuard.swift; path = "Software Updates/WireGuard.swift"; sourceTree = "<group>"; };
-		4F3EF0A028AEA02800D83F4E /* CustomCheck.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomCheck.swift; sourceTree = "<group>"; };
 		4F3EF24226CA859500841375 /* Claim.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Claim.swift; sourceTree = "<group>"; };
 		4F41831627707B0800EBAE4A /* StatusBarIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusBarIcon.swift; sourceTree = "<group>"; };
 		4F4183192770F19D00EBAE4A /* macOSVersion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = macOSVersion.swift; sourceTree = "<group>"; };
@@ -734,7 +731,6 @@
 		4FFDC59F2821539F0092B7BF /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				4F3EF0A028AEA02800D83F4E /* CustomCheck.swift */,
 				4FFDC5A0282153B50092B7BF /* TimeMachineBackup.swift */,
 				4F2E09AC2BA330A80031422E /* Apps.swift */,
 			);
@@ -1050,7 +1046,6 @@
 				4F37E7142718122E00A2B254 /* Utils.swift in Sources */,
 				4F56AB5C278C57F1001CAAEF /* TimeMachine.swift in Sources */,
 				4FB51A5B27A94F27003F528E /* SystemUpdatesCheck.swift in Sources */,
-				4F3EF0A228AEA02800D83F4E /* CustomCheck.swift in Sources */,
 				4F37E7152718122E00A2B254 /* Updater.swift in Sources */,
 				4FFDC59E282148530092B7BF /* TimeMachineHasBackup.swift in Sources */,
 				4F37E7162718122E00A2B254 /* Firewall.swift in Sources */,
@@ -1189,7 +1184,6 @@
 				4FF13D9726DCCB9900E4084E /* Utils.swift in Sources */,
 				4F56AB5B278C57F1001CAAEF /* TimeMachine.swift in Sources */,
 				4FB51A5A27A94F27003F528E /* SystemUpdatesCheck.swift in Sources */,
-				4F3EF0A128AEA02800D83F4E /* CustomCheck.swift in Sources */,
 				4F14487426D8EA5E00A5BA34 /* Updater.swift in Sources */,
 				4FFDC59D282148530092B7BF /* TimeMachineHasBackup.swift in Sources */,
 				4F868DCF26A591E6005B876E /* Firewall.swift in Sources */,
