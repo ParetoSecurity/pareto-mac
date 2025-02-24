@@ -243,8 +243,6 @@
 		4FDDE1982D53BA3200D9E853 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FDDE1962D53BA3200D9E853 /* String.swift */; };
 		4FDDE1992D53BA3200D9E853 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FDDE1962D53BA3200D9E853 /* String.swift */; };
 		4FDDE19A2D53BA3200D9E853 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FDDE1962D53BA3200D9E853 /* String.swift */; };
-		4FE23EED276BB13700CA9BA0 /* FollowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FE23EEC276BB13700CA9BA0 /* FollowView.swift */; };
-		4FE23EEE276BB13700CA9BA0 /* FollowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FE23EEC276BB13700CA9BA0 /* FollowView.swift */; };
 		4FE9C35A28B76117002C28FE /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FE9C35928B76117002C28FE /* User.swift */; };
 		4FE9C35B28B76117002C28FE /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FE9C35928B76117002C28FE /* User.swift */; };
 		4FEBA2F2269CD48F009B2469 /* ParetoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEBA2F1269CD48F009B2469 /* ParetoApp.swift */; };
@@ -397,7 +395,6 @@
 		4FDA93A22771D9FC00F9D8B4 /* Checks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Checks.swift; sourceTree = "<group>"; };
 		4FDAD88E26EB784A00F64E61 /* License.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = License.swift; sourceTree = "<group>"; };
 		4FDDE1962D53BA3200D9E853 /* String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
-		4FE23EEC276BB13700CA9BA0 /* FollowView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FollowView.swift; sourceTree = "<group>"; };
 		4FE9C35928B76117002C28FE /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		4FEBA2EE269CD48F009B2469 /* Pareto Security.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Pareto Security.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4FEBA2F1269CD48F009B2469 /* ParetoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParetoApp.swift; sourceTree = "<group>"; };
@@ -562,7 +559,6 @@
 				4F8B01B126F4A6CB00EDE14B /* WelcomeView.swift */,
 				4F38D8C7273AC5AE00671756 /* IntroView.swift */,
 				4F38D8CA273AC5F200671756 /* PermissionsView.swift */,
-				4FE23EEC276BB13700CA9BA0 /* FollowView.swift */,
 				4F38D8CD273AC62500671756 /* EndView.swift */,
 				4F79F78C273BF6300082A5EB /* ChecksView.swift */,
 			);
@@ -1039,7 +1035,6 @@
 				4F37E70A2718122E00A2B254 /* ButtonStyle.swift in Sources */,
 				4F37E70B2718122E00A2B254 /* ParetoCheck.swift in Sources */,
 				4F9153B52D4BD7B400FCD809 /* PasswordManager.swift in Sources */,
-				4FE23EEE276BB13700CA9BA0 /* FollowView.swift in Sources */,
 				4F28A97E27566D8500E34F7B /* Firefox.swift in Sources */,
 				4F37E70C2718122E00A2B254 /* RemoteLogin.swift in Sources */,
 				4FA8E5ED2B44428400B7EA9C /* NoUnusedUsers.swift in Sources */,
@@ -1180,7 +1175,6 @@
 				4FB0416126F71CC0003657BE /* ButtonStyle.swift in Sources */,
 				4F5E888026A053A9005271FB /* ParetoCheck.swift in Sources */,
 				4F9153B42D4BD7B400FCD809 /* PasswordManager.swift in Sources */,
-				4FE23EED276BB13700CA9BA0 /* FollowView.swift in Sources */,
 				4F28A97D27566D8500E34F7B /* Firefox.swift in Sources */,
 				4F35395726E8AE02008F5DD3 /* RemoteLogin.swift in Sources */,
 				4FA8E5EC2B44428400B7EA9C /* NoUnusedUsers.swift in Sources */,

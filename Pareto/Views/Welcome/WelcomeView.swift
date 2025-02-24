@@ -11,7 +11,6 @@ import SwiftUI
 enum Steps {
     case Welcome
     case Permissions
-    case Follow
     case Checks
     case End
 }
@@ -28,8 +27,6 @@ struct WelcomeView: View {
                 PermissionsView(step: $step)
             case Steps.Checks:
                 ChecksView(step: $step)
-            case Steps.Follow:
-                FollowView(step: $step)
             case Steps.End:
                 EndView()
             }

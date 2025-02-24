@@ -214,7 +214,7 @@ class StatusBarController: NSObject, NSMenuDelegate {
     }
 
     func menuWillOpen(_: NSMenu) {
-        updateMenu()
+        updateMenu(partial: true)
         #if SETAPP_ENABLED
             SetappManager.shared.reportUsageEvent(.userInteraction)
         #endif
