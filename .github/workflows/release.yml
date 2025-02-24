@@ -148,7 +148,7 @@ jobs:
         run: for i in {1..3}; do xcrun stapler staple ParetoSecurity.dmg && break || sleep 15; done
 
       - name: Release DMG
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           files: ParetoSecurity.dmg
         env:
@@ -161,7 +161,7 @@ jobs:
         run: ditto -V -c -k --keepParent Export/Pareto\ Security.app ParetoSecurity.app.zip
 
       - name: Release app
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           files: ParetoSecurity.app.zip
         env:
@@ -171,7 +171,7 @@ jobs:
         run: Export/Pareto\ Security.app/Contents/MacOS/Pareto\ Security -export > checks.json
 
       - name: Upload checks info
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           files: checks.json
         env:
