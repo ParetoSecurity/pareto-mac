@@ -113,11 +113,7 @@ struct PermissionsView: View {
             }.frame(width: 350, alignment: .leading)
             Spacer(minLength: 40)
             Button("Continue") {
-                #if SETAPP_ENABLED
-                    step = Steps.Follow
-                #else
-                    step = Steps.Checks
-                #endif
+                step = Steps.Checks
             }.buttonStyle(HighlightButtonStyle(color: checker.osaAuthorized ? .mainColor : .systemGray)).padding(10).disabled(!checker.osaAuthorized)
         }.frame(width: 380, height: 430, alignment: .center).padding(10).onAppear {
             checker.start()
