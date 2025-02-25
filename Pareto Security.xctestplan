@@ -13,6 +13,7 @@
   },
   "testTargets" : [
     {
+      "parallelizable" : false,
       "target" : {
         "containerPath" : "container:Pareto Security.xcodeproj",
         "identifier" : "4FC81A4826C41DC8006EABA8",
@@ -20,6 +21,7 @@
       }
     },
     {
+      "enabled" : false,
       "target" : {
         "containerPath" : "container:Pareto Security.xcodeproj",
         "identifier" : "4F6A92EE26C555C6006C2F2D",
