@@ -63,9 +63,9 @@ class ParetoSecurityUITests: XCTestCase {
         takeScreenshot(screenshot: app.statusItems.firstMatch.menus.firstMatch.screenshot(), name: "macOS Updates")
         takeScreenshot(screenshot: app.screenshot(), name: "macOS Updates App")
 
-        menuBarsQuery.menuItems["Software Updates"].click()
-        takeScreenshot(screenshot: app.statusItems.firstMatch.menus.firstMatch.screenshot(), name: "Software Updates")
-        takeScreenshot(screenshot: app.screenshot(), name: "Software Updates App")
+        menuBarsQuery.menuItems["Application Updates"].click()
+        takeScreenshot(screenshot: app.statusItems.firstMatch.menus.firstMatch.screenshot(), name: "Application Updates")
+        takeScreenshot(screenshot: app.screenshot(), name: "Application Updates App")
 
         menuBarsQuery.menuItems["System Integrity"].click()
         takeScreenshot(screenshot: app.statusItems.firstMatch.menus.firstMatch.screenshot(), name: "System Integrity")
