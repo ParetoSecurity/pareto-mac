@@ -41,5 +41,3 @@ class WelcomeTest: XCTestCase {
         _ = EndView()
     }
 }
-
-extension WelcomeView: Inspectable {}

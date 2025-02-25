@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "1520"
+   LastUpgradeVersion = "1620"
    version = "1.7">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -62,7 +62,28 @@
                BlueprintName = "ParetoSecurityTests"
                ReferencedContainer = "container:Pareto Security.xcodeproj">
             </BuildableReference>
-            <SkippedTests>
+            <SelectedTests>
+               <Test
+                  Identifier = "CheckIntegrationTest">
+               </Test>
+               <Test
+                  Identifier = "LicenseTest/testPersonaLicense()">
+               </Test>
+               <Test
+                  Identifier = "LicenseTest/testPersonaLicenseFail()">
+               </Test>
+               <Test
+                  Identifier = "LicenseTest/testPersonaLicenseVerify()">
+               </Test>
+               <Test
+                  Identifier = "LicenseTest/testProcessAction()">
+               </Test>
+               <Test
+                  Identifier = "LicenseTest/testTeamTicket()">
+               </Test>
+               <Test
+                  Identifier = "LicenseTest/testTeamTicketFail()">
+               </Test>
                <Test
                   Identifier = "ParetoAppTest/testActionApp()">
                </Test>
@@ -72,7 +93,58 @@
                <Test
                   Identifier = "ParetoAppTest/testActionEnrollTeam()">
                </Test>
-            </SkippedTests>
+               <Test
+                  Identifier = "ParetoSecurityTests/testAppInfo()">
+               </Test>
+               <Test
+                  Identifier = "ParetoSecurityTests/testSnooze()">
+               </Test>
+               <Test
+                  Identifier = "ParetoSecurityTests/testThatUUIDsAreUnique()">
+               </Test>
+               <Test
+                  Identifier = "SettingsViewTests/testAbout()">
+               </Test>
+               <Test
+                  Identifier = "SettingsViewTests/testLicense()">
+               </Test>
+               <Test
+                  Identifier = "SettingsViewTests/testSettingsView()">
+               </Test>
+               <Test
+                  Identifier = "SettingsViewTests/testTeam()">
+               </Test>
+               <Test
+                  Identifier = "SoftwareUpdatesTest/testAppVersionFetchers()">
+               </Test>
+               <Test
+                  Identifier = "TeamsTest/testLink()">
+               </Test>
+               <Test
+                  Identifier = "TeamsTest/testReport()">
+               </Test>
+               <Test
+                  Identifier = "TeamsTest/testSettings()">
+               </Test>
+               <Test
+                  Identifier = "UpdaterTest/testParsing()">
+               </Test>
+               <Test
+                  Identifier = "WelcomeTest/testChecksViewShow()">
+               </Test>
+               <Test
+                  Identifier = "WelcomeTest/testEndViewShow()">
+               </Test>
+               <Test
+                  Identifier = "WelcomeTest/testIntroViewShow()">
+               </Test>
+               <Test
+                  Identifier = "WelcomeTest/testPermissionsViewShow()">
+               </Test>
+               <Test
+                  Identifier = "WelcomeTest/testWelcomeViewShow()">
+               </Test>
+            </SelectedTests>
             <LocationScenarioReference
                identifier = "London, England"
                referenceType = "1">
@@ -90,6 +162,18 @@
             <SelectedTests>
                <Test
                   Identifier = "ParetoSecurityUITests/testAppRuns()">
+               </Test>
+               <Test
+                  Identifier = "ParetoSecurityUITests/testHoverMenus()">
+               </Test>
+               <Test
+                  Identifier = "ParetoSecurityUITests/testKonamiWindow()">
+               </Test>
+               <Test
+                  Identifier = "ParetoSecurityUITests/testSettingsWindow()">
+               </Test>
+               <Test
+                  Identifier = "ParetoSecurityUITests/testSnooze()">
                </Test>
             </SelectedTests>
          </TestableReference>

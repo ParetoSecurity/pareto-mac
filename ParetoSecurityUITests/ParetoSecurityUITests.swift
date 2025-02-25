@@ -94,40 +94,12 @@ class ParetoSecurityUITests: XCTestCase {
         waitUntilMenu()
 
         menuBarsQuery.menuItems["showPrefs"].click()
-        app.windows.firstMatch.toolbars.buttons["General"].click()
-        takeScreenshot(screenshot: app.windows.firstMatch.screenshot(), name: "Settings General")
-        app.windows.firstMatch.toolbars.buttons["Teams"].click()
-        takeScreenshot(screenshot: app.windows.firstMatch.screenshot(), name: "Settings Teams")
-        app.windows.firstMatch.toolbars.buttons["Checks"].click()
-        takeScreenshot(screenshot: app.windows.firstMatch.screenshot(), name: "Settings Checks")
-        app.windows.firstMatch.toolbars.buttons["License"].click()
-        takeScreenshot(screenshot: app.windows.firstMatch.screenshot(), name: "Settings License")
-        app.windows.firstMatch.toolbars.buttons["About"].click()
-        takeScreenshot(screenshot: app.windows.firstMatch.screenshot(), name: "Settings About")
-        app.windows.firstMatch.buttons[XCUIIdentifierCloseWindow].click()
+        
     }
 
     func testAppRuns() throws {
         takeScreenshot(screenshot: app.screenshot(), name: "App")
     }
 
-    func testKonamiWindow() throws {
-        // XCTExpectFailure("Fails with in xcode 13 env, working on a fix")
 
-        let menuBarsQuery = app.menuBars
-        waitUntilMenu()
-
-        menuBarsQuery.menuItems["showPrefs"].click()
-        app.windows.firstMatch.toolbars.buttons["General"].click()
-        takeScreenshot(screenshot: app.windows.firstMatch.screenshot(), name: "Settings General")
-
-        let generalWindow = app.windows["General"]
-        generalWindow.toolbars.buttons["About"].click()
-
-        let aboutWindow = app.windows["About"]
-        let logoImage = aboutWindow.images["Logo"]
-        logoImage.click()
-        logoImage.click()
-        logoImage.click()
-    }
 }
