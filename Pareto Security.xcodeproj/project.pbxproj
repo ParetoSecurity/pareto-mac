@@ -382,6 +382,7 @@
 		4FB7C68026AFF25300FB1C41 /* Date.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Date.swift; sourceTree = "<group>"; };
 		4FB7C68626AFF29A00FB1C41 /* NSImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSImage.swift; sourceTree = "<group>"; };
 		4FB7C68C26AFFD2600FB1C41 /* FileVault.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileVault.swift; sourceTree = "<group>"; };
+		4FC45C902D6DD9F300915471 /* Pareto Security.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = "Pareto Security.xctestplan"; sourceTree = "<group>"; };
 		4FC81A4926C41DC8006EABA8 /* ParetoSecurityTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ParetoSecurityTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4FC81A4B26C41DC8006EABA8 /* ParetoSecurityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParetoSecurityTests.swift; sourceTree = "<group>"; };
 		4FCAA78A2B4AD7C300A62B4E /* NoAdminUser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NoAdminUser.swift; sourceTree = "<group>"; };
@@ -673,6 +674,7 @@
 		4FEBA2E5269CD48F009B2469 = {
 			isa = PBXGroup;
 			children = (
+				4FC45C902D6DD9F300915471 /* Pareto Security.xctestplan */,
 				4F196CD72714C1C600A2A7B8 /* JWT.playground */,
 				4F343A5D26F7A3C8007D2F7D /* API.playground */,
 				4FEBA2F0269CD48F009B2469 /* Pareto */,

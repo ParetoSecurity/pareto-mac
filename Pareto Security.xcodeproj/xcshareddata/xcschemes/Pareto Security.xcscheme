@@ -26,32 +26,13 @@
       buildConfiguration = "Debug"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
-      shouldUseLaunchSchemeArgsEnv = "NO"
-      systemAttachmentLifetime = "keepNever"
-      userAttachmentLifetime = "keepAlways"
-      codeCoverageEnabled = "YES">
-      <MacroExpansion>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "4FEBA2ED269CD48F009B2469"
-            BuildableName = "Pareto Security.app"
-            BlueprintName = "Pareto Security"
-            ReferencedContainer = "container:Pareto Security.xcodeproj">
-         </BuildableReference>
-      </MacroExpansion>
-      <CommandLineArguments>
-         <CommandLineArgument
-            argument = "isRunningTests"
-            isEnabled = "YES">
-         </CommandLineArgument>
-      </CommandLineArguments>
-      <EnvironmentVariables>
-         <EnvironmentVariable
-            key = "isRunningTests"
-            value = "YES"
-            isEnabled = "YES">
-         </EnvironmentVariable>
-      </EnvironmentVariables>
+      shouldUseLaunchSchemeArgsEnv = "YES">
+      <TestPlans>
+         <TestPlanReference
+            reference = "container:Pareto Security.xctestplan"
+            default = "YES">
+         </TestPlanReference>
+      </TestPlans>
       <Testables>
          <TestableReference
             skipped = "NO">
@@ -62,93 +43,16 @@
                BlueprintName = "ParetoSecurityTests"
                ReferencedContainer = "container:Pareto Security.xcodeproj">
             </BuildableReference>
-            <SelectedTests>
-               <Test
-                  Identifier = "CheckIntegrationTest">
-               </Test>
-               <Test
-                  Identifier = "LicenseTest/testPersonaLicense()">
-               </Test>
-               <Test
-                  Identifier = "LicenseTest/testPersonaLicenseFail()">
-               </Test>
-               <Test
-                  Identifier = "LicenseTest/testPersonaLicenseVerify()">
-               </Test>
-               <Test
-                  Identifier = "LicenseTest/testProcessAction()">
-               </Test>
-               <Test
-                  Identifier = "LicenseTest/testTeamTicket()">
-               </Test>
-               <Test
-                  Identifier = "LicenseTest/testTeamTicketFail()">
-               </Test>
-               <Test
-                  Identifier = "ParetoAppTest/testActionApp()">
-               </Test>
-               <Test
-                  Identifier = "ParetoAppTest/testActionEnrollPersonal()">
-               </Test>
-               <Test
-                  Identifier = "ParetoAppTest/testActionEnrollTeam()">
-               </Test>
-               <Test
-                  Identifier = "ParetoSecurityTests/testAppInfo()">
-               </Test>
-               <Test
-                  Identifier = "ParetoSecurityTests/testSnooze()">
-               </Test>
-               <Test
-                  Identifier = "ParetoSecurityTests/testThatUUIDsAreUnique()">
-               </Test>
-               <Test
-                  Identifier = "SettingsViewTests/testAbout()">
-               </Test>
-               <Test
-                  Identifier = "SettingsViewTests/testLicense()">
-               </Test>
-               <Test
-                  Identifier = "SettingsViewTests/testSettingsView()">
-               </Test>
-               <Test
-                  Identifier = "SettingsViewTests/testTeam()">
-               </Test>
-               <Test
-                  Identifier = "SoftwareUpdatesTest/testAppVersionFetchers()">
-               </Test>
-               <Test
-                  Identifier = "TeamsTest/testLink()">
-               </Test>
-               <Test
-                  Identifier = "TeamsTest/testReport()">
-               </Test>
-               <Test
-                  Identifier = "TeamsTest/testSettings()">
-               </Test>
-               <Test
-                  Identifier = "UpdaterTest/testParsing()">
-               </Test>
-               <Test
-                  Identifier = "WelcomeTest/testChecksViewShow()">
-               </Test>
-               <Test
-                  Identifier = "WelcomeTest/testEndViewShow()">
-               </Test>
-               <Test
-                  Identifier = "WelcomeTest/testIntroViewShow()">
-               </Test>
-               <Test
-                  Identifier = "WelcomeTest/testPermissionsViewShow()">
-               </Test>
-               <Test
-                  Identifier = "WelcomeTest/testWelcomeViewShow()">
-               </Test>
-            </SelectedTests>
-            <LocationScenarioReference
-               identifier = "London, England"
-               referenceType = "1">
-            </LocationScenarioReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "4FC81A4826C41DC8006EABA8"
+               BuildableName = "ParetoSecurityTests.xctest"
+               BlueprintName = "ParetoSecurityTests"
+               ReferencedContainer = "container:Pareto Security.xcodeproj">
+            </BuildableReference>
          </TestableReference>
          <TestableReference
             skipped = "NO">
@@ -159,8 +63,6 @@
                BlueprintName = "ParetoSecurityUITests"
                ReferencedContainer = "container:Pareto Security.xcodeproj">
             </BuildableReference>
-            <SelectedTests>
-            </SelectedTests>
          </TestableReference>
       </Testables>
    </TestAction>

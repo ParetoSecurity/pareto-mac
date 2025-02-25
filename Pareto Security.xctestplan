@@ -1,0 +1,31 @@
+{
+  "configurations" : [
+    {
+      "id" : "889B0DFB-1770-41A5-982E-086C58186B4C",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:Pareto Security.xcodeproj",
+        "identifier" : "4FC81A4826C41DC8006EABA8",
+        "name" : "ParetoSecurityTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:Pareto Security.xcodeproj",
+        "identifier" : "4F6A92EE26C555C6006C2F2D",
+        "name" : "ParetoSecurityUITests"
+      }
+    }
+  ],
+  "version" : 1
+}
