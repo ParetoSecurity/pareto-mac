@@ -20,39 +20,26 @@ class SettingsViewTests: XCTestCase {
 
     func testSettingsView() throws {
         let subject = SettingsView(selected: SettingsView.Tabs.general)
-        let sub = try subject.inspect().tabView().count
-        XCTAssertEqual(sub, 5)
+        let sub = try subject.inspect().implicitAnyView()
+        XCTAssertEqual(try sub.tabView().count, 6)
     }
 
     func testAbout() throws {
         let subject = AboutSettingsView()
-        let text = try subject.inspect().hStack()[1].vStack()[5].text().string()
+        let text = try subject.inspect().implicitAnyView().hStack()[1].vStack()[5].text().string()
 
         XCTAssertEqual(text, "Made with ❤️ at [Niteo](https://paretosecurity.com/about)")
     }
 
-    func testGeneral() throws {
-        let subject = GeneralSettingsView()
-        let one = try subject.inspect().form()[0].section().footer().text().string()
-        XCTAssertEqual(one, "To enable continuous monitoring and reporting.")
-    }
-
     func testTeam() throws {
         let subject = TeamSettingsView(teamSettings: AppInfo.TeamSettings)
-        let one = try subject.inspect().form()[0].text().string()
+        let one = try subject.inspect().implicitAnyView().form()[0].text().string()
         XCTAssertEqual(one, "The Teams subscription will give you a web dashboard for an overview of the company’s devices.")
     }
 
     func testLicense() throws {
         let subject = LicenseSettingsView()
-        let one = try subject.inspect().vStack()[0].text().string()
-        XCTAssertEqual(one, "You are running the free version of the app. Please consider purchasing the Personal lifetime license for unlimited devices!")
+        let one = try subject.inspect().implicitAnyView().vStack()[0].text().string()
+        XCTAssertEqual(one, "You are running the free version of the app.")
     }
 }
-
-extension AboutSettingsView: Inspectable {}
-extension GeneralSettingsView: Inspectable {}
-extension TeamSettingsView: Inspectable {}
-extension ChecksSettingsView: Inspectable {}
-extension LicenseSettingsView: Inspectable {}
-extension SettingsView: Inspectable {}

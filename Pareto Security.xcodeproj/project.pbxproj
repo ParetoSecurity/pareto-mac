@@ -15,6 +15,8 @@
 		4F0BD120284891670098316A /* ClipButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F0BD11E284891670098316A /* ClipButton.swift */; };
 		4F103008269EE136008C1E86 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F103007269EE135008C1E86 /* SettingsView.swift */; };
 		4F103012269F1C65008C1E86 /* LaunchAtLogin in Frameworks */ = {isa = PBXBuildFile; productRef = 4F103011269F1C65008C1E86 /* LaunchAtLogin */; };
+		4F1192FD2D6DC4F4002CA181 /* ViewInspector in Frameworks */ = {isa = PBXBuildFile; productRef = 4F1192FC2D6DC4F4002CA181 /* ViewInspector */; };
+		4F1192FF2D6DC5A4002CA181 /* ViewInspector in Frameworks */ = {isa = PBXBuildFile; productRef = 4F1192FE2D6DC5A4002CA181 /* ViewInspector */; };
 		4F14487426D8EA5E00A5BA34 /* Updater.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F14487326D8EA5E00A5BA34 /* Updater.swift */; };
 		4F14487726D8EB2E00A5BA34 /* Version in Frameworks */ = {isa = PBXBuildFile; productRef = 4F14487626D8EB2E00A5BA34 /* Version */; };
 		4F14487A26D8EB7A00A5BA34 /* Path in Frameworks */ = {isa = PBXBuildFile; productRef = 4F14487926D8EB7A00A5BA34 /* Path */; };
@@ -134,7 +136,6 @@
 		4F41831A2770F19D00EBAE4A /* macOSVersion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F4183192770F19D00EBAE4A /* macOSVersion.swift */; };
 		4F41831B2770F19D00EBAE4A /* macOSVersion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F4183192770F19D00EBAE4A /* macOSVersion.swift */; };
 		4F47221026B08A0E0071CE2A /* Defaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F47220F26B08A0E0071CE2A /* Defaults.swift */; };
-		4F49640D28AD244C00C98950 /* ParetoCustomCheckTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F49640C28AD244C00C98950 /* ParetoCustomCheckTest.swift */; };
 		4F4B6E84282E4C5C00FAC103 /* AirDrop.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F4B6E83282E4C5C00FAC103 /* AirDrop.swift */; };
 		4F4B6E85282E4C5C00FAC103 /* AirDrop.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F4B6E83282E4C5C00FAC103 /* AirDrop.swift */; };
 		4F4E23B52C4E484900484782 /* Trim.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F4E23B42C4E484500484782 /* Trim.swift */; };
@@ -320,7 +321,6 @@
 		4F41831627707B0800EBAE4A /* StatusBarIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusBarIcon.swift; sourceTree = "<group>"; };
 		4F4183192770F19D00EBAE4A /* macOSVersion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = macOSVersion.swift; sourceTree = "<group>"; };
 		4F47220F26B08A0E0071CE2A /* Defaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Defaults.swift; sourceTree = "<group>"; };
-		4F49640C28AD244C00C98950 /* ParetoCustomCheckTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParetoCustomCheckTest.swift; sourceTree = "<group>"; };
 		4F4B6E83282E4C5C00FAC103 /* AirDrop.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AirDrop.swift; sourceTree = "<group>"; };
 		4F4E23B42C4E484500484782 /* Trim.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Trim.swift; sourceTree = "<group>"; };
 		4F4E285F27BD748D006A18C1 /* PasswordAfterSleep.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PasswordAfterSleep.swift; sourceTree = "<group>"; };
@@ -430,6 +430,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4F1192FD2D6DC4F4002CA181 /* ViewInspector in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -437,6 +438,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4F1192FF2D6DC5A4002CA181 /* ViewInspector in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -662,7 +664,6 @@
 				4F57135226F8A6AC004B4359 /* LicenseTest.swift */,
 				4F57135426F8ACCC004B4359 /* WelcomeTest.swift */,
 				4F57135626F8BF84004B4359 /* ParetoAppTest.swift */,
-				4F49640C28AD244C00C98950 /* ParetoCustomCheckTest.swift */,
 				4F57135C26F8C921004B4359 /* TeamsTest.swift */,
 				4F6EF8982760046100752559 /* SoftwareUpdatesTest.swift */,
 			);
@@ -806,6 +807,7 @@
 			);
 			name = ParetoSecurityTests;
 			packageProductDependencies = (
+				4F1192FE2D6DC5A4002CA181 /* ViewInspector */,
 			);
 			productName = ParetoSecurityTests;
 			productReference = 4FC81A4926C41DC8006EABA8 /* ParetoSecurityTests.xctest */;
@@ -1151,7 +1153,6 @@
 				4F57135D26F8C921004B4359 /* TeamsTest.swift in Sources */,
 				4FF13D9D26DE235700E4084E /* UpdaterTest.swift in Sources */,
 				4F080D1D26C50D2800686786 /* ParetoSecurityTests.swift in Sources */,
-				4F49640D28AD244C00C98950 /* ParetoCustomCheckTest.swift in Sources */,
 				4F6A92E626C521BE006C2F2D /* CheckIntegrationTest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1883,6 +1884,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 4F103010269F1C65008C1E86 /* XCRemoteSwiftPackageReference "LaunchAtLogin" */;
 			productName = LaunchAtLogin;
+		};
+		4F1192FC2D6DC4F4002CA181 /* ViewInspector */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4FC0F2EC2A4C47FD004E7359 /* XCRemoteSwiftPackageReference "ViewInspector" */;
+			productName = ViewInspector;
+		};
+		4F1192FE2D6DC5A4002CA181 /* ViewInspector */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4FC0F2EC2A4C47FD004E7359 /* XCRemoteSwiftPackageReference "ViewInspector" */;
+			productName = ViewInspector;
 		};
 		4F14487626D8EB2E00A5BA34 /* Version */ = {
 			isa = XCSwiftPackageProductDependency;

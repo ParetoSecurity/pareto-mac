@@ -20,7 +20,7 @@ class ParetoSecurityTests: XCTestCase {
 
     func testThatUUIDsAreUnique() throws {
         var uuids: [String] = []
-        for claim in Claims.sorted {
+        for claim in Claims.global.all {
             for check in claim.checksSorted {
                 if uuids.contains(check.UUID) {
                     XCTFail("Duplicate UUID found \(check.UUID)")
