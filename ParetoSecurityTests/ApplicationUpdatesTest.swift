@@ -1,5 +1,5 @@
 //
-//  SoftwareUpdatesTest.swift
+//  ApplicationUpdatesTest.swift
 //  ParetoSecurityTests
 //
 //  Created by Janez Troha on 07/12/2021.
@@ -8,7 +8,7 @@
 @testable import Pareto_Security
 import XCTest
 
-class SoftwareUpdatesTest: XCTestCase {
+class ApplicationUpdatesTest: XCTestCase {
     override class func setUp() {
         super.setUp()
     }
