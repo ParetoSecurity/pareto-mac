@@ -17,11 +17,11 @@ class AutoUpdateAppCheck: ParetoCheck {
     }
 
     override var TitleON: String {
-        "App Store updates are auto-installed"
+        "App Store updates are automatic"
     }
 
     override var TitleOFF: String {
-        "App Store updates are not auto-installed"
+        "App Store updates are not automatic"
     }
 
     override func checkPasses() -> Bool {
