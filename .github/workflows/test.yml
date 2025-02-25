@@ -44,6 +44,48 @@ jobs:
       - uses: maxim-lobanov/setup-xcode@v1
         with:
           xcode-version: "16"
+      - name: "Import Certificate: Development"
+        env:
+          DEVELOPMENT_CERTIFICATE_DATA: ${{ secrets.DEVELOPMENT_CERTIFICATE_DATA }}
+          DEVELOPMENT_CERTIFICATE_PASSPHRASE: ${{ secrets.DEVELOPMENT_CERTIFICATE_PASSPHRASE }}
+          KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
+        run: |
+          # create variables
+          CERTIFICATE_PATH=$RUNNER_TEMP/dev_certificate.p12
+          KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
+
+          # import certificate and provisioning profile from secrets
+          echo -n "$DEVELOPMENT_CERTIFICATE_DATA" | base64 --decode >$CERTIFICATE_PATH
+
+          # create temporary keychain
+          security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH || true
+          security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+
+          # import certificate to keychain
+          security import $CERTIFICATE_PATH -P "$DEVELOPMENT_CERTIFICATE_PASSPHRASE" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
+          security list-keychain -d user -s $KEYCHAIN_PATH
+      - name: "Import Certificate: Developer ID Application"
+        env:
+          APPLICATION_CERTIFICATE_DATA: ${{ secrets.APPLICATION_CERTIFICATE_DATA }}
+          APPLICATION_CERTIFICATE_PASSPHRASE: ${{ secrets.APPLICATION_CERTIFICATE_PASSPHRASE }}
+          KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
+        run: |
+          # create variables
+          CERTIFICATE_PATH=$RUNNER_TEMP/dev_certificate.p12
+          KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
+
+          # import certificate and provisioning profile from secrets
+          echo -n "$APPLICATION_CERTIFICATE_DATA" | base64 --decode >$CERTIFICATE_PATH
+
+          # create temporary keychain
+          security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH || true
+          security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+
+          # import certificate to keychain
+          security import $CERTIFICATE_PATH -P "$APPLICATION_CERTIFICATE_PASSPHRASE" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
+          security list-keychain -d user -s $KEYCHAIN_PATH
       - name: Repository checkout
         uses: actions/checkout@v4
       - name: Cache mint modules
