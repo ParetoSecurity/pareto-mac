@@ -301,7 +301,7 @@ class StatusBarController: NSObject, NSMenuDelegate {
 
         let docsItem = NSMenuItem(title: "Documentation", action: #selector(AppDelegate.docs), keyEquivalent: "d")
         docsItem.target = NSApp.delegate
-        statusItemMenu.addItem(docItem)
+        statusItemMenu.addItem(docsItem)
         
         let reportItem = NSMenuItem(title: "Contact Support", action: #selector(AppDelegate.reportBug), keyEquivalent: "b")
         reportItem.target = NSApp.delegate
