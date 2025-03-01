@@ -282,6 +282,10 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
         NSWorkspace.shared.open(AppInfo.bugReportURL())
     }
 
+    @objc func docs() {
+        NSWorkspace.shared.open(AppInfo.docsURL())
+    }
+    
     @objc func teamsDashboard() {
         NSWorkspace.shared.open(AppInfo.teamsURL())
     }
