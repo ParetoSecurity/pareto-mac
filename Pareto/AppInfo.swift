@@ -121,6 +121,11 @@ enum AppInfo {
         return URL(string: baseURL)!
     }
 
+    static let docsURL = { () -> URL in
+        let baseURL = "https://paretosecurity.com/docs/mac"
+        return URL(string: baseURL)!
+    }
+    
     static let bugReportURL = { () -> URL in
         let baseURL = "https://paretosecurity.com/report-bug?"
         let versions = getVersions().addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
