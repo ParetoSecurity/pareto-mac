@@ -72,6 +72,8 @@
 		4F17270B2769F3410049B875 /* SSHKeysStrength.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F17270A2769F3410049B875 /* SSHKeysStrength.swift */; };
 		4F17270C2769F3410049B875 /* SSHKeysStrength.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F17270A2769F3410049B875 /* SSHKeysStrength.swift */; };
 		4F196CD62714B51900A2A7B8 /* JWTDecode in Frameworks */ = {isa = PBXBuildFile; productRef = 4F196CD52714B51900A2A7B8 /* JWTDecode */; };
+		4F196F982D772DA7001031F0 /* ParetoUpdated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F196F972D772DA7001031F0 /* ParetoUpdated.swift */; };
+		4F196F992D772DA7001031F0 /* ParetoUpdated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F196F972D772DA7001031F0 /* ParetoUpdated.swift */; };
 		4F1AE88B26F9FC150084A381 /* SwiftSocket in Frameworks */ = {isa = PBXBuildFile; productRef = 4F1AE88A26F9FC150084A381 /* SwiftSocket */; };
 		4F1AE89026F9FFA60084A381 /* MediaShare.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F1AE88F26F9FFA60084A381 /* MediaShare.swift */; };
 		4F1AE89226FA026D0084A381 /* AirPlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F1AE89126FA026D0084A381 /* AirPlay.swift */; };
@@ -310,6 +312,7 @@
 		4F14487B26D8EDB000A5BA34 /* Bundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bundle.swift; sourceTree = "<group>"; };
 		4F17270A2769F3410049B875 /* SSHKeysStrength.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSHKeysStrength.swift; sourceTree = "<group>"; };
 		4F196CD72714C1C600A2A7B8 /* JWT.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = JWT.playground; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		4F196F972D772DA7001031F0 /* ParetoUpdated.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParetoUpdated.swift; sourceTree = "<group>"; };
 		4F1AE88F26F9FFA60084A381 /* MediaShare.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaShare.swift; sourceTree = "<group>"; };
 		4F1AE89126FA026D0084A381 /* AirPlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AirPlay.swift; sourceTree = "<group>"; };
 		4F1E6C5A2834F37500C8AFAB /* AutoUpdateAppCheck.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AutoUpdateAppCheck.swift; sourceTree = "<group>"; };
@@ -565,6 +568,7 @@
 		4F3DCFD4274FE4C900F1CB55 /* Application Updates */ = {
 			isa = PBXGroup;
 			children = (
+				4F196F972D772DA7001031F0 /* ParetoUpdated.swift */,
 				3F1733072D6D643D007C02B0 /* Firefox.swift */,
 				3F1733082D6D643D007C02B0 /* GoogleChrome.swift */,
 				3F17330A2D6D643D007C02B0 /* LibreOffice.swift */,
@@ -1052,6 +1056,7 @@
 				4F79F78E273BF6300082A5EB /* ChecksView.swift in Sources */,
 				4F37E7182718122E00A2B254 /* LicenseSettingsView.swift in Sources */,
 				4FE9C35B28B76117002C28FE /* User.swift in Sources */,
+				4F196F982D772DA7001031F0 /* ParetoUpdated.swift in Sources */,
 				4F37E7192718122E00A2B254 /* RemoteManagment.swift in Sources */,
 				4F37E71A2718122E00A2B254 /* Date.swift in Sources */,
 				4F37E71B2718122E00A2B254 /* Teams.swift in Sources */,
@@ -1189,6 +1194,7 @@
 				4F79F78D273BF6300082A5EB /* ChecksView.swift in Sources */,
 				4F24A08E26EB734A0036F748 /* LicenseSettingsView.swift in Sources */,
 				4FE9C35A28B76117002C28FE /* User.swift in Sources */,
+				4F196F992D772DA7001031F0 /* ParetoUpdated.swift in Sources */,
 				4F35395526E8AD4C008F5DD3 /* RemoteManagment.swift in Sources */,
 				4FB7C68126AFF25300FB1C41 /* Date.swift in Sources */,
 				4F343A5F26F7A3D4007D2F7D /* Teams.swift in Sources */,

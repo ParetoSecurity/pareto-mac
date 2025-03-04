@@ -61,7 +61,7 @@ class Claims: ObservableObject {
                 TimeMachineHasBackupCheck.sharedInstance,
                 TimeMachineIsEncryptedCheck.sharedInstance
             ]),
-            Claim(withTitle: "Application Updates", withChecks: Claims.updateChecks + [AutoUpdateAppCheck.sharedInstance]),
+            Claim(withTitle: "Application Updates", withChecks: Claims.updateChecks + [AutoUpdateAppCheck.sharedInstance, ParetoUpdated.sharedInstance]),
         ].sorted(by: { $0.title.lowercased() < $1.title.lowercased() })
     }
 
