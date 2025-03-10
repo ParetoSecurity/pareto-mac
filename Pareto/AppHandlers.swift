@@ -285,7 +285,7 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
     @objc func docs() {
         NSWorkspace.shared.open(AppInfo.docsURL())
     }
-    
+
     @objc func teamsDashboard() {
         NSWorkspace.shared.open(AppInfo.teamsURL())
     }
@@ -341,7 +341,7 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
             alert.runModal()
         }
 
-        
+
         if let data = try? AppInfo.logEntries().joined(separator: "\n") {
             if !data.isEmpty {
                 NSPasteboard.general.clearContents()
@@ -354,7 +354,7 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
                 return
             }
         }
-        
+
         let alert = NSAlert()
         alert.messageText = "Thre are no logs to copy. App logs are only available after the application has been running for a while."
         alert.alertStyle = NSAlert.Style.informational
@@ -411,7 +411,6 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
                     Team.link(withDevice: ReportingDevice.current()).response { response in
                         switch response.result {
                         case .success:
-                            Defaults[.appliedIgnoredChecks] = false
                             DispatchQueue.main.async {
                                 let alert = NSAlert()
                                 alert.messageText = "Pareto Security is activated and linked."

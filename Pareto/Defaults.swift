@@ -33,8 +33,6 @@ extension Defaults.Keys {
     static let machineUUID = Key<String>("machineUUID", default: AppInfo.getSystemUUID() ?? UUID().uuidString, suite: extensionDefaults)
     static let sendHWInfo = Key<Bool>("sendHWInfo", default: false, suite: extensionDefaults)
     static let lastHWAsk = Key<Int>("lastHWAsk", default: 0, suite: extensionDefaults)
-    static let appliedIgnoredChecks = Key<Bool>("appliedIgnoredChecksv1", default: false, suite: extensionDefaults)
-    static let appliedIgnoredChecksIDs = Key<[String]>("appliedIgnoredChecksv4", default: [], suite: extensionDefaults)
     // License
     static let license = Key<String>("license", default: "", suite: extensionDefaults)
     static let reportingRole = Key<ReportingRoles>("reportingRole", default: .free, suite: extensionDefaults)
