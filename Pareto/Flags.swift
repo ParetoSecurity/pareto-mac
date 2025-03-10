@@ -19,5 +19,4 @@ class FlagsUpdater: ObservableObject {
     @Published var slowerTeamUpdate: Bool = true
     @Published var nagScreenDelayDays: Int = 30
     @Published var setappUpdate: Int = 4
-
 }

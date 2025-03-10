@@ -94,12 +94,9 @@ class ParetoSecurityUITests: XCTestCase {
         waitUntilMenu()
 
         menuBarsQuery.menuItems["showPrefs"].click()
-        
     }
 
     func testAppRuns() throws {
         takeScreenshot(screenshot: app.screenshot(), name: "App")
     }
-
-
 }

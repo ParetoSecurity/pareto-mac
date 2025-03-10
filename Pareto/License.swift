@@ -111,7 +111,7 @@ enum License {
         var error: Unmanaged<CFError>?
         let attributes: [String: Any] = [
             kSecAttrKeyType as String: kSecAttrKeyTypeRSA,
-            kSecAttrKeyClass as String: kSecAttrKeyClassPublic
+            kSecAttrKeyClass as String: kSecAttrKeyClassPublic,
         ]
         guard let publicKey = SecKeyCreateFromData(attributes as CFDictionary, pubKeyData, &error) else {
             throw Error.badPublicKeyConversion

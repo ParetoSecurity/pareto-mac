@@ -7,6 +7,7 @@
 import Alamofire
 import os.log
 import Regex
+
 class AppGrammarlyCheck: AppCheck {
     static let sharedInstance = AppGrammarlyCheck()
 

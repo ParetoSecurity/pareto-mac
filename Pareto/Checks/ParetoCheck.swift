@@ -25,7 +25,7 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
     private(set) var UUID = "UUID"
     private(set) var TitleON = "TitleON"
     private(set) var TitleOFF = "TitleOFF"
-    
+
     // Add these properties to your ParetoCheck class:
     private var cachedIsRunnableValue: Bool?
     private var cachedIsRunnableTimestamp: Date?
@@ -34,21 +34,22 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
     public func isRunnableCached() -> Bool {
         let cacheDuration: TimeInterval = 300 // 5 minutes in seconds
         let now = Date()
-        
+
         // If a cached value exists and is still valid, return it.
         if let timestamp = cachedIsRunnableTimestamp,
            let value = cachedIsRunnableValue,
-           now.timeIntervalSince(timestamp) < cacheDuration {
+           now.timeIntervalSince(timestamp) < cacheDuration
+        {
             return value
         }
-        
+
         // Otherwise, compute the current state, cache it, and update the timestamp.
         let currentValue = isRunnable
         cachedIsRunnableValue = currentValue
         cachedIsRunnableTimestamp = now
         return currentValue
     }
-    
+
     var EnabledKey: String {
         "ParetoCheck-" + UUID + "-Enabled"
     }
@@ -165,7 +166,7 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
         UserDefaults.standard.register(defaults: [
             EnabledKey: true,
             PassesKey: false,
-            TimestampKey: 0
+            TimestampKey: 0,
         ])
     }
 
@@ -211,7 +212,7 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
         components.path = "/check/\(UUID)"
         components.queryItems = [
             URLQueryItem(name: "details", value: details),
-            URLQueryItem(name: "utm_source", value: AppInfo.utmSource)
+            URLQueryItem(name: "utm_source", value: AppInfo.utmSource),
         ]
 
         guard let url = components.url else {

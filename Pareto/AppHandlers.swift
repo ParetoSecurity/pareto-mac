@@ -341,7 +341,6 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
             alert.runModal()
         }
 
-
         if let data = try? AppInfo.logEntries().joined(separator: "\n") {
             if !data.isEmpty {
                 NSPasteboard.general.clearContents()

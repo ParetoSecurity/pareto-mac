@@ -51,7 +51,7 @@ class StatusBarController: NSObject, NSMenuDelegate {
             view.topAnchor.constraint(equalTo: button.topAnchor),
             view.leadingAnchor.constraint(equalTo: button.leadingAnchor),
             view.widthAnchor.constraint(equalTo: button.widthAnchor),
-            view.bottomAnchor.constraint(equalTo: button.bottomAnchor)
+            view.bottomAnchor.constraint(equalTo: button.bottomAnchor),
         ])
 
         if Defaults.firstLaunch() {

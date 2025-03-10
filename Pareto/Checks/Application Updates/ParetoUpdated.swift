@@ -1,32 +1,24 @@
 //
-//  ParetoRelease.swift
+//  ParetoUpdated.swift
 //  Pareto Security
 //
 //  Created by Janez Troha on 4. 3. 25.
 //
 
-import Foundation
-import Defaults
 import Alamofire
+import Defaults
+import Foundation
 import os.log
 
 struct ParetoRelease: Codable {
     let tagName: String
-    let targetCommitish: String
     let name: String
-    let draft: Bool
     let prerelease: Bool
-    let createdAt: Date
-    let publishedAt: Date
-    
+
     enum CodingKeys: String, CodingKey {
         case tagName = "tag_name"
-        case targetCommitish = "target_commitish"
         case name
-        case draft
         case prerelease
-        case createdAt = "created_at"
-        case publishedAt = "published_at"
     }
 }
 
@@ -34,87 +26,72 @@ typealias ParetoReleases = [ParetoRelease]
 
 class ParetoUpdated: ParetoCheck {
     static let sharedInstance = ParetoUpdated()
-    
+    private var updateCheckResult: Bool = false
+
     override var UUID: String {
         "44e4754a-0b42-4964-9cc2-b88b2023cb1e"
     }
-    
+
     override var TitleON: String {
         "Pareto Security is up-to-date"
     }
-    
+
     override var TitleOFF: String {
         "Pareto Security is outdated"
     }
-    
-    private func getPlatform() -> String {
-        return "macos"
+
+    // Helper function to compare semantic versions
+    private func compareVersions(_ version1: String, _ version2: String) -> ComparisonResult {
+        let v1 = version1.replacingOccurrences(of: "v", with: "")
+        let v2 = version2.replacingOccurrences(of: "v", with: "")
+
+        return v1.compare(v2, options: .numeric)
     }
-    
-    private func getDistribution() -> String {
-        if !Defaults[.teamID].isEmpty {
-            return "app-live-team"
-        }
-        return "app-live-opensource"
-    }
-    
+
     private func checkForUpdates(completion: @escaping (Bool) -> Void) {
-        let baseURL = "https://paretosecurity.com/api/updates"
-        
-        let parameters: [String: String] = [
-            "uuid": Defaults[.machineUUID],
-            "version": AppInfo.appVersion,
-            "os_version": AppInfo.macOSVersionString,
-            "platform": getPlatform(),
-            "app": "auditor",
-            "distribution": getDistribution()
-        ]
-        
-        AF.request(baseURL, parameters: parameters)
+        let baseURL = "https://api.github.com/repos/ParetoSecurity/pareto-mac/releases"
+
+        AF.request(baseURL)
             .responseDecodable(of: ParetoReleases.self, queue: AppCheck.queue) { response in
                 switch response.result {
-                case .success(let releases):
+                case let .success(releases):
                     if releases.isEmpty {
                         os_log("No releases found during update check")
                         completion(false)
                         return
                     }
-                    
-                    let isUpToDate = releases[0].tagName == AppInfo.appVersion
-                    os_log("Update check completed. Current version: %{public}s, Latest version: %{public}s",
+
+                    // Sort releases by version (descending order)
+                    let sortedReleases = releases.sorted {
+                        self.compareVersions($0.tagName, $1.tagName) == .orderedDescending
+                    }
+
+                    let isUpToDate = sortedReleases[0].tagName == AppInfo.appVersion
+                    os_log("Update check completed. App version: %{public}s, Github version: %{public}s",
                            AppInfo.appVersion,
                            releases[0].tagName)
                     completion(isUpToDate)
-                    
-                case .failure(let error):
+
+                case let .failure(error):
                     os_log("Failed to check for updates: %{public}s", error.localizedDescription)
                     completion(false)
                 }
             }
     }
-    
-    private var updateCheckResult: Bool = false
-    private var isCheckingForUpdates: Bool = false
-    private let checkLock = DispatchSemaphore(value: 1)
-    
+
     override func checkPasses() -> Bool {
-        checkLock.wait()
-        defer { checkLock.signal() }
-        
-        if !isCheckingForUpdates {
-            isCheckingForUpdates = true
-            
-            let checkSemaphore = DispatchSemaphore(value: 0)
-            
-            checkForUpdates { result in
-                self.updateCheckResult = result
-                self.isCheckingForUpdates = false
-                checkSemaphore.signal()
-            }
-            
-            _ = checkSemaphore.wait(timeout: .now() + 10)
+        // Create a semaphore to wait for the async operation to complete
+        let semaphore = DispatchSemaphore(value: 0)
+
+        // Call checkForUpdates with a completion handler
+        checkForUpdates { result in
+            self.updateCheckResult = result
+            semaphore.signal()
         }
-        
+
+        // Wait for the completion handler to be called
+        _ = semaphore.wait(timeout: .now() + 10.0) // 10-second timeout
+
         return updateCheckResult
     }
 }

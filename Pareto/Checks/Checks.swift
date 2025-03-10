@@ -25,7 +25,7 @@ class Claims: ObservableObject {
                 SecurityUpdateCheck.sharedInstance,
                 AutomaticDownloadCheck.sharedInstance,
                 SystemUpdatesCheck.sharedInstance,
-                AutoUpdateCheck.sharedInstance
+                AutoUpdateCheck.sharedInstance,
             ]),
             Claim(withTitle: "Access Security", withChecks: [
                 AutologinCheck.sharedInstance,
@@ -36,7 +36,7 @@ class Claims: ObservableObject {
                 SSHKeysStrengthCheck.sharedInstance,
                 PasswordAfterSleepCheck.sharedInstance,
                 NoUnusedUsers.sharedInstance,
-                NoAdminUser.sharedInstance
+                NoAdminUser.sharedInstance,
             ]),
             Claim(withTitle: "Firewall & Sharing", withChecks: [
                 FirewallCheck.sharedInstance,
@@ -48,7 +48,7 @@ class Claims: ObservableObject {
                 AirPlayCheck.sharedInstance,
                 AirDropCheck.sharedInstance,
                 MediaShareCheck.sharedInstance,
-                InternetShareCheck.sharedInstance
+                InternetShareCheck.sharedInstance,
             ]),
             Claim(withTitle: "System Integrity", withChecks: [
                 GatekeeperCheck.sharedInstance,
@@ -59,7 +59,7 @@ class Claims: ObservableObject {
                 SecureTerminalCheck.sharedInstance,
                 SecureiTermCheck.sharedInstance,
                 TimeMachineHasBackupCheck.sharedInstance,
-                TimeMachineIsEncryptedCheck.sharedInstance
+                TimeMachineIsEncryptedCheck.sharedInstance,
             ]),
             Claim(withTitle: "Application Updates", withChecks: Claims.updateChecks + [AutoUpdateAppCheck.sharedInstance, ParetoUpdated.sharedInstance]),
         ].sorted(by: { $0.title.lowercased() < $1.title.lowercased() })
@@ -88,6 +88,6 @@ class Claims: ObservableObject {
         AppVSCodeCheck.sharedInstance,
         AdobeReaderCheck.sharedInstance,
         AppLuLuCheck.sharedInstance,
-        AppMicrosoftTeamsCheck.sharedInstance
+        AppMicrosoftTeamsCheck.sharedInstance,
     ]
 }

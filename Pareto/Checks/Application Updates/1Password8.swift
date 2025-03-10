@@ -7,6 +7,7 @@
 import Alamofire
 import os.log
 import Regex
+
 class App1Password8Check: AppCheck {
     static let sharedInstance = App1Password8Check()
 

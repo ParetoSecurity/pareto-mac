@@ -125,7 +125,7 @@ enum AppInfo {
         let baseURL = "https://paretosecurity.com/docs/mac"
         return URL(string: baseURL)!
     }
-    
+
     static let bugReportURL = { () -> URL in
         let baseURL = "https://paretosecurity.com/report-bug?"
         let versions = getVersions().addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
@@ -158,7 +158,8 @@ enum AppInfo {
                 .compactMap({ $0 as? OSLogEntryLog })
                 .filter({ entry in
                     entry.subsystem == Bundle.main.bundleIdentifier
-                }) {
+                })
+            {
                 logs.append("\(log.subsystem): \(log.composedMessage)")
             }
         } else {
