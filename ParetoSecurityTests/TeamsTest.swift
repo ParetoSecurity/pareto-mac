@@ -21,7 +21,6 @@ class TeamsTest: XCTestCase {
     func testLink() throws {
         Defaults[.teamID] = "fd4e6814-440c-46d2-b240-4e0d2f786fbc"
         Defaults[.teamAPI] = "http://localhost"
-        Defaults[.appliedIgnoredChecks] = false
 
         let device = ReportingDevice(
             machineUUID: "5d486371-7841-4e4d-95c4-78c71cdaa44c",
@@ -49,7 +48,6 @@ class TeamsTest: XCTestCase {
 
         Team.settings { settings in
             XCTAssertEqual(settings?.enforcedList, [])
-            XCTAssertEqual(settings?.ignoredList, [])
         }
     }
 }

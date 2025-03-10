@@ -13,15 +13,10 @@ import JWTDecode
 import os.log
 
 struct DeviceSettings: Codable {
-    let ignoredChecks: [APICheck]
     let requiredChecks: [APICheck]
     let name: String
     let admin: String
     let forceSerialPush: Bool
-
-    var ignoredList: [String] {
-        ignoredChecks.map { $0.id }
-    }
 
     var enforcedList: [String] {
         requiredChecks.map { $0.id }
@@ -275,7 +270,6 @@ func VerifyTeamTicket(withTicket data: String, publicKey key: String = rsaPublic
 }
 
 class TeamSettingsUpdater: ObservableObject {
-    @Published var ignoredChecks: [String] = []
     @Published var enforcedChecks: [String] = []
     @Published var name: String = "Default Team"
     @Published var admin: String = "admin@niteo.co"
@@ -283,34 +277,12 @@ class TeamSettingsUpdater: ObservableObject {
 
     func update(completion: @escaping () -> Void) {
         Team.settings { res in
-            self.ignoredChecks = res?.ignoredList ?? []
             self.enforcedChecks = res?.enforcedList ?? []
             self.name = res?.name ?? "Default Team"
             self.admin = res?.admin ?? "admin@niteo.co"
             self.forceSerialPush = res?.forceSerialPush ?? false
-            os_log("Team ignored checks: %s", self.ignoredChecks.debugDescription)
             os_log("Team enforced checks: %s", self.enforcedChecks.debugDescription)
             completion()
         }
-    }
-
-    func updateIgnored() {
-        for claim in Claims.global.all {
-            for check in claim.checks {
-                if ignoredChecks.contains(where: { $0 == check.UUID }) {
-                    if !Defaults[.appliedIgnoredChecksIDs].contains(check.UUID) {
-                        // old version of sync
-                        if Defaults[.appliedIgnoredChecks] {
-                            NoUnusedUsers.sharedInstance.isActive = false
-                            NoAdminUser.sharedInstance.isActive = false
-                        } else {
-                            check.isActive = false
-                        }
-                        Defaults[.appliedIgnoredChecksIDs].append(check.UUID)
-                    }
-                }
-            }
-        }
-        os_log("Team ignored checks applied.")
     }
 }
