@@ -30,14 +30,14 @@ class PasswordManager: ParetoCheck {
             "Dashlane.app",
             "KeePassXC.app",
             "KeePassX.app",
-            "KeePassium.app",
+            "KeePassium.app"
         ]
 
         let searchPaths = [
             "/Applications",
             "/System/Applications",
             "/Applications/Setapp",
-            "\(NSHomeDirectory())/Applications",
+            "\(NSHomeDirectory())/Applications"
         ]
 
         for path in searchPaths {
@@ -61,14 +61,14 @@ class PasswordManager: ParetoCheck {
             "eiaeiblijfjekdanodkjadfinkhbfgcd", // nordpass
             "nngceckbapebfimnlniiiahkandclblb", // bitwarden
             "aeblfdkhhhdcdjpifhhbdiojplfjncoa", // 1password
-            "fdjamakpfbbddfjaooikfcpapjohcfmg", // dashlane
+            "fdjamakpfbbddfjaooikfcpapjohcfmg" // dashlane
         ]
 
         let browsers = [
             "Google/Chrome/Default/",
             "BraveSoftware/Brave-Browser/Default/",
             "Microsoft Edge/Default/",
-            "Arc/User Data/Default/",
+            "Arc/User Data/Default/"
         ]
 
         for browser in browsers {

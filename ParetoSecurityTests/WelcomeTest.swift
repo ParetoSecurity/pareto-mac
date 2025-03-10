@@ -13,14 +13,6 @@ import XCTest
 class WelcomeTest: XCTestCase {
     @State var step = Steps.Welcome
 
-    override class func setUp() {
-        super.setUp()
-    }
-
-    override class func tearDown() {
-        super.tearDown()
-    }
-
     func testWelcomeViewShow() throws {
         _ = WelcomeView()
     }

@@ -83,7 +83,7 @@ class AppCheck: ParetoCheck, AppCheckProtocol {
             URLQueryItem(name: "limit", value: "1"),
             URLQueryItem(name: "entity", value: "desktopSoftware"),
             URLQueryItem(name: "country", value: languageCode),
-            URLQueryItem(name: "bundleId", value: appBundle),
+            URLQueryItem(name: "bundleId", value: appBundle)
         ]
         if let request = url?.url {
             os_log("Requesting %{public}s", request.debugDescription)

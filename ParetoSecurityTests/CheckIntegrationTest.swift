@@ -9,13 +9,6 @@
 import XCTest
 
 class CheckIntegrationTest: XCTestCase {
-    override class func setUp() {
-        super.setUp()
-    }
-
-    override class func tearDown() {
-        super.tearDown()
-    }
 
     func testInit() throws {
         let check = IntegrationCheck()

@@ -49,16 +49,14 @@ struct TeamSettingsView: View {
         if !teamID.isEmpty {
             VStack(alignment: .leading) {
                 Section(
-                    footer: Text("Team Name").font(.caption))
-                {
+                    footer: Text("Team Name").font(.caption)) {
                     VStack(alignment: .leading) {
                         Text("\(teamSettings.name)")
                     }
                 }
                 Spacer(minLength: 1)
                 Section(
-                    footer: Text("Team Admin").font(.caption))
-                {
+                    footer: Text("Team Admin").font(.caption)) {
                     VStack(alignment: .leading) {
                         Link(teamSettings.admin, destination: URL(string: "mailto:\(teamSettings.admin)")!).contextMenu(ContextMenu(menuItems: {
                             Button("Copy", action: copyMail)
@@ -67,8 +65,7 @@ struct TeamSettingsView: View {
                 }
                 Spacer(minLength: 1)
                 Section(
-                    footer: Text("Device Name").font(.caption))
-                {
+                    footer: Text("Device Name").font(.caption)) {
                     VStack(alignment: .leading) {
                         Text("\(AppInfo.machineName)").contextMenu(ContextMenu(menuItems: {
                             Button("How to change", action: help)
@@ -77,8 +74,7 @@ struct TeamSettingsView: View {
                 }
                 Spacer(minLength: 1)
                 Section(
-                    footer: Text("Device ID").font(.caption))
-                {
+                    footer: Text("Device ID").font(.caption)) {
                     VStack(alignment: .leading) {
                         Text("\(machineUUID)").contextMenu(ContextMenu(menuItems: {
                             Button("Copy", action: copy)
@@ -88,8 +84,7 @@ struct TeamSettingsView: View {
                 Spacer(minLength: 2)
 
                 Section(
-                    footer: Text("When enabled, send model name and serial number.").font(.footnote))
-                {
+                    footer: Text("When enabled, send model name and serial number.").font(.footnote)) {
                     VStack(alignment: .leading) {
                         if teamSettings.forceSerialPush {
                             Toggle("Send inventory info on update", isOn: $sendHWInfo)

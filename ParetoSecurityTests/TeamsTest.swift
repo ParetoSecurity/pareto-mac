@@ -10,13 +10,6 @@ import Defaults
 import XCTest
 
 class TeamsTest: XCTestCase {
-    override class func setUp() {
-        super.setUp()
-    }
-
-    override class func tearDown() {
-        super.tearDown()
-    }
 
     func testLink() throws {
         Defaults[.teamID] = "fd4e6814-440c-46d2-b240-4e0d2f786fbc"

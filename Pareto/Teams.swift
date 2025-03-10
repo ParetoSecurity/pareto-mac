@@ -155,7 +155,7 @@ enum Team {
 
     static func link(withDevice device: ReportingDevice) -> DataRequest {
         let headers: HTTPHeaders = [
-            "X-Device-Auth": Defaults[.teamAuth],
+            "X-Device-Auth": Defaults[.teamAuth]
         ]
         let url = base + "/\(Defaults[.teamID])/device"
         os_log("Requesting %{public}s", url)
@@ -174,7 +174,7 @@ enum Team {
 
     static func update(withReport report: Report) -> DataRequest {
         let headers: HTTPHeaders = [
-            "X-Device-Auth": Defaults[.teamAuth],
+            "X-Device-Auth": Defaults[.teamAuth]
         ]
         let url = base + "/\(Defaults[.teamID])/device"
         os_log("Requesting %{public}s", url)
@@ -209,7 +209,7 @@ enum Team {
 
     static func settings(completion: @escaping (DeviceSettings?) -> Void) {
         let headers: HTTPHeaders = [
-            "X-Device-Auth": Defaults[.teamAuth],
+            "X-Device-Auth": Defaults[.teamAuth]
         ]
         AF.request(
             base + "/\(Defaults[.teamID])/settings",

@@ -65,12 +65,23 @@ class ParetoUpdated: ParetoCheck {
                     let sortedReleases = releases.sorted {
                         self.compareVersions($0.tagName, $1.tagName) == .orderedDescending
                     }
+                    
+                    
+                    if Defaults[.showBeta]{
+                        let isUpToDate = sortedReleases[0].tagName == AppInfo.appVersion
+                        os_log("Update check completed. App version: %{public}s, Github version: %{public}s",
+                               AppInfo.appVersion,
+                               releases[0].tagName)
+                        completion(isUpToDate)
 
-                    let isUpToDate = sortedReleases[0].tagName == AppInfo.appVersion
-                    os_log("Update check completed. App version: %{public}s, Github version: %{public}s",
-                           AppInfo.appVersion,
-                           releases[0].tagName)
-                    completion(isUpToDate)
+                    } else {
+                        let isUpToDate = sortedReleases.filter { !$0.prerelease }[0].tagName == AppInfo.appVersion
+                        os_log("Update check completed. App version: %{public}s, Github version: %{public}s",
+                               AppInfo.appVersion,
+                               releases[0].tagName)
+                        completion(isUpToDate)
+
+                    }
 
                 case let .failure(error):
                     os_log("Failed to check for updates: %{public}s", error.localizedDescription)

@@ -18,8 +18,7 @@ struct PublicApp: Codable {
         for app in allApps {
             let plist = PublicApp.readPlistFile(fileURL: app.appendingPathComponent("Contents/Info.plist"))
             if let appName = plist?["CFBundleName"] as? String,
-               let appBundle = plist?["CFBundleIdentifier"] as? String
-            {
+               let appBundle = plist?["CFBundleIdentifier"] as? String {
                 let bundleApp = PublicApp(
                     name: appName,
                     bundle: appBundle,
@@ -37,8 +36,7 @@ struct PublicApp: Codable {
             for app in userApps {
                 let plist = PublicApp.readPlistFile(fileURL: app.appendingPathComponent("Contents/Info.plist"))
                 if let appName = plist?["CFBundleName"] as? String,
-                   let appBundle = plist?["CFBundleIdentifier"] as? String
-                {
+                   let appBundle = plist?["CFBundleIdentifier"] as? String {
                     let bundleApp = PublicApp(
                         name: appName,
                         bundle: appBundle,

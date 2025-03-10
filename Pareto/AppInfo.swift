@@ -158,8 +158,7 @@ enum AppInfo {
                 .compactMap({ $0 as? OSLogEntryLog })
                 .filter({ entry in
                     entry.subsystem == Bundle.main.bundleIdentifier
-                })
-            {
+                }) {
                 logs.append("\(log.subsystem): \(log.composedMessage)")
             }
         } else {
