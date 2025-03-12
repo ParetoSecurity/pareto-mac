@@ -335,7 +335,7 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
     func copyLogs() {
         if !SystemUser.current.isAdmin {
             let alert = NSAlert()
-            alert.messageText = "Logs cannot be copied to the clipboard because you are using a non-admin user account. Please use the Console app to capture the application logs by searching for \"Pareto Security\" and copying them to the clipboard."
+            alert.messageText = "Logs cannot be copied to the clipboard because you are using a non-admin account. Please use the Console app to capture the application logs by searching for \"Pareto Security\" and copying them to the clipboard."
             alert.informativeText = "Visit our guide at paretosecurity.com/docs/mac/logs for help."
             alert.alertStyle = NSAlert.Style.informational
             alert.addButton(withTitle: "OK")
