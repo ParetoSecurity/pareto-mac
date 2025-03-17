@@ -252,29 +252,8 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
     }
 
     @objc func runChecks() {
-        if !Defaults.firstLaunch(), !AppInfo.Licensed, !enrolledHandler, Defaults.shouldShowNag() {
-            Defaults.shownNag()
-            DispatchQueue.main.async {
-                let alert = NSAlert()
-                alert.messageText = "You are running the free version of the app. Please consider purchasing the Personal lifetime license for unlimited devices."
-                alert.alertStyle = NSAlert.Style.informational
-                alert.addButton(withTitle: "Purchase")
-                alert.addButton(withTitle: "Later")
-                switch alert.runModal() {
-                case NSApplication.ModalResponse.alertFirstButtonReturn:
-                    NSWorkspace.shared.open(URL(string: "https://paretosecurity.com/pricing")!)
-                case NSApplication.ModalResponse.alertSecondButtonReturn:
-                    DispatchQueue.global(qos: .userInteractive).async {
-                        self.statusBar?.runChecks()
-                    }
-                default:
-                    os_log("Unknown")
-                }
-            }
-        } else {
-            DispatchQueue.global(qos: .userInteractive).async {
-                self.statusBar?.runChecks()
-            }
+        DispatchQueue.global(qos: .userInteractive).async {
+            self.statusBar?.runChecks()
         }
     }
 
@@ -407,7 +386,6 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
                     Defaults[.userID] = ""
                     Defaults[.teamAuth] = ticket.teamAuth
                     Defaults[.teamID] = ticket.teamUUID
-                    AppInfo.Licensed = true
                     Defaults[.reportingRole] = .team
                     Defaults[.isTeamOwner] = ticket.isTeamOwner
 
@@ -429,7 +407,7 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
                                 }
                             }
                         case .failure:
-                            Defaults.toFree()
+                            Defaults.toPersonal()
                             DispatchQueue.main.async {
                                 let alert = NSAlert()
                                 alert.messageText = "Device has been linked already! Please unlink the device and try again!"
@@ -443,7 +421,7 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
                     }
 
                 } catch {
-                    Defaults.toFree()
+                    Defaults.toPersonal()
                     DispatchQueue.main.async {
                         let alert = NSAlert()
                         alert.messageText = "Team ticket is not valid. Please email support@paretosecurity.com."

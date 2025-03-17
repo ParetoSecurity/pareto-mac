@@ -120,25 +120,3 @@ enum License {
         return SecKeyVerifySignature(publicKey, .rsaSignatureMessagePKCS1v15SHA512, input as CFData, signatureData as CFData, nil)
     }
 }
-
-struct LicensePayload: Decodable, Equatable {
-    // The "sub" (subject) claim identifies the principal that is the
-    // subject of the JWT.
-    var subject: String
-
-    // The "exp" (expiration time) claim identifies the expiration time on
-    // or after which the JWT MUST NOT be accepted for processing.
-    var issuedAt: Date
-
-    // Custom data.
-    var uuid: String
-    var role: String
-}
-
-func VerifyLicense(withLicense data: String, publicKey: String = rsaPublicKey) throws -> LicensePayload {
-    if try License.verify(jwt: data, withKey: publicKey) {
-        let jwt = try decode(jwt: data)
-        return LicensePayload(subject: jwt.subject!, issuedAt: jwt.issuedAt!, uuid: jwt.uuid!, role: jwt.role!)
-    }
-    throw License.Error.invalidLicense
-}

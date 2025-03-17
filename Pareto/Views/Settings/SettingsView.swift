@@ -14,7 +14,7 @@ struct SettingsView: View {
     @Default(.teamID) var teamID
 
     enum Tabs: Hashable {
-        case general, about, teams, checks, license, permissions
+        case general, about, teams, checks, permissions
     }
 
     var body: some View {
@@ -41,15 +41,6 @@ struct SettingsView: View {
                     Label("Checks", systemImage: "checkmark.seal")
                 }
                 .tag(Tabs.checks)
-            #if !SETAPP_ENABLED
-                if teamID.isEmpty {
-                    LicenseSettingsView()
-                        .tabItem {
-                            Label("License", systemImage: "rectangle.badge.person.crop")
-                        }
-                        .tag(Tabs.license)
-                }
-            #endif
             AboutSettingsView()
                 .tabItem {
                     Label("About", systemImage: "info")

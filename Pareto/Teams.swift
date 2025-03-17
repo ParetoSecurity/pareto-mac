@@ -195,7 +195,6 @@ enum Team {
                     Defaults[.userID] = ""
                     Defaults[.teamAuth] = ticket.teamAuth
                     Defaults[.teamID] = ticket.teamUUID
-                    AppInfo.Licensed = true
                     Defaults[.reportingRole] = .team
                     Defaults[.isTeamOwner] = ticket.isTeamOwner
                 } catch {

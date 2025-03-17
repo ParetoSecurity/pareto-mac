@@ -131,7 +131,6 @@ class AppDelegate: AppHandlers, NSApplicationDelegate {
                 Defaults[.userID] = ""
                 Defaults[.teamAuth] = ticket.teamAuth
                 Defaults[.teamID] = ticket.teamUUID
-                AppInfo.Licensed = true
                 Defaults[.reportingRole] = .team
                 Defaults[.isTeamOwner] = ticket.isTeamOwner
                 LaunchAtLogin.isEnabled = true
@@ -145,14 +144,14 @@ class AppDelegate: AppHandlers, NSApplicationDelegate {
                         exit(0)
                     case .failure:
                         print("Team ticket could not be linked")
-                        Defaults.toFree()
+                        Defaults.toPersonal()
                         exit(1)
                     }
                     exit(0)
                 }
             } catch {
                 print("Team ticket is not valid")
-                Defaults.toFree()
+                Defaults.toPersonal()
                 exit(1)
             }
         }
@@ -183,24 +182,18 @@ class AppDelegate: AppHandlers, NSApplicationDelegate {
             }
         #endif
 
-        // Verify license
+        // Verify team ticket
         #if !SETAPP_ENABLED
             do {
                 switch Defaults[.reportingRole] {
-                case .personal:
-                    _ = try VerifyLicense(withLicense: Defaults[.license])
-                    AppInfo.Licensed = true
                 case .team:
                     _ = try VerifyTeamTicket(withTicket: Defaults[.license])
-                    AppInfo.Licensed = true
                 default:
-                    Defaults.toFree()
+                    Defaults.toPersonal()
                 }
             } catch {
-                Defaults.toFree()
+                Defaults.toPersonal()
             }
-        #else
-            AppInfo.Licensed = true
         #endif
         statusBar = StatusBarController()
 

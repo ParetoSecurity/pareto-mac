@@ -86,7 +86,6 @@
 		4F1E6C6428355B2100C8AFAB /* InternetSharing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F1E6C6328355B2100C8AFAB /* InternetSharing.swift */; };
 		4F1E6C6528355B2100C8AFAB /* InternetSharing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F1E6C6328355B2100C8AFAB /* InternetSharing.swift */; };
 		4F1E6DDB2760081300FD3F01 /* Regex in Frameworks */ = {isa = PBXBuildFile; productRef = 4F1E6DDA2760081300FD3F01 /* Regex */; };
-		4F24A08E26EB734A0036F748 /* LicenseSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F24A08D26EB734A0036F748 /* LicenseSettingsView.swift */; };
 		4F24A09026EB735F0036F748 /* TeamSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F24A08F26EB735F0036F748 /* TeamSettings.swift */; };
 		4F24A09226EB73980036F748 /* AboutSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F24A09126EB73980036F748 /* AboutSettingsView.swift */; };
 		4F24A09426EB73C80036F748 /* ChecksSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F24A09326EB73C80036F748 /* ChecksSettingsView.swift */; };
@@ -110,7 +109,6 @@
 		4F37E7152718122E00A2B254 /* Updater.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F14487326D8EA5E00A5BA34 /* Updater.swift */; };
 		4F37E7162718122E00A2B254 /* Firewall.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F868DCE26A591E6005B876E /* Firewall.swift */; };
 		4F37E7172718122E00A2B254 /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F9791C026F5DB4F00E668F4 /* Color.swift */; };
-		4F37E7182718122E00A2B254 /* LicenseSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F24A08D26EB734A0036F748 /* LicenseSettingsView.swift */; };
 		4F37E7192718122E00A2B254 /* RemoteManagment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F35395426E8AD4B008F5DD3 /* RemoteManagment.swift */; };
 		4F37E71A2718122E00A2B254 /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB7C68026AFF25300FB1C41 /* Date.swift */; };
 		4F37E71B2718122E00A2B254 /* Teams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F343A5E26F7A3D4007D2F7D /* Teams.swift */; };
@@ -319,7 +317,6 @@
 		4F1E6C5D2834F5D200C8AFAB /* SecureTerminal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SecureTerminal.swift; sourceTree = "<group>"; };
 		4F1E6C602834F98A00C8AFAB /* SecureiTerm.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SecureiTerm.swift; sourceTree = "<group>"; };
 		4F1E6C6328355B2100C8AFAB /* InternetSharing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InternetSharing.swift; sourceTree = "<group>"; };
-		4F24A08D26EB734A0036F748 /* LicenseSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LicenseSettingsView.swift; sourceTree = "<group>"; };
 		4F24A08F26EB735F0036F748 /* TeamSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeamSettings.swift; sourceTree = "<group>"; };
 		4F24A09126EB73980036F748 /* AboutSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutSettingsView.swift; sourceTree = "<group>"; };
 		4F24A09326EB73C80036F748 /* ChecksSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChecksSettingsView.swift; sourceTree = "<group>"; };
@@ -608,7 +605,6 @@
 		4FAAD324277B154300AA5CEF /* Settings */ = {
 			isa = PBXGroup;
 			children = (
-				4F24A08D26EB734A0036F748 /* LicenseSettingsView.swift */,
 				4F103007269EE135008C1E86 /* SettingsView.swift */,
 				4F24A08F26EB735F0036F748 /* TeamSettings.swift */,
 				4F24A09126EB73980036F748 /* AboutSettingsView.swift */,
@@ -1054,7 +1050,6 @@
 				4F37E7162718122E00A2B254 /* Firewall.swift in Sources */,
 				4F37E7172718122E00A2B254 /* Color.swift in Sources */,
 				4F79F78E273BF6300082A5EB /* ChecksView.swift in Sources */,
-				4F37E7182718122E00A2B254 /* LicenseSettingsView.swift in Sources */,
 				4FE9C35B28B76117002C28FE /* User.swift in Sources */,
 				4F196F982D772DA7001031F0 /* ParetoUpdated.swift in Sources */,
 				4F37E7192718122E00A2B254 /* RemoteManagment.swift in Sources */,
@@ -1192,7 +1187,6 @@
 				4F868DCF26A591E6005B876E /* Firewall.swift in Sources */,
 				4F9791C126F5DB4F00E668F4 /* Color.swift in Sources */,
 				4F79F78D273BF6300082A5EB /* ChecksView.swift in Sources */,
-				4F24A08E26EB734A0036F748 /* LicenseSettingsView.swift in Sources */,
 				4FE9C35A28B76117002C28FE /* User.swift in Sources */,
 				4F196F992D772DA7001031F0 /* ParetoUpdated.swift in Sources */,
 				4F35395526E8AD4C008F5DD3 /* RemoteManagment.swift in Sources */,
