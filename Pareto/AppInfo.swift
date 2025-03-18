@@ -54,7 +54,6 @@ enum AppInfo {
         ProcessInfo.processInfo.arguments.contains("isRunningTests") || ProcessInfo.processInfo.environment["CI"] ?? "false" != "false"
     }
 
-    static var Licensed = false
     static var secExp = false
     static let Flags = FlagsUpdater()
     static let HWInfo = SPHardware.gather()
@@ -77,14 +76,10 @@ enum AppInfo {
         #if SETAPP_ENABLED
             source += "-setapp"
         #else
-            if Licensed {
-                if Defaults[.teamID].isEmpty {
-                    source += "-personal"
-                } else {
-                    source += "-team"
-                }
-            } else {
+            if Defaults[.teamID].isEmpty {
                 source += "-opensource"
+            } else {
+                source += "-team"
             }
         #endif
 

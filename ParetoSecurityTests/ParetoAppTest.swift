@@ -10,11 +10,6 @@ import XCTest
 
 class ParetoAppTest: XCTestCase {
 
-    func testActionEnrollPersonal() throws {
-        let app = AppHandlers()
-        app.processAction(URL(string: "paretosecurity://enrollSingle")!)
-    }
-
     func testActionEnrollTeam() throws {
         let app = AppHandlers()
         app.processAction(URL(string: "paretosecurity://enrollTeam")!)

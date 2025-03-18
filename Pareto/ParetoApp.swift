@@ -102,7 +102,7 @@ class AppDelegate: AppHandlers, NSApplicationDelegate {
         }
 
         if CommandLine.arguments.contains("-mdmTeam") {
-            if !Defaults[.license].isEmpty {
+            if !Defaults[.teamTicket].isEmpty {
                 print("Team license already active")
                 exit(0)
             }
@@ -125,13 +125,12 @@ class AppDelegate: AppHandlers, NSApplicationDelegate {
             }
 
             do {
-                let ticket = try VerifyTeamTicket(withTicket: token)
+                let ticket = try TeamTicket.verify(withTicket: token)
                 enrolledHandler = true
-                Defaults[.license] = token
+                Defaults[.teamTicket] = token
                 Defaults[.userID] = ""
                 Defaults[.teamAuth] = ticket.teamAuth
                 Defaults[.teamID] = ticket.teamUUID
-                AppInfo.Licensed = true
                 Defaults[.reportingRole] = .team
                 Defaults[.isTeamOwner] = ticket.isTeamOwner
                 LaunchAtLogin.isEnabled = true
@@ -145,14 +144,14 @@ class AppDelegate: AppHandlers, NSApplicationDelegate {
                         exit(0)
                     case .failure:
                         print("Team ticket could not be linked")
-                        Defaults.toFree()
+                        Defaults.toOpenSource()
                         exit(1)
                     }
                     exit(0)
                 }
             } catch {
                 print("Team ticket is not valid")
-                Defaults.toFree()
+                Defaults.toOpenSource()
                 exit(1)
             }
         }
@@ -183,24 +182,18 @@ class AppDelegate: AppHandlers, NSApplicationDelegate {
             }
         #endif
 
-        // Verify license
+        // Verify team ticket
         #if !SETAPP_ENABLED
             do {
                 switch Defaults[.reportingRole] {
-                case .personal:
-                    _ = try VerifyLicense(withLicense: Defaults[.license])
-                    AppInfo.Licensed = true
                 case .team:
-                    _ = try VerifyTeamTicket(withTicket: Defaults[.license])
-                    AppInfo.Licensed = true
+                    _ = try TeamTicket.verify(withTicket: Defaults[.teamTicket])
                 default:
-                    Defaults.toFree()
+                    Defaults.toOpenSource()
                 }
             } catch {
-                Defaults.toFree()
+                Defaults.toOpenSource()
             }
-        #else
-            AppInfo.Licensed = true
         #endif
         statusBar = StatusBarController()
 

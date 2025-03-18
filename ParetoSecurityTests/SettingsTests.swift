@@ -14,7 +14,7 @@ class SettingsViewTests: XCTestCase {
     func testSettingsView() throws {
         let subject = SettingsView(selected: SettingsView.Tabs.general)
         let sub = try subject.inspect().implicitAnyView()
-        XCTAssertEqual(try sub.tabView().count, 6)
+        XCTAssertEqual(try sub.tabView().count, 5)
     }
 
     func testAbout() throws {
@@ -30,9 +30,4 @@ class SettingsViewTests: XCTestCase {
         XCTAssertEqual(one, "The Teams subscription will give you a web dashboard for an overview of the company’s devices.")
     }
 
-    func testLicense() throws {
-        let subject = LicenseSettingsView()
-        let one = try subject.inspect().implicitAnyView().vStack()[0].text().string()
-        XCTAssertEqual(one, "You are running the free version of the app.")
-    }
 }

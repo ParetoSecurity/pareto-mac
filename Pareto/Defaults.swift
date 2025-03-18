@@ -12,9 +12,8 @@ import Foundation
 import SwiftUI
 
 enum ReportingRoles: String, Defaults.Serializable {
-    case free
     case team
-    case personal
+    case opensource
 }
 
 #if DEBUG
@@ -24,20 +23,19 @@ enum ReportingRoles: String, Defaults.Serializable {
 #endif
 
 extension Defaults.Keys {
+    static let reportingRole = Key<ReportingRoles>("reportingRole", default: .opensource, suite: extensionDefaults)
     // Teams
+    static let teamTicket = Key<String>("teamTicket", default: "", suite: extensionDefaults)
     static let userID = Key<String>("userID", default: "", suite: extensionDefaults)
     static let userEmail = Key<String>("userEmail", default: "", suite: extensionDefaults)
     static let isTeamOwner = Key<Bool>("isTeamOwner", default: false, suite: extensionDefaults)
     static let teamID = Key<String>("teamID", default: "", suite: extensionDefaults)
     static let teamAuth = Key<String>("teamAuth", default: "", suite: extensionDefaults)
+    static let teamAPI = Key<String>("teamAPI", default: Team.defaultAPI, suite: extensionDefaults)
+    static let lastTeamUpdate = Key<Int>("lastTeamUpdate", default: 0, suite: extensionDefaults)
     static let machineUUID = Key<String>("machineUUID", default: AppInfo.getSystemUUID() ?? UUID().uuidString, suite: extensionDefaults)
     static let sendHWInfo = Key<Bool>("sendHWInfo", default: false, suite: extensionDefaults)
     static let lastHWAsk = Key<Int>("lastHWAsk", default: 0, suite: extensionDefaults)
-    // License
-    static let license = Key<String>("license", default: "", suite: extensionDefaults)
-    static let reportingRole = Key<ReportingRoles>("reportingRole", default: .free, suite: extensionDefaults)
-    static let teamAPI = Key<String>("teamAPI", default: Team.defaultAPI, suite: extensionDefaults)
-    static let lastTeamUpdate = Key<Int>("lastTeamUpdate", default: 0, suite: extensionDefaults)
 
     // Updates
     static let updateNag = Key<Bool>("updateNag", default: false, suite: extensionDefaults)
@@ -53,7 +51,6 @@ extension Defaults.Keys {
     static let myChecks = Key<Bool>("myChecks", default: false, suite: extensionDefaults)
     static let myChecksURL = Key<URL?>("myChecksURL", default: nil, suite: extensionDefaults)
     static let disableChecksEvents = Key<Bool>("disableChecksEvents", default: false, suite: extensionDefaults)
-    static let lastNagShown = Key<Int>("lastNagShown", default: Date().currentTimeMs(), suite: extensionDefaults)
     static let checkForUpdatesRecentOnly = Key<Bool>("checkForUpdatesRecentOnly", default: true, suite: extensionDefaults)
     static let alternativeColor = Key<Bool>("alternativeColor", default: false, suite: extensionDefaults)
 }
@@ -117,20 +114,10 @@ public extension Defaults {
         Defaults[.lastTeamUpdate] = Date().currentTimeMs()
     }
 
-    static func shouldShowNag() -> Bool {
-        return Defaults[.lastNagShown] + (Date.HourInMs * 24 * AppInfo.Flags.nagScreenDelayDays) < Date().currentTimeMs()
-    }
-
-    static func shownNag() {
-        Defaults[.lastNagShown] = Date().currentTimeMs()
-    }
-
-    static func toFree() {
-        Defaults[.license] = ""
+    static func toOpenSource() {
         Defaults[.userEmail] = ""
         Defaults[.userID] = ""
         Defaults[.teamID] = ""
-        AppInfo.Licensed = false
-        Defaults[.reportingRole] = .free
+        Defaults[.reportingRole] = .opensource
     }
 }
