@@ -382,7 +382,7 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
                 do {
                     let ticket = try TeamTicket.verify(withTicket: jwt)
                     enrolledHandler = true
-                    Defaults[.license] = jwt
+                    Defaults[.teamTicket] = jwt
                     Defaults[.userID] = ""
                     Defaults[.teamAuth] = ticket.teamAuth
                     Defaults[.teamID] = ticket.teamUUID

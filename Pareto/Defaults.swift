@@ -25,7 +25,7 @@ enum ReportingRoles: String, Defaults.Serializable {
 extension Defaults.Keys {
     static let reportingRole = Key<ReportingRoles>("reportingRole", default: .personal, suite: extensionDefaults)
     // Teams
-    static let license = Key<String>("license", default: "", suite: extensionDefaults)
+    static let teamTicket = Key<String>("teamTicket", default: "", suite: extensionDefaults)
     static let userID = Key<String>("userID", default: "", suite: extensionDefaults)
     static let userEmail = Key<String>("userEmail", default: "", suite: extensionDefaults)
     static let isTeamOwner = Key<Bool>("isTeamOwner", default: false, suite: extensionDefaults)

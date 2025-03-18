@@ -102,7 +102,7 @@ class AppDelegate: AppHandlers, NSApplicationDelegate {
         }
 
         if CommandLine.arguments.contains("-mdmTeam") {
-            if !Defaults[.license].isEmpty {
+            if !Defaults[.teamTicket].isEmpty {
                 print("Team license already active")
                 exit(0)
             }
@@ -127,7 +127,7 @@ class AppDelegate: AppHandlers, NSApplicationDelegate {
             do {
                 let ticket = try TeamTicket.verify(withTicket: token)
                 enrolledHandler = true
-                Defaults[.license] = token
+                Defaults[.teamTicket] = token
                 Defaults[.userID] = ""
                 Defaults[.teamAuth] = ticket.teamAuth
                 Defaults[.teamID] = ticket.teamUUID
@@ -187,7 +187,7 @@ class AppDelegate: AppHandlers, NSApplicationDelegate {
             do {
                 switch Defaults[.reportingRole] {
                 case .team:
-                    _ = try TeamTicket.verify(withTicket: Defaults[.license])
+                    _ = try TeamTicket.verify(withTicket: Defaults[.teamTicket])
                 default:
                     Defaults.toPersonal()
                 }

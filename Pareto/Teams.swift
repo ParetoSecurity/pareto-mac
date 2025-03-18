@@ -235,7 +235,7 @@ enum Team {
                 os_log("Move detected, updating ticket", log: Log.api)
                 do {
                     let ticket = try TeamTicket.verify(withTicket: data.value!.token)
-                    Defaults[.license] = data.value!.token
+                    Defaults[.teamTicket] = data.value!.token
                     Defaults[.userID] = ""
                     Defaults[.teamAuth] = ticket.teamAuth
                     Defaults[.teamID] = ticket.teamUUID
@@ -307,7 +307,7 @@ enum TeamTicket {
         case invalidSignatureAlgorithm(String)
         case missingSignatureAlgorithm
         case invalidSignature
-        case invalidLicense
+        case invalidTicket
         case badPublicKeyConversion
     }
 
@@ -326,11 +326,11 @@ enum TeamTicket {
             )
 
             if !ticket.isValid() {
-                throw Error.invalidLicense
+                throw Error.invalidTicket
             }
             return ticket
         }
-        throw Error.invalidLicense
+        throw Error.invalidTicket
     }
 
     private static func verifySignature(jwt token: String, withKey key: String) throws -> Bool {
