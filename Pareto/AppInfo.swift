@@ -77,7 +77,7 @@ enum AppInfo {
             source += "-setapp"
         #else
             if Defaults[.teamID].isEmpty {
-                source += "-personal"
+                source += "-opensource"
             } else {
                 source += "-team"
             }

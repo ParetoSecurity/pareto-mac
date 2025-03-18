@@ -144,14 +144,14 @@ class AppDelegate: AppHandlers, NSApplicationDelegate {
                         exit(0)
                     case .failure:
                         print("Team ticket could not be linked")
-                        Defaults.toPersonal()
+                        Defaults.toOpenSource()
                         exit(1)
                     }
                     exit(0)
                 }
             } catch {
                 print("Team ticket is not valid")
-                Defaults.toPersonal()
+                Defaults.toOpenSource()
                 exit(1)
             }
         }
@@ -189,10 +189,10 @@ class AppDelegate: AppHandlers, NSApplicationDelegate {
                 case .team:
                     _ = try TeamTicket.verify(withTicket: Defaults[.teamTicket])
                 default:
-                    Defaults.toPersonal()
+                    Defaults.toOpenSource()
                 }
             } catch {
-                Defaults.toPersonal()
+                Defaults.toOpenSource()
             }
         #endif
         statusBar = StatusBarController()

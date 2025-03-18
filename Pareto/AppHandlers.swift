@@ -407,7 +407,7 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
                                 }
                             }
                         case .failure:
-                            Defaults.toPersonal()
+                            Defaults.toOpenSource()
                             DispatchQueue.main.async {
                                 let alert = NSAlert()
                                 alert.messageText = "Device has been linked already! Please unlink the device and try again!"
@@ -421,7 +421,7 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
                     }
 
                 } catch {
-                    Defaults.toPersonal()
+                    Defaults.toOpenSource()
                     DispatchQueue.main.async {
                         let alert = NSAlert()
                         alert.messageText = "Team ticket is not valid. Please email support@paretosecurity.com."

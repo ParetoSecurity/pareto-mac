@@ -102,7 +102,7 @@ struct TeamSettingsView: View {
 
                 HStack {
                     Button("Unlink this device") {
-                        Defaults.toPersonal()
+                        Defaults.toOpenSource()
                     }
                     Link("Team Dashboard »",
                          destination: AppInfo.teamsURL())

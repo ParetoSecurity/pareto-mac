@@ -13,7 +13,7 @@ import SwiftUI
 
 enum ReportingRoles: String, Defaults.Serializable {
     case team
-    case personal
+    case opensource
 }
 
 #if DEBUG
@@ -23,7 +23,7 @@ enum ReportingRoles: String, Defaults.Serializable {
 #endif
 
 extension Defaults.Keys {
-    static let reportingRole = Key<ReportingRoles>("reportingRole", default: .personal, suite: extensionDefaults)
+    static let reportingRole = Key<ReportingRoles>("reportingRole", default: .opensource, suite: extensionDefaults)
     // Teams
     static let teamTicket = Key<String>("teamTicket", default: "", suite: extensionDefaults)
     static let userID = Key<String>("userID", default: "", suite: extensionDefaults)
@@ -114,10 +114,10 @@ public extension Defaults {
         Defaults[.lastTeamUpdate] = Date().currentTimeMs()
     }
 
-    static func toPersonal() {
+    static func toOpenSource() {
         Defaults[.userEmail] = ""
         Defaults[.userID] = ""
         Defaults[.teamID] = ""
-        Defaults[.reportingRole] = .personal
+        Defaults[.reportingRole] = .opensource
     }
 }
