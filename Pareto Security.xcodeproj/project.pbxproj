@@ -137,7 +137,6 @@
 		4F37E7332718122E00A2B254 /* NSWorkspace.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F84530F26D634E5007C3B04 /* NSWorkspace.swift */; };
 		4F37E7342718122E00A2B254 /* NSImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB7C68626AFF29A00FB1C41 /* NSImage.swift */; };
 		4F37E7352718122E00A2B254 /* AppInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F6A92E926C54AB7006C2F2D /* AppInfo.swift */; };
-		4F37E7362718122E00A2B254 /* License.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FDAD88E26EB784A00F64E61 /* License.swift */; };
 		4F37E7382718122E00A2B254 /* Version in Frameworks */ = {isa = PBXBuildFile; productRef = 4F37E6FF2718122E00A2B254 /* Version */; };
 		4F37E7392718122E00A2B254 /* Path in Frameworks */ = {isa = PBXBuildFile; productRef = 4F37E7012718122E00A2B254 /* Path */; };
 		4F37E73A2718122E00A2B254 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 4F37E7032718122E00A2B254 /* Alamofire */; };
@@ -172,7 +171,6 @@
 		4F4E286127BD748D006A18C1 /* PasswordAfterSleep.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F4E285F27BD748D006A18C1 /* PasswordAfterSleep.swift */; };
 		4F56AB5B278C57F1001CAAEF /* TimeMachine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F56AB5A278C57F1001CAAEF /* TimeMachine.swift */; };
 		4F56AB5C278C57F1001CAAEF /* TimeMachine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F56AB5A278C57F1001CAAEF /* TimeMachine.swift */; };
-		4F57135326F8A6AC004B4359 /* LicenseTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F57135226F8A6AC004B4359 /* LicenseTest.swift */; };
 		4F57135526F8ACCC004B4359 /* WelcomeTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F57135426F8ACCC004B4359 /* WelcomeTest.swift */; };
 		4F57135726F8BF84004B4359 /* ParetoAppTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F57135626F8BF84004B4359 /* ParetoAppTest.swift */; };
 		4F57135B26F8C5D7004B4359 /* AppHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F57135A26F8C5D7004B4359 /* AppHandlers.swift */; };
@@ -235,7 +233,6 @@
 		4FD0A24126A024440070BED4 /* Gatekeeper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FD0A24026A024440070BED4 /* Gatekeeper.swift */; };
 		4FDA93A32771D9FC00F9D8B4 /* Checks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FDA93A22771D9FC00F9D8B4 /* Checks.swift */; };
 		4FDA93A42771D9FC00F9D8B4 /* Checks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FDA93A22771D9FC00F9D8B4 /* Checks.swift */; };
-		4FDAD88F26EB784A00F64E61 /* License.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FDAD88E26EB784A00F64E61 /* License.swift */; };
 		4FDDE1972D53BA3200D9E853 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FDDE1962D53BA3200D9E853 /* String.swift */; };
 		4FDDE1982D53BA3200D9E853 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FDDE1962D53BA3200D9E853 /* String.swift */; };
 		4FDDE1992D53BA3200D9E853 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FDDE1962D53BA3200D9E853 /* String.swift */; };
@@ -339,7 +336,6 @@
 		4F4E23B42C4E484500484782 /* Trim.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Trim.swift; sourceTree = "<group>"; };
 		4F4E285F27BD748D006A18C1 /* PasswordAfterSleep.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PasswordAfterSleep.swift; sourceTree = "<group>"; };
 		4F56AB5A278C57F1001CAAEF /* TimeMachine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimeMachine.swift; sourceTree = "<group>"; };
-		4F57135226F8A6AC004B4359 /* LicenseTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LicenseTest.swift; sourceTree = "<group>"; };
 		4F57135426F8ACCC004B4359 /* WelcomeTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeTest.swift; sourceTree = "<group>"; };
 		4F57135626F8BF84004B4359 /* ParetoAppTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParetoAppTest.swift; sourceTree = "<group>"; };
 		4F57135A26F8C5D7004B4359 /* AppHandlers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppHandlers.swift; sourceTree = "<group>"; };
@@ -388,7 +384,6 @@
 		4FCAA78A2B4AD7C300A62B4E /* NoAdminUser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NoAdminUser.swift; sourceTree = "<group>"; };
 		4FD0A24026A024440070BED4 /* Gatekeeper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Gatekeeper.swift; sourceTree = "<group>"; };
 		4FDA93A22771D9FC00F9D8B4 /* Checks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Checks.swift; sourceTree = "<group>"; };
-		4FDAD88E26EB784A00F64E61 /* License.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = License.swift; sourceTree = "<group>"; };
 		4FDDE1962D53BA3200D9E853 /* String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
 		4FE9C35928B76117002C28FE /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		4FEBA2EE269CD48F009B2469 /* Pareto Security.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Pareto Security.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -663,7 +658,6 @@
 				4FC81A4B26C41DC8006EABA8 /* ParetoSecurityTests.swift */,
 				4F84A94326CBBA6900A1579D /* SettingsTests.swift */,
 				4FF13D9C26DE235700E4084E /* UpdaterTest.swift */,
-				4F57135226F8A6AC004B4359 /* LicenseTest.swift */,
 				4F57135426F8ACCC004B4359 /* WelcomeTest.swift */,
 				4F57135626F8BF84004B4359 /* ParetoAppTest.swift */,
 				4F57135C26F8C921004B4359 /* TeamsTest.swift */,
@@ -718,7 +712,6 @@
 				4FF13D9626DCCB9900E4084E /* Utils.swift */,
 				4F14487326D8EA5E00A5BA34 /* Updater.swift */,
 				4FF22A6426F0CFA500500213 /* Flags.swift */,
-				4FDAD88E26EB784A00F64E61 /* License.swift */,
 			);
 			path = Pareto;
 			sourceTree = "<group>";
@@ -1128,7 +1121,6 @@
 				4F6A2CE729CDC7C800B653C2 /* SSHCheck.swift in Sources */,
 				4FB51A5827A94457003F528E /* SecurityUpdateCheck.swift in Sources */,
 				4F37E7352718122E00A2B254 /* AppInfo.swift in Sources */,
-				4F37E7362718122E00A2B254 /* License.swift in Sources */,
 				4F84EC9329DC3A030047C79C /* PermissionsSettingsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1148,7 +1140,6 @@
 			files = (
 				4F84A94426CBBA6900A1579D /* SettingsTests.swift in Sources */,
 				4FDDE19A2D53BA3200D9E853 /* String.swift in Sources */,
-				4F57135326F8A6AC004B4359 /* LicenseTest.swift in Sources */,
 				4F57135526F8ACCC004B4359 /* WelcomeTest.swift in Sources */,
 				4F57135726F8BF84004B4359 /* ParetoAppTest.swift in Sources */,
 				4F57135D26F8C921004B4359 /* TeamsTest.swift in Sources */,
@@ -1265,7 +1256,6 @@
 				4F6A2CE629CDC7C800B653C2 /* SSHCheck.swift in Sources */,
 				4FB51A5727A94457003F528E /* SecurityUpdateCheck.swift in Sources */,
 				4F6A92EA26C54AB7006C2F2D /* AppInfo.swift in Sources */,
-				4FDAD88F26EB784A00F64E61 /* License.swift in Sources */,
 				4F84EC9229DC3A030047C79C /* PermissionsSettingsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -125,7 +125,7 @@ class AppDelegate: AppHandlers, NSApplicationDelegate {
             }
 
             do {
-                let ticket = try VerifyTeamTicket(withTicket: token)
+                let ticket = try TeamTicket.verify(withTicket: token)
                 enrolledHandler = true
                 Defaults[.license] = token
                 Defaults[.userID] = ""
@@ -187,7 +187,7 @@ class AppDelegate: AppHandlers, NSApplicationDelegate {
             do {
                 switch Defaults[.reportingRole] {
                 case .team:
-                    _ = try VerifyTeamTicket(withTicket: Defaults[.license])
+                    _ = try TeamTicket.verify(withTicket: Defaults[.license])
                 default:
                     Defaults.toPersonal()
                 }

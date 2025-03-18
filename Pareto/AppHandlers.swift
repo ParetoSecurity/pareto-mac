@@ -380,7 +380,7 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
 
                 let jwt = url.queryParams()["token"] ?? ""
                 do {
-                    let ticket = try VerifyTeamTicket(withTicket: jwt)
+                    let ticket = try TeamTicket.verify(withTicket: jwt)
                     enrolledHandler = true
                     Defaults[.license] = jwt
                     Defaults[.userID] = ""
