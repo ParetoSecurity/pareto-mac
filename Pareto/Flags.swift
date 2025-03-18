@@ -11,7 +11,6 @@ import Foundation
 import os.log
 
 class FlagsUpdater: ObservableObject {
-    @Published var personalLicenseSharing: Bool = true
     @Published var dashboardMenu: Bool = true
     @Published var dashboardMenuAll: Bool = true
     @Published var useEdgeCache: Bool = true
