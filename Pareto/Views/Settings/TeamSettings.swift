@@ -117,7 +117,7 @@ struct TeamSettingsView: View {
             Form {
                 Text("The Teams subscription will give you a web dashboard for an overview of the company’s devices.")
                 Link("Learn more »",
-                     destination: URL(string: "https://paretosecurity.com/pricing?utm_source=\(AppInfo.utmSource)&utm_medium=teams-link")!)
+                     destination: URL(string: "https://paretosecurity.com/product/device-monitoring?utm_source=\(AppInfo.utmSource)&utm_medium=teams-link")!)
             }.frame(width: 380).padding(25)
         }
     }

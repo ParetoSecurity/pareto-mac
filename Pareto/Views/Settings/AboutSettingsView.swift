@@ -25,7 +25,7 @@ struct AboutSettingsView: View {
 
     var body: some View {
         HStack {
-            Image("Logo").resizable()
+            Image("Icon").resizable()
                 .aspectRatio(contentMode: .fit).onTapGesture {
                     konami += 1
                     if konami >= 3 {
