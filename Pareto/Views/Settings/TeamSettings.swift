@@ -114,10 +114,8 @@ struct TeamSettingsView: View {
                 }
             }
         } else {
-            Form {
-                Text("The Teams subscription will give you a web dashboard for an overview of the company’s devices.")
-                Link("Learn more »",
-                     destination: URL(string: "https://paretosecurity.com/product/device-monitoring?utm_source=\(AppInfo.utmSource)&utm_medium=teams-link")!)
+            Group {
+                Text("The Teams subscription will give you a web dashboard for an overview of the company’s devices. [Learn more »](https://paretosecurity.com/product/device-monitoring)")
             }.frame(width: 380).padding(25)
         }
     }

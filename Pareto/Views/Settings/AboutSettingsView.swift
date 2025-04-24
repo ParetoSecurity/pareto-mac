@@ -41,8 +41,7 @@ struct AboutSettingsView: View {
                     }
                 }
             VStack(alignment: .leading) {
-                Link("Pareto Security",
-                     destination: URL(string: "https://paretosecurity.com")!).font(.title)
+                Text("Pareto Security").font(.title)
 
                 VStack(alignment: .leading, spacing: 0) {
                     Text("Version: \(AppInfo.appVersion) - \(AppInfo.buildVersion)")
@@ -65,7 +64,7 @@ struct AboutSettingsView: View {
                 Spacer()
                 Text("We’d love to [hear from you!](https://paretosecurity.com/contact)")
                 Spacer()
-                Text("Made with ❤️ at [Niteo](https://paretosecurity.com/about)")
+                Text("Made with ❤️ in 🇪🇺")
             }
 
         }.frame(width: 380, height: 150).padding(25).onAppear(perform: fetch)
