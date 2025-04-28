@@ -182,18 +182,9 @@ class AppDelegate: AppHandlers, NSApplicationDelegate {
             }
         #endif
 
-        // Verify team ticket
+        // Migrate team ticket
         #if !SETAPP_ENABLED
-            do {
-                switch Defaults[.reportingRole] {
-                case .team:
-                    _ = try TeamTicket.verify(withTicket: Defaults[.teamTicket])
-                default:
-                    Defaults.toOpenSource()
-                }
-            } catch {
-                Defaults.toOpenSource()
-            }
+        TeamTicket.migrate()
         #endif
         statusBar = StatusBarController()
 

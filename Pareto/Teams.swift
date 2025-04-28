@@ -196,6 +196,7 @@ enum Team {
     public static let defaultAPI = "https://dash.paretosecurity.com/api/v1/team"
     private static let base = Defaults[.teamAPI]
     private static let queue = DispatchQueue(label: "co.pareto.api", qos: .userInteractive, attributes: .concurrent)
+    
 
     static func link(withDevice device: ReportingDevice) -> DataRequest {
         let headers: HTTPHeaders = [
@@ -311,6 +312,22 @@ enum TeamTicket {
         case badPublicKeyConversion
     }
 
+    public static func migrate(publicKey key: String = rsaPublicKey) {
+        do {
+            if !Defaults[.license].isEmpty && !Defaults[.migrated] {
+                let ticket = try TeamTicket.verify(withTicket: Defaults[.license], publicKey: key)
+                Defaults[.teamTicket] = Defaults[.license]
+                Defaults[.teamAuth] = ticket.teamAuth
+                Defaults[.teamID] = ticket.teamUUID
+                Defaults[.reportingRole] = .team
+                Defaults[.isTeamOwner] = ticket.isTeamOwner
+                Defaults[.migrated] = true
+            }
+        } catch {
+            os_log("Migration detected, ticket parsing failed", log: Log.api)
+        }
+    }
+    
 
     public static func verify(withTicket data: String, publicKey key: String = rsaPublicKey) throws -> Payload {
         if try verifySignature(jwt: data, withKey: key) {
