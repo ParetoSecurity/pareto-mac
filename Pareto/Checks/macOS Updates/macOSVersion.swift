@@ -59,6 +59,9 @@ class MacOSVersionCheck: ParetoCheck {
         if #available(macOS 14, *) {
             doc = "HT213895"
         }
+        if #available(macOS 15, *) {
+            doc = "120283"
+        }
         var tempVersion = "0.0.0"
         let lock = DispatchSemaphore(value: 0)
         getLatestVersion(doc: doc) { version in
