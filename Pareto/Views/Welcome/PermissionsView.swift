@@ -77,7 +77,7 @@ struct PermissionsView: View {
             HStack {
                 VStack(alignment: .leading) {
                     Text("System Events Access").font(.title3)
-                    Text("App requires read-only access to system events so that it can react on connectivity changes, settings changes, and to run checks. [Learn more](https://help.paretosecurity.com/article/312-app-permissions)").font(.footnote)
+                    Text("App requires read-only access to system events so that it can react on connectivity changes, settings changes, and to run checks. [Learn more](https://paretosecurity.com/docs/mac/permissions)").font(.footnote)
                 }
 
                 Button(action: authorizeOSAClick, label: {
@@ -96,7 +96,7 @@ struct PermissionsView: View {
             HStack {
                 VStack(alignment: .leading) {
                     Text("Full Disk Access").font(.title3)
-                    Text("App requires full disk access if you want to use the Time Machine checks. [Learn more](https://help.paretosecurity.com/article/312-app-permissions)").font(.footnote)
+                    Text("App requires full disk access if you want to use the Time Machine checks. [Learn more](https://paretosecurity.com/docs/mac/permissions)").font(.footnote)
                 }
                 Button(action: authorizeFDAClick, label: {
                     if checker.ran {
