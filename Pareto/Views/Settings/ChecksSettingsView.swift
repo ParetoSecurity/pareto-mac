@@ -59,7 +59,7 @@ struct ChecksSettingsView: View {
                                             Text("Authorize").font(.footnote)
                                         }
                                         Link("?",
-                                             destination: URL(string: "https://help.paretosecurity.com/article/312-app-permissions?utm_source=\(AppInfo.utmSource)")!)
+                                             destination: URL(string: "https://paretosecurity.com/docs/mac/permissions?utm_source=\(AppInfo.utmSource)")!)
                                     }
                                 }
                                 if check.showSettingsWarnEvents && !check.isRunnable {
@@ -72,7 +72,7 @@ struct ChecksSettingsView: View {
                                             Text("Authorize").font(.footnote)
                                         }
                                         Link("?",
-                                             destination: URL(string: "https://help.paretosecurity.com/article/312-app-permissions?utm_source=\(AppInfo.utmSource)")!)
+                                             destination: URL(string: "https://paretosecurity.com/docs/mac/permissions?utm_source=\(AppInfo.utmSource)")!)
                                     }
                                 }
                             }.padding(.vertical, 5.0)
