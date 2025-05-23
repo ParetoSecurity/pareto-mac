@@ -20,7 +20,7 @@ struct PermissionsSettingsView: View {
     @Default(.myChecks) var myChecks
     @Default(.myChecksURL) var myChecksURL
     @Default(.hideWhenNoFailures) var hideWhenNoFailures
-
+    @StateObject private var helperToolManager = HelperToolManager()
     @ObservedObject fileprivate var checker = PermissionsChecker()
 
     func authorizeOSAClick() {
@@ -35,15 +35,42 @@ struct PermissionsSettingsView: View {
         }
         NSApp.activate(ignoringOtherApps: true)
     }
-
+    
+    func authorizeFWClick() async {
+        if helperToolManager.isHelperToolInstalled {
+            await helperToolManager.manageHelperTool(action: .uninstall)
+            return
+        }
+        await helperToolManager.manageHelperTool(action: .install)
+    }
+    
     var body: some View {
         VStack {
+            HStack {
+                VStack(alignment: .leading) {
+                    Text("Firewall Access").font(.headline)
+                    Text("App requires read-only access to firewall to perform checks. [Learn more](https://paretosecurity.com/docs/mac/firewall)").font(.footnote).padding([.top], 1)
+                }
+                Spacer()
+                Button(action: { Task { await authorizeFWClick() } }, label: {
+                    if checker.ran {
+                        if helperToolManager.isHelperToolInstalled {
+                            Text("Remove").frame(width: 70)
+                        } else {
+                            Text("Authorize").frame(width: 70)
+                        }
+                    } else {
+                        Text("Verifying").frame(width: 70)
+                    }
+                }).disabled(!checker.ran)
+
+            }.frame(width: 380, alignment: .leading)
             HStack {
                 VStack(alignment: .leading) {
                     Text("System Events Access").font(.headline)
                     Text("App requires read-only access to system events so that it can react on connectivity changes, settings changes, and to run checks. [Learn more](https://paretosecurity.com/docs/mac/permissions)").font(.footnote).padding([.top], 1)
                 }
-
+                Spacer()
                 Button(action: authorizeOSAClick, label: {
                     if checker.ran {
                         if checker.osaAuthorized {
@@ -54,7 +81,7 @@ struct PermissionsSettingsView: View {
                     } else {
                         Text("Verifying").frame(width: 70)
                     }
-                }).disabled(checker.osaAuthorized)
+                }).disabled(checker.osaAuthorized || !checker.ran)
 
             }.frame(width: 380, alignment: .leading)
             HStack {
@@ -62,6 +89,7 @@ struct PermissionsSettingsView: View {
                     Text("Full Disk Access").font(.headline)
                     Text("App requires full disk access if you want to use the Time Machine checks. [Learn more](https://paretosecurity.com/docs/mac/permissions)").font(.footnote).padding([.top], 1)
                 }
+                Spacer()
                 Button(action: authorizeFDAClick, label: {
                     if checker.ran {
                         if checker.fdaAuthorized {
@@ -72,7 +100,7 @@ struct PermissionsSettingsView: View {
                     } else {
                         Text("Verifying").frame(width: 70)
                     }
-                }).disabled(checker.fdaAuthorized)
+                }).disabled(checker.fdaAuthorized || !checker.ran)
 
             }.frame(width: 380, alignment: .leading)
         }.frame(maxWidth: 380, minHeight: 120).padding(25).onAppear {

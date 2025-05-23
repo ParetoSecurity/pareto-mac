@@ -5,6 +5,10 @@
 //  Created by Janez Troha on 15/07/2021.
 //
 
+import Foundation
+import os.log
+
+
 class FirewallCheck: ParetoCheck {
     static let sharedInstance = FirewallCheck()
     override var UUID: String {
@@ -23,45 +27,27 @@ class FirewallCheck: ParetoCheck {
         return true
     }
 
-    override public var hasDebug: Bool {
-        return true
-    }
-
-    override public func debugInfo() -> String {
-        let systemextensionsctl = runCMD(app: "/usr/bin/systemextensionsctl", args: ["list", "com.apple.system_extension.network_extension"])
-        return "systemextensionsctl:\n\(systemextensionsctl)"
-    }
-
-    func extensionActive(name: String) -> Bool {
-        let list = runCMD(app: "/usr/bin/systemextensionsctl", args: ["list", "com.apple.system_extension.network_extension"])
-        for app in list.split(separator: "\n") {
-            if app.contains(name) {
-                return app.contains("activated enabled")
-            }
-        }
-        return false
-    }
-
-    var isLittleSnitchActive: Bool {
-        extensionActive(name: "at.obdev.littlesnitch.networkextension")
-    }
-
-    var isLuluActive: Bool {
-        extensionActive(name: "com.objective-see.lulu.extension")
-    }
-
     override func checkPasses() -> Bool {
         if #available(macOS 15, *) {
-            let out = runCMD(app: "/usr/libexec/ApplicationFirewall/socketfilterfw", args: ["--getglobalstate"])
-            return out.contains("State = 1") || out.contains("State = 2")
-        } else {
-            let native = readDefaultsFile(path: "/Library/Preferences/com.apple.alf.plist")
-
-            if let globalstate = native?.value(forKey: "globalstate") as? Int {
-                return globalstate >= 1
+            let semaphore = DispatchSemaphore(value: 0)
+            var enabled = false
+            DispatchQueue.global(qos: .userInteractive).async {
+                Task {
+                    await HelperToolManager().isFirewallEnabled { out in
+                        enabled = out.contains("State = 1") || out.contains("State = 2")
+                        semaphore.signal()
+                    }
+                }
             }
-
-            return false
+            semaphore.wait()
+            return enabled
         }
+        
+        let native = readDefaultsFile(path: "/Library/Preferences/com.apple.alf.plist")
+        if let globalstate = native?.value(forKey: "globalstate") as? Int {
+            return globalstate >= 1
+        }
+        return false
+        
     }
 }

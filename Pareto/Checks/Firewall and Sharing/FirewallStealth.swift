@@ -5,6 +5,8 @@
 //  Created by Janez Troha on 15/07/2021.
 //
 
+import Foundation
+
 class FirewallStealthCheck: ParetoCheck {
     static let sharedInstance = FirewallStealthCheck()
     override var UUID: String {
@@ -23,16 +25,6 @@ class FirewallStealthCheck: ParetoCheck {
         return FirewallCheck.sharedInstance.isActive && isActive
     }
 
-    override public var hasDebug: Bool {
-        return true
-    }
-
-    override public func debugInfo() -> String {
-        let dictionary = readDefaultsFile(path: "/Library/Preferences/com.apple.alf.plist")
-        let out = runCMD(app: "/usr/libexec/ApplicationFirewall/socketfilterfw", args: ["--getstealthmode"])
-        return "com.apple.alf.plist:\n\(dictionary.debugDescription)\nsocketfilterfw:\n\(out)"
-    }
-
     override public var showSettings: Bool {
         if teamEnforced {
             return false
@@ -41,6 +33,23 @@ class FirewallStealthCheck: ParetoCheck {
     }
 
     override func checkPasses() -> Bool {
+
+        if #available(macOS 15, *) {
+            let semaphore = DispatchSemaphore(value: 0)
+            var enabled = false
+
+            DispatchQueue.global(qos: .userInteractive).async {
+                Task {
+                    await HelperToolManager().isFirewallStealthEnabled { out in
+                        enabled = out.contains("enabled") || out.contains("mode is on")
+                        semaphore.signal()
+                    }
+                }
+            }
+
+            semaphore.wait()
+            return enabled
+        }
         let out = runCMD(app: "/usr/libexec/ApplicationFirewall/socketfilterfw", args: ["--getstealthmode"])
         return out.contains("enabled") || out.contains("mode is on")
     }
