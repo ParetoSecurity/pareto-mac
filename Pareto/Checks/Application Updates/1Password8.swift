@@ -30,6 +30,7 @@ class App1Password8Check: AppCheck {
                 completion(result.last?.groups.first?.value ?? "0.0.0")
             } else {
                 os_log("%{public}s failed: %{public}s", self.appBundle, response.error.debugDescription)
+                self.hasError = true
                 completion("0.0.0")
             }
 

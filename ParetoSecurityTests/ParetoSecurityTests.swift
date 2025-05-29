@@ -10,7 +10,6 @@ import Defaults
 import XCTest
 
 class ParetoSecurityTests: XCTestCase {
-
     func testThatUUIDsAreUnique() throws {
         var uuids: [String] = []
         for claim in Claims.global.all {

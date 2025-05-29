@@ -36,6 +36,7 @@ class TimeMachineHasBackupCheck: ParetoCheck {
     override func checkPasses() -> Bool {
         guard let settings = readDefaultsFile(path: "/Library/Preferences/com.apple.TimeMachine.plist") as! [String: Any]? else {
             os_log("/Library/Preferences/com.apple.TimeMachine.plist is empty")
+            hasError = true
             return false
         }
         let tmConf = TimeMachineConfig(dict: settings)

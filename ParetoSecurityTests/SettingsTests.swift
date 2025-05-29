@@ -10,7 +10,6 @@ import ViewInspector
 import XCTest
 
 class SettingsViewTests: XCTestCase {
-
     func testSettingsView() throws {
         let subject = SettingsView(selected: SettingsView.Tabs.general)
         let sub = try subject.inspect().implicitAnyView()
@@ -29,5 +28,4 @@ class SettingsViewTests: XCTestCase {
         let one = try subject.inspect().implicitAnyView().form()[0].text().string()
         XCTAssertEqual(one, "The Teams subscription will give you a web dashboard for an overview of the company’s devices.")
     }
-
 }
