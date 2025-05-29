@@ -86,7 +86,7 @@ class ParetoUpdated: ParetoCheck {
                         sortedReleases = sortedReleases.filter { !$0.prerelease }
                     }
 
-                    // Include releases with publised date odler than 10 days
+                    // Include releases with published date older than 10 days
                     let tenDaysAgo = Date().addingTimeInterval(-10 * 24 * 60 * 60)
                     let dateFormatter = ISO8601DateFormatter()
                     // dateFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
