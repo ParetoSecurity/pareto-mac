@@ -14,11 +14,15 @@ struct ParetoRelease: Codable {
     let tagName: String
     let name: String
     let prerelease: Bool
+    let draft: Bool
+    let publishedAt: String
 
     enum CodingKeys: String, CodingKey {
         case tagName = "tag_name"
         case name
         case prerelease
+        case draft
+        case publishedAt = "published_at"
     }
 }
 
@@ -62,12 +66,43 @@ class ParetoUpdated: ParetoCheck {
                     }
 
                     // Sort releases by version (descending order)
-                    let sortedReleases = releases.sorted {
+                    var sortedReleases = releases.sorted {
                         self.compareVersions($0.tagName, $1.tagName) == .orderedDescending
                     }
-                    
-                    
-                    if Defaults[.showBeta]{
+
+                    // Exclude draft releases
+                    sortedReleases = sortedReleases.filter { !$0.draft }
+
+                    // Log the sorted releases for debugging
+                    os_log("Sorted releases: %{public}@", sortedReleases.map { $0.tagName }.joined(separator: ", "))
+
+                    // Filter out pre-releases if showBeta is false
+                    if Defaults[.showBeta] {
+                        // Include all releases
+                        os_log("Including beta releases in update check")
+                    } else {
+                        // Exclude pre-releases
+                        os_log("Excluding beta releases in update check")
+                        sortedReleases = sortedReleases.filter { !$0.prerelease }
+                    }
+
+                    // Include releases with publised date odler than 10 days
+                    let tenDaysAgo = Date().addingTimeInterval(-10 * 24 * 60 * 60)
+                    let dateFormatter = ISO8601DateFormatter()
+                    // dateFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+                    let recentReleases = sortedReleases.filter { release in
+                        guard let publishedDate = dateFormatter.date(from: release.publishedAt) else {
+                            return false
+                        }
+                        return tenDaysAgo >= publishedDate
+                    }
+                    if recentReleases.isEmpty {
+                        os_log("No recent releases older found in update check")
+                        completion(false)
+                        return
+                    }
+
+                    if Defaults[.showBeta] {
                         let isUpToDate = sortedReleases[0].tagName == AppInfo.appVersion
                         os_log("Update check completed. App version: %{public}s, Github version: %{public}s",
                                AppInfo.appVersion,
@@ -80,11 +115,11 @@ class ParetoUpdated: ParetoCheck {
                                AppInfo.appVersion,
                                releases[0].tagName)
                         completion(isUpToDate)
-
                     }
 
                 case let .failure(error):
                     os_log("Failed to check for updates: %{public}s", error.localizedDescription)
+                    self.hasError = true
                     completion(false)
                 }
             }

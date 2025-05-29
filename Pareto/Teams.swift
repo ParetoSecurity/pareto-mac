@@ -131,7 +131,7 @@ struct ReportingDevice: Encodable {
 
 struct Report: Encodable {
     public enum CheckStatus: String {
-        case Disabled = "off", Passing = "pass", Failing = "fail"
+        case Disabled = "off", Passing = "pass", Failing = "fail", Error = "error"
     }
 
     let passedCount: Int
@@ -155,14 +155,21 @@ struct Report: Encodable {
         for claim in Claims.global.all {
             for check in claim.checks {
                 if check.isRunnable {
-                    if check.checkPassed {
-                        passed += 1
-                        checkStates[check.UUID] = CheckStatus.Passing.rawValue
-                    } else {
+                    if check.hasError {
                         failed += 1
                         failedSeed.append(contentsOf: check.UUID)
-                        checkStates[check.UUID] = CheckStatus.Failing.rawValue
+                        checkStates[check.UUID] = CheckStatus.Error.rawValue
+                    } else {
+                        if check.checkPassed {
+                            passed += 1
+                            checkStates[check.UUID] = CheckStatus.Passing.rawValue
+                        } else {
+                            failed += 1
+                            failedSeed.append(contentsOf: check.UUID)
+                            checkStates[check.UUID] = CheckStatus.Failing.rawValue
+                        }
                     }
+
                 } else {
                     if check.reportIfDisabled {
                         disabled += 1
@@ -196,7 +203,6 @@ enum Team {
     public static let defaultAPI = "https://dash.paretosecurity.com/api/v1/team"
     private static let base = Defaults[.teamAPI]
     private static let queue = DispatchQueue(label: "co.pareto.api", qos: .userInteractive, attributes: .concurrent)
-    
 
     static func link(withDevice device: ReportingDevice) -> DataRequest {
         let headers: HTTPHeaders = [
@@ -314,7 +320,7 @@ enum TeamTicket {
 
     public static func migrate(publicKey key: String = rsaPublicKey) {
         do {
-            if !Defaults[.license].isEmpty && !Defaults[.migrated] {
+            if !Defaults[.license].isEmpty, !Defaults[.migrated] {
                 let ticket = try TeamTicket.verify(withTicket: Defaults[.license], publicKey: key)
                 Defaults[.teamTicket] = Defaults[.license]
                 Defaults[.teamAuth] = ticket.teamAuth
@@ -327,7 +333,6 @@ enum TeamTicket {
             os_log("Migration detected, ticket parsing failed", log: Log.api)
         }
     }
-    
 
     public static func verify(withTicket data: String, publicKey key: String = rsaPublicKey) throws -> Payload {
         if try verifySignature(jwt: data, withKey: key) {
@@ -386,7 +391,6 @@ enum TeamTicket {
         return SecKeyVerifySignature(publicKey, .rsaSignatureMessagePKCS1v15SHA512, input as CFData, signatureData as CFData, nil)
     }
 }
-
 
 class TeamSettingsUpdater: ObservableObject {
     @Published var enforcedChecks: [String] = []

@@ -1,16 +1,16 @@
 //
-//  HelperToolProtocol.swift
+//  HelperTool.swift
 //  Pareto Security
 //
 //  Created by Janez Troha on 23. 5. 25.
 //
 
-import ServiceManagement
 import os.log
+import ServiceManagement
 
 enum HelperToolAction {
-    case none      // Only check status
-    case install   // Install the helper tool
+    case none // Only check status
+    case install // Install the helper tool
     case uninstall // Uninstall the helper tool
 }
 
@@ -61,7 +61,6 @@ class HelperToolManager: ObservableObject {
                         message = "Installation failed: \(nsError.localizedDescription)"
                         print("Failed to register helper: \(nsError.localizedDescription)")
                     }
-
                 }
             }
 
@@ -121,7 +120,6 @@ class HelperToolManager: ObservableObject {
         })
     }
 
-
     // Create/reuse XPC connection
     private func getConnection() -> NSXPCConnection? {
         if let connection = helperConnection {
@@ -136,8 +134,6 @@ class HelperToolManager: ObservableObject {
         helperConnection = connection
         return connection
     }
-
-
 
     // Helper to update helper status messages
     func updateStatusMessages(with service: SMAppService, occurredError: NSError?) {
@@ -169,7 +165,4 @@ class HelperToolManager: ObservableObject {
             }
         }
     }
-
-
-
 }
