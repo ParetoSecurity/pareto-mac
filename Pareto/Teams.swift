@@ -200,7 +200,7 @@ struct Report: Encodable {
 }
 
 enum Team {
-    public static let defaultAPI = "https://dash.paretosecurity.com/api/v1/team"
+    public static let defaultAPI = "https://cloud.paretosecurity.com/api/v1/team"
     private static let base = Defaults[.teamAPI]
     private static let queue = DispatchQueue(label: "co.pareto.api", qos: .userInteractive, attributes: .concurrent)
 
