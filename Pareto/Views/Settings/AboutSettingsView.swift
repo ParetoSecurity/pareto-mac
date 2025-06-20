@@ -12,7 +12,9 @@ struct AboutSettingsView: View {
     @State private var isLoading = false
     @State private var status = UpdateStates.Checking
     @State private var konami = 0
+    @State private var helperVersion = "Checking..."
 
+    @StateObject private var helperManager = HelperToolManager()
     @Default(.showBeta) var showBeta
 
     enum UpdateStates: String {
@@ -45,6 +47,7 @@ struct AboutSettingsView: View {
 
                 VStack(alignment: .leading, spacing: 0) {
                     Text("Version: \(AppInfo.appVersion) - \(AppInfo.buildVersion)")
+                    Text("Helper: \(helperVersion)")
                     Text("Channel: \(AppInfo.utmSource)")
 
                     HStack(spacing: 10) {
@@ -67,7 +70,20 @@ struct AboutSettingsView: View {
                 Text("Made with ❤️ in 🇪🇺")
             }
 
-        }.frame(width: 380, height: 150).padding(25).onAppear(perform: fetch)
+        }.frame(width: 380, height: 150).padding(25).onAppear {
+            fetch()
+            fetchHelperVersion()
+        }
+    }
+
+    private func fetchHelperVersion() {
+        Task {
+            await helperManager.getHelperVersion { version in
+                DispatchQueue.main.async {
+                    self.helperVersion = HelperToolUtilities.isHelperInstalled() ? version : "Not installed"
+                }
+            }
+        }
     }
 
     private func fetch() {

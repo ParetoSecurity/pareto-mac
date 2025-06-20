@@ -13,6 +13,7 @@ class PermissionsChecker: ObservableObject {
     private var timer: Timer?
     @Published var osaAuthorized = false
     @Published var fdaAuthorized = false
+    @Published var firewallAuthorized = false
     @Published var ran = false
 
     private func osaIsAuthorized() -> Bool {
@@ -34,6 +35,7 @@ class PermissionsChecker: ObservableObject {
         timer = Timer.scheduledTimer(withTimeInterval: 2.0, repeats: true) { _ in
             self.fdaAuthorized = TimeMachineHasBackupCheck.sharedInstance.isRunnable
             self.osaAuthorized = self.osaIsAuthorized()
+            self.firewallAuthorized = HelperToolUtilities.isHelperInstalled()
             self.ran = true
         }
     }
@@ -47,6 +49,19 @@ struct PermissionsView: View {
     @Binding var step: Steps
     @ObservedObject fileprivate var checker = PermissionsChecker()
 
+    private var canContinue: Bool {
+        // OSA is always required
+        guard checker.osaAuthorized else { return false }
+
+        // On macOS 15+, firewall access is also required for security checks
+        if #available(macOS 15, *) {
+            return checker.firewallAuthorized
+        }
+
+        // Pre-macOS 15, only OSA is required
+        return true
+    }
+
     func authorizeOSAClick() {
         NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Automation")!)
     }
@@ -58,6 +73,12 @@ struct PermissionsView: View {
             NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_AllFiles")!)
         }
         NSApp.activate(ignoringOtherApps: true)
+    }
+
+    @MainActor
+    func authorizeFWClick() async {
+        let helperManager = HelperToolManager()
+        await helperManager.manageHelperTool(action: .install)
     }
 
     var body: some View {
@@ -73,49 +94,99 @@ struct PermissionsView: View {
                 Spacer()
                 Text("Allow the app read-only access to the system. These permissions do not allow changing or running any of the system settings.").font(.body)
             }.frame(width: 350, alignment: .center).padding(15)
-            Spacer(minLength: 30)
-            HStack {
-                VStack(alignment: .leading) {
-                    Text("System Events Access").font(.title3)
-                    Text("App requires read-only access to system events so that it can react on connectivity changes, settings changes, and to run checks. [Learn more](https://paretosecurity.com/docs/mac/permissions)").font(.footnote)
+            Spacer(minLength: 20)
+
+            VStack(spacing: 20) {
+                // System Events Access
+                HStack(alignment: .top) {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("System Events Access").font(.title3).fontWeight(.medium)
+                        Text("App requires read-only access to system events so that it can react on connectivity changes, settings changes, and to run checks. [Learn more](https://paretosecurity.com/docs/mac/permissions)")
+                            .font(.footnote)
+                            .foregroundColor(.secondary)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+
+                    Spacer()
+
+                    Button(action: authorizeOSAClick, label: {
+                        if checker.ran {
+                            if checker.osaAuthorized {
+                                Text("Authorized").frame(width: 80)
+                            } else {
+                                Text("Authorize").frame(width: 80)
+                            }
+                        } else {
+                            Text("Verifying").frame(width: 80)
+                        }
+                    })
+                    .disabled(checker.osaAuthorized || !checker.ran)
+                    .frame(minWidth: 80)
                 }
 
-                Button(action: authorizeOSAClick, label: {
-                    if checker.ran {
-                        if checker.osaAuthorized {
-                            Text("Authorized").frame(width: 70)
-                        } else {
-                            Text("Authorize").frame(width: 70)
-                        }
-                    } else {
-                        Text("Verifying").frame(width: 70)
+                // Full Disk Access
+                HStack(alignment: .top) {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("Full Disk Access").font(.title3).fontWeight(.medium)
+                        Text("App requires full disk access if you want to use the Time Machine checks. [Learn more](https://paretosecurity.com/docs/mac/permissions)")
+                            .font(.footnote)
+                            .foregroundColor(.secondary)
+                            .fixedSize(horizontal: false, vertical: true)
                     }
-                }).disabled(checker.osaAuthorized)
 
-            }.frame(width: 350, alignment: .leading)
-            HStack {
-                VStack(alignment: .leading) {
-                    Text("Full Disk Access").font(.title3)
-                    Text("App requires full disk access if you want to use the Time Machine checks. [Learn more](https://paretosecurity.com/docs/mac/permissions)").font(.footnote)
+                    Spacer()
+
+                    Button(action: authorizeFDAClick, label: {
+                        if checker.ran {
+                            if checker.fdaAuthorized {
+                                Text("Authorized").frame(width: 80)
+                            } else {
+                                Text("Authorize").frame(width: 80)
+                            }
+                        } else {
+                            Text("Verifying").frame(width: 80)
+                        }
+                    })
+                    .disabled(checker.fdaAuthorized || !checker.ran)
+                    .frame(minWidth: 80)
                 }
-                Button(action: authorizeFDAClick, label: {
-                    if checker.ran {
-                        if checker.fdaAuthorized {
-                            Text("Authorized").frame(width: 70)
-                        } else {
-                            Text("Authorize").frame(width: 70)
-                        }
-                    } else {
-                        Text("Verifying").frame(width: 70)
-                    }
-                }).disabled(checker.fdaAuthorized)
 
-            }.frame(width: 350, alignment: .leading)
+                // Firewall Access (macOS 15+ only)
+                if #available(macOS 15, *) {
+                    HStack(alignment: .top) {
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text("Firewall Access").font(.title3).fontWeight(.medium)
+                            Text("App requires read-only access to firewall to perform checks on macOS 15+. [Learn more](https://paretosecurity.com/docs/mac/firewall)")
+                                .font(.footnote)
+                                .foregroundColor(.secondary)
+                                .fixedSize(horizontal: false, vertical: true)
+                        }
+
+                        Spacer()
+
+                        Button(action: { Task { await authorizeFWClick() } }, label: {
+                            if checker.ran {
+                                if checker.firewallAuthorized {
+                                    Text("Authorized").frame(width: 80)
+                                } else {
+                                    Text("Authorize").frame(width: 80)
+                                }
+                            } else {
+                                Text("Verifying").frame(width: 80)
+                            }
+                        })
+                        .disabled(checker.firewallAuthorized || !checker.ran)
+                        .frame(minWidth: 80)
+                    }
+                }
+            }
+            .frame(maxWidth: 400)
+            .padding(.horizontal, 20)
             Spacer(minLength: 40)
             Button("Continue") {
                 step = Steps.Checks
-            }.buttonStyle(HighlightButtonStyle(color: checker.osaAuthorized ? .mainColor : .systemGray)).padding(10).disabled(!checker.osaAuthorized)
-        }.frame(width: 380, height: 430, alignment: .center).padding(10).onAppear {
+            }.buttonStyle(HighlightButtonStyle(color: canContinue ? .mainColor : .systemGray)).padding(10).disabled(!canContinue)
+        }.frame(width: 450, height: 500, alignment: .center).padding(15).onAppear {
             checker.start()
         }.onDisappear {
             checker.stop()

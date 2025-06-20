@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(make lint)",
+      "Bash(make fmt:*)",
+      "Bash(find:*)",
+      "Bash(xcodebuild:*)",
+      "Bash(NSUnbufferedIO=YES xcodebuild -exportArchive -archivePath app.xcarchive -exportPath Export -exportOptionsPlist exportOptionsDev.plist 2 >& 1)",
+      "Bash(plutil:*)",
+      "Bash(NSUnbufferedIO=YES xcodebuild -exportArchive -archivePath app.xcarchive -exportPath Export -exportOptionsPlist exportOptionsDev.plist)",
+      "Bash(NSUnbufferedIO=YES xcodebuild -exportArchive -archivePath app.xcarchive -exportPath Export 2 >& 1)",
+      "Bash(ls:*)",
+      "Bash(mkdir:*)",
+      "Bash(cp:*)",
+      "Bash(codesign:*)"
+    ]
+  },
+  "enableAllProjectMcpServers": false
+}
