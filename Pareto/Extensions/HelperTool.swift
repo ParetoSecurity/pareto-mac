@@ -49,15 +49,12 @@ class HelperToolUtilities {
         return compareVersions(currentVersion, expectedVersion) == .orderedAscending
     }
 
-    // Static method to get expected helper version from main app bundle
+    // Manual version counter - increment this when helper needs updating
+    static let expectedHelperVersion = "1.0.3"
+    
+    // Static method to get expected helper version (manual counter)
     static func getExpectedHelperVersion() -> String {
-        guard let helperPath = Bundle.main.path(forAuxiliaryExecutable: "ParetoSecurityHelper"),
-              let helperBundle = Bundle(path: helperPath.replacingOccurrences(of: "/ParetoSecurityHelper", with: "")),
-              let version = helperBundle.infoDictionary?["CFBundleShortVersionString"] as? String else {
-            // Fallback to main app version if helper version not found
-            return Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0.0"
-        }
-        return version
+        return expectedHelperVersion
     }
 }
 

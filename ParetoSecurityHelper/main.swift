@@ -7,6 +7,9 @@
 
 import Foundation
 
+// Static version constant for helper tool
+private let helperToolVersion = "1.0.3"
+
 // XPC Communication setup
 class HelperToolDelegate: NSObject, NSXPCListenerDelegate, ParetoSecurityHelperProtocol {
     // Accept new XPC connections by setting up the exported interface and object.
@@ -77,13 +80,8 @@ class HelperToolDelegate: NSObject, NSXPCListenerDelegate, ParetoSecurityHelperP
 
     func getVersion(with reply: @escaping (String) -> Void) {
         NSLog("Helper: getVersion called")
-        if let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String {
-            NSLog("Helper: getVersion found version: %@", version)
-            reply(version)
-        } else {
-            NSLog("Helper: getVersion could not find version")
-            reply("Unknown")
-        }
+        NSLog("Helper: getVersion returning static version: %@", helperToolVersion)
+        reply(helperToolVersion)
         NSLog("Helper: getVersion reply sent")
     }
 }
