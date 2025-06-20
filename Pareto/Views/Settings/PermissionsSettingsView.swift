@@ -35,7 +35,7 @@ struct PermissionsSettingsView: View {
         }
         NSApp.activate(ignoringOtherApps: true)
     }
-    
+
     func authorizeFWClick() async {
         if helperToolManager.isHelperToolInstalled {
             await helperToolManager.manageHelperTool(action: .uninstall)
@@ -43,7 +43,7 @@ struct PermissionsSettingsView: View {
         }
         await helperToolManager.manageHelperTool(action: .install)
     }
-    
+
     var body: some View {
         VStack {
             HStack {

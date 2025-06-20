@@ -8,7 +8,6 @@
 import Foundation
 import os.log
 
-
 class FirewallCheck: ParetoCheck {
     static let sharedInstance = FirewallCheck()
     override var UUID: String {
@@ -27,6 +26,25 @@ class FirewallCheck: ParetoCheck {
         return true
     }
 
+    override public var requiresHelper: Bool {
+        if #available(macOS 15, *) {
+            return true
+        }
+        return false
+    }
+
+    override public var isRunnable: Bool {
+        if !isActive {
+            return false
+        }
+
+        if requiresHelper {
+            return HelperToolManager.isHelperInstalled()
+        }
+
+        return true
+    }
+
     override func checkPasses() -> Bool {
         if #available(macOS 15, *) {
             let semaphore = DispatchSemaphore(value: 0)
@@ -42,12 +60,11 @@ class FirewallCheck: ParetoCheck {
             semaphore.wait()
             return enabled
         }
-        
+
         let native = readDefaultsFile(path: "/Library/Preferences/com.apple.alf.plist")
         if let globalstate = native?.value(forKey: "globalstate") as? Int {
             return globalstate >= 1
         }
         return false
-        
     }
 }

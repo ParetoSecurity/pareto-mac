@@ -117,6 +117,10 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
         return false
     }
 
+    public var requiresHelper: Bool {
+        return false
+    }
+
     var checkTimestamp: Int {
         get { UserDefaults.standard.integer(forKey: TimestampKey) }
         set {
@@ -154,7 +158,12 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
                 }
             }
         } else {
-            item.image = NSImage.SF(name: "seal")
+            // Show question mark for checks requiring helper when active but helper authorization is not enabled
+            if requiresHelper && isActive {
+                item.image = NSImage.SF(name: "questionmark.circle").tint(color: .systemOrange)
+            } else {
+                item.image = NSImage.SF(name: "seal")
+            }
         }
 
         return item
@@ -213,6 +222,22 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
     }
 
     var infoURL: URL {
+        // For checks requiring helper that are not runnable, direct to helper authorization docs
+        if requiresHelper && !isRunnable && isActive {
+            var components = URLComponents()
+            components.scheme = "https"
+            components.host = "paretosecurity.com"
+            components.path = "/docs/mac/privileged-helper-authorization"
+            components.queryItems = [
+                URLQueryItem(name: "utm_source", value: AppInfo.utmSource)
+            ]
+
+            guard let url = components.url else {
+                fatalError("Invalid URL constructed")
+            }
+            return url
+        }
+
         var components = URLComponents()
         components.scheme = "https"
         components.host = "paretosecurity.com"

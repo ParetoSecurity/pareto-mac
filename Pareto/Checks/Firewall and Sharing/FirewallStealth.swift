@@ -21,8 +21,23 @@ class FirewallStealthCheck: ParetoCheck {
         "Firewall stealth mode is disabled"
     }
 
+    override public var requiresHelper: Bool {
+        if #available(macOS 15, *) {
+            return true
+        }
+        return false
+    }
+
     override public var isRunnable: Bool {
-        return FirewallCheck.sharedInstance.isActive && isActive
+        if !FirewallCheck.sharedInstance.isActive || !isActive {
+            return false
+        }
+
+        if requiresHelper {
+            return HelperToolManager.isHelperInstalled()
+        }
+
+        return true
     }
 
     override public var showSettings: Bool {
@@ -33,7 +48,6 @@ class FirewallStealthCheck: ParetoCheck {
     }
 
     override func checkPasses() -> Bool {
-
         if #available(macOS 15, *) {
             let semaphore = DispatchSemaphore(value: 0)
             var enabled = false

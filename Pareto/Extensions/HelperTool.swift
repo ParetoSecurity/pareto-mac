@@ -1,21 +1,28 @@
 //
-//  HelperToolProtocol.swift
+//  HelperTool.swift
 //  Pareto Security
 //
 //  Created by Janez Troha on 23. 5. 25.
 //
 
-import ServiceManagement
 import os.log
+import ServiceManagement
 
 enum HelperToolAction {
-    case none      // Only check status
-    case install   // Install the helper tool
+    case none // Only check status
+    case install // Install the helper tool
     case uninstall // Uninstall the helper tool
 }
 
 @MainActor
 class HelperToolManager: ObservableObject {
+    // Static method to check helper tool status without actor isolation
+    static func isHelperInstalled() -> Bool {
+        let plistName = "co.niteo.ParetoSecurityHelper.plist"
+        let service = SMAppService.daemon(plistName: plistName)
+        return service.status == .enabled
+    }
+
     private var helperConnection: NSXPCConnection?
     let helperToolIdentifier = "co.niteo.ParetoSecurityHelper"
     @Published var isHelperToolInstalled: Bool = false
@@ -61,7 +68,6 @@ class HelperToolManager: ObservableObject {
                         message = "Installation failed: \(nsError.localizedDescription)"
                         print("Failed to register helper: \(nsError.localizedDescription)")
                     }
-
                 }
             }
 
@@ -168,8 +174,6 @@ class HelperToolManager: ObservableObject {
         return connection
     }
 
-
-
     // Helper to update helper status messages
     func updateStatusMessages(with service: SMAppService, occurredError: NSError?) {
         if let nsError = occurredError {
@@ -200,7 +204,4 @@ class HelperToolManager: ObservableObject {
             }
         }
     }
-
-
-
 }
