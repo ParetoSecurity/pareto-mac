@@ -14,14 +14,55 @@ enum HelperToolAction {
     case uninstall // Uninstall the helper tool
 }
 
-@MainActor
-class HelperToolManager: ObservableObject {
+// Static helper utility functions (not actor-isolated)
+class HelperToolUtilities {
     // Static method to check helper tool status without actor isolation
     static func isHelperInstalled() -> Bool {
         let plistName = "co.niteo.ParetoSecurityHelper.plist"
         let service = SMAppService.daemon(plistName: plistName)
         return service.status == .enabled
     }
+
+    // Static method to compare version strings (semantic versioning)
+    static func compareVersions(_ version1: String, _ version2: String) -> ComparisonResult {
+        let v1Components = version1.components(separatedBy: ".").compactMap { Int($0) }
+        let v2Components = version2.components(separatedBy: ".").compactMap { Int($0) }
+        
+        let maxCount = max(v1Components.count, v2Components.count)
+        
+        for i in 0..<maxCount {
+            let v1Value = i < v1Components.count ? v1Components[i] : 0
+            let v2Value = i < v2Components.count ? v2Components[i] : 0
+            
+            if v1Value < v2Value {
+                return .orderedAscending
+            } else if v1Value > v2Value {
+                return .orderedDescending
+            }
+        }
+        
+        return .orderedSame
+    }
+
+    // Static method to check if helper needs updating
+    static func helperNeedsUpdate(currentVersion: String, expectedVersion: String) -> Bool {
+        return compareVersions(currentVersion, expectedVersion) == .orderedAscending
+    }
+
+    // Static method to get expected helper version from main app bundle
+    static func getExpectedHelperVersion() -> String {
+        guard let helperPath = Bundle.main.path(forAuxiliaryExecutable: "ParetoSecurityHelper"),
+              let helperBundle = Bundle(path: helperPath.replacingOccurrences(of: "/ParetoSecurityHelper", with: "")),
+              let version = helperBundle.infoDictionary?["CFBundleShortVersionString"] as? String else {
+            // Fallback to main app version if helper version not found
+            return Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0.0"
+        }
+        return version
+    }
+}
+
+@MainActor
+class HelperToolManager: ObservableObject {
 
     private var helperConnection: NSXPCConnection?
     let helperToolIdentifier = "co.niteo.ParetoSecurityHelper"
@@ -157,6 +198,71 @@ class HelperToolManager: ObservableObject {
                 completion(output)
             }
         })
+    }
+
+    // Function to get helper tool version
+    func getHelperVersion(completion: @escaping (String) -> Void) async {
+        if !isHelperToolInstalled {
+            os_log("XPC: Helper tool is not installed")
+            completion("Not installed")
+            return
+        }
+
+        guard let connection = getConnection() else {
+            os_log("XPC: Connection not available")
+            completion("Connection unavailable")
+            return
+        }
+
+        guard let proxy = connection.remoteObjectProxyWithErrorHandler({ error in
+            DispatchQueue.main.async {
+                os_log("XPC: Connection error: \(error.localizedDescription)")
+                completion("Connection error")
+            }
+        }) as? ParetoSecurityHelperProtocol else {
+            os_log("XPC: Failed to get remote object")
+            completion("Connection failed")
+            return
+        }
+
+        proxy.getVersion(with: { version in
+            DispatchQueue.main.async {
+                completion(version)
+            }
+        })
+    }
+
+    // Function to check and update helper if needed
+    func ensureHelperIsUpToDate() async -> Bool {
+        let expectedVersion = HelperToolUtilities.getExpectedHelperVersion()
+        
+        // If helper is not installed, install it
+        guard isHelperToolInstalled else {
+            os_log("Helper not installed, installing version %{public}s", expectedVersion)
+            await manageHelperTool(action: .install)
+            return isHelperToolInstalled
+        }
+
+        // Get current helper version
+        let semaphore = DispatchSemaphore(value: 0)
+        var currentVersion = "Unknown"
+        
+        await getHelperVersion { version in
+            currentVersion = version
+            semaphore.signal()
+        }
+        semaphore.wait()
+
+        // Check if update is needed
+        if HelperToolUtilities.helperNeedsUpdate(currentVersion: currentVersion, expectedVersion: expectedVersion) {
+            os_log("Helper version %{public}s is outdated, updating to %{public}s", currentVersion, expectedVersion)
+            await manageHelperTool(action: .uninstall)
+            await manageHelperTool(action: .install)
+            return isHelperToolInstalled
+        }
+
+        os_log("Helper version %{public}s is up to date", currentVersion)
+        return true
     }
 
     // Create/reuse XPC connection

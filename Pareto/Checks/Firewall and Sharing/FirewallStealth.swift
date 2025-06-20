@@ -32,11 +32,11 @@ class FirewallStealthCheck: ParetoCheck {
         if !FirewallCheck.sharedInstance.isActive || !isActive {
             return false
         }
-
-        if requiresHelper {
-            return HelperToolManager.isHelperInstalled()
+        if #available(macOS 15, *) {
+            if requiresHelper {
+                return HelperToolUtilities.isHelperInstalled()
+            }
         }
-
         return true
     }
 
@@ -54,8 +54,16 @@ class FirewallStealthCheck: ParetoCheck {
 
             DispatchQueue.global(qos: .userInteractive).async {
                 Task {
-                    await HelperToolManager().isFirewallStealthEnabled { out in
-                        enabled = out.contains("enabled") || out.contains("mode is on")
+                    let helperManager = HelperToolManager()
+                    // Ensure helper is up to date before running check
+                    let helperReady = await helperManager.ensureHelperIsUpToDate()
+                    if helperReady {
+                        await helperManager.isFirewallStealthEnabled { out in
+                            enabled = out.contains("enabled") || out.contains("mode is on")
+                            semaphore.signal()
+                        }
+                    } else {
+                        // Helper failed to install/update, signal failure
                         semaphore.signal()
                     }
                 }

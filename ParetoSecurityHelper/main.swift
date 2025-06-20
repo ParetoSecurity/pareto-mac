@@ -47,6 +47,14 @@ class HelperToolDelegate: NSObject, NSXPCListenerDelegate, ParetoSecurityHelperP
         let out = runCMD(app: "/usr/libexec/ApplicationFirewall/socketfilterfw", args: ["--getstealthmode"])
         reply(out)
     }
+
+    func getVersion(with reply: @escaping (String) -> Void) {
+        if let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String {
+            reply(version)
+        } else {
+            reply("Unknown")
+        }
+    }
 }
 
 // Set up and start the XPC listener.
