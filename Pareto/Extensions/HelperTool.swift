@@ -138,7 +138,7 @@ class HelperToolManager: ObservableObject {
 
     // Function to run privileged commands
     func isFirewallEnabled(completion: @escaping (String) -> Void) async {
-        if !isHelperToolInstalled {
+        if !HelperToolUtilities.isHelperInstalled() {
             os_log("XPC: Helper tool is not installed")
             completion("XPC: Helper tool is not installed")
             return
@@ -170,7 +170,7 @@ class HelperToolManager: ObservableObject {
 
     // Function to run privileged commands
     func isFirewallStealthEnabled(completion: @escaping (String) -> Void) async {
-        if !isHelperToolInstalled {
+        if !HelperToolUtilities.isHelperInstalled() {
             os_log("XPC: Helper tool is not installed")
             completion("XPC: Helper tool is not installed")
             return
@@ -202,7 +202,7 @@ class HelperToolManager: ObservableObject {
 
     // Function to get helper tool version
     func getHelperVersion(completion: @escaping (String) -> Void) async {
-        if !isHelperToolInstalled {
+        if !HelperToolUtilities.isHelperInstalled() {
             os_log("XPC: Helper tool is not installed")
             completion("Not installed")
             return
@@ -237,28 +237,27 @@ class HelperToolManager: ObservableObject {
         let expectedVersion = HelperToolUtilities.getExpectedHelperVersion()
         
         // If helper is not installed, install it
-        guard isHelperToolInstalled else {
+        guard HelperToolUtilities.isHelperInstalled() else {
             os_log("Helper not installed, installing version %{public}s", expectedVersion)
             await manageHelperTool(action: .install)
-            return isHelperToolInstalled
+            return HelperToolUtilities.isHelperInstalled()
         }
 
-        // Get current helper version
-        let semaphore = DispatchSemaphore(value: 0)
-        var currentVersion = "Unknown"
-        
-        await getHelperVersion { version in
-            currentVersion = version
-            semaphore.signal()
+        // Get current helper version using async/await
+        let currentVersion = await withCheckedContinuation { continuation in
+            Task {
+                await getHelperVersion { version in
+                    continuation.resume(returning: version)
+                }
+            }
         }
-        semaphore.wait()
 
         // Check if update is needed
         if HelperToolUtilities.helperNeedsUpdate(currentVersion: currentVersion, expectedVersion: expectedVersion) {
             os_log("Helper version %{public}s is outdated, updating to %{public}s", currentVersion, expectedVersion)
             await manageHelperTool(action: .uninstall)
             await manageHelperTool(action: .install)
-            return isHelperToolInstalled
+            return HelperToolUtilities.isHelperInstalled()
         }
 
         os_log("Helper version %{public}s is up to date", currentVersion)
