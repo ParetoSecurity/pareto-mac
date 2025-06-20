@@ -94,69 +94,99 @@ struct PermissionsView: View {
                 Spacer()
                 Text("Allow the app read-only access to the system. These permissions do not allow changing or running any of the system settings.").font(.body)
             }.frame(width: 350, alignment: .center).padding(15)
-            Spacer(minLength: 30)
-            HStack {
-                VStack(alignment: .leading) {
-                    Text("System Events Access").font(.title3)
-                    Text("App requires read-only access to system events so that it can react on connectivity changes, settings changes, and to run checks. [Learn more](https://paretosecurity.com/docs/mac/permissions)").font(.footnote)
-                }
-
-                Button(action: authorizeOSAClick, label: {
-                    if checker.ran {
-                        if checker.osaAuthorized {
-                            Text("Authorized").frame(width: 70)
-                        } else {
-                            Text("Authorize").frame(width: 70)
-                        }
-                    } else {
-                        Text("Verifying").frame(width: 70)
+            Spacer(minLength: 20)
+            
+            VStack(spacing: 20) {
+                // System Events Access
+                HStack(alignment: .top) {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("System Events Access").font(.title3).fontWeight(.medium)
+                        Text("App requires read-only access to system events so that it can react on connectivity changes, settings changes, and to run checks. [Learn more](https://paretosecurity.com/docs/mac/permissions)")
+                            .font(.footnote)
+                            .foregroundColor(.secondary)
+                            .fixedSize(horizontal: false, vertical: true)
                     }
-                }).disabled(checker.osaAuthorized || !checker.ran)
-
-            }.frame(width: 350, alignment: .leading)
-            HStack {
-                VStack(alignment: .leading) {
-                    Text("Full Disk Access").font(.title3)
-                    Text("App requires full disk access if you want to use the Time Machine checks. [Learn more](https://paretosecurity.com/docs/mac/permissions)").font(.footnote)
-                }
-                Button(action: authorizeFDAClick, label: {
-                    if checker.ran {
-                        if checker.fdaAuthorized {
-                            Text("Authorized").frame(width: 70)
-                        } else {
-                            Text("Authorize").frame(width: 70)
-                        }
-                    } else {
-                        Text("Verifying").frame(width: 70)
-                    }
-                }).disabled(checker.fdaAuthorized || !checker.ran)
-
-            }.frame(width: 350, alignment: .leading)
-            if #available(macOS 15, *) {
-                HStack {
-                    VStack(alignment: .leading) {
-                        Text("Firewall Access").font(.title3)
-                        Text("App requires read-only access to firewall to perform checks on macOS 15+. [Learn more](https://paretosecurity.com/docs/mac/firewall)").font(.footnote)
-                    }
-                    Button(action: { Task { await authorizeFWClick() } }, label: {
+                    
+                    Spacer()
+                    
+                    Button(action: authorizeOSAClick, label: {
                         if checker.ran {
-                            if checker.firewallAuthorized {
-                                Text("Authorized").frame(width: 70)
+                            if checker.osaAuthorized {
+                                Text("Authorized").frame(width: 80)
                             } else {
-                                Text("Authorize").frame(width: 70)
+                                Text("Authorize").frame(width: 80)
                             }
                         } else {
-                            Text("Verifying").frame(width: 70)
+                            Text("Verifying").frame(width: 80)
                         }
-                    }).disabled(checker.firewallAuthorized || !checker.ran)
-
-                }.frame(width: 350, alignment: .leading)
+                    })
+                    .disabled(checker.osaAuthorized || !checker.ran)
+                    .frame(minWidth: 80)
+                }
+                
+                // Full Disk Access
+                HStack(alignment: .top) {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("Full Disk Access").font(.title3).fontWeight(.medium)
+                        Text("App requires full disk access if you want to use the Time Machine checks. [Learn more](https://paretosecurity.com/docs/mac/permissions)")
+                            .font(.footnote)
+                            .foregroundColor(.secondary)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+                    
+                    Spacer()
+                    
+                    Button(action: authorizeFDAClick, label: {
+                        if checker.ran {
+                            if checker.fdaAuthorized {
+                                Text("Authorized").frame(width: 80)
+                            } else {
+                                Text("Authorize").frame(width: 80)
+                            }
+                        } else {
+                            Text("Verifying").frame(width: 80)
+                        }
+                    })
+                    .disabled(checker.fdaAuthorized || !checker.ran)
+                    .frame(minWidth: 80)
+                }
+                
+                // Firewall Access (macOS 15+ only)
+                if #available(macOS 15, *) {
+                    HStack(alignment: .top) {
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text("Firewall Access").font(.title3).fontWeight(.medium)
+                            Text("App requires read-only access to firewall to perform checks on macOS 15+. [Learn more](https://paretosecurity.com/docs/mac/firewall)")
+                                .font(.footnote)
+                                .foregroundColor(.secondary)
+                                .fixedSize(horizontal: false, vertical: true)
+                        }
+                        
+                        Spacer()
+                        
+                        Button(action: { Task { await authorizeFWClick() } }, label: {
+                            if checker.ran {
+                                if checker.firewallAuthorized {
+                                    Text("Authorized").frame(width: 80)
+                                } else {
+                                    Text("Authorize").frame(width: 80)
+                                }
+                            } else {
+                                Text("Verifying").frame(width: 80)
+                            }
+                        })
+                        .disabled(checker.firewallAuthorized || !checker.ran)
+                        .frame(minWidth: 80)
+                    }
+                }
             }
+            .frame(maxWidth: 400)
+            .padding(.horizontal, 20)
             Spacer(minLength: 40)
             Button("Continue") {
                 step = Steps.Checks
             }.buttonStyle(HighlightButtonStyle(color: canContinue ? .mainColor : .systemGray)).padding(10).disabled(!canContinue)
-        }.frame(width: 380, height: 480, alignment: .center).padding(10).onAppear {
+        }.frame(width: 450, height: 500, alignment: .center).padding(15).onAppear {
             checker.start()
         }.onDisappear {
             checker.stop()

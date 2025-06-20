@@ -6,6 +6,15 @@
 //
 
 import Foundation
+import os.log
+
+// Reference type to avoid Swift 6 concurrency mutation warnings
+private class Box<T> {
+    var value: T
+    init(_ value: T) {
+        self.value = value
+    }
+}
 
 class FirewallStealthCheck: ParetoCheck {
     static let sharedInstance = FirewallStealthCheck()
@@ -50,16 +59,17 @@ class FirewallStealthCheck: ParetoCheck {
     override func checkPasses() -> Bool {
         if #available(macOS 15, *) {
             let semaphore = DispatchSemaphore(value: 0)
-            var enabled = false
+            let result = Box(false) // Use a reference type to avoid mutation warnings
 
             DispatchQueue.global(qos: .userInteractive).async {
-                Task {
+                Task { @MainActor in
                     let helperManager = HelperToolManager()
+                    
                     // Ensure helper is up to date before running check
                     let helperReady = await helperManager.ensureHelperIsUpToDate()
                     if helperReady {
-                        await helperManager.isFirewallStealthEnabled { out in
-                            enabled = out.contains("enabled") || out.contains("mode is on")
+                        await helperManager.isFirewallStealthEnabled { output in
+                            result.value = output.contains("enabled") || output.contains("mode is on")
                             semaphore.signal()
                         }
                     } else {
@@ -69,8 +79,14 @@ class FirewallStealthCheck: ParetoCheck {
                 }
             }
 
-            semaphore.wait()
-            return enabled
+            // Wait with timeout to prevent blocking forever
+            let timeoutResult = semaphore.wait(timeout: .now() + 10.0)
+            if timeoutResult == .timedOut {
+                os_log("Firewall stealth check timed out", log: Log.app)
+                return false
+            }
+            
+            return result.value
         }
         let out = runCMD(app: "/usr/libexec/ApplicationFirewall/socketfilterfw", args: ["--getstealthmode"])
         return out.contains("enabled") || out.contains("mode is on")

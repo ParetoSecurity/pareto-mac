@@ -2,7 +2,8 @@
   "permissions": {
     "allow": [
       "Bash(make lint)",
-      "Bash(make fmt:*)"
+      "Bash(make fmt:*)",
+      "Bash(find:*)"
     ]
   },
   "enableAllProjectMcpServers": false

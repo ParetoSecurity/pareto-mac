@@ -8,6 +8,14 @@
 import Foundation
 import os.log
 
+// Reference type to avoid Swift 6 concurrency mutation warnings
+private class Box<T> {
+    var value: T
+    init(_ value: T) {
+        self.value = value
+    }
+}
+
 class FirewallCheck: ParetoCheck {
     static let sharedInstance = FirewallCheck()
     override var UUID: String {
@@ -46,27 +54,49 @@ class FirewallCheck: ParetoCheck {
     }
 
     override func checkPasses() -> Bool {
+        os_log("FirewallCheck: checkPasses called")
+        
         if #available(macOS 15, *) {
+            os_log("FirewallCheck: Running macOS 15+ check with helper")
             let semaphore = DispatchSemaphore(value: 0)
-            var enabled = false
+            let result = Box(false) // Use a reference type to avoid mutation warnings
+            
             DispatchQueue.global(qos: .userInteractive).async {
-                Task {
+                Task { @MainActor in
+                    os_log("FirewallCheck: Task started, creating helper manager")
                     let helperManager = HelperToolManager()
+                    
+                    os_log("FirewallCheck: Ensuring helper is up to date")
                     // Ensure helper is up to date before running check
                     let helperReady = await helperManager.ensureHelperIsUpToDate()
+                    os_log("FirewallCheck: Helper ready status: %{public}s", helperReady ? "true" : "false")
+                    
                     if helperReady {
-                        await helperManager.isFirewallEnabled { out in
-                            enabled = out.contains("State = 1") || out.contains("State = 2")
+                        os_log("FirewallCheck: Calling isFirewallEnabled")
+                        await helperManager.isFirewallEnabled { output in
+                            os_log("FirewallCheck: Received firewall output: %{public}s", output)
+                            result.value = output.contains("State = 1") || output.contains("State = 2")
+                            os_log("FirewallCheck: Firewall enabled result: %{public}s", result.value ? "true" : "false")
                             semaphore.signal()
                         }
                     } else {
+                        os_log("FirewallCheck: Helper failed to install/update, signaling failure")
                         // Helper failed to install/update, signal failure
                         semaphore.signal()
                     }
                 }
             }
-            semaphore.wait()
-            return enabled
+            
+            os_log("FirewallCheck: Waiting for result with 10 second timeout")
+            // Wait with timeout to prevent blocking forever
+            let timeoutResult = semaphore.wait(timeout: .now() + 10.0)
+            if timeoutResult == .timedOut {
+                os_log("FirewallCheck: Timed out waiting for result", log: Log.app)
+                return false
+            }
+            
+            os_log("FirewallCheck: Check completed with result: %{public}s", result.value ? "true" : "false")
+            return result.value
         }
 
         let native = readDefaultsFile(path: "/Library/Preferences/com.apple.alf.plist")

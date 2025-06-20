@@ -5,7 +5,7 @@
 	<key>Label</key>
 	<string>co.niteo.ParetoSecurityHelper</string>
 	<key>BundleProgram</key>
-	<string>Contents/MacOS/HelperTool</string>
+	<string>Contents/MacOS/ParetoSecurityHelper</string>
 	<key>MachServices</key>
 	<dict>
 		<key>co.niteo.ParetoSecurityHelper</key>
