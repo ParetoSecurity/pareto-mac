@@ -9,7 +9,7 @@
 	<key>iCloudContainerEnvironment</key>
 	<string>""</string>
 	<key>method</key>
-	<string>development</string>
+	<string>mac-application</string>
 	<key>onDemandResourcesAssetPacksBaseURL</key>
 	<string>0</string>
 	<key>teamID</key>
