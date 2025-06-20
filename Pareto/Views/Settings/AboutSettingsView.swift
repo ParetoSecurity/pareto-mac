@@ -13,7 +13,7 @@ struct AboutSettingsView: View {
     @State private var status = UpdateStates.Checking
     @State private var konami = 0
     @State private var helperVersion = "Checking..."
-    
+
     @StateObject private var helperManager = HelperToolManager()
     @Default(.showBeta) var showBeta
 
@@ -85,7 +85,7 @@ struct AboutSettingsView: View {
             }
         }
     }
-    
+
     private func fetch() {
         DispatchQueue.global(qos: .userInteractive).async {
             isLoading = true

@@ -17,15 +17,15 @@ class HelperToolDelegate: NSObject, NSXPCListenerDelegate, ParetoSecurityHelperP
         NSLog("Helper: New XPC connection request received")
         newConnection.exportedInterface = NSXPCInterface(with: ParetoSecurityHelperProtocol.self)
         newConnection.exportedObject = self
-        
+
         newConnection.invalidationHandler = {
             NSLog("Helper: XPC connection invalidated")
         }
-        
+
         newConnection.interruptionHandler = {
             NSLog("Helper: XPC connection interrupted")
         }
-        
+
         NSLog("Helper: Resuming new XPC connection")
         newConnection.resume()
         NSLog("Helper: XPC connection accepted and resumed")
@@ -40,7 +40,7 @@ class HelperToolDelegate: NSObject, NSXPCListenerDelegate, ParetoSecurityHelperP
         task.standardError = pipe
         task.arguments = args
         task.executableURL = URL(fileURLWithPath: app)
-        
+
         do {
             NSLog("Helper: runCMD attempting to run task")
             try task.run()

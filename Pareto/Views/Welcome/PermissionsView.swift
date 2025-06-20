@@ -48,16 +48,16 @@ class PermissionsChecker: ObservableObject {
 struct PermissionsView: View {
     @Binding var step: Steps
     @ObservedObject fileprivate var checker = PermissionsChecker()
-    
+
     private var canContinue: Bool {
         // OSA is always required
         guard checker.osaAuthorized else { return false }
-        
+
         // On macOS 15+, firewall access is also required for security checks
         if #available(macOS 15, *) {
             return checker.firewallAuthorized
         }
-        
+
         // Pre-macOS 15, only OSA is required
         return true
     }
@@ -95,7 +95,7 @@ struct PermissionsView: View {
                 Text("Allow the app read-only access to the system. These permissions do not allow changing or running any of the system settings.").font(.body)
             }.frame(width: 350, alignment: .center).padding(15)
             Spacer(minLength: 20)
-            
+
             VStack(spacing: 20) {
                 // System Events Access
                 HStack(alignment: .top) {
@@ -106,9 +106,9 @@ struct PermissionsView: View {
                             .foregroundColor(.secondary)
                             .fixedSize(horizontal: false, vertical: true)
                     }
-                    
+
                     Spacer()
-                    
+
                     Button(action: authorizeOSAClick, label: {
                         if checker.ran {
                             if checker.osaAuthorized {
@@ -123,7 +123,7 @@ struct PermissionsView: View {
                     .disabled(checker.osaAuthorized || !checker.ran)
                     .frame(minWidth: 80)
                 }
-                
+
                 // Full Disk Access
                 HStack(alignment: .top) {
                     VStack(alignment: .leading, spacing: 4) {
@@ -133,9 +133,9 @@ struct PermissionsView: View {
                             .foregroundColor(.secondary)
                             .fixedSize(horizontal: false, vertical: true)
                     }
-                    
+
                     Spacer()
-                    
+
                     Button(action: authorizeFDAClick, label: {
                         if checker.ran {
                             if checker.fdaAuthorized {
@@ -150,7 +150,7 @@ struct PermissionsView: View {
                     .disabled(checker.fdaAuthorized || !checker.ran)
                     .frame(minWidth: 80)
                 }
-                
+
                 // Firewall Access (macOS 15+ only)
                 if #available(macOS 15, *) {
                     HStack(alignment: .top) {
@@ -161,9 +161,9 @@ struct PermissionsView: View {
                                 .foregroundColor(.secondary)
                                 .fixedSize(horizontal: false, vertical: true)
                         }
-                        
+
                         Spacer()
-                        
+
                         Button(action: { Task { await authorizeFWClick() } }, label: {
                             if checker.ran {
                                 if checker.firewallAuthorized {

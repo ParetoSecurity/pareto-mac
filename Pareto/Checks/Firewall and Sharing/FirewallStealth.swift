@@ -64,7 +64,7 @@ class FirewallStealthCheck: ParetoCheck {
             DispatchQueue.global(qos: .userInteractive).async {
                 Task { @MainActor in
                     let helperManager = HelperToolManager()
-                    
+
                     // Ensure helper is up to date before running check
                     let helperReady = await helperManager.ensureHelperIsUpToDate()
                     if helperReady {
@@ -85,7 +85,7 @@ class FirewallStealthCheck: ParetoCheck {
                 os_log("Firewall stealth check timed out", log: Log.app)
                 return false
             }
-            
+
             return result.value
         }
         let out = runCMD(app: "/usr/libexec/ApplicationFirewall/socketfilterfw", args: ["--getstealthmode"])

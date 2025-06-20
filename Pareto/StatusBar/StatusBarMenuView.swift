@@ -5,8 +5,8 @@
 //  Created by Claude on 20/06/2025.
 //
 
-import SwiftUI
 import Defaults
+import SwiftUI
 
 struct StatusBarMenuView: View {
     @ObservedObject var statusBarModel: StatusBarModel
@@ -15,7 +15,7 @@ struct StatusBarMenuView: View {
     @Default(.lastCheck) var lastCheck
     @Default(.teamID) var teamID
     @Default(.isTeamOwner) var isTeamOwner
-    
+
     private var claimsPassed: Bool {
         Claims.global.all.allSatisfy { claim in
             claim.checksSorted.allSatisfy { check in
@@ -23,7 +23,7 @@ struct StatusBarMenuView: View {
             }
         }
     }
-    
+
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             // Check status
@@ -46,16 +46,16 @@ struct StatusBarMenuView: View {
                     .padding(.horizontal)
                     .padding(.vertical, 4)
             }
-            
+
             Divider()
-            
+
             // Security checks
             ForEach(Claims.global.all, id: \.title) { claim in
                 if !claim.checks.isEmpty {
                     ClaimMenuView(claim: claim)
                 }
             }
-            
+
             // Action buttons
             if !statusBarModel.isRunning {
                 if snoozeTime == 0 {
@@ -65,7 +65,7 @@ struct StatusBarMenuView: View {
                     .keyboardShortcut("r")
                     .padding(.horizontal)
                     .padding(.vertical, 2)
-                    
+
                     Menu("Snooze") {
                         Button("for 1 hour") {
                             appHandlers.snoozeOneHour()
@@ -88,21 +88,21 @@ struct StatusBarMenuView: View {
                     .padding(.vertical, 2)
                 }
             }
-            
+
             #if !SETAPP_ENABLED
-            if !teamID.isEmpty && isTeamOwner {
-                Divider()
-                Button("Team Dashboard") {
-                    appHandlers.teamsDashboard()
+                if !teamID.isEmpty, isTeamOwner {
+                    Divider()
+                    Button("Team Dashboard") {
+                        appHandlers.teamsDashboard()
+                    }
+                    .keyboardShortcut("t")
+                    .padding(.horizontal)
+                    .padding(.vertical, 2)
                 }
-                .keyboardShortcut("t")
-                .padding(.horizontal)
-                .padding(.vertical, 2)
-            }
             #endif
-            
+
             Divider()
-            
+
             // Settings with proper SwiftUI integration
             if #available(macOS 14.0, *) {
                 SettingsLink {
@@ -119,23 +119,23 @@ struct StatusBarMenuView: View {
                 .padding(.horizontal)
                 .padding(.vertical, 2)
             }
-            
+
             Button("Documentation") {
                 appHandlers.docs()
             }
             .keyboardShortcut("d")
             .padding(.horizontal)
             .padding(.vertical, 2)
-            
+
             Button("Contact Support") {
                 appHandlers.reportBug()
             }
             .keyboardShortcut("b")
             .padding(.horizontal)
             .padding(.vertical, 2)
-            
+
             Divider()
-            
+
             Button("Quit Pareto") {
                 appHandlers.quitApp()
             }
@@ -149,7 +149,7 @@ struct StatusBarMenuView: View {
 
 struct ClaimMenuView: View {
     let claim: Claim
-    
+
     var body: some View {
         Menu {
             ForEach(claim.checksSorted, id: \.UUID) { check in
@@ -182,7 +182,7 @@ struct ClaimMenuView: View {
 
 struct CheckMenuItemView: View {
     let check: ParetoCheck
-    
+
     var body: some View {
         Button(action: {
             // Open info URL

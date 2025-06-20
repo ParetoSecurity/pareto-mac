@@ -27,20 +27,20 @@ class HelperToolUtilities {
     static func compareVersions(_ version1: String, _ version2: String) -> ComparisonResult {
         let v1Components = version1.components(separatedBy: ".").compactMap { Int($0) }
         let v2Components = version2.components(separatedBy: ".").compactMap { Int($0) }
-        
+
         let maxCount = max(v1Components.count, v2Components.count)
-        
-        for i in 0..<maxCount {
+
+        for i in 0 ..< maxCount {
             let v1Value = i < v1Components.count ? v1Components[i] : 0
             let v2Value = i < v2Components.count ? v2Components[i] : 0
-            
+
             if v1Value < v2Value {
                 return .orderedAscending
             } else if v1Value > v2Value {
                 return .orderedDescending
             }
         }
-        
+
         return .orderedSame
     }
 
@@ -51,7 +51,7 @@ class HelperToolUtilities {
 
     // Manual version counter - increment this when helper needs updating
     static let expectedHelperVersion = "1.0.3"
-    
+
     // Static method to get expected helper version (manual counter)
     static func getExpectedHelperVersion() -> String {
         return expectedHelperVersion
@@ -60,7 +60,6 @@ class HelperToolUtilities {
 
 @MainActor
 class HelperToolManager: ObservableObject {
-
     private var helperConnection: NSXPCConnection?
     let helperToolIdentifier = "co.niteo.ParetoSecurityHelper"
     @Published var isHelperToolInstalled: Bool = false
@@ -232,7 +231,7 @@ class HelperToolManager: ObservableObject {
     // Function to check and update helper if needed
     func ensureHelperIsUpToDate() async -> Bool {
         let expectedVersion = HelperToolUtilities.getExpectedHelperVersion()
-        
+
         // If helper is not installed, install it
         guard HelperToolUtilities.isHelperInstalled() else {
             os_log("Helper not installed, installing version %{public}s", expectedVersion)
