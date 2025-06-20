@@ -228,6 +228,7 @@
 		4FB51A5B27A94F27003F528E /* SystemUpdatesCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB51A5927A94F27003F528E /* SystemUpdatesCheck.swift */; };
 		4FB51A5D27A94F7C003F528E /* AutomaticDownloadCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB51A5C27A94F7C003F528E /* AutomaticDownloadCheck.swift */; };
 		4FB51A5E27A94F7C003F528E /* AutomaticDownloadCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB51A5C27A94F7C003F528E /* AutomaticDownloadCheck.swift */; };
+		4FB7511F2E05A504004C7DED /* ParetoSecurityHelper in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4F7ACFDD2DE0998F003400E8 /* ParetoSecurityHelper */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		4FB7C67D26AFF1AB00FB1C41 /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB7C67C26AFF1AB00FB1C41 /* Log.swift */; };
 		4FB7C68126AFF25300FB1C41 /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB7C68026AFF25300FB1C41 /* Date.swift */; };
 		4FB7C68726AFF29A00FB1C41 /* NSImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB7C68626AFF29A00FB1C41 /* NSImage.swift */; };
@@ -303,6 +304,25 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		4F7AD01C2DE09C57003400E8 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = Contents/Library/LaunchDaemons;
+			dstSubfolderSpec = 1;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4FB7511E2E05A4EB004C7DED /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 6;
+			files = (
+				4FB7511F2E05A504004C7DED /* ParetoSecurityHelper in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4FB751202E05A519004C7DED /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = Contents/Library/LaunchDaemons;
@@ -456,10 +476,17 @@
 				co.niteo.ParetoSecurityHelper.plist,
 			);
 		};
+		4FB751222E05A526004C7DED /* PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet;
+			buildPhase = 4FB751202E05A519004C7DED /* CopyFiles */;
+			membershipExceptions = (
+				co.niteo.ParetoSecurityHelper.plist,
+			);
+		};
 /* End PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		4F7ACFDE2DE0998F003400E8 /* ParetoSecurityHelper */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (4F7AD01E2DE09C6E003400E8 /* PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = ParetoSecurityHelper; sourceTree = "<group>"; };
+		4F7ACFDE2DE0998F003400E8 /* ParetoSecurityHelper */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (4F7AD01E2DE09C6E003400E8 /* PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet */, 4FB751222E05A526004C7DED /* PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = ParetoSecurityHelper; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -817,6 +844,8 @@
 				4F37E7372718122E00A2B254 /* Frameworks */,
 				4F37E73F2718122E00A2B254 /* Resources */,
 				4F37E7422718122E00A2B254 /* Bundle run at login */,
+				4FB7511E2E05A4EB004C7DED /* CopyFiles */,
+				4FB751202E05A519004C7DED /* CopyFiles */,
 			);
 			buildRules = (
 			);
