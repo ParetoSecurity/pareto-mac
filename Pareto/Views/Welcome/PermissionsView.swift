@@ -13,6 +13,7 @@ class PermissionsChecker: ObservableObject {
     private var timer: Timer?
     @Published var osaAuthorized = false
     @Published var fdaAuthorized = false
+    @Published var firewallAuthorized = false
     @Published var ran = false
 
     private func osaIsAuthorized() -> Bool {
@@ -34,6 +35,7 @@ class PermissionsChecker: ObservableObject {
         timer = Timer.scheduledTimer(withTimeInterval: 2.0, repeats: true) { _ in
             self.fdaAuthorized = TimeMachineHasBackupCheck.sharedInstance.isRunnable
             self.osaAuthorized = self.osaIsAuthorized()
+            self.firewallAuthorized = HelperToolUtilities.isHelperInstalled()
             self.ran = true
         }
     }
@@ -46,6 +48,19 @@ class PermissionsChecker: ObservableObject {
 struct PermissionsView: View {
     @Binding var step: Steps
     @ObservedObject fileprivate var checker = PermissionsChecker()
+    
+    private var canContinue: Bool {
+        // OSA is always required
+        guard checker.osaAuthorized else { return false }
+        
+        // On macOS 15+, firewall access is also required for security checks
+        if #available(macOS 15, *) {
+            return checker.firewallAuthorized
+        }
+        
+        // Pre-macOS 15, only OSA is required
+        return true
+    }
 
     func authorizeOSAClick() {
         NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Automation")!)
@@ -58,6 +73,12 @@ struct PermissionsView: View {
             NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_AllFiles")!)
         }
         NSApp.activate(ignoringOtherApps: true)
+    }
+
+    @MainActor
+    func authorizeFWClick() async {
+        let helperManager = HelperToolManager()
+        await helperManager.manageHelperTool(action: .install)
     }
 
     var body: some View {
@@ -90,7 +111,7 @@ struct PermissionsView: View {
                     } else {
                         Text("Verifying").frame(width: 70)
                     }
-                }).disabled(checker.osaAuthorized)
+                }).disabled(checker.osaAuthorized || !checker.ran)
 
             }.frame(width: 350, alignment: .leading)
             HStack {
@@ -108,14 +129,34 @@ struct PermissionsView: View {
                     } else {
                         Text("Verifying").frame(width: 70)
                     }
-                }).disabled(checker.fdaAuthorized)
+                }).disabled(checker.fdaAuthorized || !checker.ran)
 
             }.frame(width: 350, alignment: .leading)
+            if #available(macOS 15, *) {
+                HStack {
+                    VStack(alignment: .leading) {
+                        Text("Firewall Access").font(.title3)
+                        Text("App requires read-only access to firewall to perform checks on macOS 15+. [Learn more](https://paretosecurity.com/docs/mac/firewall)").font(.footnote)
+                    }
+                    Button(action: { Task { await authorizeFWClick() } }, label: {
+                        if checker.ran {
+                            if checker.firewallAuthorized {
+                                Text("Authorized").frame(width: 70)
+                            } else {
+                                Text("Authorize").frame(width: 70)
+                            }
+                        } else {
+                            Text("Verifying").frame(width: 70)
+                        }
+                    }).disabled(checker.firewallAuthorized || !checker.ran)
+
+                }.frame(width: 350, alignment: .leading)
+            }
             Spacer(minLength: 40)
             Button("Continue") {
                 step = Steps.Checks
-            }.buttonStyle(HighlightButtonStyle(color: checker.osaAuthorized ? .mainColor : .systemGray)).padding(10).disabled(!checker.osaAuthorized)
-        }.frame(width: 380, height: 430, alignment: .center).padding(10).onAppear {
+            }.buttonStyle(HighlightButtonStyle(color: canContinue ? .mainColor : .systemGray)).padding(10).disabled(!canContinue)
+        }.frame(width: 380, height: 480, alignment: .center).padding(10).onAppear {
             checker.start()
         }.onDisappear {
             checker.stop()

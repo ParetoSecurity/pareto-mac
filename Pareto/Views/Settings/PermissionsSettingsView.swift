@@ -37,7 +37,7 @@ struct PermissionsSettingsView: View {
     }
 
     func authorizeFWClick() async {
-        if helperToolManager.isHelperToolInstalled {
+        if checker.firewallAuthorized {
             await helperToolManager.manageHelperTool(action: .uninstall)
             return
         }
@@ -54,7 +54,7 @@ struct PermissionsSettingsView: View {
                 Spacer()
                 Button(action: { Task { await authorizeFWClick() } }, label: {
                     if checker.ran {
-                        if helperToolManager.isHelperToolInstalled {
+                        if checker.firewallAuthorized {
                             Text("Remove").frame(width: 70)
                         } else {
                             Text("Authorize").frame(width: 70)
