@@ -105,7 +105,7 @@ struct AboutSettingsView: View {
                     Defaults[.updateNag] = false
                 }
             } else {
-                status = UpdateStates.Updated
+                status = UpdateStates.Failed
                 isLoading = false
             }
         }

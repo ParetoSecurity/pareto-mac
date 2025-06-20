@@ -39,6 +39,7 @@ class AppVSCodeCheck: AppCheck {
                 completion(version)
             } else {
                 os_log("%{public}s failed: %{public}s", self.appBundle, response.error.debugDescription)
+                self.hasError = true
                 completion("0.0.0")
             }
 

@@ -112,7 +112,7 @@ enum AppInfo {
     }
 
     static let teamsURL = { () -> URL in
-        let baseURL = "https://dash.paretosecurity.com/?utm_source=\(AppInfo.utmSource)&utm_medium=team-link"
+        let baseURL = "https://cloud.paretosecurity.com/?utm_source=\(AppInfo.utmSource)&utm_medium=team-link"
         return URL(string: baseURL)!
     }
 

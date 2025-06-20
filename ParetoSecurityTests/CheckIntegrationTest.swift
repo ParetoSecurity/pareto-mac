@@ -9,7 +9,6 @@
 import XCTest
 
 class CheckIntegrationTest: XCTestCase {
-
     func testInit() throws {
         let check = IntegrationCheck()
         check.configure()

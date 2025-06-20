@@ -26,6 +26,9 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
     private(set) var TitleON = "TitleON"
     private(set) var TitleOFF = "TitleOFF"
 
+    // Indicate check has errored
+    public var hasError = false
+
     // Add these properties to your ParetoCheck class:
     private var cachedIsRunnableValue: Bool?
     private var cachedIsRunnableTimestamp: Date?
@@ -140,10 +143,14 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
             if Defaults[.snoozeTime] > 0 {
                 item.image = NSImage.SF(name: "seal.fill").tint(color: .systemGray)
             } else {
-                if checkPassed {
-                    item.image = NSImage.SF(name: "checkmark").tint(color: Defaults.OKColor())
+                if hasError {
+                    item.image = NSImage.SF(name: "questionmark").tint(color: Defaults.FailColor())
                 } else {
-                    item.image = NSImage.SF(name: "xmark").tint(color: Defaults.FailColor())
+                    if checkPassed {
+                        item.image = NSImage.SF(name: "checkmark").tint(color: Defaults.OKColor())
+                    } else {
+                        item.image = NSImage.SF(name: "xmark").tint(color: Defaults.FailColor())
+                    }
                 }
             }
         } else {
@@ -198,6 +205,7 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
         }
 
         os_log("Running check for %{public}s - %{public}s", log: Log.app, UUID, Title)
+        hasError = false
         checkPassed = checkPasses()
         checkTimestamp = Int(Date().currentTimeMs())
 

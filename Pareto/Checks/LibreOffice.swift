@@ -44,6 +44,7 @@ class AppLibreOfficeCheck: AppCheck {
                 completion(versions)
             } else {
                 os_log("%{public}s failed: %{public}s", self.appBundle, response.error.debugDescription)
+                self.hasError = true
                 completion(["0.0.0"])
             }
         })

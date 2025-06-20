@@ -9,7 +9,6 @@
 import XCTest
 
 class ApplicationUpdatesTest: XCTestCase {
-
     func testAppVersionFetchers() throws {
         var redirects = [String]()
         var names = [String]()

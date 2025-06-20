@@ -184,7 +184,7 @@ class AppDelegate: AppHandlers, NSApplicationDelegate {
 
         // Migrate team ticket
         #if !SETAPP_ENABLED
-        TeamTicket.migrate()
+            TeamTicket.migrate()
         #endif
         statusBar = StatusBarController()
 

@@ -94,6 +94,7 @@ class AppCheck: ParetoCheck, AppCheckProtocol {
                 } else {
                     os_log("%{public}s failed: %{public}s", self.appBundle, response.error.debugDescription)
                     completion("0.0.0")
+                    self.hasError = true
                     return
                 }
             })
