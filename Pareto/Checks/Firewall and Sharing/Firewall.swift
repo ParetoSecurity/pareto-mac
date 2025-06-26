@@ -41,7 +41,7 @@ class FirewallCheck: ParetoCheck {
         return false
     }
 
-    override public var isRunnable: Bool {
+    public var isRunnable: Bool {
         if !isActive {
             return false
         }

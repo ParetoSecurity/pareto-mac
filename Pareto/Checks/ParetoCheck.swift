@@ -22,9 +22,9 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
         hasher.combine(UUID)
     }
 
-    private(set) var UUID = "UUID"
-    private(set) var TitleON = "TitleON"
-    private(set) var TitleOFF = "TitleOFF"
+    internal(set) var UUID = "UUID"
+    internal(set) var TitleON = "TitleON"
+    internal(set) var TitleOFF = "TitleOFF"
 
     // Indicate check has errored
     public var hasError = false
@@ -93,33 +93,9 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
         set { UserDefaults.standard.set(newValue, forKey: EnabledKey) }
     }
 
-    public var isRunnable: Bool {
-        return isActive
-    }
+    internal(set) public var requiresHelper: Bool = false
 
-    public var isInstalled: Bool {
-        return true
-    }
-
-    public var showSettings: Bool {
-        return !teamEnforced
-    }
-
-    public var reportIfDisabled: Bool {
-        return true
-    }
-
-    public var showSettingsWarnDiskAccess: Bool {
-        return false
-    }
-
-    public var showSettingsWarnEvents: Bool {
-        return false
-    }
-
-    public var requiresHelper: Bool {
-        return false
-    }
+    internal(set) public var isRunnable: Bool = false
 
     var checkTimestamp: Int {
         get { UserDefaults.standard.integer(forKey: TimestampKey) }

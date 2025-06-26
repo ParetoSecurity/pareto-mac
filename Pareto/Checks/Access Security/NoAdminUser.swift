@@ -15,7 +15,7 @@ class NoAdminUser: ParetoCheck {
         "Current user is not admin"
     }
 
-    override var TitleOFF: String {
+    var TitleOFF: String {
         "Current user is admin"
     }
 

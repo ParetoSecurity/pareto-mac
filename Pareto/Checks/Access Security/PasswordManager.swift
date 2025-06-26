@@ -13,7 +13,7 @@ class PasswordManager: ParetoCheck {
         "Password manager is installed"
     }
 
-    override var TitleOFF: String {
+    var TitleOFF: String {
         "Password manager is not installed"
     }
 

@@ -16,7 +16,7 @@ class PasswordAfterSleepCheck: ParetoCheck {
         "Password after sleep or screensaver is on"
     }
 
-    override var TitleOFF: String {
+    var TitleOFF: String {
         "Password after sleep or screensaver is off"
     }
 

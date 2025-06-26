@@ -15,7 +15,7 @@ class App1Password8Check: AppCheck {
     override var appMarketingName: String { "1Password" }
     override var appBundle: String { "com.1password.1password" }
 
-    override var UUID: String {
+    var UUID: String {
         "0a076668-f8c6-4d53-b275-6806afcddca8"
     }
 

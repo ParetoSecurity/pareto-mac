@@ -13,7 +13,7 @@ import SwiftUI
 struct PermissionsSettingsView: View {
     @ObservedObject private var atLogin = LaunchAtLogin.observable
 
-    @Default(.betaChannel) var betaChannel
+    @Default(.showBeta) var betaChannel
     @Default(.showBeta) var showBeta
     @Default(.checkForUpdatesRecentOnly) var checkForUpdatesRecentOnly
     @Default(.disableChecksEvents) var disableChecksEvents

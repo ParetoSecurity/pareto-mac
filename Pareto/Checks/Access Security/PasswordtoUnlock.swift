@@ -19,7 +19,7 @@ class RequirePasswordToUnlock: ParetoCheck {
         "No password to unlock preferences"
     }
 
-    override public var showSettingsWarnEvents: Bool {
+    public var showSettingsWarnEvents: Bool {
         return true
     }
 
