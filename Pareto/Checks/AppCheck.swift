@@ -165,7 +165,7 @@ class AppCheck: ParetoCheck, AppCheckProtocol {
         return isActive && isInstalled && usedRecently
     }
 
-    override public var showSettings: Bool {
+    public var showSettings: Bool {
         if teamEnforced {
             return false
         }

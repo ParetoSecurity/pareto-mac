@@ -18,7 +18,7 @@ class SSHKeysCheck: SSHCheck {
         "SSH keys require a password"
     }
 
-    override var TitleOFF: String {
+    var TitleOFF: String {
         return "SSH key is missing a password"
     }
 

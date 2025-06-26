@@ -57,6 +57,14 @@
 		3F17335A2D6D6487007C02B0 /* Dashlane.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F1733312D6D6487007C02B0 /* Dashlane.swift */; };
 		4F020DDF2853503400D8D4E9 /* DebugView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F020DDE2853503400D8D4E9 /* DebugView.swift */; };
 		4F020DE02853503400D8D4E9 /* DebugView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F020DDE2853503400D8D4E9 /* DebugView.swift */; };
+		4F036D812E0D761A008683CA /* ParetoCheckTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F036D7F2E0D761A008683CA /* ParetoCheckTests.swift */; };
+		4F036D822E0D761A008683CA /* AutologinCheckTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F036D7A2E0D761A008683CA /* AutologinCheckTests.swift */; };
+		4F036D832E0D761A008683CA /* PasswordManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F036D802E0D761A008683CA /* PasswordManagerTests.swift */; };
+		4F036D842E0D761A008683CA /* FirewallStealthCheckTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F036D7C2E0D761A008683CA /* FirewallStealthCheckTests.swift */; };
+		4F036D852E0D761A008683CA /* NoAdminUserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F036D7D2E0D761A008683CA /* NoAdminUserTests.swift */; };
+		4F036D862E0D761A008683CA /* FirewallCheckTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F036D7B2E0D761A008683CA /* FirewallCheckTests.swift */; };
+		4F036D872E0D761A008683CA /* NoUnusedUsersTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F036D7E2E0D761A008683CA /* NoUnusedUsersTests.swift */; };
+		4F036D882E0D761A008683CA /* AppCheckTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F036D792E0D761A008683CA /* AppCheckTests.swift */; };
 		4F0371BC26CD00B700B35E43 /* Boot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F0371BB26CD00B700B35E43 /* Boot.swift */; };
 		4F080D1D26C50D2800686786 /* ParetoSecurityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FC81A4B26C41DC8006EABA8 /* ParetoSecurityTests.swift */; };
 		4F0BD11F284891670098316A /* ClipButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F0BD11E284891670098316A /* ClipButton.swift */; };
@@ -359,6 +367,14 @@
 		3F1733392D6D6487007C02B0 /* Tailscale.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tailscale.swift; sourceTree = "<group>"; };
 		3F17333A2D6D6487007C02B0 /* WireGuard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WireGuard.swift; sourceTree = "<group>"; };
 		4F020DDE2853503400D8D4E9 /* DebugView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugView.swift; sourceTree = "<group>"; };
+		4F036D792E0D761A008683CA /* AppCheckTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCheckTests.swift; sourceTree = "<group>"; };
+		4F036D7A2E0D761A008683CA /* AutologinCheckTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutologinCheckTests.swift; sourceTree = "<group>"; };
+		4F036D7B2E0D761A008683CA /* FirewallCheckTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirewallCheckTests.swift; sourceTree = "<group>"; };
+		4F036D7C2E0D761A008683CA /* FirewallStealthCheckTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirewallStealthCheckTests.swift; sourceTree = "<group>"; };
+		4F036D7D2E0D761A008683CA /* NoAdminUserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoAdminUserTests.swift; sourceTree = "<group>"; };
+		4F036D7E2E0D761A008683CA /* NoUnusedUsersTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoUnusedUsersTests.swift; sourceTree = "<group>"; };
+		4F036D7F2E0D761A008683CA /* ParetoCheckTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParetoCheckTests.swift; sourceTree = "<group>"; };
+		4F036D802E0D761A008683CA /* PasswordManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordManagerTests.swift; sourceTree = "<group>"; };
 		4F0371BB26CD00B700B35E43 /* Boot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Boot.swift; sourceTree = "<group>"; };
 		4F0BD11E284891670098316A /* ClipButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipButton.swift; sourceTree = "<group>"; };
 		4F103007269EE135008C1E86 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
@@ -750,6 +766,14 @@
 		4FC81A4A26C41DC8006EABA8 /* ParetoSecurityTests */ = {
 			isa = PBXGroup;
 			children = (
+				4F036D792E0D761A008683CA /* AppCheckTests.swift */,
+				4F036D7A2E0D761A008683CA /* AutologinCheckTests.swift */,
+				4F036D7B2E0D761A008683CA /* FirewallCheckTests.swift */,
+				4F036D7C2E0D761A008683CA /* FirewallStealthCheckTests.swift */,
+				4F036D7D2E0D761A008683CA /* NoAdminUserTests.swift */,
+				4F036D7E2E0D761A008683CA /* NoUnusedUsersTests.swift */,
+				4F036D7F2E0D761A008683CA /* ParetoCheckTests.swift */,
+				4F036D802E0D761A008683CA /* PasswordManagerTests.swift */,
 				4F6A00BA2D6E5791001BDE61 /* ApplicationUpdatesTest.swift */,
 				4F6A92E526C521BE006C2F2D /* CheckIntegrationTest.swift */,
 				4FC81A4B26C41DC8006EABA8 /* ParetoSecurityTests.swift */,
@@ -1275,6 +1299,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4F036D812E0D761A008683CA /* ParetoCheckTests.swift in Sources */,
+				4F036D822E0D761A008683CA /* AutologinCheckTests.swift in Sources */,
+				4F036D832E0D761A008683CA /* PasswordManagerTests.swift in Sources */,
+				4F036D842E0D761A008683CA /* FirewallStealthCheckTests.swift in Sources */,
+				4F036D852E0D761A008683CA /* NoAdminUserTests.swift in Sources */,
+				4F036D862E0D761A008683CA /* FirewallCheckTests.swift in Sources */,
+				4F036D872E0D761A008683CA /* NoUnusedUsersTests.swift in Sources */,
+				4F036D882E0D761A008683CA /* AppCheckTests.swift in Sources */,
 				4F84A94426CBBA6900A1579D /* SettingsTests.swift in Sources */,
 				4FDDE19A2D53BA3200D9E853 /* String.swift in Sources */,
 				4F57135526F8ACCC004B4359 /* WelcomeTest.swift in Sources */,

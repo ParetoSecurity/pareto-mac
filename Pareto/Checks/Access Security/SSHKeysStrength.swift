@@ -71,7 +71,7 @@ class SSHKeysStrengthCheck: SSHCheck {
         "SSH keys use strong encryption"
     }
 
-    override var TitleOFF: String {
+    var TitleOFF: String {
         if sshKey.isEmpty {
             return "SSH key is using weak encryption"
         }

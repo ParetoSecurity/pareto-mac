@@ -330,7 +330,7 @@ enum TeamTicket {
                 Defaults[.migrated] = true
             }
         } catch {
-            os_log("Migration detected, ticket parsing failed", log: Log.api)
+            os_log("Migration detected, ticket parsing failed: %{public}s", log: Log.api, error.localizedDescription)
         }
     }
 

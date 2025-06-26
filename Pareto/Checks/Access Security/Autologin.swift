@@ -19,7 +19,7 @@ class AutologinCheck: ParetoCheck {
         "Automatic login is on"
     }
 
-    override public var showSettingsWarnEvents: Bool {
+    public var showSettingsWarnEvents: Bool {
         return true
     }
 

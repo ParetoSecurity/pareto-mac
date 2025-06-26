@@ -19,7 +19,7 @@ class AdobeReaderCheck: AppCheck {
     override var appMarketingName: String { "Adobe Reader" }
     override var appBundle: String { "com.adobe.Reader" }
 
-    override var UUID: String {
+    var UUID: String {
         "5c6cdb30-2e84-55b0-9d8e-754067b5094e"
     }
 

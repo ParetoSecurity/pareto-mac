@@ -37,7 +37,7 @@ class FirewallStealthCheck: ParetoCheck {
         return false
     }
 
-    override public var isRunnable: Bool {
+    public var isRunnable: Bool {
         if !FirewallCheck.sharedInstance.isActive || !isActive {
             return false
         }

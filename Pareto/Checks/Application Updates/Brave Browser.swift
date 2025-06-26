@@ -14,7 +14,7 @@ class AppBraveBrowserCheck: AppCheck {
     override var appBundle: String { "com.brave.Browser" }
     override var sparkleURL: String { viaEdgeCache("https://updates.bravesoftware.com/sparkle/Brave-Browser/stable/appcast.xml") }
 
-    override var UUID: String {
+    var UUID: String {
         "64026bd2-54c2-4d3e-8696-559091457dde"
     }
 

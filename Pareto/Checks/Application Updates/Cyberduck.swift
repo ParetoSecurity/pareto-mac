@@ -13,7 +13,7 @@ class AppCyberduckCheck: AppCheck {
     override var appBundle: String { "ch.sudo.cyberduck" }
     override var sparkleURL: String { "https://version.cyberduck.io/changelog.rss" }
 
-    override var UUID: String {
+    var UUID: String {
         "765b6f80-7a20-5d60-a8c4-013ea360c28e"
     }
 }

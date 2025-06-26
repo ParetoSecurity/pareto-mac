@@ -12,7 +12,7 @@ class AppBitwardenCheck: AppCheck {
     override var appMarketingName: String { "Bitwarden" }
     override var appBundle: String { "com.bitwarden.desktop" }
 
-    override var UUID: String {
+    var UUID: String {
         "42e4fce2-b34f-5220-990a-33ba64e9ffa0"
     }
 }
