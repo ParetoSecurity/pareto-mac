@@ -13,6 +13,7 @@ struct AboutSettingsView: View {
     @State private var status = UpdateStates.Checking
     @State private var konami = 0
     @State private var helperVersion = "Checking..."
+    @State private var hasCheckedForUpdates = false
 
     @StateObject private var helperManager = HelperToolManager()
     @Default(.showBeta) var showBeta
@@ -26,9 +27,11 @@ struct AboutSettingsView: View {
     }
 
     var body: some View {
-        HStack {
+        HStack(spacing: 20) {
             Image("Icon").resizable()
-                .aspectRatio(contentMode: .fit).onTapGesture {
+                .aspectRatio(contentMode: .fit)
+                .frame(width: 160)
+                .onTapGesture {
                     konami += 1
                     if konami >= 3 {
                         showBeta.toggle()
@@ -44,13 +47,26 @@ struct AboutSettingsView: View {
                 }
             VStack(alignment: .leading) {
                 Text("Pareto Security").font(.title)
-
-                VStack(alignment: .leading, spacing: 0) {
+                Spacer()
+                VStack(alignment: .leading, spacing: 5) {
                     Text("Version: \(AppInfo.appVersion) - \(AppInfo.buildVersion)")
                     Text("Helper: \(helperVersion)")
                     Text("Channel: \(AppInfo.utmSource)")
 
                     HStack(spacing: 10) {
+                        if !hasCheckedForUpdates || status == UpdateStates.Updated {
+                            Button("Check for Updates") {
+                                fetch()
+                            }
+                            .disabled(isLoading)
+                        }
+
+                        if hasCheckedForUpdates && status == UpdateStates.NewVersion {
+                            Button("Update Now") {
+                                forceUpdate()
+                            }
+                            .disabled(isLoading)
+                        }
                         if status == UpdateStates.Failed {
                             Text("Failed to update, [download update](https://github.com/ParetoSecurity/pareto-mac/releases/latest/download/ParetoSecurity.dmg)")
 
@@ -65,14 +81,14 @@ struct AboutSettingsView: View {
                     }
                 }
                 Spacer()
-                Text("We’d love to [hear from you!](https://paretosecurity.com/contact)")
+                Text("We'd love to [hear from you!](https://paretosecurity.com/contact)")
                 Spacer()
                 Text("Made with ❤️ in 🇪🇺")
             }
 
-        }.frame(width: 380, height: 150).padding(25).onAppear {
-            fetch()
+        }.frame(width: 420, height: 180).padding(25).onAppear {
             fetchHelperVersion()
+            fetch()
         }
     }
 
@@ -88,41 +104,82 @@ struct AboutSettingsView: View {
 
     private func fetch() {
         DispatchQueue.global(qos: .userInteractive).async {
-            isLoading = true
-            status = UpdateStates.Checking
+            DispatchQueue.main.async {
+                isLoading = true
+                status = UpdateStates.Checking
+            }
+
             let updater = AppUpdater(owner: "ParetoSecurity", repo: "pareto-mac")
             let currentVersion = Bundle.main.version
+
             if let release = try? updater.getLatestRelease() {
-                isLoading = false
-                if currentVersion < release.version {
-                    status = UpdateStates.NewVersion
-                    #if SETAPP_ENABLED
-                        Defaults[.updateNag] = true
-                        return
-                    #endif
+                DispatchQueue.main.async {
+                    hasCheckedForUpdates = true
+                    isLoading = false
 
-                    if let zipURL = release.assets.filter({ $0.browser_download_url.path.hasSuffix(".zip") }).first {
-                        status = UpdateStates.Installing
-                        isLoading = true
+                    if currentVersion < release.version {
+                        status = UpdateStates.NewVersion
+                        #if SETAPP_ENABLED
+                            Defaults[.updateNag] = true
+                        #endif
+                    } else {
+                        status = UpdateStates.Updated
+                        Defaults[.updateNag] = false
+                    }
+                }
+            } else {
+                DispatchQueue.main.async {
+                    hasCheckedForUpdates = true
+                    status = UpdateStates.Failed
+                    isLoading = false
+                }
+            }
+        }
+    }
 
-                        let done = updater.downloadAndUpdate(withAsset: zipURL)
-                        if !done {
+    private func forceUpdate() {
+        DispatchQueue.global(qos: .userInteractive).async {
+            DispatchQueue.main.async {
+                isLoading = true
+                status = UpdateStates.Installing
+            }
+
+            let updater = AppUpdater(owner: "ParetoSecurity", repo: "pareto-mac")
+
+            if let release = try? updater.getLatestRelease() {
+                #if SETAPP_ENABLED
+                    DispatchQueue.main.async {
+                        isLoading = false
+                        status = UpdateStates.Failed
+                        let alert = NSAlert()
+                        alert.messageText = "Force update is not available in SetApp version"
+                        alert.informativeText = "Please use SetApp to update the application"
+                        alert.alertStyle = NSAlert.Style.informational
+                        alert.addButton(withTitle: "OK")
+                        alert.runModal()
+                    }
+                    return
+                #endif
+
+                if let zipURL = release.assets.filter({ $0.browser_download_url.path.hasSuffix(".zip") }).first {
+                    let done = updater.downloadAndUpdate(withAsset: zipURL)
+                    if !done {
+                        DispatchQueue.main.async {
                             status = UpdateStates.Failed
                             isLoading = false
                         }
-
-                    } else {
-                        status = UpdateStates.Updated
-                        isLoading = false
                     }
                 } else {
-                    status = UpdateStates.Updated
-                    isLoading = false
-                    Defaults[.updateNag] = false
+                    DispatchQueue.main.async {
+                        status = UpdateStates.Failed
+                        isLoading = false
+                    }
                 }
             } else {
-                status = UpdateStates.Failed
-                isLoading = false
+                DispatchQueue.main.async {
+                    status = UpdateStates.Failed
+                    isLoading = false
+                }
             }
         }
     }

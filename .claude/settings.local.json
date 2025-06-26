@@ -12,7 +12,8 @@
       "Bash(ls:*)",
       "Bash(mkdir:*)",
       "Bash(cp:*)",
-      "Bash(codesign:*)"
+      "Bash(codesign:*)",
+      "Bash(make:*)"
     ]
   },
   "enableAllProjectMcpServers": false
