@@ -42,7 +42,6 @@ extension Defaults.Keys {
     // Updates
     static let updateNag = Key<Bool>("updateNag", default: false, suite: extensionDefaults)
     static let showBeta = Key<Bool>("showBeta", default: false, suite: extensionDefaults)
-    static let betaChannel = Key<Bool>("betaChannel", default: false, suite: extensionDefaults)
     static let lastUpdateCheck = Key<Int>("lastUpdateCheck", default: Date().currentTimeMs(), suite: extensionDefaults)
 
     // Checks
@@ -60,6 +59,12 @@ extension Defaults.Keys {
 public extension Defaults {
     static func firstLaunch() -> Bool {
         return Defaults[.lastCheck] == 0
+    }
+    
+    static var betaChannelComputed: Bool {
+        get {
+            return Defaults[.showBeta]
+        }
     }
 
     static func customChecksPath() -> URL {

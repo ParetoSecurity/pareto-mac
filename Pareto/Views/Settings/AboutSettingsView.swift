@@ -42,6 +42,7 @@ struct AboutSettingsView: View {
                             alert.alertStyle = NSAlert.Style.informational
                             alert.addButton(withTitle: "Let me in")
                             alert.runModal()
+                            fetch()
                         }
                     }
                 }

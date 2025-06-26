@@ -13,7 +13,6 @@ import SwiftUI
 struct GeneralSettingsView: View {
     @ObservedObject private var atLogin = LaunchAtLogin.observable
 
-    @Default(.betaChannel) var betaChannel
     @Default(.showBeta) var showBeta
     @Default(.checkForUpdatesRecentOnly) var checkForUpdatesRecentOnly
     @Default(.disableChecksEvents) var disableChecksEvents
@@ -61,7 +60,8 @@ struct GeneralSettingsView: View {
                     Section(
                         footer: Text("Latest features but potentially bugs to report.").font(.footnote)) {
                         VStack(alignment: .leading) {
-                            Toggle("Update app to pre-release builds", isOn: $betaChannel)
+                            Toggle("Update app to pre-release builds", isOn: .constant(showBeta))
+                                .disabled(showBeta)
                         }
                     }
                     #if DEBUG

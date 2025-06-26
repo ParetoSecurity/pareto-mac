@@ -223,7 +223,7 @@ public class AppUpdater {
         let url = URL(string: "https://paretosecurity.com/api/updates?\(vars)")!
         let data = try Data(contentsOf: url)
         let releases = try JSONDecoder().decode([Release].self, from: data)
-        let release = try releases.findViableUpdate(prerelease: Defaults[.betaChannel])
+        let release = try releases.findViableUpdate(prerelease: Defaults.betaChannelComputed)
         return release
     }
 }
