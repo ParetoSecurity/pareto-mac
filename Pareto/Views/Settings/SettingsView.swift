@@ -32,7 +32,7 @@ struct SettingsView: View {
             #if !SETAPP_ENABLED
                 TeamSettingsView(teamSettings: AppInfo.TeamSettings)
                     .tabItem {
-                        Label("Link", systemImage: "person.3.fill")
+                        Label("Cloud", systemImage: "person.3.fill")
                     }
                     .tag(Tabs.teams)
             #endif

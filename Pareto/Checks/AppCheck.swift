@@ -198,7 +198,6 @@ class AppCheck: ParetoCheck, AppCheckProtocol {
             let versionRegex = Regex("sparkle:shortVersionString=\"([\\.\\d]+)\"")
             let versionFallbackRegex = Regex("sparkle:version=\"([\\.\\d]+)\"")
             AF.request(sparkleURL).responseString(queue: AppCheck.queue, completionHandler: { response in
-
                 if response.error == nil {
                     let versionNew = versionRegex.allMatches(in: response.value ?? "")
                     let versionOld = versionFallbackRegex.allMatches(in: response.value ?? "")

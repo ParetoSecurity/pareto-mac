@@ -56,14 +56,14 @@ struct AboutSettingsView: View {
 
                     HStack(spacing: 10) {
                         if !hasCheckedForUpdates || status == UpdateStates.Updated {
-                            Button("Check for Updates") {
+                            Button("Check") {
                                 fetch()
                             }
                             .disabled(isLoading)
                         }
 
                         if hasCheckedForUpdates && status == UpdateStates.NewVersion {
-                            Button("Update Now") {
+                            Button("Update") {
                                 forceUpdate()
                             }
                             .disabled(isLoading)

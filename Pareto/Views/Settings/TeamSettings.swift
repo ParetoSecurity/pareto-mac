@@ -104,7 +104,7 @@ struct TeamSettingsView: View {
                     Button("Unlink this device") {
                         Defaults.toOpenSource()
                     }
-                    Link("Team Dashboard »",
+                    Link("Cloud Dashboard »",
                          destination: AppInfo.teamsURL())
                 }
                 Spacer(minLength: 2)

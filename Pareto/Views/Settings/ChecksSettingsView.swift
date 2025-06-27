@@ -21,7 +21,6 @@ struct ChecksSettingsView: View {
                 }
                 VStack(alignment: .leading, spacing: 0.0) {
                     ForEach(Claims.global.all, id: \.self) { claim in
-
                         // Hack to force update view
                         // see https://developer.apple.com/forums/thread/131577
                         let title = "\(claim.title) (\(claim.checks.count))"

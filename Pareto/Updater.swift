@@ -99,7 +99,6 @@ public class AppUpdater {
             var state = false
             let tmpDir = try! FileManager.default.url(for: .itemReplacementDirectory, in: .userDomainMask, appropriateFor: Bundle.main.bundleURL, create: true)
             URLSession.shared.downloadTask(with: asset.browser_download_url) { tempLocalUrl, response, error in
-
                 if error != nil {
                     os_log("Error took place while downloading a file: \(error!.localizedDescription)")
                     lock.signal()

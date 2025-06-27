@@ -15,7 +15,7 @@ struct ChecksView: View {
     var body: some View {
         VStack {
             VStack {
-                Image("Logo")
+                Image("Icon")
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .frame(minHeight: 180, alignment: .center)

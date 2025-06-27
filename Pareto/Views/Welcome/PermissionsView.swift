@@ -156,7 +156,7 @@ struct PermissionsView: View {
                     HStack(alignment: .top) {
                         VStack(alignment: .leading, spacing: 4) {
                             Text("Firewall Access").font(.title3).fontWeight(.medium)
-                            Text("App requires read-only access to firewall to perform checks on macOS 15+. [Learn more](https://paretosecurity.com/docs/mac/firewall)")
+                            Text("App requires read-only access to firewall to perform checks on macOS 15+. [Learn more](https://paretosecurity.com/docs/mac/privileged-helper-authorization)")
                                 .font(.footnote)
                                 .foregroundColor(.secondary)
                                 .fixedSize(horizontal: false, vertical: true)

@@ -49,7 +49,7 @@ struct PermissionsSettingsView: View {
             HStack {
                 VStack(alignment: .leading) {
                     Text("Firewall Access").font(.headline)
-                    Text("App requires read-only access to firewall to perform checks. [Learn more](https://paretosecurity.com/docs/mac/firewall)").font(.footnote).padding([.top], 1)
+                    Text("App requires read-only access to firewall to perform checks. [Learn more](https://paretosecurity.com/docs/mac/privileged-helper-authorization)").font(.footnote).padding([.top], 1)
                 }
                 Spacer()
                 Button(action: { Task { await authorizeFWClick() } }, label: {

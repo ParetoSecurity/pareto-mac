@@ -60,11 +60,9 @@ public extension Defaults {
     static func firstLaunch() -> Bool {
         return Defaults[.lastCheck] == 0
     }
-    
+
     static var betaChannelComputed: Bool {
-        get {
-            return Defaults[.showBeta]
-        }
+        return Defaults[.showBeta]
     }
 
     static func customChecksPath() -> URL {

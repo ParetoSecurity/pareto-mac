@@ -43,7 +43,6 @@ class AppZoomCheck: AppCheck {
         os_log("Requesting %{public}s", url)
 
         AF.request(url, method: .head).redirect(using: Redirector(behavior: .doNotFollow)).response(queue: AppCheck.queue, completionHandler: { response in
-
             if response.error == nil {
                 let location = response.response?.allHeaderFields["Location"] as? String ?? "https://cdn.zoom.us/prod/1.8.6.2879/ZoomInstallerIT.pkg"
                 let version = versionRegex.firstMatch(in: location)?.groups.first?.value ?? "1.8.6.2879"

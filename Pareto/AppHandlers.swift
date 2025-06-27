@@ -143,7 +143,6 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
             }
         #else
             NSBackgroundActivityScheduler.repeating(withName: "UpdateRunnerSetapp", withInterval: 60 * 60 * Double(AppInfo.Flags.setappUpdate)) { (completion: NSBackgroundActivityScheduler.CompletionHandler) in
-
                 if self.networkHandler.currentStatus == .satisfied {
                     os_log("Running update check")
                     DispatchQueue.main.async {
@@ -377,7 +376,6 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
         switch url.host {
         #if !SETAPP_ENABLED
             case "enrollTeam":
-
                 let jwt = url.queryParams()["token"] ?? ""
                 do {
                     let ticket = try TeamTicket.verify(withTicket: jwt)
