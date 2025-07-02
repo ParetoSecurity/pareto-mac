@@ -77,44 +77,46 @@ class ParetoUpdated: ParetoCheck {
                     os_log("Sorted releases: %{public}@", sortedReleases.map { $0.tagName }.joined(separator: ", "))
 
                     // Filter out pre-releases if showBeta is false
-                    if Defaults[.showBeta] {
-                        // Include all releases
-                        os_log("Including beta releases in update check")
-                    } else {
-                        // Exclude pre-releases
+                    if !Defaults[.showBeta] {
                         os_log("Excluding beta releases in update check")
                         sortedReleases = sortedReleases.filter { !$0.prerelease }
+                    } else {
+                        os_log("Including beta releases in update check")
                     }
 
-                    // Include releases with published date older than 10 days
-                    let tenDaysAgo = Date().addingTimeInterval(-10 * 24 * 60 * 60)
-                    let dateFormatter = ISO8601DateFormatter()
-                    // dateFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
-                    let recentReleases = sortedReleases.filter { release in
-                        guard let publishedDate = dateFormatter.date(from: release.publishedAt) else {
-                            return false
-                        }
-                        return tenDaysAgo >= publishedDate
-                    }
-                    if recentReleases.isEmpty {
-                        os_log("No recent releases older found in update check")
+                    guard let latestRelease = sortedReleases.first else {
+                        os_log("No valid releases found after filtering")
                         completion(false)
                         return
                     }
 
-                    if Defaults[.showBeta] {
-                        let isUpToDate = sortedReleases[0].tagName == AppInfo.appVersion
-                        os_log("Update check completed. App version: %{public}s, Github version: %{public}s",
-                               AppInfo.appVersion,
-                               releases[0].tagName)
-                        completion(isUpToDate)
+                    // Only fail if latest release is older than 10 days and current version does not match
+                    let tenDaysAgo = Date().addingTimeInterval(-10 * 24 * 60 * 60)
+                    let dateFormatter = ISO8601DateFormatter()
+                    
+                    guard let publishedDate = dateFormatter.date(from: latestRelease.publishedAt) else {
+                        os_log("Could not parse published date for latest release")
+                        completion(false)
+                        return
+                    }
 
-                    } else {
-                        let isUpToDate = sortedReleases.filter { !$0.prerelease }[0].tagName == AppInfo.appVersion
-                        os_log("Update check completed. App version: %{public}s, Github version: %{public}s",
-                               AppInfo.appVersion,
-                               releases[0].tagName)
+                    if publishedDate < tenDaysAgo {
+                        // Latest release is older than 10 days, check version match
+                        var currentVersion = AppInfo.appVersion
+                        if currentVersion.contains("-") {
+                            // Strip any pre-release suffix for comparison
+                            currentVersion = String(currentVersion.split(separator: "-")[0])
+                        }
+                        
+                        let isUpToDate = currentVersion == latestRelease.tagName
+                        os_log("Latest release is older than 10 days. App version: %{public}s, Github version: %{public}s, Up to date: %{public}@",
+                               currentVersion, latestRelease.tagName, isUpToDate ? "true" : "false")
                         completion(isUpToDate)
+                    } else {
+                        // Within 10 days grace period, always pass
+                        os_log("Latest release is within 10 days grace period. App version: %{public}s, Github version: %{public}s",
+                               AppInfo.appVersion, latestRelease.tagName)
+                        completion(true)
                     }
 
                 case let .failure(error):
