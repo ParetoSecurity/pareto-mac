@@ -266,7 +266,7 @@ extension ParetoCheck {
 
     func readDefaultsFile(path: String) -> NSDictionary? {
         guard let dictionary = NSDictionary(contentsOfFile: path) else {
-            os_log("Failed reading %{public}s", path)
+            //os_log("Failed reading %{public}s", path)
             return nil
         }
         return dictionary
@@ -279,7 +279,7 @@ extension ParetoCheck {
 
     func appVersion(path: String, key: String = "CFBundleShortVersionString") -> String? {
         guard let dictionary = NSDictionary(contentsOfFile: path) else {
-            os_log("Failed reading %{public}s", path)
+            //os_log("Failed reading %{public}s", path)
             return nil
         }
         // print("\(app): \(dictionary as AnyObject)")

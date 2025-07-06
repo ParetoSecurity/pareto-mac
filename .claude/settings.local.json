@@ -13,7 +13,10 @@
       "Bash(mkdir:*)",
       "Bash(cp:*)",
       "Bash(codesign:*)",
-      "Bash(make:*)"
+      "Bash(make:*)",
+      "Bash(swift:*)",
+      "Bash(rm:*)",
+      "Bash(rg:*)"
     ]
   },
   "enableAllProjectMcpServers": false

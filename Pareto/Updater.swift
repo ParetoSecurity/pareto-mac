@@ -27,6 +27,7 @@ struct Release: Decodable {
     let body: String
     let prerelease: Bool
     let html_url: URL
+    let published_at: String
 
     var version: Version {
         if let ver = Version(tag_name.replacingOccurrences(of: "v", with: "")) {
@@ -218,12 +219,21 @@ public class AppUpdater {
         guard Bundle.main.executableURL != nil else {
             throw Error.bundleExecutableURL
         }
-        let vars = "uuid=\(Defaults[.machineUUID])&version=\(AppInfo.appVersion)&os_version=\(AppInfo.macOSVersionString)&distribution=\(AppInfo.utmSource)"
-        let url = URL(string: "https://paretosecurity.com/api/updates?\(vars)")!
-        let data = try Data(contentsOf: url)
-        let releases = try JSONDecoder().decode([Release].self, from: data)
-        let release = try releases.findViableUpdate(prerelease: Defaults.betaChannelComputed)
-        return release
+        do {
+            let releases = try APIService.shared.getUpdatesSync()
+            let release = try releases.findViableUpdate(prerelease: Defaults.betaChannelComputed)
+            return release
+        } catch {
+            if let apiError = error as? APIError {
+                switch apiError {
+                case .networkError, .decodingError:
+                    throw Error.invalidAsset
+                default:
+                    throw Error.invalidAsset
+                }
+            }
+            throw error
+        }
     }
 }
 

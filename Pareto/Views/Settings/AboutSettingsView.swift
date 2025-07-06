@@ -20,7 +20,7 @@ struct AboutSettingsView: View {
 
     enum UpdateStates: String {
         case Checking = "Checking for updates"
-        case NewVersion = "New version found, please update app"
+        case NewVersion = "New version found"
         case Installing = "Installing new update"
         case Updated = "App is up to date"
         case Failed = "Failed to update, download manually"
@@ -57,6 +57,7 @@ struct AboutSettingsView: View {
                     HStack(spacing: 10) {
                         if !hasCheckedForUpdates || status == UpdateStates.Updated {
                             Button("Check") {
+                                APIService.shared.clearCache()
                                 fetch()
                             }
                             .disabled(isLoading)
@@ -64,6 +65,7 @@ struct AboutSettingsView: View {
 
                         if hasCheckedForUpdates && status == UpdateStates.NewVersion {
                             Button("Update") {
+                                APIService.shared.clearCache()
                                 forceUpdate()
                             }
                             .disabled(isLoading)
