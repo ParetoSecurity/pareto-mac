@@ -17,7 +17,7 @@ class APIServiceTest: XCTestCase {
     func testGetUpdatesSync() throws {
         // Skip network tests in CI environment or if network is unavailable
         let expectation = self.expectation(description: "API call")
-        var testResult: Result<[Release], Error>?
+        var testResult: Result<[Release], Swift.Error>?
         
         DispatchQueue.global().async {
             do {
@@ -116,9 +116,10 @@ class APIServiceTest: XCTestCase {
     
     func testAPIEndpointParameters() throws {
         // Test Release array filtering without network dependency
+        let mockAsset = Release.Asset(name: "test.zip", browser_download_url: URL(string: "https://example.com/test.zip")!, size: 1000, content_type: .zip)
         let mockReleases = [
-            Release(tag_name: "v1.0.0", body: "", prerelease: false, html_url: URL(string: "https://example.com")!, published_at: "2024-01-01T00:00:00Z", assets: []),
-            Release(tag_name: "v1.1.0-beta", body: "", prerelease: true, html_url: URL(string: "https://example.com")!, published_at: "2024-02-01T00:00:00Z", assets: [])
+            Release(tag_name: "v1.0.0", body: "", prerelease: false, html_url: URL(string: "https://example.com")!, published_at: "2024-01-01T00:00:00Z", assets: [mockAsset]),
+            Release(tag_name: "v1.1.0-beta", body: "", prerelease: true, html_url: URL(string: "https://example.com")!, published_at: "2024-02-01T00:00:00Z", assets: [mockAsset])
         ]
         
         // Test that we can find a viable update
