@@ -17,3 +17,4 @@ SourcePackages
 xcuserdata/
 *.zip
 junit.xml
+.claude/settings.local.json
