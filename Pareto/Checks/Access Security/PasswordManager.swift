@@ -37,7 +37,6 @@ class PasswordManager: ParetoCheck {
             "NordPass",
             "Keeper Password Manager",
             "Keeper",
-            "Password"
         ]
         
         // Get all running applications
