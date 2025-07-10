@@ -18,9 +18,42 @@ class PasswordManager: ParetoCheck {
     }
 
     override func checkPasses() -> Bool {
-        return checkInstalledApplications() || checkForBrowserExtensions()
+        return isPasswordManagerRunning() || checkInstalledApplications() || checkForBrowserExtensions()
     }
 
+    func isPasswordManagerRunning() -> Bool {
+        let passwordManagerNames = [
+            "1Password",
+            "1Password 8",
+            "1Password 7",
+            "Bitwarden",
+            "Dashlane",
+            "KeePassXC",
+            "KeePassX",
+            "KeePassium",
+            "LastPass",
+            "RoboForm",
+            "Enpass",
+            "NordPass",
+            "Keeper Password Manager",
+            "Keeper"
+        ]
+        
+        // Get all running applications
+        let runningApps = NSWorkspace.shared.runningApplications
+        
+        for app in runningApps {
+            if let appName = app.localizedName {
+                // Check if the running app matches any password manager
+                if passwordManagerNames.contains(appName) {
+                    return true
+                }
+            }
+        }
+        
+        return false
+    }
+    
     private func checkInstalledApplications() -> Bool {
         let passwordManagers = [
             "1Password.app",
@@ -37,7 +70,7 @@ class PasswordManager: ParetoCheck {
             "/Applications",
             "/System/Applications",
             "/Applications/Setapp",
-            "\(NSHomeDirectory())/Applications"
+            NSString(string: "~/Applications").expandingTildeInPath
         ]
 
         for path in searchPaths {
