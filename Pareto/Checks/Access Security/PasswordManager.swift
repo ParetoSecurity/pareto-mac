@@ -36,7 +36,8 @@ class PasswordManager: ParetoCheck {
             "Enpass",
             "NordPass",
             "Keeper Password Manager",
-            "Keeper"
+            "Keeper",
+            "Password"
         ]
         
         // Get all running applications
@@ -94,7 +95,8 @@ class PasswordManager: ParetoCheck {
             "eiaeiblijfjekdanodkjadfinkhbfgcd", // nordpass
             "nngceckbapebfimnlniiiahkandclblb", // bitwarden
             "aeblfdkhhhdcdjpifhhbdiojplfjncoa", // 1password
-            "fdjamakpfbbddfjaooikfcpapjohcfmg" // dashlane
+            "fdjamakpfbbddfjaooikfcpapjohcfmg", // dashlane
+            "pejdijmoenmkgeppbflobdenhhabjlaj" // Apple passwords
         ]
 
         let browsers = [
