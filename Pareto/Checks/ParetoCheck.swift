@@ -27,14 +27,14 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
     private(set) var TitleOFF = "TitleOFF"
 
     // Indicate check has errored
-    public var hasError = false
+    var hasError = false
 
     // Add these properties to your ParetoCheck class:
     private var cachedIsRunnableValue: Bool?
     private var cachedIsRunnableTimestamp: Date?
 
     // This function caches the result of isRunnable for 5 minutes (300 seconds).
-    public func isRunnableCached() -> Bool {
+    func isRunnableCached() -> Bool {
         let cacheDuration: TimeInterval = 300 // 5 minutes in seconds
         let now = Date()
 
@@ -64,11 +64,11 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
         "ParetoCheck-" + UUID + "-TS"
     }
 
-    public var hasDebug: Bool {
+    var hasDebug: Bool {
         false
     }
 
-    public func debugInfo() -> String {
+    func debugInfo() -> String {
         ""
     }
 
@@ -76,14 +76,14 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
         checkPassed ? TitleON : TitleOFF
     }
 
-    public var teamEnforced: Bool {
+    var teamEnforced: Bool {
         if AppInfo.TeamSettings.enforcedChecks.isEmpty {
             return false
         }
         return AppInfo.TeamSettings.enforcedChecks.contains(where: { $0 == UUID })
     }
 
-    public var isActive: Bool {
+    var isActive: Bool {
         get {
             if teamEnforced {
                 return true
@@ -93,31 +93,31 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
         set { UserDefaults.standard.set(newValue, forKey: EnabledKey) }
     }
 
-    public var isRunnable: Bool {
+    var isRunnable: Bool {
         return isActive
     }
 
-    public var isInstalled: Bool {
+    var isInstalled: Bool {
         return true
     }
 
-    public var showSettings: Bool {
+    var showSettings: Bool {
         return !teamEnforced
     }
 
-    public var reportIfDisabled: Bool {
+    var reportIfDisabled: Bool {
         return true
     }
 
-    public var showSettingsWarnDiskAccess: Bool {
+    var showSettingsWarnDiskAccess: Bool {
         return false
     }
 
-    public var showSettingsWarnEvents: Bool {
+    var showSettingsWarnEvents: Bool {
         return false
     }
 
-    public var requiresHelper: Bool {
+    var requiresHelper: Bool {
         return false
     }
 
@@ -169,11 +169,11 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
         return item
     }
 
-    public var isCritical: Bool {
+    var isCritical: Bool {
         return false
     }
 
-    public var CIS: String {
+    var CIS: String {
         return "0"
     }
 
@@ -254,7 +254,34 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
     }
 
     @objc func moreInfo() {
-        NSWorkspace.shared.open(infoURL)
+        // Check if Command key is pressed
+        if NSEvent.modifierFlags.contains(.command), hasDebug {
+            showDebugWindow()
+        } else {
+            NSWorkspace.shared.open(infoURL)
+        }
+    }
+
+    @objc func showDebugWindow() {
+        guard hasDebug else { return }
+
+        DispatchQueue.main.async { [self] in
+            let debugInfo = self.debugInfo()
+            let hostingController = NSHostingController(rootView: CheckDebugView(checkTitle: self.Title, debugInfo: debugInfo))
+            hostingController.preferredContentSize = NSSize(width: 640, height: 480)
+            if #available(macOS 13.0, *) {
+                hostingController.sizingOptions = .preferredContentSize
+            }
+            let window = NSWindow(contentViewController: hostingController)
+            window.title = "Debug Info - \(self.Title)"
+            window.standardWindowButton(.zoomButton)?.isHidden = true
+            window.standardWindowButton(.miniaturizeButton)?.isHidden = true
+            window.center()
+            window.setContentSize(NSSize(width: 640, height: 480))
+
+            let windowController = NSWindowController(window: window)
+            windowController.showWindow(nil)
+        }
     }
 }
 
@@ -266,7 +293,7 @@ extension ParetoCheck {
 
     func readDefaultsFile(path: String) -> NSDictionary? {
         guard let dictionary = NSDictionary(contentsOfFile: path) else {
-            //os_log("Failed reading %{public}s", path)
+            // os_log("Failed reading %{public}s", path)
             return nil
         }
         return dictionary
@@ -279,7 +306,7 @@ extension ParetoCheck {
 
     func appVersion(path: String, key: String = "CFBundleShortVersionString") -> String? {
         guard let dictionary = NSDictionary(contentsOfFile: path) else {
-            //os_log("Failed reading %{public}s", path)
+            // os_log("Failed reading %{public}s", path)
             return nil
         }
         // print("\(app): \(dictionary as AnyObject)")

@@ -30,14 +30,14 @@ class FirewallStealthCheck: ParetoCheck {
         "Firewall stealth mode is disabled"
     }
 
-    override public var requiresHelper: Bool {
+    override var requiresHelper: Bool {
         if #available(macOS 15, *) {
             return true
         }
         return false
     }
 
-    override public var isRunnable: Bool {
+    override var isRunnable: Bool {
         if !FirewallCheck.sharedInstance.isActive || !isActive {
             return false
         }
@@ -49,7 +49,7 @@ class FirewallStealthCheck: ParetoCheck {
         return true
     }
 
-    override public var showSettings: Bool {
+    override var showSettings: Bool {
         if teamEnforced {
             return false
         }

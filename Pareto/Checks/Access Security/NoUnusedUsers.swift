@@ -89,7 +89,7 @@ class NoUnusedUsers: ParetoCheck {
         }
     }
 
-    override public var isRunnable: Bool {
+    override var isRunnable: Bool {
         isActive && isAdmin
     }
 }

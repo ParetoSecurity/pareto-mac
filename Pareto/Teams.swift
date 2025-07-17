@@ -130,7 +130,7 @@ struct ReportingDevice: Encodable {
 }
 
 struct Report: Encodable {
-    public enum CheckStatus: String {
+    enum CheckStatus: String {
         case Disabled = "off", Passing = "pass", Failing = "fail", Error = "error"
     }
 
@@ -200,7 +200,7 @@ struct Report: Encodable {
 }
 
 enum Team {
-    public static let defaultAPI = "https://cloud.paretosecurity.com/api/v1/team"
+    static let defaultAPI = "https://cloud.paretosecurity.com/api/v1/team"
     private static let base = Defaults[.teamAPI]
     private static let queue = DispatchQueue(label: "co.pareto.api", qos: .userInteractive, attributes: .concurrent)
 
@@ -299,13 +299,13 @@ enum TeamTicket {
         }
     }
 
-    public enum Part {
+    enum Part {
         case header
         case payload
         case signature
     }
 
-    public indirect enum Error: Swift.Error {
+    indirect enum Error: Swift.Error {
         case badTokenStructure
         case cannotDecodeBase64Part(TeamTicket.Part, String)
         case invalidJSON(TeamTicket.Part, Swift.Error)
@@ -318,7 +318,7 @@ enum TeamTicket {
         case badPublicKeyConversion
     }
 
-    public static func migrate(publicKey key: String = rsaPublicKey) {
+    static func migrate(publicKey key: String = rsaPublicKey) {
         do {
             if !Defaults[.license].isEmpty, !Defaults[.migrated] {
                 let ticket = try TeamTicket.verify(withTicket: Defaults[.license], publicKey: key)
@@ -334,7 +334,7 @@ enum TeamTicket {
         }
     }
 
-    public static func verify(withTicket data: String, publicKey key: String = rsaPublicKey) throws -> Payload {
+    static func verify(withTicket data: String, publicKey key: String = rsaPublicKey) throws -> Payload {
         if try verifySignature(jwt: data, withKey: key) {
             let jwt = try decode(jwt: data)
 

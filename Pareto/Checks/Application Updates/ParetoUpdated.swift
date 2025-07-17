@@ -10,7 +10,6 @@ import Foundation
 import os.log
 import Version
 
-
 class ParetoUpdated: ParetoCheck {
     static let sharedInstance = ParetoUpdated()
     private var updateCheckResult: Bool = false
@@ -38,7 +37,7 @@ class ParetoUpdated: ParetoCheck {
     private func checkForUpdates(completion: @escaping (Bool) -> Void) {
         do {
             let releases = try APIService.shared.getUpdatesSync()
-            
+
             if releases.isEmpty {
                 os_log("No releases found during update check")
                 completion(false)
@@ -53,7 +52,7 @@ class ParetoUpdated: ParetoCheck {
 
             // Filter out pre-releases if showBeta is false
             let filteredReleases = Defaults[.showBeta] ? sortedReleases : sortedReleases.filter { !$0.prerelease }
-            
+
             if !Defaults[.showBeta] {
                 os_log("Excluding beta releases in update check")
             } else {
@@ -69,13 +68,13 @@ class ParetoUpdated: ParetoCheck {
             // Only fail if latest release is older than 10 days and current version does not match
             let tenDaysAgo = Date().addingTimeInterval(-10 * 24 * 60 * 60)
             let dateFormatter = ISO8601DateFormatter()
-            
+
             guard let publishedDate = dateFormatter.date(from: latestRelease.published_at) else {
                 os_log("Could not parse published date for latest release")
                 completion(false)
                 return
             }
-            
+
             if publishedDate < tenDaysAgo {
                 // Latest release is older than 10 days, check version match
                 var currentVersion = AppInfo.appVersion
@@ -83,10 +82,10 @@ class ParetoUpdated: ParetoCheck {
                     // Strip any pre-release suffix for comparison
                     currentVersion = String(currentVersion.split(separator: "-")[0])
                 }
-                
+
                 let latestVersionString = latestRelease.tag_name.replacingOccurrences(of: "v", with: "")
                 let isUpToDate = currentVersion == latestVersionString
-                
+
                 os_log("Latest release is older than 10 days. App version: %{public}s, Latest version: %{public}s, Up to date: %{public}@",
                        currentVersion, latestVersionString, isUpToDate ? "true" : "false")
                 completion(isUpToDate)
@@ -97,15 +96,15 @@ class ParetoUpdated: ParetoCheck {
                     currentVersion = String(currentVersion.split(separator: "-")[0])
                 }
                 let latestVersionString = latestRelease.tag_name.replacingOccurrences(of: "v", with: "")
-                
+
                 os_log("Latest release is within 10 days grace period. Published: %{public}s, Days ago: %{public}f, App version: %{public}s, Latest version: %{public}s",
                        latestRelease.published_at, abs(publishedDate.timeIntervalSinceNow) / (24 * 60 * 60), currentVersion, latestVersionString)
                 completion(true)
             }
-            
+
         } catch {
             os_log("Failed to check for updates: %{public}s", error.localizedDescription)
-            self.hasError = true
+            hasError = true
             completion(false)
         }
     }

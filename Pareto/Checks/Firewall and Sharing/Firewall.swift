@@ -30,18 +30,18 @@ class FirewallCheck: ParetoCheck {
         "Firewall is off"
     }
 
-    override public var isCritical: Bool {
+    override var isCritical: Bool {
         return true
     }
 
-    override public var requiresHelper: Bool {
+    override var requiresHelper: Bool {
         if #available(macOS 15, *) {
             return true
         }
         return false
     }
 
-    override public var isRunnable: Bool {
+    override var isRunnable: Bool {
         if !isActive {
             return false
         }

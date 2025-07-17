@@ -50,7 +50,7 @@ class AppLibreOfficeCheck: AppCheck {
         })
     }
 
-    public var latestVersions: [Version] {
+    var latestVersions: [Version] {
         var tempVersions = [Version(0, 0, 0)]
         let lock = DispatchSemaphore(value: 0)
         getLatestVersions { versions in

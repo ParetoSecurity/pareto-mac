@@ -19,7 +19,7 @@ class ScreensaverCheck: ParetoCheck {
         "Screensaver or screen lock shows in more than 20min"
     }
 
-    override public var showSettingsWarnEvents: Bool {
+    override var showSettingsWarnEvents: Bool {
         return true
     }
 

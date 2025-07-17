@@ -26,13 +26,12 @@ class StatusBarController: NSObject, NSMenuDelegate {
         static let oneWeek = oneDay * 7
     }
 
-    public var snoozeTime: Int {
+    var snoozeTime: Int {
         get { Defaults[.snoozeTime] }
         set { Defaults[.snoozeTime] = newValue }
     }
 
-    override
-    init() {
+    override init() {
         super.init()
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
         statusItemMenu = NSMenu(title: "ParetoSecurity")

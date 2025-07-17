@@ -167,7 +167,7 @@ enum AppInfo {
         "HW: \(AppInfo.hwModelName) macOS: \(AppInfo.macOSVersionString) App: Pareto Auditor App Version: \(AppInfo.appVersion) Build: \(AppInfo.buildVersion)"
     }
 
-    public static func getSystemUUID() -> String? {
+    static func getSystemUUID() -> String? {
         let dev = IOServiceMatching("IOPlatformExpertDevice")
         let platformExpert: io_service_t = IOServiceGetMatchingService(kIOMasterPortDefault, dev)
         let serialNumberAsCFString = IORegistryEntryCreateCFProperty(platformExpert, kIOPlatformUUIDKey as CFString, kCFAllocatorDefault, 0)
