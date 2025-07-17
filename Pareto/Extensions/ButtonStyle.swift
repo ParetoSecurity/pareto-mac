@@ -15,7 +15,7 @@ struct HighlightButtonStyle: ButtonStyle {
     let color: Color
     let font: Font
 
-    public init(
+    init(
         h: CGFloat = 15,
         v: CGFloat = 12,
         cornerRadius: CGFloat = 4,
@@ -29,7 +29,7 @@ struct HighlightButtonStyle: ButtonStyle {
         self.font = font
     }
 
-    public func makeBody(configuration: Self.Configuration) -> some View {
+    func makeBody(configuration: Self.Configuration) -> some View {
         configuration.label
             .padding(.horizontal, hPadding)
             .padding(.vertical, vPadding)

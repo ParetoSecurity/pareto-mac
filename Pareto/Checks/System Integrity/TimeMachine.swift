@@ -21,16 +21,16 @@ class TimeMachineCheck: ParetoCheck {
         "Time Machine is off"
     }
 
-    override public var hasDebug: Bool {
+    override var hasDebug: Bool {
         return true
     }
 
-    override public func debugInfo() -> String {
+    override func debugInfo() -> String {
         let tmutil = runCMD(app: "/usr/bin/tmutil", args: ["destinationinfo"])
         return "tmutil:\n\(tmutil)\nTimeMachine: \(readDefaultsFile(path: "/Library/Preferences/com.apple.TimeMachine.plist") as! [String: Any]? as AnyObject)"
     }
 
-    override public var isRunnable: Bool {
+    override var isRunnable: Bool {
         guard let config = readDefaultsFile(path: "/Library/Preferences/com.apple.TimeMachine.plist") as! [String: Any]? else {
             return false
         }

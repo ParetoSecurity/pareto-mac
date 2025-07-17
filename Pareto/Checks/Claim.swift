@@ -21,10 +21,10 @@ class Claim: Hashable {
         hasher.combine(title)
     }
 
-    public var title: String
-    public var checks: [ParetoCheck]
+    var title: String
+    var checks: [ParetoCheck]
 
-    public var checksSorted: [ParetoCheck] {
+    var checksSorted: [ParetoCheck] {
         checks.sorted(by: { $0.Title.lowercased() < $1.Title.lowercased() })
     }
 

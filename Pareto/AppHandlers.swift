@@ -35,7 +35,7 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
         }
     }
 
-    public indirect enum Error: Swift.Error {
+    indirect enum Error: Swift.Error {
         case teamLinkinFailed
     }
 
@@ -372,7 +372,7 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
         Defaults[.showBeta] = true
     }
 
-    public func processAction(_ url: URL) {
+    func processAction(_ url: URL) {
         switch url.host {
         #if !SETAPP_ENABLED
             case "enrollTeam":

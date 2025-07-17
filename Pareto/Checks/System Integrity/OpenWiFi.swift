@@ -31,7 +31,7 @@ class OpenWiFiCheck: ParetoCheck {
         return CWWiFiClient.shared().interface(withName: nil)?.security() != CWSecurity.none
     }
 
-    override public var isCritical: Bool {
+    override var isCritical: Bool {
         return true
     }
 

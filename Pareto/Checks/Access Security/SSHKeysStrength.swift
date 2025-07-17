@@ -34,13 +34,13 @@ struct KeyInfo: Equatable, ExpressibleByStringLiteral {
 
     // MARK: - Equatable Methods
 
-    public static func == (lhs: KeyInfo, rhs: KeyInfo) -> Bool {
+    static func == (lhs: KeyInfo, rhs: KeyInfo) -> Bool {
         return lhs.signature == rhs.signature
     }
 
     // MARK: - ExpressibleByStringLiteral Methods
 
-    public init(stringLiteral value: String) {
+    init(stringLiteral value: String) {
         let components = value.components(separatedBy: " ")
         if components.count >= 4 {
             let rawCipher = components.last!.strip().uppercased()
@@ -50,11 +50,11 @@ struct KeyInfo: Equatable, ExpressibleByStringLiteral {
         }
     }
 
-    public init(unicodeScalarLiteral value: String) {
+    init(unicodeScalarLiteral value: String) {
         self.init(stringLiteral: value)
     }
 
-    public init(extendedGraphemeClusterLiteral value: String) {
+    init(extendedGraphemeClusterLiteral value: String) {
         self.init(stringLiteral: value)
     }
 }

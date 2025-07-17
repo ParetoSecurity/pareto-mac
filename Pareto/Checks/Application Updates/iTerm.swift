@@ -17,7 +17,7 @@ class AppiTermCheck: AppCheck {
         "1a925bda-7c49-52de-a970-a84b53ea2d7b"
     }
 
-    override public var supportsRecentlyUsed: Bool {
+    override var supportsRecentlyUsed: Bool {
         return false
     }
 }

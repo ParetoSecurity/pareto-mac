@@ -21,15 +21,15 @@ class TimeMachineHasBackupCheck: ParetoCheck {
         "Time Machine is missing up to date backup"
     }
 
-    override public var isRunnable: Bool {
+    override var isRunnable: Bool {
         return TimeMachineCheck.sharedInstance.isRunnable && isActive
     }
 
-    override public var showSettings: Bool {
+    override var showSettings: Bool {
         return readDefaultsFile(path: "/Library/Preferences/com.apple.TimeMachine.plist") as! [String: Any]? != nil
     }
 
-    override public var showSettingsWarnDiskAccess: Bool {
+    override var showSettingsWarnDiskAccess: Bool {
         return true && readDefaultsFile(path: "/Library/Preferences/com.apple.TimeMachine.plist") as! [String: Any]? == nil
     }
 

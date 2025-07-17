@@ -59,15 +59,15 @@ class AppCheck: ParetoCheck, AppCheckProtocol {
         "local=\(currentVersion) online=\(latestVersion) applicationPath=\(String(describing: applicationPath))"
     }
 
-    override public var reportIfDisabled: Bool {
+    override var reportIfDisabled: Bool {
         return false
     }
 
-    public var supportsRecentlyUsed: Bool {
+    var supportsRecentlyUsed: Bool {
         return true
     }
 
-    public var fromAppStore: Bool {
+    var fromAppStore: Bool {
         if let appPath = applicationPath {
             let attributes = NSMetadataItem(url: URL(fileURLWithPath: appPath))
             guard let hasReceipt = attributes?.value(forAttribute: "kMDItemAppStoreHasReceipt") as? Bool else { return false }
@@ -107,7 +107,7 @@ class AppCheck: ParetoCheck, AppCheckProtocol {
     }
 
     static let queue = DispatchQueue(label: "co.pareto.check_versions", qos: .userInteractive, attributes: .concurrent)
-    public var latestVersion: Version {
+    var latestVersion: Version {
         if try! AppInfo.versionStorage.existsObject(forKey: appBundle) {
             return try! AppInfo.versionStorage.object(forKey: appBundle)
         } else {
@@ -137,11 +137,11 @@ class AppCheck: ParetoCheck, AppCheckProtocol {
         return nil
     }
 
-    override public var isInstalled: Bool {
+    override var isInstalled: Bool {
         applicationPath != nil
     }
 
-    public var usedRecently: Bool {
+    var usedRecently: Bool {
         if !Defaults[.checkForUpdatesRecentOnly] {
             return true
         }
@@ -160,12 +160,12 @@ class AppCheck: ParetoCheck, AppCheckProtocol {
         return false
     }
 
-    override public var isRunnable: Bool {
+    override var isRunnable: Bool {
         // show if application is present
         return isActive && isInstalled && usedRecently
     }
 
-    override public var showSettings: Bool {
+    override var showSettings: Bool {
         if teamEnforced {
             return false
         }
