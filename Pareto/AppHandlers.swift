@@ -375,59 +375,75 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
     func processAction(_ url: URL) {
         switch url.host {
         #if !SETAPP_ENABLED
-            case "enrollTeam":
-                let jwt = url.queryParams()["token"] ?? ""
-                do {
-                    let ticket = try TeamTicket.verify(withTicket: jwt)
-                    enrolledHandler = true
-                    Defaults[.teamTicket] = jwt
-                    Defaults[.userID] = ""
-                    Defaults[.teamAuth] = ticket.teamAuth
-                    Defaults[.teamID] = ticket.teamUUID
-                    Defaults[.reportingRole] = .team
-                    Defaults[.isTeamOwner] = ticket.isTeamOwner
-
-                    Team.link(withDevice: ReportingDevice.current()).response { response in
-                        switch response.result {
-                        case .success:
-                            DispatchQueue.main.async {
-                                let alert = NSAlert()
-                                alert.messageText = "Pareto Desktop successfully linked to Pareto Cloud."
-                                alert.alertStyle = NSAlert.Style.informational
-                                alert.addButton(withTitle: "OK")
-                                #if !DEBUG
-                                    alert.runModal()
-                                #endif
-                            }
-                            if !Defaults.firstLaunch() {
-                                DispatchQueue.global(qos: .userInteractive).async {
-                                    self.statusBar?.runChecks()
-                                }
-                            }
-                        case .failure:
-                            Defaults.toOpenSource()
-                            DispatchQueue.main.async {
-                                let alert = NSAlert()
-                                alert.messageText = "Device has been linked already! Please unlink the device and try again!"
-                                alert.alertStyle = NSAlert.Style.critical
-                                alert.addButton(withTitle: "OK")
-                                #if !DEBUG
-                                    alert.runModal()
-                                #endif
-                            }
-                        }
-                    }
-
-                } catch {
-                    Defaults.toOpenSource()
+            case "linkDevice":
+                let inviteID = url.queryParams()["invite_id"] ?? ""
+                if inviteID.isEmpty {
                     DispatchQueue.main.async {
                         let alert = NSAlert()
-                        alert.messageText = "Team ticket is not valid. Please email support@paretosecurity.com."
-                        alert.alertStyle = NSAlert.Style.informational
+                        alert.messageText = "Invalid linking URL. Please use a valid invitation link."
+                        alert.alertStyle = NSAlert.Style.critical
                         alert.addButton(withTitle: "OK")
                         #if !DEBUG
                             alert.runModal()
                         #endif
+                    }
+                    return
+                }
+                
+                enrolledHandler = true
+                
+                APIService.shared.enrollDevice(inviteID: inviteID) { result in
+                    switch result {
+                    case .success(let (authToken, teamID)):
+                        // Store the auth token and team ID directly
+                        Defaults[.teamAuth] = authToken
+                        Defaults[.teamID] = teamID
+                        Defaults[.reportingRole] = .team
+                        Defaults[.userID] = ""
+                        Defaults[.teamTicket] = "" // Clear old ticket format
+                        
+                        // Link the device using the existing Team API
+                        Team.link(withDevice: ReportingDevice.current()).response { response in
+                            switch response.result {
+                            case .success:
+                                DispatchQueue.main.async {
+                                    let alert = NSAlert()
+                                    alert.messageText = "Pareto Security is activated and linked."
+                                    alert.alertStyle = NSAlert.Style.informational
+                                    alert.addButton(withTitle: "OK")
+                                    #if !DEBUG
+                                        alert.runModal()
+                                    #endif
+                                }
+                                if !Defaults.firstLaunch() {
+                                    DispatchQueue.global(qos: .userInteractive).async {
+                                        self.statusBar?.runChecks()
+                                    }
+                                }
+                            case .failure:
+                                Defaults.toOpenSource()
+                                DispatchQueue.main.async {
+                                    let alert = NSAlert()
+                                    alert.messageText = "Device has been linked already! Please unlink the device and try again!"
+                                    alert.alertStyle = NSAlert.Style.critical
+                                    alert.addButton(withTitle: "OK")
+                                    #if !DEBUG
+                                        alert.runModal()
+                                    #endif
+                                }
+                            }
+                        }
+                    case .failure(let error):
+                        Defaults.toOpenSource()
+                        DispatchQueue.main.async {
+                            let alert = NSAlert()
+                            alert.messageText = "Device linking failed: \(error.localizedDescription). Please email support@paretosecurity.com."
+                            alert.alertStyle = NSAlert.Style.critical
+                            alert.addButton(withTitle: "OK")
+                            #if !DEBUG
+                                alert.runModal()
+                            #endif
+                        }
                     }
                 }
         #endif

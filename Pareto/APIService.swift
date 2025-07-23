@@ -9,6 +9,9 @@ import Alamofire
 import Defaults
 import Foundation
 import os.log
+import Defaults
+import Alamofire
+import JWTDecode
 
 enum APIError: Swift.Error {
     case invalidURL
@@ -16,6 +19,39 @@ enum APIError: Swift.Error {
     case invalidResponse
     case networkError(String)
     case decodingError(String)
+    case invalidToken
+    case enrollmentFailed
+    
+    var localizedDescription: String {
+        switch self {
+        case .invalidURL:
+            return "Invalid URL"
+        case .noData:
+            return "No data received"
+        case .invalidResponse:
+            return "Invalid response"
+        case .networkError(let message):
+            return "Network error: \(message)"
+        case .decodingError(let message):
+            return "Decoding error: \(message)"
+        case .invalidToken:
+            return "Invalid authentication token"
+        case .enrollmentFailed:
+            return "Device enrollment failed"
+        }
+    }
+}
+
+struct DeviceEnrollmentRequest: Codable {
+    let inviteID: String
+    
+    enum CodingKeys: String, CodingKey {
+        case inviteID = "invite_id"
+    }
+}
+
+struct DeviceEnrollmentResponse: Codable {
+    let auth: String
 }
 
 class APIService {
@@ -182,6 +218,55 @@ class APIService {
         }
 
         return components?.url
+    }
+    
+    // Team enrollment specific methods using different base URL
+    private var teamBaseURL: String {
+        return "https://cloud.paretosecurity.com"
+    }
+    
+    func enrollDevice(inviteID: String, completion: @escaping (Result<(String, String), APIError>) -> Void) {
+        let request = DeviceEnrollmentRequest(inviteID: inviteID)
+        let headers: HTTPHeaders = [
+            "Content-Type": "application/json"
+        ]
+        
+        os_log("Enrolling device with invite ID: %{public}s", inviteID)
+        
+        session.request(
+            "\(teamBaseURL)/api/v1/team/enroll",
+            method: .post,
+            parameters: request,
+            encoder: JSONParameterEncoder.default,
+            headers: headers
+        ) { $0.timeoutInterval = 10 }
+        .validate()
+        .responseDecodable(of: DeviceEnrollmentResponse.self) { response in
+            os_log("%{public}s", log: Log.api, response.debugDescription)
+            
+            switch response.result {
+            case .success(let enrollmentResponse):
+                // Extract team ID from the JWT token
+                if let teamID = self.extractTeamIDFromToken(enrollmentResponse.auth) {
+                    completion(.success((enrollmentResponse.auth, teamID)))
+                } else {
+                    completion(.failure(.invalidToken))
+                }
+            case .failure(let error):
+                os_log("Device enrollment failed: %{public}s", error.localizedDescription)
+                completion(.failure(.networkError(error.localizedDescription)))
+            }
+        }
+    }
+    
+    private func extractTeamIDFromToken(_ token: String) -> String? {
+        do {
+            let jwt = try decode(jwt: token)
+            return jwt.claim(name: "team_id").string
+        } catch {
+            os_log("Failed to extract team ID from token: %{public}s", error.localizedDescription)
+            return nil
+        }
     }
 }
 
