@@ -392,7 +392,7 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
                         case .success:
                             DispatchQueue.main.async {
                                 let alert = NSAlert()
-                                alert.messageText = "Pareto Security is activated and linked."
+                                alert.messageText = "Pareto Desktop successfully linked to Pareto Cloud."
                                 alert.alertStyle = NSAlert.Style.informational
                                 alert.addButton(withTitle: "OK")
                                 #if !DEBUG
