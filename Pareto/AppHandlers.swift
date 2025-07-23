@@ -392,7 +392,7 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
                 
                 enrolledHandler = true
                 
-                APIService.shared.enrollDevice(inviteID: inviteID) { result in
+                Team.enrollDevice(inviteID: inviteID) { result in
                     switch result {
                     case .success(let (authToken, teamID)):
                         // Store the auth token and team ID directly
@@ -402,35 +402,18 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
                         Defaults[.userID] = ""
                         Defaults[.teamTicket] = "" // Clear old ticket format
                         
-                        // Link the device using the existing Team API
-                        Team.link(withDevice: ReportingDevice.current()).response { response in
-                            switch response.result {
-                            case .success:
-                                DispatchQueue.main.async {
-                                    let alert = NSAlert()
-                                    alert.messageText = "Pareto Security is activated and linked."
-                                    alert.alertStyle = NSAlert.Style.informational
-                                    alert.addButton(withTitle: "OK")
-                                    #if !DEBUG
-                                        alert.runModal()
-                                    #endif
-                                }
-                                if !Defaults.firstLaunch() {
-                                    DispatchQueue.global(qos: .userInteractive).async {
-                                        self.statusBar?.runChecks()
-                                    }
-                                }
-                            case .failure:
-                                Defaults.toOpenSource()
-                                DispatchQueue.main.async {
-                                    let alert = NSAlert()
-                                    alert.messageText = "Device has been linked already! Please unlink the device and try again!"
-                                    alert.alertStyle = NSAlert.Style.critical
-                                    alert.addButton(withTitle: "OK")
-                                    #if !DEBUG
-                                        alert.runModal()
-                                    #endif
-                                }
+                        DispatchQueue.main.async {
+                            let alert = NSAlert()
+                            alert.messageText = "Pareto Security is activated and linked."
+                            alert.alertStyle = NSAlert.Style.informational
+                            alert.addButton(withTitle: "OK")
+                            #if !DEBUG
+                                alert.runModal()
+                            #endif
+                        }
+                        if !Defaults.firstLaunch() {
+                            DispatchQueue.global(qos: .userInteractive).async {
+                                self.statusBar?.runChecks()
                             }
                         }
                     case .failure(let error):
