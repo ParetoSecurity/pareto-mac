@@ -15,10 +15,6 @@ struct TeamSettingsView: View {
     @Default(.machineUUID) var machineUUID
     @Default(.sendHWInfo) var sendHWInfo
 
-    func copyMail() {
-        NSPasteboard.general.clearContents()
-        NSPasteboard.general.setString(teamSettings.admin, forType: .string)
-    }
 
     func copy() {
         NSPasteboard.general.clearContents()
@@ -48,22 +44,6 @@ struct TeamSettingsView: View {
     var body: some View {
         if !teamID.isEmpty {
             VStack(alignment: .leading) {
-                Section(
-                    footer: Text("Team Name").font(.caption)) {
-                    VStack(alignment: .leading) {
-                        Text("\(teamSettings.name)")
-                    }
-                }
-                Spacer(minLength: 1)
-                Section(
-                    footer: Text("Team Admin").font(.caption)) {
-                    VStack(alignment: .leading) {
-                        Link(teamSettings.admin, destination: URL(string: "mailto:\(teamSettings.admin)")!).contextMenu(ContextMenu(menuItems: {
-                            Button("Copy", action: copyMail)
-                        }))
-                    }
-                }
-                Spacer(minLength: 1)
                 Section(
                     footer: Text("Device Name").font(.caption)) {
                     VStack(alignment: .leading) {
@@ -108,7 +88,7 @@ struct TeamSettingsView: View {
                          destination: AppInfo.teamsURL())
                 }
                 Spacer(minLength: 2)
-            }.frame(width: 380, height: 290).padding(25).onAppear {
+            }.frame(width: 380, height: 180).padding(25).onAppear {
                 DispatchQueue.main.async {
                     teamSettings.update {}
                 }

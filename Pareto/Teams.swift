@@ -16,8 +16,6 @@ import os.log
 
 struct DeviceSettings: Codable {
     let requiredChecks: [APICheck]
-    let name: String
-    let admin: String
     let forceSerialPush: Bool
 
     var enforcedList: [String] {
@@ -250,15 +248,11 @@ enum Team {
 
 class TeamSettingsUpdater: ObservableObject {
     @Published var enforcedChecks: [String] = []
-    @Published var name: String = "Default Team"
-    @Published var admin: String = "admin@niteo.co"
     @Published var forceSerialPush: Bool = false
 
     func update(completion: @escaping () -> Void) {
         Team.settings { res in
             self.enforcedChecks = res?.enforcedList ?? []
-            self.name = res?.name ?? "Default Team"
-            self.admin = res?.admin ?? "admin@niteo.co"
             self.forceSerialPush = res?.forceSerialPush ?? false
             os_log("Team enforced checks: %s", self.enforcedChecks.debugDescription)
             completion()
