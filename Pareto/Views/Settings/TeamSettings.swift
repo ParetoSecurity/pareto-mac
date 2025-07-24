@@ -98,6 +98,20 @@ struct TeamSettingsView: View {
                     }
                 }
 
+                if showBeta {
+                    Spacer(minLength: 2)
+                    Section(
+                        footer: Text("Team API Endpoint").font(.caption)) {
+                        VStack(alignment: .leading) {
+                            Text("\(Defaults[.teamAPI])").contextMenu(ContextMenu(menuItems: {
+                                Button("Copy") {
+                                    NSPasteboard.general.clearContents()
+                                    NSPasteboard.general.setString(Defaults[.teamAPI], forType: .string)
+                                }
+                            }))
+                        }
+                    }
+                }
 
                 HStack {
                     Button("Unlink this device") {
