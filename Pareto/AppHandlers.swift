@@ -400,7 +400,6 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
                         Defaults[.teamID] = teamID
                         Defaults[.reportingRole] = .team
                         Defaults[.userID] = ""
-                        Defaults[.teamTicket] = "" // Clear old ticket format
                         
                         DispatchQueue.main.async {
                             let alert = NSAlert()

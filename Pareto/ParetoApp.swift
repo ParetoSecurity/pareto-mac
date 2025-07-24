@@ -138,7 +138,6 @@ class AppDelegate: AppHandlers, NSApplicationDelegate {
                     Defaults[.teamID] = teamID
                     Defaults[.reportingRole] = .team
                     Defaults[.userID] = ""
-                    Defaults[.teamTicket] = "" // Clear old ticket format
                     LaunchAtLogin.isEnabled = true
                     
                     print("Device successfully enrolled and linked to team: \(teamID)")

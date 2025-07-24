@@ -27,7 +27,6 @@ extension Defaults.Keys {
     // Teams
     static let license = Key<String>("license", default: "", suite: extensionDefaults)
     static let migrated = Key<Bool>("migrated", default: false, suite: extensionDefaults)
-    static let teamTicket = Key<String>("teamTicket", default: "", suite: extensionDefaults)
     static let userID = Key<String>("userID", default: "", suite: extensionDefaults)
     static let userEmail = Key<String>("userEmail", default: "", suite: extensionDefaults)
     static let isTeamOwner = Key<Bool>("isTeamOwner", default: false, suite: extensionDefaults)
