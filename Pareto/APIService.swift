@@ -9,6 +9,8 @@ import Alamofire
 import Defaults
 import Foundation
 import os.log
+import Defaults
+import Alamofire
 
 enum APIError: Swift.Error {
     case invalidURL
@@ -16,7 +18,22 @@ enum APIError: Swift.Error {
     case invalidResponse
     case networkError(String)
     case decodingError(String)
+    var localizedDescription: String {
+        switch self {
+        case .invalidURL:
+            return "Invalid URL"
+        case .noData:
+            return "No data received"
+        case .invalidResponse:
+            return "Invalid response"
+        case .networkError(let message):
+            return "Network error: \(message)"
+        case .decodingError(let message):
+            return "Decoding error: \(message)"
+        }
+    }
 }
+
 
 class APIService {
     static let shared = APIService()

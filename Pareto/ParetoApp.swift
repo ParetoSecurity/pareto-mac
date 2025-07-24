@@ -102,57 +102,52 @@ class AppDelegate: AppHandlers, NSApplicationDelegate {
         }
 
         if CommandLine.arguments.contains("-mdmTeam") {
-            if !Defaults[.teamTicket].isEmpty {
+            if !Defaults[.teamAuth].isEmpty {
                 print("Team license already active")
                 exit(0)
             }
 
-            var token = CommandLine.arguments.last ?? ""
+            var inviteParam = CommandLine.arguments.last ?? ""
 
-            if token.isEmpty {
-                print("Missing team license parameter")
+            if inviteParam.isEmpty {
+                print("Missing team invite parameter")
                 exit(0)
             }
 
-            if token.starts(with: "paretosecurity://") {
-                let url = URL(string: token)!
-                token = url.queryParams()["token"] ?? ""
+            var inviteID = ""
+            if inviteParam.starts(with: "paretosecurity://") {
+                let url = URL(string: inviteParam)!
+                inviteID = url.queryParams()["invite_id"] ?? ""
 
-                if token.isEmpty {
-                    print("Missing team license token parameter")
+                if inviteID.isEmpty {
+                    print("Missing invite_id parameter in URL")
                     exit(0)
                 }
+            } else {
+                // Assume the parameter is the invite ID directly
+                inviteID = inviteParam
             }
 
-            do {
-                let ticket = try TeamTicket.verify(withTicket: token)
-                enrolledHandler = true
-                Defaults[.teamTicket] = token
-                Defaults[.userID] = ""
-                Defaults[.teamAuth] = ticket.teamAuth
-                Defaults[.teamID] = ticket.teamUUID
-                Defaults[.reportingRole] = .team
-                Defaults[.isTeamOwner] = ticket.isTeamOwner
-                LaunchAtLogin.isEnabled = true
-
-                print("Team ticket subscribing")
-                Team.link(withDevice: ReportingDevice.current()).response { response in
-                    switch response.result {
-                    case .success:
-                        print("Team ticket is linked")
-                        Defaults[.lastCheck] = 1
-                        exit(0)
-                    case .failure:
-                        print("Team ticket could not be linked")
-                        Defaults.toOpenSource()
-                        exit(1)
-                    }
+            print("Enrolling device with invite ID")
+            enrolledHandler = true
+            
+            Team.enrollDevice(inviteID: inviteID) { result in
+                switch result {
+                case .success(let (authToken, teamID)):
+                    Defaults[.teamAuth] = authToken
+                    Defaults[.teamID] = teamID
+                    Defaults[.reportingRole] = .team
+                    Defaults[.userID] = ""
+                    LaunchAtLogin.isEnabled = true
+                    
+                    print("Device successfully enrolled and linked to team: \(teamID)")
+                    Defaults[.lastCheck] = 1
                     exit(0)
+                case .failure(let error):
+                    print("Device enrollment failed: \(error.localizedDescription)")
+                    Defaults.toOpenSource()
+                    exit(1)
                 }
-            } catch {
-                print("Team ticket is not valid")
-                Defaults.toOpenSource()
-                exit(1)
             }
         }
     }
@@ -182,10 +177,7 @@ class AppDelegate: AppHandlers, NSApplicationDelegate {
             }
         #endif
 
-        // Migrate team ticket
-        #if !SETAPP_ENABLED
-            TeamTicket.migrate()
-        #endif
+        // Team ticket migration removed - no longer needed with new enrollment approach
         statusBar = StatusBarController()
 
         statusBar?.configureChecks()
