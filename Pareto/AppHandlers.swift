@@ -377,7 +377,15 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
         #if !SETAPP_ENABLED
             case "linkDevice":
                 let inviteID = url.queryParams()["invite_id"] ?? ""
-                let host = url.queryParams()["host"] ?? "cloud"
+                let host = url.queryParams()["host"] ?? ""
+                
+                // Set teamAPI based on host parameter
+                if host.isEmpty {
+                    Defaults[.teamAPI] = "https://cloud.paretosecurity.com"
+                } else {
+                    Defaults[.teamAPI] = host
+                }
+                
                 if inviteID.isEmpty {
                     DispatchQueue.main.async {
                         let alert = NSAlert()
@@ -393,7 +401,7 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
                 
                 enrolledHandler = true
                 
-                Team.enrollDevice(inviteID: inviteID, host: host) { result in
+                Team.enrollDevice(inviteID: inviteID) { result in
                     switch result {
                     case .success(let (authToken, teamID)):
                         // Store the auth token and team ID directly

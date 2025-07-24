@@ -27,11 +27,18 @@ struct APICheck: Codable {
     let id: String
 }
 
-struct DeviceEnrollmentRequest: Codable {
+struct DeviceEnrollmentRequest: Encodable {
     let inviteID: String
-    
+    let device: ReportingDevice
+
     enum CodingKeys: String, CodingKey {
         case inviteID = "invite_id"
+        case device
+    }
+
+    init(inviteID: String, device: ReportingDevice) {
+        self.inviteID = inviteID
+        self.device = device
     }
 }
 
@@ -62,7 +69,6 @@ private extension Digest {
 struct ReportingDevice: Encodable {
     let machineUUID: String
     let machineName: String
-    let auth: String
     let macOSVersion: String
     let modelName: String
     let modelSerial: String
@@ -78,7 +84,6 @@ struct ReportingDevice: Encodable {
         return ReportingDevice(
             machineUUID: Defaults[.machineUUID],
             machineName: AppInfo.machineName,
-            auth: Defaults[.teamAuth],
             macOSVersion: AppInfo.macOSVersionString,
             modelName: sendSerial ? AppInfo.hwModelName : reason,
             modelSerial: sendSerial ? AppInfo.hwSerial : reason
@@ -157,29 +162,18 @@ struct Report: Encodable {
 }
 
 enum Team {
-    static let defaultAPI = "https://cloud.paretosecurity.com/api/v1/team"
-    private static let base = Defaults[.teamAPI]
     private static let queue = DispatchQueue(label: "co.pareto.api", qos: .userInteractive, attributes: .concurrent)
 
-    static func enrollDevice(inviteID: String, host: String = "cloud", completion: @escaping (Result<(String, String), Swift.Error>) -> Void) {
-        let request = DeviceEnrollmentRequest(inviteID: inviteID)
+    static func enrollDevice(inviteID: String, completion: @escaping (Result<(String, String), Swift.Error>) -> Void) {
+        let request = DeviceEnrollmentRequest(inviteID: inviteID, device: ReportingDevice.current())
         let headers: HTTPHeaders = [
             "Content-Type": "application/json"
         ]
         
-        // Build the enrollment URL
-        let enrollmentURL: String
-        if host.isEmpty {
-            enrollmentURL = "\(defaultAPI)/enroll"
-        } else {
-            // Hostname only - use legacy format
-            enrollmentURL = "\(host)/api/v1/team/enroll"
-        }
-        
-        os_log("Enrolling device with invite ID: %{public}s using URL: %{public}s", inviteID, enrollmentURL)
+        os_log("Enrolling device with invite ID: %{public}s using URL: %{public}s", inviteID)
         
         AF.request(
-            enrollmentURL,
+            URL(string: Defaults[.teamAPI])!.appendingPathComponent("api").appendingPathComponent("v1").appendingPathComponent("team").appendingPathComponent("enroll").absoluteString,
             method: .post,
             parameters: request,
             encoder: JSONParameterEncoder.default,
@@ -218,7 +212,7 @@ enum Team {
         let headers: HTTPHeaders = [
             "X-Device-Auth": Defaults[.teamAuth]
         ]
-        let url = base + "/\(Defaults[.teamID])/device"
+        let url = URL(string: Defaults[.teamAPI])!.appendingPathComponent("\(Defaults[.teamID])").appendingPathComponent("device").absoluteString
         os_log("Requesting %{public}s", url)
         return AF.request(
             url,
@@ -238,7 +232,7 @@ enum Team {
             "X-Device-Auth": Defaults[.teamAuth]
         ]
         AF.request(
-            base + "/\(Defaults[.teamID])/settings",
+            URL(string: Defaults[.teamAPI])!.appendingPathComponent("\(Defaults[.teamID])").appendingPathComponent("settings").absoluteString,
             method: .get,
             headers: headers
         ) { $0.timeoutInterval = 5 }.cURLDescription { cmd in

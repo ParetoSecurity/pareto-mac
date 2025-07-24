@@ -43,12 +43,20 @@ class TeamsTest: XCTestCase {
     }
 
     func testDeviceEnrollmentRequest() throws {
-        let request = DeviceEnrollmentRequest(inviteID: "test-invite-id")
+        let testDevice = ReportingDevice(
+            machineUUID: "test-uuid",
+            machineName: "Test Machine",
+            macOSVersion: "14.0",
+            modelName: "Test Model",
+            modelSerial: "Test Serial"
+        )
+        let request = DeviceEnrollmentRequest(inviteID: "test-invite-id", device: testDevice)
         let encoder = JSONEncoder()
         let data = try encoder.encode(request)
         let json = try JSONSerialization.jsonObject(with: data) as! [String: Any]
         
         XCTAssertEqual(json["invite_id"] as! String, "test-invite-id")
+        XCTAssertNotNil(json["device"])
     }
     
     func testDeviceEnrollmentResponse() throws {
