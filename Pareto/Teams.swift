@@ -27,11 +27,18 @@ struct APICheck: Codable {
     let id: String
 }
 
-struct DeviceEnrollmentRequest: Codable {
+struct DeviceEnrollmentRequest: Encodable {
     let inviteID: String
-    
+    let device: ReportingDevice
+
     enum CodingKeys: String, CodingKey {
         case inviteID = "invite_id"
+        case device
+    }
+
+    init(inviteID: String, device: ReportingDevice) {
+        self.inviteID = inviteID
+        self.device = device
     }
 }
 
@@ -158,7 +165,7 @@ enum Team {
     private static let queue = DispatchQueue(label: "co.pareto.api", qos: .userInteractive, attributes: .concurrent)
 
     static func enrollDevice(inviteID: String, completion: @escaping (Result<(String, String), Swift.Error>) -> Void) {
-        let request = DeviceEnrollmentRequest(inviteID: inviteID)
+        let request = DeviceEnrollmentRequest(inviteID: inviteID, device: ReportingDevice.current())
         let headers: HTTPHeaders = [
             "Content-Type": "application/json"
         ]
