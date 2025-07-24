@@ -161,16 +161,25 @@ enum Team {
     private static let base = Defaults[.teamAPI]
     private static let queue = DispatchQueue(label: "co.pareto.api", qos: .userInteractive, attributes: .concurrent)
 
-    static func enrollDevice(inviteID: String, completion: @escaping (Result<(String, String), Swift.Error>) -> Void) {
+    static func enrollDevice(inviteID: String, host: String = "cloud", completion: @escaping (Result<(String, String), Swift.Error>) -> Void) {
         let request = DeviceEnrollmentRequest(inviteID: inviteID)
         let headers: HTTPHeaders = [
             "Content-Type": "application/json"
         ]
         
-        os_log("Enrolling device with invite ID: %{public}s", inviteID)
+        // Build the enrollment URL
+        let enrollmentURL: String
+        if host.isEmpty {
+            enrollmentURL = "\(defaultAPI)/enroll"
+        } else {
+            // Hostname only - use legacy format
+            enrollmentURL = "\(host)/api/v1/team/enroll"
+        }
+        
+        os_log("Enrolling device with invite ID: %{public}s using URL: %{public}s", inviteID, enrollmentURL)
         
         AF.request(
-            "https://cloud.paretosecurity.com/api/v1/team/enroll",
+            enrollmentURL,
             method: .post,
             parameters: request,
             encoder: JSONParameterEncoder.default,

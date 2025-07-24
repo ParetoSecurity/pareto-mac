@@ -377,6 +377,7 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
         #if !SETAPP_ENABLED
             case "linkDevice":
                 let inviteID = url.queryParams()["invite_id"] ?? ""
+                let host = url.queryParams()["host"] ?? "cloud"
                 if inviteID.isEmpty {
                     DispatchQueue.main.async {
                         let alert = NSAlert()
@@ -392,7 +393,7 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
                 
                 enrolledHandler = true
                 
-                Team.enrollDevice(inviteID: inviteID) { result in
+                Team.enrollDevice(inviteID: inviteID, host: host) { result in
                     switch result {
                     case .success(let (authToken, teamID)):
                         // Store the auth token and team ID directly

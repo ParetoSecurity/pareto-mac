@@ -13,6 +13,21 @@ class ParetoAppTest: XCTestCase {
         let app = AppHandlers()
         app.processAction(URL(string: "paretosecurity://linkDevice?invite_id=12345678-1234-5678-9012-123456789012")!)
     }
+    
+    func testActionLinkDeviceWithHost() throws {
+        let app = AppHandlers()
+        app.processAction(URL(string: "paretosecurity://linkDevice?invite_id=12345678-1234-5678-9012-123456789012&host=staging")!)
+    }
+    
+    func testActionLinkDeviceWithCompleteURL() throws {
+        let app = AppHandlers()
+        app.processAction(URL(string: "paretosecurity://linkDevice?invite_id=12345678-1234-5678-9012-123456789012&host=https://api.example.com")!)
+    }
+    
+    func testActionLinkDeviceWithCompleteURLAndPath() throws {
+        let app = AppHandlers()
+        app.processAction(URL(string: "paretosecurity://linkDevice?invite_id=12345678-1234-5678-9012-123456789012&host=https://api.example.com/api/v1/team/enroll")!)
+    }
 
     func testActionApp() throws {
         let app = AppHandlers()
