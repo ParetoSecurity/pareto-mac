@@ -57,7 +57,7 @@ struct AboutSettingsView: View {
                     HStack(spacing: 10) {
                         if !hasCheckedForUpdates || status == UpdateStates.Updated {
                             Button("Check") {
-                                APIService.shared.clearCache()
+                                UpdateService.shared.clearCache()
                                 fetch()
                             }
                             .disabled(isLoading)
@@ -65,7 +65,6 @@ struct AboutSettingsView: View {
 
                         if hasCheckedForUpdates && status == UpdateStates.NewVersion {
                             Button("Update") {
-                                APIService.shared.clearCache()
                                 forceUpdate()
                             }
                             .disabled(isLoading)

@@ -10,7 +10,6 @@ import Defaults
 import XCTest
 
 class TeamsTest: XCTestCase {
-
     func testReport() throws {
         Defaults[.teamID] = "fd4e6814-440c-46d2-b240-4e0d2f786fbc"
         Defaults[.teamAPI] = "http://localhost"
@@ -54,11 +53,11 @@ class TeamsTest: XCTestCase {
         let encoder = JSONEncoder()
         let data = try encoder.encode(request)
         let json = try JSONSerialization.jsonObject(with: data) as! [String: Any]
-        
+
         XCTAssertEqual(json["invite_id"] as! String, "test-invite-id")
         XCTAssertNotNil(json["device"])
     }
-    
+
     func testDeviceEnrollmentResponse() throws {
         let json = """
         {
@@ -68,7 +67,7 @@ class TeamsTest: XCTestCase {
         let data = json.data(using: .utf8)!
         let decoder = JSONDecoder()
         let response = try decoder.decode(DeviceEnrollmentResponse.self, from: data)
-        
+
         XCTAssertEqual(response.auth, "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0ZWFtX2lkIjoiMjQyOWM0OWUtMzdiYi00MWJiLTkwNzctNmJiNjIwMmUyNTViIn0.test")
     }
 }

@@ -220,7 +220,7 @@ public class AppUpdater {
             throw Error.bundleExecutableURL
         }
         do {
-            let releases = try APIService.shared.getUpdatesSync()
+            let releases = try UpdateService.shared.getUpdatesSync()
             let release = try releases.findViableUpdate(prerelease: Defaults.betaChannelComputed)
             return release
         } catch {

@@ -219,9 +219,9 @@
 		4F9791C126F5DB4F00E668F4 /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F9791C026F5DB4F00E668F4 /* Color.swift */; };
 		4FA8E5EC2B44428400B7EA9C /* NoUnusedUsers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FA8E5EB2B44428400B7EA9C /* NoUnusedUsers.swift */; };
 		4FA8E5ED2B44428400B7EA9C /* NoUnusedUsers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FA8E5EB2B44428400B7EA9C /* NoUnusedUsers.swift */; };
-		4FAC8BA42E1AFCB300A4FF22 /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FAC8BA32E1AFCB300A4FF22 /* APIService.swift */; };
-		4FAC8BA52E1AFCB300A4FF22 /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FAC8BA32E1AFCB300A4FF22 /* APIService.swift */; };
-		4FAC8BA72E1B0A9300A4FF22 /* APIServiceTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FAC8BA62E1B0A9300A4FF22 /* APIServiceTest.swift */; };
+		4FA975702E4B31E4006C0D5A /* UpdateService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FA9756F2E4B31E4006C0D5A /* UpdateService.swift */; };
+		4FA975712E4B31E4006C0D5A /* UpdateService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FA9756F2E4B31E4006C0D5A /* UpdateService.swift */; };
+		4FA975732E4B3307006C0D5A /* UpdateServiceTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FA975722E4B3307006C0D5A /* UpdateServiceTest.swift */; };
 		4FAF5BBF2895573F004E9615 /* setappPublicKey.pem in Resources */ = {isa = PBXBuildFile; fileRef = 4FAF5BBE2895573F004E9615 /* setappPublicKey.pem */; };
 		4FAF5BC22895583A004E9615 /* Setapp in Frameworks */ = {isa = PBXBuildFile; productRef = 4FAF5BC12895583A004E9615 /* Setapp */; };
 		4FB0416126F71CC0003657BE /* ButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB0416026F71CC0003657BE /* ButtonStyle.swift */; };
@@ -434,8 +434,8 @@
 		4F9153B32D4BD7B400FCD809 /* PasswordManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordManager.swift; sourceTree = "<group>"; };
 		4F9791C026F5DB4F00E668F4 /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
 		4FA8E5EB2B44428400B7EA9C /* NoUnusedUsers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NoUnusedUsers.swift; sourceTree = "<group>"; };
-		4FAC8BA32E1AFCB300A4FF22 /* APIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIService.swift; sourceTree = "<group>"; };
-		4FAC8BA62E1B0A9300A4FF22 /* APIServiceTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIServiceTest.swift; sourceTree = "<group>"; };
+		4FA9756F2E4B31E4006C0D5A /* UpdateService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateService.swift; sourceTree = "<group>"; };
+		4FA975722E4B3307006C0D5A /* UpdateServiceTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateServiceTest.swift; sourceTree = "<group>"; };
 		4FAF5BBE2895573F004E9615 /* setappPublicKey.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = setappPublicKey.pem; sourceTree = "<group>"; };
 		4FB0416026F71CC0003657BE /* ButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonStyle.swift; sourceTree = "<group>"; };
 		4FB51A5627A94457003F528E /* SecurityUpdateCheck.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SecurityUpdateCheck.swift; sourceTree = "<group>"; };
@@ -755,8 +755,8 @@
 		4FC81A4A26C41DC8006EABA8 /* ParetoSecurityTests */ = {
 			isa = PBXGroup;
 			children = (
-				4FAC8BA62E1B0A9300A4FF22 /* APIServiceTest.swift */,
 				4F6A00BA2D6E5791001BDE61 /* ApplicationUpdatesTest.swift */,
+				4FA975722E4B3307006C0D5A /* UpdateServiceTest.swift */,
 				4F6A92E526C521BE006C2F2D /* CheckIntegrationTest.swift */,
 				4FC81A4B26C41DC8006EABA8 /* ParetoSecurityTests.swift */,
 				4F84A94326CBBA6900A1579D /* SettingsTests.swift */,
@@ -814,7 +814,7 @@
 				4FB7C67C26AFF1AB00FB1C41 /* Log.swift */,
 				4F47220F26B08A0E0071CE2A /* Defaults.swift */,
 				4F6A92E926C54AB7006C2F2D /* AppInfo.swift */,
-				4FAC8BA32E1AFCB300A4FF22 /* APIService.swift */,
+				4FA9756F2E4B31E4006C0D5A /* UpdateService.swift */,
 				4FF13D9626DCCB9900E4084E /* Utils.swift */,
 				4F14487326D8EA5E00A5BA34 /* Updater.swift */,
 				4FF22A6426F0CFA500500213 /* Flags.swift */,
@@ -1192,6 +1192,7 @@
 				4FDDE1982D53BA3200D9E853 /* String.swift in Sources */,
 				4F37E71E2718122E00A2B254 /* Autologin.swift in Sources */,
 				4F38D8CF273AC62500671756 /* EndView.swift in Sources */,
+				4FA975702E4B31E4006C0D5A /* UpdateService.swift in Sources */,
 				4F8ECA382798262F00361728 /* FirewallStealth.swift in Sources */,
 				3F17334B2D6D6487007C02B0 /* NordLayer.swift in Sources */,
 				3F17334C2D6D6487007C02B0 /* Bitwarden.swift in Sources */,
@@ -1200,7 +1201,6 @@
 				3F17334F2D6D6487007C02B0 /* Docker.swift in Sources */,
 				3F1733502D6D6487007C02B0 /* Enpass.swift in Sources */,
 				3F1733512D6D6487007C02B0 /* 1Password8.swift in Sources */,
-				4FAC8BA52E1AFCB300A4FF22 /* APIService.swift in Sources */,
 				3F1733522D6D6487007C02B0 /* Tailscale.swift in Sources */,
 				3F1733532D6D6487007C02B0 /* WireGuard.swift in Sources */,
 				3F1733542D6D6487007C02B0 /* MicrosoftTeams.swift in Sources */,
@@ -1285,13 +1285,13 @@
 			files = (
 				4F84A94426CBBA6900A1579D /* SettingsTests.swift in Sources */,
 				4FDDE19A2D53BA3200D9E853 /* String.swift in Sources */,
-				4FAC8BA72E1B0A9300A4FF22 /* APIServiceTest.swift in Sources */,
 				4F57135526F8ACCC004B4359 /* WelcomeTest.swift in Sources */,
 				4F57135726F8BF84004B4359 /* ParetoAppTest.swift in Sources */,
 				4F57135D26F8C921004B4359 /* TeamsTest.swift in Sources */,
 				4FF13D9D26DE235700E4084E /* UpdaterTest.swift in Sources */,
 				4F6A00BB2D6E5791001BDE61 /* ApplicationUpdatesTest.swift in Sources */,
 				4F080D1D26C50D2800686786 /* ParetoSecurityTests.swift in Sources */,
+				4FA975732E4B3307006C0D5A /* UpdateServiceTest.swift in Sources */,
 				4F6A92E626C521BE006C2F2D /* CheckIntegrationTest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1338,6 +1338,7 @@
 				4FDDE1992D53BA3200D9E853 /* String.swift in Sources */,
 				4F868DD126A5C51C005B876E /* Autologin.swift in Sources */,
 				4F38D8CE273AC62500671756 /* EndView.swift in Sources */,
+				4FA975712E4B31E4006C0D5A /* UpdateService.swift in Sources */,
 				4F8ECA372798262F00361728 /* FirewallStealth.swift in Sources */,
 				3F17333B2D6D6487007C02B0 /* NordLayer.swift in Sources */,
 				3F17333C2D6D6487007C02B0 /* Bitwarden.swift in Sources */,
@@ -1346,7 +1347,6 @@
 				3F17333F2D6D6487007C02B0 /* Docker.swift in Sources */,
 				3F1733402D6D6487007C02B0 /* Enpass.swift in Sources */,
 				3F1733412D6D6487007C02B0 /* 1Password8.swift in Sources */,
-				4FAC8BA42E1AFCB300A4FF22 /* APIService.swift in Sources */,
 				3F1733422D6D6487007C02B0 /* Tailscale.swift in Sources */,
 				3F1733432D6D6487007C02B0 /* WireGuard.swift in Sources */,
 				3F1733442D6D6487007C02B0 /* MicrosoftTeams.swift in Sources */,
