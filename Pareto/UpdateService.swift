@@ -42,7 +42,7 @@ class UpdateService {
     private let cacheExpiration: TimeInterval = 86400 // 1 day (24 hours)
 
     // Disk cache for updates endpoint
-    private let updatesCache: Storage<String, Data>?
+    private let updatesCache: SyncStorage<String, Data>?
 
     private init() {
         // Create URLSessionConfiguration without caching (we'll handle it manually)
@@ -59,16 +59,20 @@ class UpdateService {
                 expiry: .seconds(86400), // 1 day
                 maxSize: 10_000_000 // 10 MB
             )
+            let diskStorage = try DiskStorage<String, Data>(
+                config: diskConfig,
+                transformer: TransformerFactory.forData()
+            )
+            
             let memoryConfig = MemoryConfig(
-                expiry: .seconds(3600),
+                expiry: .seconds(86400), // 1 day
                 countLimit: 10,
                 totalCostLimit: 10_000_000
             )
-            updatesCache = try Storage(
-                diskConfig: diskConfig,
-                memoryConfig: memoryConfig,
-                transformer: TransformerFactory.forData()
-            )
+            let memoryStorage = MemoryStorage<String, Data>(config: memoryConfig)
+            
+            let hybridStorage = HybridStorage(memoryStorage: memoryStorage, diskStorage: diskStorage)
+            updatesCache = SyncStorage(storage: hybridStorage, serialQueue: DispatchQueue(label: "UpdateServiceCacheSync"))
         } catch {
             os_log("Failed to initialize updates disk cache: %{public}s", error.localizedDescription)
             updatesCache = nil
@@ -220,9 +224,12 @@ class UpdateService {
         var components = URLComponents(string: baseURL + endpoint)
 
         if !queryParameters.isEmpty {
-            components?.queryItems = queryParameters.map { key, value in
-                URLQueryItem(name: key, value: value)
-            }
+            // Sort query parameters to ensure consistent cache keys
+            components?.queryItems = queryParameters
+                .sorted { $0.key < $1.key }
+                .map { key, value in
+                    URLQueryItem(name: key, value: value)
+                }
         }
 
         return components?.url
