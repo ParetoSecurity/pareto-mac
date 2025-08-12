@@ -378,14 +378,14 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
             case "linkDevice":
                 let inviteID = url.queryParams()["invite_id"] ?? ""
                 let host = url.queryParams()["host"] ?? ""
-                
+
                 // Set teamAPI based on host parameter
                 if host.isEmpty {
                     Defaults[.teamAPI] = "https://cloud.paretosecurity.com"
                 } else {
                     Defaults[.teamAPI] = host
                 }
-                
+
                 if inviteID.isEmpty {
                     DispatchQueue.main.async {
                         let alert = NSAlert()
@@ -398,9 +398,9 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
                     }
                     return
                 }
-                
+
                 enrolledHandler = true
-                
+
                 Team.enrollDevice(inviteID: inviteID) { result in
                     switch result {
                     case .success(let (authToken, teamID)):
@@ -409,7 +409,7 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
                         Defaults[.teamID] = teamID
                         Defaults[.reportingRole] = .team
                         Defaults[.userID] = ""
-                        
+
                         DispatchQueue.main.async {
                             let alert = NSAlert()
                             alert.messageText = "Pareto Security is activated and linked."
@@ -424,7 +424,7 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
                                 self.statusBar?.runChecks()
                             }
                         }
-                    case .failure(let error):
+                    case let .failure(error):
                         Defaults.toOpenSource()
                         DispatchQueue.main.async {
                             let alert = NSAlert()

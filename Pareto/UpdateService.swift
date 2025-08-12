@@ -1,16 +1,15 @@
 //
-//  APIService.swift
+//  UpdateService.swift
 //  Pareto Security
 //
 //  Created by Claude on 06/07/2025.
 //
 
 import Alamofire
+import Cache
 import Defaults
 import Foundation
 import os.log
-import Defaults
-import Alamofire
 
 enum APIError: Swift.Error {
     case invalidURL
@@ -26,22 +25,24 @@ enum APIError: Swift.Error {
             return "No data received"
         case .invalidResponse:
             return "Invalid response"
-        case .networkError(let message):
+        case let .networkError(message):
             return "Network error: \(message)"
-        case .decodingError(let message):
+        case let .decodingError(message):
             return "Decoding error: \(message)"
         }
     }
 }
 
-
-class APIService {
-    static let shared = APIService()
+class UpdateService {
+    static let shared = UpdateService()
 
     private let baseURL = "https://paretosecurity.com/api"
     private let session: Session
     private var memoryCache: [String: (data: Data, timestamp: Date)] = [:]
-    private let cacheExpiration: TimeInterval = 300 // 5 minutes
+    private let cacheExpiration: TimeInterval = 86400 // 1 day (24 hours)
+
+    // Disk cache for updates endpoint
+    private let updatesCache: Storage<String, Data>?
 
     private init() {
         // Create URLSessionConfiguration without caching (we'll handle it manually)
@@ -50,6 +51,28 @@ class APIService {
 
         // Create Alamofire session with custom configuration
         session = Session(configuration: configuration)
+
+        // Initialize disk cache for updates
+        do {
+            let diskConfig = DiskConfig(
+                name: "ParetoUpdatesCache",
+                expiry: .seconds(86400), // 1 day
+                maxSize: 10_000_000 // 10 MB
+            )
+            let memoryConfig = MemoryConfig(
+                expiry: .seconds(3600),
+                countLimit: 10,
+                totalCostLimit: 10_000_000
+            )
+            updatesCache = try Storage(
+                diskConfig: diskConfig,
+                memoryConfig: memoryConfig,
+                transformer: TransformerFactory.forData()
+            )
+        } catch {
+            os_log("Failed to initialize updates disk cache: %{public}s", error.localizedDescription)
+            updatesCache = nil
+        }
     }
 
     func request<T: Decodable>(
@@ -65,23 +88,16 @@ class APIService {
 
         let cacheKey = url.absoluteString
 
-        // Check memory cache first
-        if let cachedItem = memoryCache[cacheKey] {
-            let age = Date().timeIntervalSince(cachedItem.timestamp)
-            if age < cacheExpiration {
-                os_log("Returning cached response for: %{public}s (age: %{public}f seconds)", url.absoluteString, age)
-                do {
-                    let result = try JSONDecoder().decode(responseType, from: cachedItem.data)
-                    completion(.success(result))
-                    return
-                } catch {
-                    os_log("Failed to decode cached data: %{public}s", error.localizedDescription)
-                    // Remove invalid cached data and continue with network request
-                    memoryCache.removeValue(forKey: cacheKey)
-                }
-            } else {
-                // Cache expired, remove it
-                memoryCache.removeValue(forKey: cacheKey)
+        // Use disk cache for updates
+        if let cache = updatesCache {
+            do {
+                let cachedData = try cache.object(forKey: cacheKey)
+                os_log("Returning disk cached response for updates: %{public}s", url.absoluteString)
+                let result = try JSONDecoder().decode(responseType, from: cachedData)
+                completion(.success(result))
+                return
+            } catch {
+                // Cache miss or decode error, continue with network request
             }
         }
 
@@ -96,9 +112,13 @@ class APIService {
                 case let .success(data):
                     do {
                         let result = try JSONDecoder().decode(responseType, from: data)
-                        // Cache the response data
-                        self.memoryCache[cacheKey] = (data: data, timestamp: Date())
-                        os_log("API request completed and cached: %{public}s", url.absoluteString)
+
+                        // Save to disk cache for updates
+                        if let cache = self.updatesCache {
+                            try? cache.setObject(data, forKey: cacheKey)
+                            os_log("API request completed and disk cached: %{public}s", url.absoluteString)
+                        }
+
                         completion(.success(result))
                     } catch {
                         os_log("Failed to decode response: %{public}s", error.localizedDescription)
@@ -122,22 +142,15 @@ class APIService {
 
         let cacheKey = url.absoluteString
 
-        // Check memory cache first
-        if let cachedItem = memoryCache[cacheKey] {
-            let age = Date().timeIntervalSince(cachedItem.timestamp)
-            if age < cacheExpiration {
-                os_log("Returning cached response for sync request: %{public}s (age: %{public}f seconds)", url.absoluteString, age)
-                do {
-                    let result = try JSONDecoder().decode(responseType, from: cachedItem.data)
-                    return result
-                } catch {
-                    os_log("Failed to decode cached data: %{public}s", error.localizedDescription)
-                    // Remove invalid cached data and continue with network request
-                    memoryCache.removeValue(forKey: cacheKey)
-                }
-            } else {
-                // Cache expired, remove it
-                memoryCache.removeValue(forKey: cacheKey)
+        // Use disk cache for updates
+        if let cache = updatesCache {
+            do {
+                let cachedData = try cache.object(forKey: cacheKey)
+                os_log("Returning disk cached response for sync updates request: %{public}s", url.absoluteString)
+                let result = try JSONDecoder().decode(responseType, from: cachedData)
+                return result
+            } catch {
+                // Cache miss or decode error, continue with network request
             }
         }
 
@@ -155,9 +168,13 @@ class APIService {
                 case let .success(data):
                     do {
                         let decodedResult = try JSONDecoder().decode(responseType, from: data)
-                        // Cache the response data
-                        self.memoryCache[cacheKey] = (data: data, timestamp: Date())
-                        os_log("Sync API request completed and cached: %{public}s", url.absoluteString)
+
+                        // Save to disk cache for updates
+                        if let cache = self.updatesCache {
+                            try? cache.setObject(data, forKey: cacheKey)
+                            os_log("Sync API request completed and disk cached: %{public}s", url.absoluteString)
+                        }
+
                         result = .success(decodedResult)
                     } catch {
                         os_log("Failed to decode response: %{public}s", error.localizedDescription)
@@ -186,7 +203,17 @@ class APIService {
 
     func clearCache() {
         memoryCache.removeAll()
-        os_log("API cache cleared")
+        // Also clear disk cache for updates
+        if let cache = updatesCache {
+            do {
+                try cache.removeAll()
+                os_log("API memory and disk cache cleared")
+            } catch {
+                os_log("Failed to clear disk cache: %{public}s", error.localizedDescription)
+            }
+        } else {
+            os_log("API memory cache cleared")
+        }
     }
 
     private func buildURL(endpoint: String, queryParameters: [String: String]) -> URL? {
@@ -202,7 +229,7 @@ class APIService {
     }
 }
 
-extension APIService {
+extension UpdateService {
     func getUpdates(completion: @escaping (Result<[Release], APIError>) -> Void) {
         let params = [
             "uuid": Defaults[.machineUUID],

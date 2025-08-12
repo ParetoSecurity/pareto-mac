@@ -1,16 +1,16 @@
 //
-//  APIServiceTest.swift
+//  UpdateServiceTest.swift
 //  ParetoSecurityTests
 //
 
 @testable import Pareto_Security
 import XCTest
 
-class APIServiceTest: XCTestCase {
+class UpdateServiceTest: XCTestCase {
     override func setUp() {
         super.setUp()
         // Clear cache before each test
-        APIService.shared.clearCache()
+        UpdateService.shared.clearCache()
     }
 
     func testGetUpdatesSync() throws {
@@ -20,7 +20,7 @@ class APIServiceTest: XCTestCase {
 
         DispatchQueue.global().async {
             do {
-                let releases = try APIService.shared.getUpdatesSync()
+                let releases = try UpdateService.shared.getUpdatesSync()
                 testResult = .success(releases)
             } catch {
                 testResult = .failure(error)
@@ -32,8 +32,8 @@ class APIServiceTest: XCTestCase {
         wait(for: [expectation], timeout: 15.0)
 
         guard case let .success(releases) = testResult else {
-            // If network fails, test basic APIService structure instead
-            XCTAssertNotNil(APIService.shared, "APIService should be initialized")
+            // If network fails, test basic UpdateService structure instead
+            XCTAssertNotNil(UpdateService.shared, "UpdateService should be initialized")
             return
         }
 
@@ -56,10 +56,10 @@ class APIServiceTest: XCTestCase {
 
     func testCaching() throws {
         // Test basic cache functionality without network dependency
-        APIService.shared.clearCache()
+        UpdateService.shared.clearCache()
 
         // Test that cache clear works
-        XCTAssertNotNil(APIService.shared, "APIService should be available")
+        XCTAssertNotNil(UpdateService.shared, "UpdateService should be available")
 
         // Skip network-dependent caching tests to avoid flaky tests
         // This test would need mock network responses to be reliable
@@ -67,14 +67,14 @@ class APIServiceTest: XCTestCase {
 
     func testCacheExpiration() throws {
         // Test cache clear functionality
-        APIService.shared.clearCache()
-        XCTAssertNotNil(APIService.shared, "APIService should be available after cache clear")
+        UpdateService.shared.clearCache()
+        XCTAssertNotNil(UpdateService.shared, "UpdateService should be available after cache clear")
     }
 
     func testClearCache() throws {
         // Test cache clearing functionality
-        APIService.shared.clearCache()
-        XCTAssertNotNil(APIService.shared, "APIService should remain functional after cache clear")
+        UpdateService.shared.clearCache()
+        XCTAssertNotNil(UpdateService.shared, "UpdateService should remain functional after cache clear")
     }
 
     func testUpdateCheckIntegration() throws {

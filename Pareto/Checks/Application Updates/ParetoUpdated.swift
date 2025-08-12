@@ -36,7 +36,7 @@ class ParetoUpdated: ParetoCheck {
 
     private func checkForUpdates(completion: @escaping (Bool) -> Void) {
         do {
-            let releases = try APIService.shared.getUpdatesSync()
+            let releases = try UpdateService.shared.getUpdatesSync()
 
             if releases.isEmpty {
                 os_log("No releases found during update check")

@@ -15,9 +15,8 @@ struct TeamSettingsView: View {
     @Default(.machineUUID) var machineUUID
     @Default(.sendHWInfo) var sendHWInfo
     @Default(.showBeta) var showBeta
-    
-    @State private var debugLinkURL: String = ""
 
+    @State private var debugLinkURL: String = ""
 
     func copy() {
         NSPasteboard.general.clearContents()
@@ -43,7 +42,7 @@ struct TeamSettingsView: View {
     func help() {
         NSWorkspace.shared.open(URL(string: "https://support.apple.com/en-ie/guide/mac-help/mchlp2322/mac#mchl8c79215b")!)
     }
-    
+
     func processDebugLinkURL() {
         guard let url = URL(string: debugLinkURL.trimmingCharacters(in: .whitespacesAndNewlines)) else {
             let alert = NSAlert()
@@ -54,7 +53,7 @@ struct TeamSettingsView: View {
             alert.runModal()
             return
         }
-        
+
         AppHandlers().processAction(url)
         debugLinkURL = ""
     }
@@ -129,7 +128,7 @@ struct TeamSettingsView: View {
         } else {
             VStack(alignment: .leading, spacing: 16) {
                 Text("The Teams subscription will give you a web dashboard for an overview of the company's devices. [Learn more »](https://paretosecurity.com/product/device-monitoring)")
-                
+
                 if showBeta {
                     Section(
                         footer: VStack(alignment: .leading, spacing: 4) {
@@ -138,18 +137,18 @@ struct TeamSettingsView: View {
                             Text("• Default (cloud): paretosecurity://linkDevice/?invite_id=123").font(.footnote)
                             Text("• Complete URL: paretosecurity://linkDevice/?invite_id=123&host=https://api.example.com").font(.footnote)
                         }) {
-                        VStack(alignment: .leading) {
-                            TextField("paretosecurity://linkDevice/?invite_id=...", text: $debugLinkURL)
-                                .textFieldStyle(RoundedBorderTextFieldStyle())
-                            HStack {
-                                Button("Process URL") {
-                                    processDebugLinkURL()
+                            VStack(alignment: .leading) {
+                                TextField("paretosecurity://linkDevice/?invite_id=...", text: $debugLinkURL)
+                                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                                HStack {
+                                    Button("Process URL") {
+                                        processDebugLinkURL()
+                                    }
+                                    .disabled(debugLinkURL.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                                    Spacer()
                                 }
-                                .disabled(debugLinkURL.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
-                                Spacer()
                             }
                         }
-                    }
                 }
             }.frame(width: 380).padding(25)
         }

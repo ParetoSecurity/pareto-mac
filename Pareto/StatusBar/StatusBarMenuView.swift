@@ -60,7 +60,6 @@ struct StatusBarMenuView: View {
             if !statusBarModel.isRunning {
                 if snoozeTime == 0 {
                     Button("Run Checks") {
-                        APIService.shared.clearCache()
                         appHandlers.runChecks()
                     }
                     .keyboardShortcut("r")

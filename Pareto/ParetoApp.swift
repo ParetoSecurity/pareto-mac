@@ -130,7 +130,7 @@ class AppDelegate: AppHandlers, NSApplicationDelegate {
 
             print("Enrolling device with invite ID")
             enrolledHandler = true
-            
+
             Team.enrollDevice(inviteID: inviteID) { result in
                 switch result {
                 case .success(let (authToken, teamID)):
@@ -139,11 +139,11 @@ class AppDelegate: AppHandlers, NSApplicationDelegate {
                     Defaults[.reportingRole] = .team
                     Defaults[.userID] = ""
                     LaunchAtLogin.isEnabled = true
-                    
+
                     print("Device successfully enrolled and linked to team: \(teamID)")
                     Defaults[.lastCheck] = 1
                     exit(0)
-                case .failure(let error):
+                case let .failure(error):
                     print("Device enrollment failed: \(error.localizedDescription)")
                     Defaults.toOpenSource()
                     exit(1)
