@@ -38,8 +38,6 @@ class UpdateService {
 
     private let baseURL = "https://paretosecurity.com/api"
     private let session: Session
-    private var memoryCache: [String: (data: Data, timestamp: Date)] = [:]
-    private let cacheExpiration: TimeInterval = 86400 // 1 day (24 hours)
 
     // Disk cache for updates endpoint
     private let updatesCache: SyncStorage<String, Data>?
@@ -56,7 +54,7 @@ class UpdateService {
         do {
             let diskConfig = DiskConfig(
                 name: "ParetoUpdatesCache",
-                expiry: .seconds(86400), // 1 day
+                expiry: .seconds(60*4), // 4 hours
                 maxSize: 10_000_000 // 10 MB
             )
             let diskStorage = try DiskStorage<String, Data>(
@@ -65,7 +63,7 @@ class UpdateService {
             )
             
             let memoryConfig = MemoryConfig(
-                expiry: .seconds(86400), // 1 day
+                expiry: .seconds(60*4), // 4 hours
                 countLimit: 10,
                 totalCostLimit: 10_000_000
             )
@@ -206,7 +204,7 @@ class UpdateService {
     }
 
     func clearCache() {
-        memoryCache.removeAll()
+
         // Also clear disk cache for updates
         if let cache = updatesCache {
             do {
