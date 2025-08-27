@@ -22,6 +22,19 @@ enum Error: Swift.Error {
     case uptoDate
 }
 
+extension AppUpdater {
+    /// Clears extended attributes (including quarantine flags) from the app bundle
+    /// to prevent binary corruption issues after update
+    static func clearExtendedAttributes(at path: String) {
+        let xattrProc = Process()
+        xattrProc.launchPath = "/usr/bin/xattr"
+        xattrProc.arguments = ["-cr", path]
+        xattrProc.launch()
+        xattrProc.waitUntilExit()
+        os_log("Cleared extended attributes from: \(path)")
+    }
+}
+
 struct Release: Decodable {
     let tag_name: String
     let body: String
@@ -188,6 +201,7 @@ public class AppUpdater {
                     os_log("Delete installedAppBundle: \(installedAppBundle)")
                     try downloadedAppBundle.path.move(to: installedAppBundle.path)
                     os_log("Move new app to installedAppBundle: \(installedAppBundle)")
+                    AppUpdater.clearExtendedAttributes(at: installedAppBundle.path.string)
                 } else {
                     let path = "\(downloadedAppBundle.path)/Contents/MacOS/Pareto Security".shellEscaped()
                     AppUpdater.runCMDasAdmin(cmd: "\(path) -update")

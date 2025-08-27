@@ -39,6 +39,7 @@ class AppDelegate: AppHandlers, NSApplicationDelegate {
         do {
             try fileManager.moveItem(atPath: bundlePath, toPath: destinationPath)
             print("Moved app to /Applications")
+            AppUpdater.clearExtendedAttributes(at: destinationPath)
 
         } catch {
             print("Failed to move the app: \(error)")
