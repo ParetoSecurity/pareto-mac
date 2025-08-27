@@ -37,12 +37,12 @@ class AppDelegate: AppHandlers, NSApplicationDelegate {
         }
 
         do {
-            try fileManager.moveItem(atPath: bundlePath, toPath: destinationPath)
+            try AppUpdater.safeCopyBundle(from: bundlePath, to: destinationPath)
             print("Moved app to /Applications")
-            AppUpdater.clearExtendedAttributes(at: destinationPath)
-
+            // Clean up original bundle after successful copy
+            try? fileManager.removeItem(atPath: bundlePath)
         } catch {
-            print("Failed to move the app: \(error)")
+            print("Failed to copy the app: \(error)")
         }
         exit(0) // Terminate old instance
     }

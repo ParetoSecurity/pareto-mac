@@ -23,15 +23,25 @@ enum Error: Swift.Error {
 }
 
 extension AppUpdater {
-    /// Clears extended attributes (including quarantine flags) from the app bundle
-    /// to prevent binary corruption issues after update
-    static func clearExtendedAttributes(at path: String) {
-        let xattrProc = Process()
-        xattrProc.launchPath = "/usr/bin/xattr"
-        xattrProc.arguments = ["-cr", path]
-        xattrProc.launch()
-        xattrProc.waitUntilExit()
-        os_log("Cleared extended attributes from: \(path)")
+    /// Uses ditto to preserve code signatures and permissions when copying app bundles
+    static func safeCopyBundle(from source: String, to destination: String) throws {
+        // First remove destination if it exists
+        if FileManager.default.fileExists(atPath: destination) {
+            try FileManager.default.removeItem(atPath: destination)
+        }
+
+        // Use ditto to preserve all metadata including code signatures
+        let dittoProc = Process()
+        dittoProc.launchPath = "/usr/bin/ditto"
+        dittoProc.arguments = [source, destination]
+        dittoProc.launch()
+        dittoProc.waitUntilExit()
+
+        if dittoProc.terminationStatus != 0 {
+            throw Error.invalidDownloadedBundle
+        }
+
+        os_log("Successfully copied bundle from \(source) to \(destination)")
     }
 }
 
@@ -197,11 +207,7 @@ public class AppUpdater {
         if validate(downloadedAppBundle, installedAppBundle) {
             do {
                 if SystemUser.current.isAdmin {
-                    try installedAppBundle.path.delete()
-                    os_log("Delete installedAppBundle: \(installedAppBundle)")
-                    try downloadedAppBundle.path.move(to: installedAppBundle.path)
-                    os_log("Move new app to installedAppBundle: \(installedAppBundle)")
-                    AppUpdater.clearExtendedAttributes(at: installedAppBundle.path.string)
+                    try AppUpdater.safeCopyBundle(from: downloadedAppBundle.path.string, to: installedAppBundle.path.string)
                 } else {
                     let path = "\(downloadedAppBundle.path)/Contents/MacOS/Pareto Security".shellEscaped()
                     AppUpdater.runCMDasAdmin(cmd: "\(path) -update")
@@ -263,10 +269,12 @@ extension Release: Comparable {
 
 private func unzip(_ url: URL, contentType: Release.Asset.ContentType) -> URL {
     let proc = Process()
+    let extractDir = url.deletingLastPathComponent()
+
     if #available(OSX 10.13, *) {
-        proc.currentDirectoryURL = url.deletingLastPathComponent()
+        proc.currentDirectoryURL = extractDir
     } else {
-        proc.currentDirectoryPath = url.deletingLastPathComponent().path
+        proc.currentDirectoryPath = extractDir.path
     }
 
     switch contentType {
@@ -274,14 +282,17 @@ private func unzip(_ url: URL, contentType: Release.Asset.ContentType) -> URL {
         proc.launchPath = "/usr/bin/tar"
         proc.arguments = ["xf", url.path]
     case .zip:
-        proc.launchPath = "/usr/bin/unzip"
-        proc.arguments = [url.path]
+        // Use ditto to properly extract zip files and preserve code signatures
+        proc.launchPath = "/usr/bin/ditto"
+        proc.arguments = ["-xk", url.path, extractDir.path]
     case .unknown:
-        proc.launchPath = "/usr/bin/unzip"
-        proc.arguments = [url.path]
+        // Default to ditto for unknown types as well
+        proc.launchPath = "/usr/bin/ditto"
+        proc.arguments = ["-xk", url.path, extractDir.path]
     }
+
     func findApp() throws -> URL? {
-        let files = try FileManager.default.contentsOfDirectory(at: url.deletingLastPathComponent(), includingPropertiesForKeys: [.isDirectoryKey], options: .skipsSubdirectoryDescendants)
+        let files = try FileManager.default.contentsOfDirectory(at: extractDir, includingPropertiesForKeys: [.isDirectoryKey], options: .skipsSubdirectoryDescendants)
         for url in files {
             guard url.pathExtension == "app" else { continue }
             guard let foo = try url.resourceValues(forKeys: [.isDirectoryKey]).isDirectory, foo else { continue }
@@ -289,7 +300,13 @@ private func unzip(_ url: URL, contentType: Release.Asset.ContentType) -> URL {
         }
         return nil
     }
+
     proc.launch()
     proc.waitUntilExit()
+
+    if proc.terminationStatus != 0 {
+        os_log("Failed to extract archive: \(url.path)")
+    }
+
     return try! findApp()!
 }
