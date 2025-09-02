@@ -46,17 +46,20 @@ class Claim: Hashable {
         let item = NSMenuItem(title: title, action: nil, keyEquivalent: "")
         let submenu = NSMenu()
         for check in checksSorted {
-            if check.isRunnableCached() {
-                submenu.addItem(check.menu())
-                if Defaults[.snoozeTime] > 0 {
-                    item.image = NSImage.SF(name: "shield.fill").tint(color: .systemGray)
-                } else {
-                    if checksPassed && checksNoError {
-                        item.image = NSImage.SF(name: "checkmark.circle.fill").tint(color: Defaults.OKColor())
-                    } else {
-                        item.image = NSImage.SF(name: "xmark.diamond.fill").tint(color: Defaults.FailColor())
-                    }
-                }
+            let checkMenuItem = check.menu()
+            
+            // Always add the check to the menu
+            submenu.addItem(checkMenuItem)
+        }
+        
+        // Set the claim icon based on overall status
+        if Defaults[.snoozeTime] > 0 {
+            item.image = NSImage.SF(name: "shield.fill").tint(color: .systemGray)
+        } else {
+            if checksPassed && checksNoError {
+                item.image = NSImage.SF(name: "checkmark.circle.fill").tint(color: Defaults.OKColor())
+            } else {
+                item.image = NSImage.SF(name: "xmark.diamond.fill").tint(color: Defaults.FailColor())
             }
         }
 
