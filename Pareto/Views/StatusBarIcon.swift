@@ -37,6 +37,10 @@ struct StatusBarIcon: View {
     }
 
     private var overlayColor: Color {
+        // While running, always show neutral gray regardless of last state
+        if statusBarModel.isRunning {
+            return .gray
+        }
         switch statusBarModel.state {
         case .allOk:
             return Color(nsColor: Defaults.OKColor())

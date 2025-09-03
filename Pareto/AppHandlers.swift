@@ -56,6 +56,10 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
     private func setRunning(_ running: Bool) {
         let apply: () -> Void = {
             self.statusBarModel.isRunning = running
+            // Show neutral/gray indicator while running
+            if running {
+                self.statusBarModel.state = .idle
+            }
             self.statusBarModel.refreshNonce &+= 1
         }
         if Thread.isMainThread {
@@ -459,13 +463,15 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
         DispatchQueue.main.async { [self] in
             if welcomeWindow == nil {
                 let hostingController = NSHostingController(rootView: WelcomeView())
-                hostingController.preferredContentSize = NSSize(width: 640, height: 480)
+                let welcomeSize = NSSize(width: 380, height: 520)
+                hostingController.preferredContentSize = welcomeSize
                 let window = NSWindow(contentViewController: hostingController)
                 window.title = "Welcome"
                 window.standardWindowButton(.zoomButton)?.isHidden = true
                 window.standardWindowButton(.miniaturizeButton)?.isHidden = true
+                window.setContentSize(welcomeSize)
+                window.contentMinSize = welcomeSize
                 window.center()
-                window.setContentSize(NSSize(width: 640, height: 480))
 
                 welcomeWindow = NSWindowController(window: window)
             }
