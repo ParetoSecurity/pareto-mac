@@ -27,14 +27,16 @@ struct StatusBarMenuView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            // Security checks
-            ForEach(claims.all, id: \.title) { claim in
-                if !claim.checks.isEmpty {
-                    ClaimMenuView(claim: claim)
+            // Security checks (hidden while running)
+            if !statusBarModel.isRunning {
+                ForEach(claims.all, id: \.title) { claim in
+                    if !claim.checks.isEmpty {
+                        ClaimMenuView(claim: claim)
+                    }
                 }
+                // Force re-render of list when checks or running state changes
+                .id(statusBarModel.refreshNonce)
             }
-            // Force re-render of list when checks or running state changes
-            .id(statusBarModel.refreshNonce ^ (statusBarModel.isRunning ? 1 : 0))
 
             statusline().id(statusBarModel.refreshNonce ^ (statusBarModel.isRunning ? 1 : 0))
 
