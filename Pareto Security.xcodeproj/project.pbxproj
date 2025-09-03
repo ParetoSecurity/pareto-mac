@@ -1908,7 +1908,7 @@
 			repositoryURL = "https://github.com/sindresorhus/LaunchAtLogin";
 			requirement = {
 				kind = upToNextMinorVersion;
-				minimumVersion = 5.0.1;
+				minimumVersion = 5.0.0;
 			};
 		};
 		4F14487526D8EB2E00A5BA34 /* XCRemoteSwiftPackageReference "Version" */ = {
@@ -2012,7 +2012,7 @@
 			repositoryURL = "https://github.com/sindresorhus/Defaults";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 8.2.0;
+				minimumVersion = 9.0.0;
 			};
 		};
 		4F6EF890275FEE6C00752559 /* XCRemoteSwiftPackageReference "Regex" */ = {
@@ -2028,7 +2028,7 @@
 			repositoryURL = "https://github.com/hyperoslo/Cache";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 6.0.0;
+				minimumVersion = 7.0.0;
 			};
 		};
 		4FAF5BC02895583A004E9615 /* XCRemoteSwiftPackageReference "Setapp-framework" */ = {
@@ -2036,7 +2036,7 @@
 			repositoryURL = "https://github.com/MacPaw/Setapp-framework.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 3.0.0;
+				minimumVersion = 4.0.0;
 			};
 		};
 		4FC0F2EC2A4C47FD004E7359 /* XCRemoteSwiftPackageReference "ViewInspector" */ = {

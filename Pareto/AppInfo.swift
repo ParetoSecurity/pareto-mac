@@ -86,19 +86,14 @@ enum AppInfo {
         return source
     }
 
-    #if DEBUG
-        static let versionStorage = try! Storage<String, Version>(
-            diskConfig: DiskConfig(name: "Version+Bundles+Debug", expiry: .seconds(1)),
-            memoryConfig: MemoryConfig(expiry: .seconds(1)),
-            transformer: TransformerFactory.forCodable(ofType: Version.self) // Storage<String, Version>
-        )
-    #else
-        static let versionStorage = try! Storage<String, Version>(
-            diskConfig: DiskConfig(name: "Version+Bundles+v2", expiry: .seconds(3600 * 24)),
-            memoryConfig: MemoryConfig(expiry: .seconds(3600)),
-            transformer: TransformerFactory.forCodable(ofType: Version.self) // Storage<String, Version>
-        )
-    #endif
+
+    static let versionStorage = try! Storage<String, Version>(
+        diskConfig: DiskConfig(name: "Version+Bundles+v2", expiry: .seconds(3600 * 24)),
+        memoryConfig: MemoryConfig(expiry: .seconds(3600)),
+        fileManager: FileManager.default,
+        transformer: TransformerFactory.forCodable(ofType: Version.self) // Storage<String, Version>
+    )
+
 
     static var hwModelName: String {
         if let modelNumber = HWInfo?.modelNumber {
