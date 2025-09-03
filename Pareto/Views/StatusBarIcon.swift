@@ -7,6 +7,8 @@
 
 import AppKit
 import SwiftUI
+import Defaults
+
 
 enum StatusBarState: String {
     case initial = "Icon"
@@ -36,9 +38,9 @@ struct StatusBarIcon: View {
     private var overlayColor: Color {
         switch statusBarModel.state {
         case .allOk:
-            return .green
+            return Color(nsColor: Defaults.OKColor())
         case .warning:
-            return .orange
+            return Color(nsColor: Defaults.FailColor())
         case .idle, .initial:
             return .gray
         }

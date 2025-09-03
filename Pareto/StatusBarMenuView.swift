@@ -169,15 +169,15 @@ struct ClaimMenuView: View {
             HStack {
                 Group {
                     if claim.checksPassed {
-                        Image(systemName: "checkmark.circle")
+                        Image(systemName: "checkmark")
                             .symbolRenderingMode(.palette)
-                            .font(.system(size: 12))
-                            .foregroundStyle(.green)
+                            .font(.system(size: 15))
+                            .foregroundStyle(Color(nsColor: Defaults.OKColor()))
                     } else {
-                        Image(systemName: "xmark.circle")
+                        Image(systemName: "xmark")
                             .symbolRenderingMode(.palette)
-                            .font(.system(size: 12))
-                            .foregroundStyle(.red)
+                            .font(.system(size: 15))
+                            .foregroundStyle(Color(nsColor: Defaults.FailColor()))
                     }
                 }
                 Text(claim.title)
@@ -202,20 +202,20 @@ struct CheckMenuItemView: View {
                 Group {
                     if check.isRunnable {
                         if check.checkPassed {
-                            Image(systemName: "checkmark.circle")
+                            Image(systemName: "checkmark")
                                 .symbolRenderingMode(.palette)
-                                .font(.system(size: 10))
-                                .foregroundStyle(.green)
+                                .font(.system(size: 15))
+                                .foregroundStyle(Color(nsColor: Defaults.OKColor()))
                         } else {
-                            Image(systemName: "xmark.circle")
+                            Image(systemName: "xmark")
                                 .symbolRenderingMode(.palette)
-                                .font(.system(size: 10))
-                                .foregroundStyle(.red)
+                                .font(.system(size: 15))
+                                .foregroundStyle(Color(nsColor: Defaults.FailColor()))
                         }
                     } else {
-                        Image(systemName: "questionmark.circle")
+                        Image(systemName: "questionmark")
                             .symbolRenderingMode(.palette)
-                            .font(.system(size: 10))
+                            .font(.system(size: 15))
                             .foregroundStyle(.orange)
                     }
                 }

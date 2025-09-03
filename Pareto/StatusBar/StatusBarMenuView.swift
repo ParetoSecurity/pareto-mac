@@ -181,15 +181,15 @@ struct ClaimMenuView: View {
             HStack {
                 Group {
                     if claim.checksPassed {
-                        Image(systemName: "checkmark.circle.fill")
-                            .symbolRenderingMode(.multicolor)
+                        Image(systemName: "checkmark.circle")
+                            .symbolRenderingMode(.palette)
                             .font(.system(size: 12))
-                            .foregroundColor(.green)
+                            .foregroundStyle(Color(nsColor: Defaults.OKColor()))
                     } else {
-                        Image(systemName: "xmark.circle.fill")
-                            .symbolRenderingMode(.multicolor)
+                        Image(systemName: "xmark.circle")
+                            .symbolRenderingMode(.palette)
                             .font(.system(size: 12))
-                            .foregroundColor(.red)
+                            .foregroundStyle(Color(nsColor: Defaults.FailColor()))
                     }
                 }
                 Text(claim.title)
@@ -214,21 +214,21 @@ struct CheckMenuItemView: View {
                 Group {
                     if check.isRunnable {
                         if check.checkPassed {
-                            Image(systemName: "checkmark.circle.fill")
-                                .symbolRenderingMode(.multicolor)
+                            Image(systemName: "checkmark.circle")
+                                .symbolRenderingMode(.palette)
                                 .font(.system(size: 10))
-                                .foregroundColor(.green)
+                                .foregroundStyle(Color(nsColor: Defaults.OKColor()))
                         } else {
-                            Image(systemName: "xmark.circle.fill")
-                                .symbolRenderingMode(.multicolor)
+                            Image(systemName: "xmark.circle")
+                                .symbolRenderingMode(.palette)
                                 .font(.system(size: 10))
-                                .foregroundColor(.red)
+                                .foregroundStyle(Color(nsColor: Defaults.FailColor()))
                         }
                     } else {
-                        Image(systemName: "questionmark.circle.fill")
-                            .symbolRenderingMode(.multicolor)
+                        Image(systemName: "questionmark.circle")
+                            .symbolRenderingMode(.palette)
                             .font(.system(size: 10))
-                            .foregroundColor(.orange)
+                            .foregroundStyle(.orange)
                     }
                 }
                 Text(check.Title)
