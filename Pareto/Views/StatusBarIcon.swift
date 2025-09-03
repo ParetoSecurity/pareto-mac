@@ -65,7 +65,6 @@ struct StatusBarIcon: View {
         return newImage
     }
 
-
     var body: some View {
         // Center inside the status bar button area
         ZStack(alignment: .bottomLeading) {
@@ -85,12 +84,12 @@ struct StatusBarIcon: View {
             let side = NSStatusBar.system.thickness
             // Make the overlay small relative to the bar size; keep readable
             let overlaySide = max(10, floor(side * 0.55))
-                // Small colored status dot in the bottom-left corner
-                Circle()
-                    .fill(overlayColor)
-                    .frame(width: overlaySide, height: overlaySide)
-                    .padding(2)
-                    .accessibilityHidden(true)
+            // Small colored status dot in the bottom-left corner
+            Circle()
+                .fill(overlayColor)
+                .frame(width: overlaySide, height: overlaySide)
+                .padding(2)
+                .accessibilityHidden(true)
         }
         // Force refresh when running state or nonce changes
         .id(statusBarModel.refreshNonce ^ (statusBarModel.isRunning ? 1 : 0))
