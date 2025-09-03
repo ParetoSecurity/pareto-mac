@@ -694,6 +694,7 @@
 				4F24A09326EB73C80036F748 /* ChecksSettingsView.swift */,
 				4F24A09526EB73F30036F748 /* GeneralSettingsView.swift */,
 				4F84EC9129DC3A030047C79C /* PermissionsSettingsView.swift */,
+				4F8E688B2E68A90400CD82DF /* StatusBarMenuView.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -786,7 +787,6 @@
 		4FEBA2F0269CD48F009B2469 /* Pareto */ = {
 			isa = PBXGroup;
 			children = (
-				4F8E688B2E68A90400CD82DF /* StatusBarMenuView.swift */,
 				4FAF5BBE2895573F004E9615 /* setappPublicKey.pem */,
 				4FFDC59F2821539F0092B7BF /* Models */,
 				4F10300A269F0568008C1E86 /* Checks */,

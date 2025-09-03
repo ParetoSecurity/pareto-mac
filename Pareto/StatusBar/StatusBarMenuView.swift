@@ -10,6 +10,8 @@ import SwiftUI
 
 struct StatusBarMenuView: View {
     @ObservedObject var statusBarModel: StatusBarModel
+    // Observe claims so menu refreshes when checks finish
+    @ObservedObject private var claims = Claims.global
     @EnvironmentObject var appHandlers: AppHandlers
     @Default(.snoozeTime) var snoozeTime
     @Default(.lastCheck) var lastCheck
@@ -50,7 +52,7 @@ struct StatusBarMenuView: View {
             Divider()
 
             // Security checks
-            ForEach(Claims.global.all, id: \.title) { claim in
+            ForEach(claims.all, id: \.title) { claim in
                 if !claim.checks.isEmpty {
                     ClaimMenuView(claim: claim)
                 }
@@ -203,7 +205,8 @@ struct ClaimMenuView: View {
 }
 
 struct CheckMenuItemView: View {
-    let check: ParetoCheck
+    // Observe individual check for live updates
+    @ObservedObject var check: ParetoCheck
 
     var body: some View {
         Button(action: {

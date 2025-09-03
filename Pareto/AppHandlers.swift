@@ -178,6 +178,9 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
                 }
             }
 
+            // Notify views observing Claims to refresh menu content
+            Claims.global.objectWillChange.send()
+
             os_log("Checks finished running", log: Log.app)
         }
 
