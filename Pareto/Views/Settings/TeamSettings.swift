@@ -80,7 +80,7 @@ struct TeamSettingsView: View {
                 }
 
                 if showBeta {
-                    Section(footer: Text("Team API Endpoint").font(.caption)) {
+                    Section(footer: Text("Cloud API Endpoint").font(.caption)) {
                         Text("\(Defaults[.teamAPI])")
                             .contextMenu(ContextMenu(menuItems: {
                                 Button("Copy") {
@@ -102,7 +102,7 @@ struct TeamSettingsView: View {
         } else {
             Form {
                 Section {
-                    Text("The Teams subscription will give you a web dashboard for an overview of the company's devices. [Learn more »](https://paretosecurity.com/product/device-monitoring)")
+                    Text("Pareto Cloud provides a web dashboard for an overview of your company's devices. [Learn more »](https://paretosecurity.com/product/device-monitoring)")
                 }
                 if showBeta {
                     Section(

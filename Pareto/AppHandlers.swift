@@ -17,8 +17,11 @@ import OSLog
 import ServiceManagement
 import SwiftUI
 
-class AppHandlers: NSObject, NetworkHandlerObserver {
-    var statusBar: StatusBarController?
+class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
+    // Replaces StatusBarController model usage for MenuBarExtra/StatusBarIcon
+    let statusBarModel = StatusBarModel()
+
+    // Removed: var statusBar: StatusBarController?
     var updater: AppUpdater?
     var welcomeWindow: NSWindowController?
     var preferencesWindow: NSWindowController?
@@ -29,9 +32,12 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
 
     @Default(.hideWhenNoFailures) var hideWhenNoFailures
 
+    // With MenuBarExtra there is no NSStatusItem visibility to toggle.
+    // Keep method for compatibility; adapt if you later bind MenuBarExtra(isInserted:) to a property.
     func updateHiddenState() {
         if hideWhenNoFailures {
-            statusBar?.statusItem?.isVisible = !(statusBar?.claimsPassed ?? true)
+            // Implement MenuBarExtra visibility binding here if desired.
+            // e.g., isMenuBarInserted = !(claimsPassed)
         }
     }
 
@@ -39,10 +45,162 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
         case teamLinkinFailed
     }
 
+    // New: configure all checks (replaces StatusBarController.configureChecks())
+    func configureChecks() {
+        for claim in Claims.global.all {
+            claim.configure()
+        }
+    }
+
+    // New: Snooze helpers (replaces StatusBarController snooze methods)
+    @objc func snoozeOneHour() {
+        Defaults[.snoozeTime] = Date().currentTimeMs() + 3600 * 1000
+        // Update icon state if needed
+        statusBarModel.state = .idle
+    }
+
+    @objc func snoozeOneDay() {
+        Defaults[.snoozeTime] = Date().currentTimeMs() + 3600 * 24 * 1000
+        statusBarModel.state = .idle
+    }
+
+    @objc func snoozeOneWeek() {
+        Defaults[.snoozeTime] = Date().currentTimeMs() + 3600 * 24 * 7 * 1000
+        statusBarModel.state = .idle
+    }
+
+    @objc func unsnooze() {
+        Defaults[.snoozeTime] = 0
+        // Recompute state on next run
+    }
+
+    // Ported run logic from StatusBarController.runChecks(isInteractive:)
+    func runChecks(isInteractive interactive: Bool = true) {
+        if statusBarModel.isRunning {
+            return
+        }
+
+        // invalidate possible expired cache
+        try? AppInfo.versionStorage.removeExpiredObjects()
+
+        // Clear UpdateService cache when user manually runs checks
+        if interactive {
+            UpdateService.shared.clearCache()
+        }
+
+        // Snooze in effect
+        if Defaults[.snoozeTime] >= Date().currentTimeMs() {
+            os_log("Checks are snoozed until %s", log: Log.app, String(Defaults[.snoozeTime]))
+            return
+        } else {
+            // snooze expired
+            if Defaults[.snoozeTime] > 0 {
+                os_log("Snooze expired %s", log: Log.app, String(Defaults[.snoozeTime]))
+            }
+            Defaults[.snoozeTime] = 0
+        }
+
+        // don't run checks if not in interactive mode and it was ran less than 5 minutes ago
+        if (Defaults[.lastCheck] + (60 * 1000 * 5)) >= Date().currentTimeMs(), !interactive {
+            os_log("Debounce detected, last check %sms ago", log: Log.app, String(Date().currentTimeMs() - Defaults[.lastCheck]))
+            return
+        }
+
+        Defaults[.lastCheck] = Date().currentTimeMs()
+        DispatchQueue.main.async {
+            self.statusBarModel.isRunning = true
+        }
+
+        // Update team configuration (blocking until done)
+        if !Defaults[.teamID].isEmpty {
+            let lock = DispatchSemaphore(value: 0)
+            AppInfo.TeamSettings.update {
+                os_log("Updated teams settings")
+                lock.signal()
+            }
+            lock.wait()
+        }
+
+        // Run the checks
+        let workItem = DispatchWorkItem {
+            for claim in Claims.global.all {
+                claim.run()
+            }
+        }
+
+        // After checks finish
+        workItem.notify(queue: .main) {
+            self.statusBarModel.isRunning = false
+
+            // Determine overall state
+            let claimsPassed = Claims.global.all.allSatisfy { $0.checksPassed }
+            Defaults[.checksPassed] = claimsPassed
+
+            if Defaults[.snoozeTime] > 0 {
+                self.statusBarModel.state = .idle
+            } else {
+                self.statusBarModel.state = claimsPassed ? .allOk : .warning
+            }
+
+            // Team reporting if enabled
+            if Defaults[.reportingRole] == .team, AppInfo.Flags.teamAPI {
+                if Defaults.shouldDoTeamUpdate() || interactive {
+                    let report = Report.now()
+                    if !Defaults[.sendHWInfo], AppInfo.TeamSettings.forceSerialPush, Defaults.shouldAskForHWAllow() {
+                        DispatchQueue.main.async {
+                            let alert = NSAlert()
+                            alert.messageText = "Send device model and serial"
+                            alert.informativeText = "Your team policy enables collection of serial number and hardware model name from this device. Do you allow it?"
+                            alert.alertStyle = NSAlert.Style.warning
+                            alert.addButton(withTitle: "OK")
+                            alert.addButton(withTitle: "Don't Allow")
+                            if alert.runModal() == .alertFirstButtonReturn {
+                                Defaults[.sendHWInfo] = true
+                                Defaults[.lastHWAsk] = Date().currentTimeMs()
+                            } else {
+                                Defaults[.sendHWInfo] = false
+                                Defaults[.lastHWAsk] = Date().currentTimeMs()
+                            }
+                        }
+                    }
+
+                    DispatchQueue.global(qos: .userInteractive).async {
+                        Team.update(withReport: report).response { response in
+                            switch response.result {
+                            case .success:
+                                os_log("Team status was updated", log: Log.app)
+                            case let .failure(err):
+                                os_log("Team status update failed: %s", log: Log.app, err.localizedDescription)
+                            }
+                        }
+                    }
+                    Defaults.doneTeamUpdate()
+                }
+            }
+
+            os_log("Checks finished running", log: Log.app)
+        }
+
+        // guard to prevent long running tasks
+        DispatchQueue.global(qos: .userInteractive).asyncAfter(deadline: .now() + 90) {
+            if self.statusBarModel.isRunning {
+                workItem.cancel()
+                os_log("Checks took more than 30s to finish canceling", log: Log.app)
+                self.statusBarModel.isRunning = false
+            }
+        }
+
+        // run tasks
+        DispatchQueue.global(qos: .userInteractive).async(execute: workItem)
+        os_log("Running check scheduler", log: Log.app)
+    }
+
     func runApp() {
         networkHandler.addObserver(observer: self)
 
-        idleSink = statusBar?.statusBarModel.$state.sink { [self] state in
+        // When model goes idle, update hidden state if needed
+        idleSink = statusBarModel.$state.sink { [weak self] state in
+            guard let self else { return }
             if state == .idle {
                 updateHiddenState()
             }
@@ -51,7 +209,7 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
         Task {
             for await hideWhenNoFailures in Defaults.updates(.hideWhenNoFailures) {
                 if !hideWhenNoFailures {
-                    statusBar?.statusItem?.isVisible = true
+                    // Always show MenuBarExtra if you add binding support later
                 } else {
                     updateHiddenState()
                 }
@@ -70,7 +228,7 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
             NSApp.activate(ignoringOtherApps: true)
         } else {
             DispatchQueue.main.asyncAfter(deadline: .now() + 300) {
-                self.statusBar?.runChecks(isInteractive: false)
+                self.runChecks(isInteractive: false)
             }
         }
 
@@ -101,7 +259,7 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
                 return
             }
             DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + 300) {
-                self.statusBar?.runChecks(isInteractive: false)
+                self.runChecks(isInteractive: false)
             }
             #if !SETAPP_ENABLED
                 if Defaults.shouldDoUpdateCheck() {
@@ -122,7 +280,7 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
         NSBackgroundActivityScheduler.repeating(withName: "ClaimRunner", withInterval: 60 * 60) { (completion: NSBackgroundActivityScheduler.CompletionHandler) in
             os_log("Running checks")
             DispatchQueue.global(qos: .userInteractive).async {
-                self.statusBar?.runChecks(isInteractive: false)
+                self.runChecks(isInteractive: false)
             }
             completion(.finished)
         }
@@ -185,7 +343,7 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
             os_log("network condtions changed to: connected")
             // wait 30 second of stable connection before running checks
             DispatchQueue.global(qos: .userInteractive).asyncAfter(deadline: .now() + 30) {
-                self.statusBar?.runChecks(isInteractive: false)
+                self.runChecks(isInteractive: false)
             }
         } else {
             os_log("network conditions changed to: disconnected")
@@ -238,18 +396,18 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
     }
 
     @objc func showMenu() {
-        statusBar?.showMenu()
+        // No-op with MenuBarExtra; kept for compatibility if invoked from UI
     }
 
     @objc func runChecksDelayed() {
         DispatchQueue.global(qos: .userInteractive).asyncAfter(deadline: .now() + 2) {
-            self.statusBar?.runChecks(isInteractive: false)
+            self.runChecks(isInteractive: false)
         }
     }
 
     @objc func runChecks() {
         DispatchQueue.global(qos: .userInteractive).async {
-            self.statusBar?.runChecks()
+            self.runChecks(isInteractive: true)
         }
     }
 
@@ -419,7 +577,7 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
                         }
                         if !Defaults.firstLaunch() {
                             DispatchQueue.global(qos: .userInteractive).async {
-                                self.statusBar?.runChecks()
+                                self.runChecks()
                             }
                         }
                     case let .failure(error):

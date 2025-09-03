@@ -5,6 +5,7 @@
 //  Created by Janez Troha on 20/12/2021.
 //
 
+import AppKit
 import SwiftUI
 
 enum StatusBarState: String {
@@ -15,90 +16,70 @@ enum StatusBarState: String {
 }
 
 class StatusBarModel: ObservableObject {
-    @Published var state = StatusBarState.initial
+    // Default to a known-good asset with vector variants
+    @Published var state = StatusBarState.idle
     @Published var isRunning = false
 }
 
 struct StatusBarIcon: View {
     @ObservedObject var statusBarModel: StatusBarModel
-    @State private var isBlinking: Bool = false
-    @State private var isBlinkingState = StatusBarState.warning
-    @State private var fadeOut: Bool = true
+
+    // Load by name and allow template if the asset supports it
+    private var nsIcon: NSImage? {
+        // Try to load by current state name, fall back to gray
+        if let img = NSImage(named: statusBarModel.state.rawValue) {
+            return img
+        }
+        return NSImage(named: StatusBarState.initial.rawValue)
+    }
+
+    private var overlayColor: Color {
+        switch statusBarModel.state {
+        case .allOk:
+            return .green
+        case .warning:
+            return .orange
+        case .idle, .initial:
+            return .gray
+        }
+    }
+
+    // Provide an intrinsically sized NSImage to avoid hosts ignoring SwiftUI frames.
+    private func sizedIcon(from img: NSImage, side: CGFloat) -> NSImage {
+        let targetSize = NSSize(width: side, height: side)
+        let newImage = NSImage(size: targetSize)
+        // Always mark as template so tint can be applied by the host or SwiftUI.
+        newImage.isTemplate = true
+        newImage.lockFocus()
+        NSGraphicsContext.current?.imageInterpolation = .high
+        let destRect = NSRect(origin: .zero, size: targetSize)
+        img.draw(in: destRect)
+        newImage.unlockFocus()
+        return newImage
+    }
 
     var body: some View {
-        ZStack {
-            // Moves in from leading out, out to trailing edge.
-            if statusBarModel.isRunning {
-                ZStack {
-                    Image(statusBarModel.state.rawValue)
-                        .resizable()
-                        .blur(radius: 0.8)
-                        .frame(width: 22, height: 20, alignment: .center)
-                    ProgressView()
-                        .frame(width: 5.0, height: 5.0)
-                        .blur(radius: 0.8)
-                        .scaleEffect(x: 0.5, y: 0.5, anchor: .center)
-                }.onDisappear {
-                    self.isBlinking = true
-                    self.isBlinkingState = statusBarModel.state == StatusBarState.warning ? StatusBarState.warning : StatusBarState.allOk
-                }
+        // Center inside the status bar button area
+        ZStack(alignment: .bottomLeading) {
+            // Keep transparent background; only show the icon
+            if let img = nsIcon {
+                let side = NSStatusBar.system.thickness
+                let preSized = sizedIcon(from: img, side: side)
 
-            } else {
-                if isBlinking {
-                    Image(isBlinkingState.rawValue)
-                        .resizable()
-                        .frame(width: 22, height: 20, alignment: .center)
-                        .opacity(fadeOut ? 1 : 0.5)
-                        .animation(.easeInOut(duration: 0.3)) // animatable fade in/out
-                        .onAppear {
-                            let timer = Timer.scheduledTimer(withTimeInterval: 0.2, repeats: true) { _ in
-                                self.fadeOut.toggle() // 1) fade out
-                            }
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 1.3) {
-                                isBlinking = false
-                                isBlinkingState = StatusBarState.warning
-                                fadeOut = true
-                                timer.invalidate()
-                            }
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                                if statusBarModel.state == .allOk {
-                                    statusBarModel.state = .idle
-                                }
-                            }
-                        }
-                } else {
-                    if statusBarModel.state == .allOk {
-                        Image(statusBarModel.state.rawValue)
-                            .resizable()
-                            .frame(width: 22, height: 20, alignment: .center).onAppear {
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                                    if statusBarModel.state == .allOk {
-                                        statusBarModel.state = .idle
-                                    }
-                                }
-                            }
-                    } else {
-                        Image(statusBarModel.state.rawValue)
-                            .resizable()
-                            .frame(width: 22, height: 20, alignment: .center).onAppear {
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                                    if statusBarModel.state == .allOk {
-                                        statusBarModel.state = .idle
-                                    }
-                                }
-                            }
-                    }
-                }
+                Image(nsImage: preSized)
+                    .interpolation(.high)
+                    .antialiased(true)
+                    .accessibilityHidden(true)
             }
 
-        }.frame(width: 26, height: 20, alignment: .center)
-            .padding(.horizontal, 2)
-            .padding(.vertical, 2)
-    }
-}
-
-struct StatusBarIcon_Previews: PreviewProvider {
-    static var previews: some View {
-        StatusBarIcon(statusBarModel: StatusBarModel())
+            // Small colored status dot in the bottom-left corner
+            // Size scales with the status bar thickness and is slightly inset.
+            let side = NSStatusBar.system.thickness
+            let dotSize = max(5, floor(side * 1))
+            Circle()
+                .fill(overlayColor)
+                .frame(width: dotSize, height: dotSize)
+                .padding(2)
+        }
     }
 }
