@@ -51,8 +51,8 @@ struct StatusBarIcon: View {
     private func sizedIcon(from img: NSImage, side: CGFloat) -> NSImage {
         let targetSize = NSSize(width: side, height: side)
         let newImage = NSImage(size: targetSize)
-        // Always mark as template so tint can be applied by the host or SwiftUI.
-        newImage.isTemplate = true
+        // Ensure we keep original colors (not template-tinted white in menu bar)
+        newImage.isTemplate = false
         newImage.lockFocus()
         NSGraphicsContext.current?.imageInterpolation = .high
         let destRect = NSRect(origin: .zero, size: targetSize)
@@ -60,6 +60,7 @@ struct StatusBarIcon: View {
         newImage.unlockFocus()
         return newImage
     }
+
 
     var body: some View {
         // Center inside the status bar button area
@@ -70,19 +71,24 @@ struct StatusBarIcon: View {
                 let preSized = sizedIcon(from: img, side: side)
 
                 Image(nsImage: preSized)
+                    .renderingMode(.original)
                     .interpolation(.high)
                     .antialiased(true)
                     .accessibilityHidden(true)
             }
 
-            // Small colored status dot in the bottom-left corner
-            // Size scales with the status bar thickness and is slightly inset.
+            // Overlay: spinner while running, otherwise status dot
             let side = NSStatusBar.system.thickness
-            let dotSize = max(5, floor(side * 1))
-            Circle()
-                .fill(overlayColor)
-                .frame(width: dotSize, height: dotSize)
-                .padding(2)
+            // Make the overlay small relative to the bar size; keep readable
+            let overlaySide = max(10, floor(side * 0.55))
+                // Small colored status dot in the bottom-left corner
+                Circle()
+                    .fill(overlayColor)
+                    .frame(width: overlaySide, height: overlaySide)
+                    .padding(2)
+                    .accessibilityHidden(true)
         }
+        // Force refresh when running state or nonce changes
+        .id(statusBarModel.refreshNonce ^ (statusBarModel.isRunning ? 1 : 0))
     }
 }
