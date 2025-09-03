@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import OpenDirectory
 
 class NoUnusedUsers: ParetoCheck {
     static let sharedInstance = NoUnusedUsers()
@@ -42,7 +43,60 @@ class NoUnusedUsers: ParetoCheck {
     }
 
     var isAdmin: Bool {
-        return runCMD(app: "/usr/bin/id", args: ["-Gn"]).components(separatedBy: " ").contains("admin")
+        // Determine if the current user is in the local "admin" group using OpenDirectory
+        do {
+            let session = ODSession.default()
+            let node = try ODNode(session: session, type: UInt32(kODNodeTypeLocalNodes))
+
+            // Fetch the "admin" group record
+            let groupQuery = try ODQuery(
+                node: node,
+                forRecordTypes: kODRecordTypeGroups,
+                attribute: kODAttributeTypeRecordName,
+                matchType: ODMatchType(kODMatchEqualTo),
+                queryValues: "admin",
+                returnAttributes: kODAttributeTypeAllAttributes,
+                maximumResults: 1
+            )
+
+            guard let groups = try groupQuery.resultsAllowingPartial(false) as? [ODRecord],
+                  let adminGroup = groups.first else {
+                return false
+            }
+
+            let username = NSUserName()
+
+            // First, check membership by short name
+            if let shortNameMembers = try adminGroup.values(forAttribute: kODAttributeTypeGroupMembership) as? [String],
+               shortNameMembers.contains(username) {
+                return true
+            }
+
+            // Fallback: check membership by GUID if available
+            if let guidMembers = try adminGroup.values(forAttribute: kODAttributeTypeGroupMembers) as? [String] {
+                let userQuery = try ODQuery(
+                    node: node,
+                    forRecordTypes: kODRecordTypeUsers,
+                    attribute: kODAttributeTypeRecordName,
+                    matchType: ODMatchType(kODMatchEqualTo),
+                    queryValues: username,
+                    returnAttributes: [kODAttributeTypeGUID],
+                    maximumResults: 1
+                )
+
+                if let users = try userQuery.resultsAllowingPartial(false) as? [ODRecord],
+                   let userRecord = users.first,
+                   let guids = try userRecord.values(forAttribute: kODAttributeTypeGUID) as? [String],
+                   let guid = guids.first {
+                    return guidMembers.contains(guid)
+                }
+            }
+        } catch {
+            // If OpenDirectory fails for any reason, treat as non-admin
+            return false
+        }
+
+        return false
     }
 
     func lastLoginRecent(user: String) -> Bool {
@@ -93,3 +147,4 @@ class NoUnusedUsers: ParetoCheck {
         isActive && isAdmin
     }
 }
+

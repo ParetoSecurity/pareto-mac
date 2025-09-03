@@ -47,11 +47,11 @@ class Claim: Hashable {
         let submenu = NSMenu()
         for check in checksSorted {
             let checkMenuItem = check.menu()
-            
+
             // Always add the check to the menu
             submenu.addItem(checkMenuItem)
         }
-        
+
         // Set the claim icon based on overall status
         if Defaults[.snoozeTime] > 0 {
             item.image = NSImage.SF(name: "shield.fill").tint(color: .systemGray)

@@ -108,7 +108,7 @@ class StatusBarController: NSObject, NSMenuDelegate {
         }
         // invalidate possible expired cache
         try! AppInfo.versionStorage.removeExpiredObjects()
-        
+
         // Clear UpdateService cache when user manually runs checks
         if interactive {
             UpdateService.shared.clearCache()

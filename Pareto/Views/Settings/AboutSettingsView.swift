@@ -53,38 +53,38 @@ struct AboutSettingsView: View {
                     Text("Version: \(AppInfo.appVersion) - \(AppInfo.buildVersion)")
                     Text("Helper: \(helperVersion)")
                     Text("Channel: \(AppInfo.utmSource)")
-                    
+
                     #if SETAPP_ENABLED
-                    HStack(spacing: 10) {
-                        if !hasCheckedForUpdates || status == UpdateStates.Updated {
-                            Button("Check") {
-                                UpdateService.shared.clearCache()
-                                fetch()
+                        HStack(spacing: 10) {
+                            if !hasCheckedForUpdates || status == UpdateStates.Updated {
+                                Button("Check") {
+                                    UpdateService.shared.clearCache()
+                                    fetch()
+                                }
+                                .disabled(isLoading)
                             }
-                            .disabled(isLoading)
-                        }
 
-                        if hasCheckedForUpdates && status == UpdateStates.NewVersion {
-                            Button("Update") {
-                                forceUpdate()
+                            if hasCheckedForUpdates && status == UpdateStates.NewVersion {
+                                Button("Update") {
+                                    forceUpdate()
+                                }
+                                .disabled(isLoading)
                             }
-                            .disabled(isLoading)
-                        }
-                        if status == UpdateStates.Failed {
-                            Text("Failed to update, [download update](https://github.com/ParetoSecurity/pareto-mac/releases/latest/download/ParetoSecurity.dmg)")
+                            if status == UpdateStates.Failed {
+                                Text("Failed to update, [download update](https://github.com/ParetoSecurity/pareto-mac/releases/latest/download/ParetoSecurity.dmg)")
 
-                        } else {
-                            Text(status.rawValue)
-                        }
+                            } else {
+                                Text(status.rawValue)
+                            }
 
-                        if self.isLoading {
-                            ProgressView().frame(width: 5.0, height: 5.0)
-                                .scaleEffect(x: 0.5, y: 0.5, anchor: .center)
+                            if self.isLoading {
+                                ProgressView().frame(width: 5.0, height: 5.0)
+                                    .scaleEffect(x: 0.5, y: 0.5, anchor: .center)
+                            }
                         }
-                    }
                     #endif
                 }
-         
+
                 Spacer()
                 Text("We'd love to [hear from you!](https://paretosecurity.com/contact)")
                 Spacer()
@@ -93,9 +93,9 @@ struct AboutSettingsView: View {
 
         }.frame(width: 420, height: 180).padding(25).onAppear {
             fetchHelperVersion()
-#if SETAPP_ENABLED
-            fetch()
-#endif
+            #if SETAPP_ENABLED
+                fetch()
+            #endif
         }
     }
 

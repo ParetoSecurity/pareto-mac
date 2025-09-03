@@ -54,21 +54,21 @@ class UpdateService {
         do {
             let diskConfig = DiskConfig(
                 name: "ParetoUpdatesCache",
-                expiry: .seconds(60*4), // 4 hours
+                expiry: .seconds(60 * 4), // 4 hours
                 maxSize: 10_000_000 // 10 MB
             )
             let diskStorage = try DiskStorage<String, Data>(
                 config: diskConfig,
                 transformer: TransformerFactory.forData()
             )
-            
+
             let memoryConfig = MemoryConfig(
-                expiry: .seconds(60*4), // 4 hours
+                expiry: .seconds(60 * 4), // 4 hours
                 countLimit: 10,
                 totalCostLimit: 10_000_000
             )
             let memoryStorage = MemoryStorage<String, Data>(config: memoryConfig)
-            
+
             let hybridStorage = HybridStorage(memoryStorage: memoryStorage, diskStorage: diskStorage)
             updatesCache = SyncStorage(storage: hybridStorage, serialQueue: DispatchQueue(label: "UpdateServiceCacheSync"))
         } catch {
@@ -204,7 +204,6 @@ class UpdateService {
     }
 
     func clearCache() {
-
         // Also clear disk cache for updates
         if let cache = updatesCache {
             do {
