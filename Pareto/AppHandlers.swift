@@ -213,6 +213,20 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
     }
 
     func runApp() {
+        // Apply last saved state (if any) to the status icon immediately
+        // so the app reflects the previous run before the next scheduled run.
+        if Defaults[.lastCheck] > 0 {
+            let claimsPassed = Claims.global.all.allSatisfy { $0.checksPassed }
+            Defaults[.checksPassed] = claimsPassed
+            if Defaults[.snoozeTime] > 0 {
+                statusBarModel.state = .idle
+            } else {
+                statusBarModel.state = claimsPassed ? .allOk : .warning
+            }
+            // Nudge views that depend on this state
+            statusBarModel.refreshNonce &+= 1
+        }
+
         networkHandler.addObserver(observer: self)
 
         // When model goes idle, update hidden state if needed
