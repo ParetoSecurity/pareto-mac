@@ -93,10 +93,10 @@ struct PermissionsView: View {
                 Text("Configure Permissions").font(.largeTitle)
                 Spacer()
                 Text("Allow the app read-only access to the system. These permissions do not allow changing or running any of the system settings.").font(.body)
-            }.frame(width: 350, alignment: .center).padding(15)
+            }.frame(width: 320, alignment: .center).padding(10)
             Spacer(minLength: 20)
 
-            VStack(spacing: 20) {
+            VStack(spacing: 18) {
                 // System Events Access
                 HStack(alignment: .top) {
                     VStack(alignment: .leading, spacing: 4) {
@@ -180,13 +180,13 @@ struct PermissionsView: View {
                     }
                 }
             }
-            .frame(maxWidth: 400)
-            .padding(.horizontal, 20)
+            .frame(maxWidth: 320)
+            .padding(.horizontal, 15)
             Spacer(minLength: 40)
             Button("Continue") {
                 step = Steps.Checks
             }.buttonStyle(HighlightButtonStyle(color: canContinue ? .mainColor : .systemGray)).padding(10).disabled(!canContinue)
-        }.frame(width: 450, height: 500, alignment: .center).padding(15).onAppear {
+        }.frame(width: 350, height: 520, alignment: .center).padding(15).onAppear {
             checker.start()
         }.onDisappear {
             checker.stop()
