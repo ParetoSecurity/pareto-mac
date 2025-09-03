@@ -38,14 +38,17 @@ struct StatusBarMenuView: View {
             // Action buttons
             if !statusBarModel.isRunning {
                 if snoozeTime == 0 {
-                    Button("Run Checks") {
+                    Button {
                         appHandlers.runChecks()
+                    } label: {
+                        Label("Run Checks", systemImage: "play.circle.fill")
+                            .symbolRenderingMode(.multicolor)
                     }
                     .keyboardShortcut("r")
                     .padding(.horizontal)
                     .padding(.vertical, 2)
 
-                    Menu("Snooze") {
+                    Menu {
                         Button("for 1 hour") {
                             appHandlers.snoozeOneHour()
                         }
@@ -55,12 +58,18 @@ struct StatusBarMenuView: View {
                         Button("for 1 week") {
                             appHandlers.snoozeOneWeek()
                         }
+                    } label: {
+                        Label("Snooze", systemImage: "zzz")
+                            .symbolRenderingMode(.multicolor)
                     }
                     .padding(.horizontal)
                     .padding(.vertical, 2)
                 } else {
-                    Button("Resume checks") {
+                    Button {
                         appHandlers.unsnooze()
+                    } label: {
+                        Label("Resume checks", systemImage: "play.circle")
+                            .symbolRenderingMode(.multicolor)
                     }
                     .keyboardShortcut("u")
                     .padding(.horizontal)
@@ -69,28 +78,40 @@ struct StatusBarMenuView: View {
             }
             // Settings with proper SwiftUI integration
             if #available(macOS 14.0, *) {
-                SettingsLink()
+                SettingsLink {
+                    Label("Preferences", systemImage: "gearshape.fill")
+                        .symbolRenderingMode(.multicolor)
+                }
                 .keyboardShortcut(",")
                 .padding(.horizontal)
                 .padding(.vertical, 2)
             } else {
-                Button("Preferences") {
+                Button {
                     appHandlers.showPrefs()
+                } label: {
+                    Label("Preferences", systemImage: "gearshape.fill")
+                        .symbolRenderingMode(.multicolor)
                 }
                 .keyboardShortcut(",")
                 .padding(.horizontal)
                 .padding(.vertical, 2)
             }
 
-            Button("Documentation") {
+            Button {
                 appHandlers.docs()
+            } label: {
+                Label("Documentation", systemImage: "book.pages.fill")
+                    .symbolRenderingMode(.multicolor)
             }
             .keyboardShortcut("d")
             .padding(.horizontal)
             .padding(.vertical, 2)
 
-            Button("Contact Support") {
+            Button {
                 appHandlers.reportBug()
+            } label: {
+                Label("Contact Support", systemImage: "questionmark.circle.fill")
+                    .symbolRenderingMode(.multicolor)
             }
             .keyboardShortcut("b")
             .padding(.horizontal)
@@ -98,8 +119,11 @@ struct StatusBarMenuView: View {
 
             Divider()
 
-            Button("Quit Pareto") {
+            Button {
                 appHandlers.quitApp()
+            } label: {
+                Label("Quit Pareto", systemImage: "power")
+                    .symbolRenderingMode(.multicolor)
             }
             .keyboardShortcut("q")
             .padding(.horizontal)
@@ -145,15 +169,15 @@ struct ClaimMenuView: View {
             HStack {
                 Group {
                     if claim.checksPassed {
-                        Image(systemName: "checkmark.circle.fill")
-                            .symbolRenderingMode(.multicolor)
+                        Image(systemName: "checkmark.circle")
+                            .symbolRenderingMode(.palette)
                             .font(.system(size: 12))
-                            .foregroundColor(.green)
+                            .foregroundStyle(.green)
                     } else {
-                        Image(systemName: "xmark.circle.fill")
-                            .symbolRenderingMode(.multicolor)
+                        Image(systemName: "xmark.circle")
+                            .symbolRenderingMode(.palette)
                             .font(.system(size: 12))
-                            .foregroundColor(.red)
+                            .foregroundStyle(.red)
                     }
                 }
                 Text(claim.title)
@@ -178,21 +202,21 @@ struct CheckMenuItemView: View {
                 Group {
                     if check.isRunnable {
                         if check.checkPassed {
-                            Image(systemName: "checkmark.circle.fill")
-                                .symbolRenderingMode(.multicolor)
+                            Image(systemName: "checkmark.circle")
+                                .symbolRenderingMode(.palette)
                                 .font(.system(size: 10))
-                                .foregroundColor(.green)
+                                .foregroundStyle(.green)
                         } else {
-                            Image(systemName: "xmark.circle.fill")
-                                .symbolRenderingMode(.multicolor)
+                            Image(systemName: "xmark.circle")
+                                .symbolRenderingMode(.palette)
                                 .font(.system(size: 10))
-                                .foregroundColor(.red)
+                                .foregroundStyle(.red)
                         }
                     } else {
-                        Image(systemName: "questionmark.circle.fill")
-                            .symbolRenderingMode(.multicolor)
+                        Image(systemName: "questionmark.circle")
+                            .symbolRenderingMode(.palette)
                             .font(.system(size: 10))
-                            .foregroundColor(.orange)
+                            .foregroundStyle(.orange)
                     }
                 }
                 Text(check.Title)
