@@ -42,7 +42,7 @@ struct SettingsView: View {
                     ChecksSettingsView()
                 } else {
                     ChecksSettingsView()
-                        .frame(minHeight: 800)
+                        .frame(minHeight: 480)
                 }
             }
             .tabItem {

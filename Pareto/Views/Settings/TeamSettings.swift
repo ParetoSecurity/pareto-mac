@@ -102,23 +102,30 @@ struct TeamSettingsView: View {
         } else {
             Form {
                 Section {
-                    Text("Pareto Cloud provides a web dashboard for an overview of your company's devices. [Learn more »](https://paretosecurity.com/product/device-monitoring)")
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text("Pareto Cloud provides a web dashboard for an overview of your company's devices. [Learn more »](https://paretosecurity.com/product/device-monitoring)")
+                            .multilineTextAlignment(.leading)
+                            .lineLimit(nil)
+                            .fixedSize(horizontal: false, vertical: true)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                    }
                 }
                 if showBeta {
-                    Section(
-                        footer: VStack(alignment: .leading, spacing: 4) {
-                            Text("DEBUG: Enter a paretosecurity:// URL to trigger device linking").font(.footnote)
-                            Text("Host parameter options:").font(.footnote).fontWeight(.medium)
-                            Text("• Default (cloud): paretosecurity://linkDevice/?invite_id=123").font(.footnote)
-                            Text("• Complete URL: paretosecurity://linkDevice/?invite_id=123&host=https://api.example.com").font(.footnote)
-                        }
-                    ) {
-                        TextField("paretosecurity://linkDevice/?invite_id=...", text: $debugLinkURL)
+                    Section {
+                        // Use inline placeholder to avoid wide left-side form label
+                        TextField("Debug URL", text: $debugLinkURL, prompt: Text("paretosecurity://linkDevice/?invite_id=..."))
                             .textFieldStyle(RoundedBorderTextFieldStyle())
                         HStack {
                             Button("Process URL") { processDebugLinkURL() }
                                 .disabled(debugLinkURL.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
                             Spacer()
+                        }
+                    } footer: {
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text("DEBUG: Enter a paretosecurity:// URL to trigger device linking").font(.footnote)
+                            Text("Host parameter options:").font(.footnote).fontWeight(.medium)
+                            Text("• Default (cloud): paretosecurity://linkDevice/?invite_id=123").font(.footnote)
+                            Text("• Complete URL: paretosecurity://linkDevice/?invite_id=123&host=https://api.example.com").font(.footnote)
                         }
                     }
                 }

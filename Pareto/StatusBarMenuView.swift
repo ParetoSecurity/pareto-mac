@@ -69,9 +69,7 @@ struct StatusBarMenuView: View {
             }
             // Settings with proper SwiftUI integration
             if #available(macOS 14.0, *) {
-                SettingsLink {
-                    Label("Preferences", systemImage: "gear")
-                }
+                SettingsLink()
                 .keyboardShortcut(",")
                 .padding(.horizontal)
                 .padding(.vertical, 2)
