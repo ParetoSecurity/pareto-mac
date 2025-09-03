@@ -53,7 +53,8 @@ struct AboutSettingsView: View {
                     Text("Version: \(AppInfo.appVersion) - \(AppInfo.buildVersion)")
                     Text("Helper: \(helperVersion)")
                     Text("Channel: \(AppInfo.utmSource)")
-
+                    
+                    #if SETAPP_ENABLED
                     HStack(spacing: 10) {
                         if !hasCheckedForUpdates || status == UpdateStates.Updated {
                             Button("Check") {
@@ -81,7 +82,9 @@ struct AboutSettingsView: View {
                                 .scaleEffect(x: 0.5, y: 0.5, anchor: .center)
                         }
                     }
+                    #endif
                 }
+         
                 Spacer()
                 Text("We'd love to [hear from you!](https://paretosecurity.com/contact)")
                 Spacer()
@@ -90,7 +93,9 @@ struct AboutSettingsView: View {
 
         }.frame(width: 420, height: 180).padding(25).onAppear {
             fetchHelperVersion()
+#if SETAPP_ENABLED
             fetch()
+#endif
         }
     }
 
