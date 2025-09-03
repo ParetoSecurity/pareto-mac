@@ -60,7 +60,8 @@ class NoUnusedUsers: ParetoCheck {
             )
 
             guard let groups = try groupQuery.resultsAllowingPartial(false) as? [ODRecord],
-                  let adminGroup = groups.first else {
+                  let adminGroup = groups.first
+            else {
                 return false
             }
 
@@ -147,4 +148,3 @@ class NoUnusedUsers: ParetoCheck {
         isActive && isAdmin
     }
 }
-

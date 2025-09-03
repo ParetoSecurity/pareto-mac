@@ -11,6 +11,7 @@ import SwiftUI
 
 struct SettingsView: View {
     @State var selected: Tabs
+    var embedded: Bool = false
     @Default(.teamID) var teamID
 
     enum Tabs: Hashable {
@@ -36,7 +37,14 @@ struct SettingsView: View {
                     }
                     .tag(Tabs.teams)
             #endif
-            ChecksSettingsView()
+            Group {
+                if embedded {
+                    ChecksSettingsView()
+                } else {
+                    ChecksSettingsView()
+                        .frame(minHeight: 800)
+                }
+            }
                 .tabItem {
                     Label("Checks", systemImage: "checkmark.seal")
                 }
@@ -46,7 +54,9 @@ struct SettingsView: View {
                     Label("About", systemImage: "info")
                 }
                 .tag(Tabs.about)
-        }.onAppear(perform: decideTab).padding(25)
+        }
+        .onAppear(perform: decideTab)
+        .padding(24)
     }
 
     private func decideTab() {

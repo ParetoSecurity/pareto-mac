@@ -226,13 +226,10 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
 
     @objc func showPrefs() {
         Defaults[.updateNag] = false
-        if #available(macOS 14.0, *) {
-            showSettingsFallback()
-        } else if #available(macOS 13.0, *) {
-            NSApp.sendAction(Selector(("showSettingsWindow:")), to: nil, from: nil)
-        } else {
-            NSApp.sendAction(Selector(("showPreferencesWindow:")), to: nil, from: nil)
-        }
+
+        // Fallback for older macOS
+        showSettingsFallback()
+
         NSApp.activate(ignoringOtherApps: true)
     }
 
@@ -268,16 +265,14 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
         NSWorkspace.shared.open(AppInfo.teamsURL())
     }
 
+    @MainActor
     @objc func showWelcome() {
         DispatchQueue.main.async { [self] in
             if welcomeWindow == nil {
                 let hostingController = NSHostingController(rootView: WelcomeView())
                 hostingController.preferredContentSize = NSSize(width: 640, height: 480)
-                if #available(macOS 13.0, *) {
-                    hostingController.sizingOptions = .preferredContentSize
-                }
                 let window = NSWindow(contentViewController: hostingController)
-                window.title = "Preferences"
+                window.title = "Welcome"
                 window.standardWindowButton(.zoomButton)?.isHidden = true
                 window.standardWindowButton(.miniaturizeButton)?.isHidden = true
                 window.center()
@@ -289,25 +284,28 @@ class AppHandlers: NSObject, NetworkHandlerObserver {
         }
     }
 
+    @MainActor
     @objc func showSettingsFallback() {
-        DispatchQueue.main.async { [self] in
-            if preferencesWindow == nil {
-                let hostingController = NSHostingController(rootView: SettingsView(selected: SettingsView.Tabs.general))
-                hostingController.preferredContentSize = NSSize(width: 640, height: 280)
-                if #available(macOS 13.0, *) {
-                    hostingController.sizingOptions = .preferredContentSize
-                }
-                let window = NSWindow(contentViewController: hostingController)
-                window.title = "Preferences"
-                window.standardWindowButton(.zoomButton)?.isHidden = true
-                window.standardWindowButton(.miniaturizeButton)?.isHidden = true
-                window.center()
-                window.setContentSize(NSSize(width: 640, height: 280))
+        if preferencesWindow == nil {
+            let hostingController = NSHostingController(rootView: SettingsView(selected: SettingsView.Tabs.general, embedded: true))
+            hostingController.preferredContentSize = NSSize(width: 520, height: 380)
+            let window = NSWindow(contentViewController: hostingController)
+            window.title = "Preferences"
+            window.standardWindowButton(.zoomButton)?.isHidden = true
+            window.standardWindowButton(.miniaturizeButton)?.isHidden = true
+            window.center()
+            window.setContentSize(NSSize(width: 520, height: 380))
+            window.isReleasedWhenClosed = false
 
-                preferencesWindow = NSWindowController(window: window)
+            preferencesWindow = NSWindowController(window: window)
+
+            // Clear strong reference when closed so it can be recreated later
+            NotificationCenter.default.addObserver(forName: NSWindow.willCloseNotification, object: window, queue: .main) { [weak self] _ in
+                self?.preferencesWindow = nil
             }
-            preferencesWindow!.showWindow(nil)
         }
+
+        preferencesWindow?.showWindow(nil)
     }
 
     func copyLogs() {

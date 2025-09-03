@@ -11,7 +11,6 @@ import Foundation
 import LaunchAtLogin
 import os.log
 import OSLog
-import SettingsAccess
 import SwiftUI
 
 class AppDelegate: AppHandlers, NSApplicationDelegate {
@@ -372,6 +371,7 @@ struct Pareto: App {
         #endif
         Settings {
             SettingsView(selected: SettingsView.Tabs.general)
+                .frame(minWidth: 480)
         }
     }
 }

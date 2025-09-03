@@ -30,7 +30,7 @@ struct AboutSettingsView: View {
         HStack(spacing: 20) {
             Image("Icon").resizable()
                 .aspectRatio(contentMode: .fit)
-                .frame(width: 160)
+                .frame(width: 120)
                 .onTapGesture {
                     konami += 1
                     if konami >= 3 {
@@ -46,10 +46,9 @@ struct AboutSettingsView: View {
                         }
                     }
                 }
-            VStack(alignment: .leading) {
+            VStack(alignment: .leading, spacing: 8) {
                 Text("Pareto Security").font(.title)
-                Spacer()
-                VStack(alignment: .leading, spacing: 5) {
+                VStack(alignment: .leading, spacing: 6) {
                     Text("Version: \(AppInfo.appVersion) - \(AppInfo.buildVersion)")
                     Text("Helper: \(helperVersion)")
                     Text("Channel: \(AppInfo.utmSource)")
@@ -78,20 +77,21 @@ struct AboutSettingsView: View {
                             }
 
                             if self.isLoading {
-                                ProgressView().frame(width: 5.0, height: 5.0)
-                                    .scaleEffect(x: 0.5, y: 0.5, anchor: .center)
+                                ProgressView()
                             }
                         }
                     #endif
                 }
 
-                Spacer()
-                Text("We'd love to [hear from you!](https://paretosecurity.com/contact)")
-                Spacer()
-                Text("Made with ❤️ in 🇪🇺")
+                Divider()
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("We'd love to [hear from you!](https://paretosecurity.com/contact)")
+                    Text("Made with ❤️ in 🇪🇺")
+                }
             }
-
-        }.frame(width: 420, height: 180).padding(25).onAppear {
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .onAppear {
             fetchHelperVersion()
             #if SETAPP_ENABLED
                 fetch()

@@ -60,75 +60,50 @@ struct TeamSettingsView: View {
 
     var body: some View {
         if !teamID.isEmpty {
-            VStack(alignment: .leading) {
-                Section(
-                    footer: Text("Device Name").font(.caption)) {
-                    VStack(alignment: .leading) {
-                        Text("\(AppInfo.machineName)").contextMenu(ContextMenu(menuItems: {
-                            Button("How to change", action: help)
-                        }))
-                    }
+            Form {
+                Section(footer: Text("Device Name").font(.caption)) {
+                    Text("\(AppInfo.machineName)")
+                        .contextMenu(ContextMenu(menuItems: { Button("How to change", action: help) }))
                 }
-                Spacer(minLength: 1)
-                Section(
-                    footer: Text("Device ID").font(.caption)) {
-                    VStack(alignment: .leading) {
-                        Text("\(machineUUID)").contextMenu(ContextMenu(menuItems: {
-                            Button("Copy", action: copy)
-                        }))
-                    }
+                Section(footer: Text("Device ID").font(.caption)) {
+                    Text("\(machineUUID)")
+                        .contextMenu(ContextMenu(menuItems: { Button("Copy", action: copy) }))
                 }
-                Spacer(minLength: 2)
-
-                Section(
-                    footer: Text("When enabled, send model name and serial number.").font(.footnote)) {
-                    VStack(alignment: .leading) {
-                        if teamSettings.forceSerialPush {
-                            Toggle("Send inventory info on update", isOn: $sendHWInfo)
-                            Text("Sending is requested by the team policy.").font(.footnote)
-                        } else {
-                            Toggle("Send inventory info on update", isOn: $sendHWInfo)
-                        }
-                        HStack {
-                            Button("Copy App list") {
-                                copyApps()
-                            }
-                        }
+                Section(footer: Text("When enabled, send model name and serial number.").font(.footnote)) {
+                    if teamSettings.forceSerialPush {
+                        Toggle("Send inventory info on update", isOn: $sendHWInfo)
+                        Text("Sending is requested by the team policy.").font(.footnote)
+                    } else {
+                        Toggle("Send inventory info on update", isOn: $sendHWInfo)
                     }
+                    Button("Copy App list") { copyApps() }
                 }
 
                 if showBeta {
-                    Spacer(minLength: 2)
-                    Section(
-                        footer: Text("Team API Endpoint").font(.caption)) {
-                        VStack(alignment: .leading) {
-                            Text("\(Defaults[.teamAPI])").contextMenu(ContextMenu(menuItems: {
+                    Section(footer: Text("Team API Endpoint").font(.caption)) {
+                        Text("\(Defaults[.teamAPI])")
+                            .contextMenu(ContextMenu(menuItems: {
                                 Button("Copy") {
                                     NSPasteboard.general.clearContents()
                                     NSPasteboard.general.setString(Defaults[.teamAPI], forType: .string)
                                 }
                             }))
-                        }
                     }
                 }
 
-                HStack {
-                    Button("Unlink this device") {
-                        Defaults.toOpenSource()
+                Section {
+                    HStack {
+                        Button("Unlink this device") { Defaults.toOpenSource() }
+                        Link("Cloud Dashboard »", destination: AppInfo.teamsURL())
                     }
-                    Link("Cloud Dashboard »",
-                         destination: AppInfo.teamsURL())
-                }
-                Spacer(minLength: 2)
-            }.frame(width: 380, height: 180).padding(25).onAppear {
-                DispatchQueue.main.async {
-                    teamSettings.update {}
                 }
             }
+            .onAppear { DispatchQueue.main.async { teamSettings.update {} } }
         } else {
-            VStack(alignment: .leading, spacing: 16) {
-                Text("The Teams subscription will give you a web dashboard for an overview of the company's devices. [Learn more »](https://paretosecurity.com/product/device-monitoring)")
-
+            Form {
+                Section {
+                    Text("The Teams subscription will give you a web dashboard for an overview of the company's devices. [Learn more »](https://paretosecurity.com/product/device-monitoring)")
+                }
                 if showBeta {
                     Section(
                         footer: VStack(alignment: .leading, spacing: 4) {
@@ -136,21 +111,18 @@ struct TeamSettingsView: View {
                             Text("Host parameter options:").font(.footnote).fontWeight(.medium)
                             Text("• Default (cloud): paretosecurity://linkDevice/?invite_id=123").font(.footnote)
                             Text("• Complete URL: paretosecurity://linkDevice/?invite_id=123&host=https://api.example.com").font(.footnote)
-                        }) {
-                            VStack(alignment: .leading) {
-                                TextField("paretosecurity://linkDevice/?invite_id=...", text: $debugLinkURL)
-                                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                                HStack {
-                                    Button("Process URL") {
-                                        processDebugLinkURL()
-                                    }
-                                    .disabled(debugLinkURL.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
-                                    Spacer()
-                                }
-                            }
                         }
+                    ) {
+                        TextField("paretosecurity://linkDevice/?invite_id=...", text: $debugLinkURL)
+                            .textFieldStyle(RoundedBorderTextFieldStyle())
+                        HStack {
+                            Button("Process URL") { processDebugLinkURL() }
+                                .disabled(debugLinkURL.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                            Spacer()
+                        }
+                    }
                 }
-            }.frame(width: 380).padding(25)
+            }
         }
     }
 }

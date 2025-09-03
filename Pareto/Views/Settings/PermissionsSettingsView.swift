@@ -45,69 +45,76 @@ struct PermissionsSettingsView: View {
     }
 
     var body: some View {
-        VStack {
-            HStack {
-                VStack(alignment: .leading) {
+        Form {
+            Section {
+                VStack(alignment: .leading, spacing: 6) {
                     Text("Firewall Access").font(.headline)
-                    Text("App requires read-only access to firewall to perform checks. [Learn more](https://paretosecurity.com/docs/mac/privileged-helper-authorization)").font(.footnote).padding([.top], 1)
-                }
-                Spacer()
-                Button(action: { Task { await authorizeFWClick() } }, label: {
-                    if checker.ran {
-                        if checker.firewallAuthorized {
-                            Text("Remove").frame(width: 70)
-                        } else {
-                            Text("Authorize").frame(width: 70)
-                        }
-                    } else {
-                        Text("Verifying").frame(width: 70)
+                    Text("App requires read-only access to firewall to perform checks. [Learn more](https://paretosecurity.com/docs/mac/privileged-helper-authorization)").font(.footnote)
+                    HStack {
+                        Button(action: { Task { await authorizeFWClick() } }, label: {
+                            if checker.ran {
+                                if checker.firewallAuthorized {
+                                    Text("Remove")
+                                } else {
+                                    Text("Authorize")
+                                }
+                            } else {
+                                Text("Verifying")
+                            }
+                        })
+                        .disabled(!checker.ran)
+                        Spacer()
                     }
-                }).disabled(!checker.ran)
-
-            }.frame(width: 380, alignment: .leading)
-            HStack {
-                VStack(alignment: .leading) {
+                    .padding(.top, 2)
+                }
+            }
+            Section {
+                VStack(alignment: .leading, spacing: 6) {
                     Text("System Events Access").font(.headline)
-                    Text("App requires read-only access to system events so that it can react on connectivity changes, settings changes, and to run checks. [Learn more](https://paretosecurity.com/docs/mac/permissions)").font(.footnote).padding([.top], 1)
-                }
-                Spacer()
-                Button(action: authorizeOSAClick, label: {
-                    if checker.ran {
-                        if checker.osaAuthorized {
-                            Text("Authorized").frame(width: 70)
-                        } else {
-                            Text("Authorize").frame(width: 70)
-                        }
-                    } else {
-                        Text("Verifying").frame(width: 70)
+                    Text("App requires read-only access to system events so that it can react on connectivity changes, settings changes, and to run checks. [Learn more](https://paretosecurity.com/docs/mac/permissions)").font(.footnote)
+                    HStack {
+                        Button(action: authorizeOSAClick, label: {
+                            if checker.ran {
+                                if checker.osaAuthorized {
+                                    Text("Authorized")
+                                } else {
+                                    Text("Authorize")
+                                }
+                            } else {
+                                Text("Verifying")
+                            }
+                        })
+                        .disabled(checker.osaAuthorized || !checker.ran)
+                        Spacer()
                     }
-                }).disabled(checker.osaAuthorized || !checker.ran)
-
-            }.frame(width: 380, alignment: .leading)
-            HStack {
-                VStack(alignment: .leading) {
+                    .padding(.top, 2)
+                }
+            }
+            Section {
+                VStack(alignment: .leading, spacing: 6) {
                     Text("Full Disk Access").font(.headline)
-                    Text("App requires full disk access if you want to use the Time Machine checks. [Learn more](https://paretosecurity.com/docs/mac/permissions)").font(.footnote).padding([.top], 1)
-                }
-                Spacer()
-                Button(action: authorizeFDAClick, label: {
-                    if checker.ran {
-                        if checker.fdaAuthorized {
-                            Text("Authorized").frame(width: 70)
-                        } else {
-                            Text("Authorize").frame(width: 70)
-                        }
-                    } else {
-                        Text("Verifying").frame(width: 70)
+                    Text("App requires full disk access if you want to use the Time Machine checks. [Learn more](https://paretosecurity.com/docs/mac/permissions)").font(.footnote)
+                    HStack {
+                        Button(action: authorizeFDAClick, label: {
+                            if checker.ran {
+                                if checker.fdaAuthorized {
+                                    Text("Authorized")
+                                } else {
+                                    Text("Authorize")
+                                }
+                            } else {
+                                Text("Verifying")
+                            }
+                        })
+                        .disabled(checker.fdaAuthorized || !checker.ran)
+                        Spacer()
                     }
-                }).disabled(checker.fdaAuthorized || !checker.ran)
-
-            }.frame(width: 380, alignment: .leading)
-        }.frame(maxWidth: 380, minHeight: 120).padding(25).onAppear {
-            checker.start()
-        }.onDisappear {
-            checker.stop()
+                    .padding(.top, 2)
+                }
+            }
         }
+        .onAppear { checker.start() }
+        .onDisappear { checker.stop() }
     }
 }
 
