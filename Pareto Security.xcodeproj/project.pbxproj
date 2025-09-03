@@ -205,8 +205,8 @@
 		4F868DD126A5C51C005B876E /* Autologin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F868DD026A5C51C005B876E /* Autologin.swift */; };
 		4F868DD326A5C751005B876E /* Screensaver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F868DD226A5C751005B876E /* Screensaver.swift */; };
 		4F8B01B226F4A6CB00EDE14B /* WelcomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F8B01B126F4A6CB00EDE14B /* WelcomeView.swift */; };
-		4F8E688C2E68A90400CD82DF /* StatusBarMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F8E688B2E68A90400CD82DF /* StatusBarMenuView.swift */; };
-		4F8E688D2E68A90400CD82DF /* StatusBarMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F8E688B2E68A90400CD82DF /* StatusBarMenuView.swift */; };
+		4F8E688F2E68BE4D00CD82DF /* StatusBarMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F8E688E2E68BE4D00CD82DF /* StatusBarMenuView.swift */; };
+		4F8E68902E68BE4D00CD82DF /* StatusBarMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F8E688E2E68BE4D00CD82DF /* StatusBarMenuView.swift */; };
 		4F8ECA372798262F00361728 /* FirewallStealth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F8ECA362798262F00361728 /* FirewallStealth.swift */; };
 		4F8ECA382798262F00361728 /* FirewallStealth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F8ECA362798262F00361728 /* FirewallStealth.swift */; };
 		4F905C4227B6C9B20012C661 /* AutoUpdateCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F905C4127B6C9B20012C661 /* AutoUpdateCheck.swift */; };
@@ -426,7 +426,7 @@
 		4F868DD026A5C51C005B876E /* Autologin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Autologin.swift; sourceTree = "<group>"; };
 		4F868DD226A5C751005B876E /* Screensaver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Screensaver.swift; sourceTree = "<group>"; };
 		4F8B01B126F4A6CB00EDE14B /* WelcomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeView.swift; sourceTree = "<group>"; };
-		4F8E688B2E68A90400CD82DF /* StatusBarMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusBarMenuView.swift; sourceTree = "<group>"; };
+		4F8E688E2E68BE4D00CD82DF /* StatusBarMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusBarMenuView.swift; sourceTree = "<group>"; };
 		4F8ECA362798262F00361728 /* FirewallStealth.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FirewallStealth.swift; sourceTree = "<group>"; };
 		4F905C4127B6C9B20012C661 /* AutoUpdateCheck.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AutoUpdateCheck.swift; sourceTree = "<group>"; };
 		4F91060227623E4B00D1A348 /* SSHKeys.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSHKeys.swift; sourceTree = "<group>"; };
@@ -561,6 +561,7 @@
 				4FAAD324277B154300AA5CEF /* Settings */,
 				4F38D8C6273AC57500671756 /* Welcome */,
 				4F41831627707B0800EBAE4A /* StatusBarIcon.swift */,
+				4F8E688E2E68BE4D00CD82DF /* StatusBarMenuView.swift */,
 				4F0BD11E284891670098316A /* ClipButton.swift */,
 				4F020DDE2853503400D8D4E9 /* DebugView.swift */,
 			);
@@ -694,7 +695,6 @@
 				4F24A09326EB73C80036F748 /* ChecksSettingsView.swift */,
 				4F24A09526EB73F30036F748 /* GeneralSettingsView.swift */,
 				4F84EC9129DC3A030047C79C /* PermissionsSettingsView.swift */,
-				4F8E688B2E68A90400CD82DF /* StatusBarMenuView.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -1152,7 +1152,7 @@
 				4F37E7112718122E00A2B254 /* URL.swift in Sources */,
 				4F38D8CC273AC5F200671756 /* PermissionsView.swift in Sources */,
 				4FFDC5A528215A8F0092B7BF /* TimeMachineIsEncrypted.swift in Sources */,
-				4F8E688C2E68A90400CD82DF /* StatusBarMenuView.swift in Sources */,
+				4F8E688F2E68BE4D00CD82DF /* StatusBarMenuView.swift in Sources */,
 				4F37E7122718122E00A2B254 /* NetworkHandler.swift in Sources */,
 				4F7ACFC32DE080AB003400E8 /* HelperTool.swift in Sources */,
 				4F37E7132718122E00A2B254 /* Log.swift in Sources */,
@@ -1298,7 +1298,7 @@
 				4F81C10826EB5D270065F548 /* URL.swift in Sources */,
 				4F38D8CB273AC5F200671756 /* PermissionsView.swift in Sources */,
 				4FFDC5A428215A8F0092B7BF /* TimeMachineIsEncrypted.swift in Sources */,
-				4F8E688D2E68A90400CD82DF /* StatusBarMenuView.swift in Sources */,
+				4F8E68902E68BE4D00CD82DF /* StatusBarMenuView.swift in Sources */,
 				4F5B20C3270316DB0015642A /* NetworkHandler.swift in Sources */,
 				4F7ACFC42DE080AB003400E8 /* HelperTool.swift in Sources */,
 				4FB7C67D26AFF1AB00FB1C41 /* Log.swift in Sources */,

@@ -13,10 +13,9 @@ struct StatusBarMenuView: View {
     // Observe claims so menu refreshes when checks finish
     @ObservedObject private var claims = Claims.global
     @EnvironmentObject var appHandlers: AppHandlers
+
     @Default(.snoozeTime) var snoozeTime
     @Default(.lastCheck) var lastCheck
-    @Default(.teamID) var teamID
-    @Default(.isTeamOwner) var isTeamOwner
 
     private var claimsPassed: Bool {
         Claims.global.all.allSatisfy { claim in
@@ -28,36 +27,18 @@ struct StatusBarMenuView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            // Check status
-            if !statusBarModel.isRunning {
-                if snoozeTime == 0 {
-                    let title = lastCheck == 0 ? "Not checked yet" : "Last check \(Date.fromTimeStamp(timeStamp: lastCheck).timeAgoDisplay())"
-                    Text(title)
-                        .foregroundColor(.secondary)
-                        .padding(.horizontal)
-                        .padding(.vertical, 4)
-                } else {
-                    Text("Resumes \(Date.fromTimeStamp(timeStamp: snoozeTime).timeAgoDisplay())")
-                        .foregroundColor(.secondary)
-                        .padding(.horizontal)
-                        .padding(.vertical, 4)
-                }
-            } else {
-                Text("Running checks ...")
-                    .foregroundColor(.secondary)
-                    .padding(.horizontal)
-                    .padding(.vertical, 4)
-            }
-
-            Divider()
-
             // Security checks
             ForEach(claims.all, id: \.title) { claim in
                 if !claim.checks.isEmpty {
                     ClaimMenuView(claim: claim)
                 }
             }
+            // Force re-render of list when checks or running state changes
+            .id(statusBarModel.refreshNonce ^ (statusBarModel.isRunning ? 1 : 0))
 
+            statusline().id(statusBarModel.refreshNonce ^ (statusBarModel.isRunning ? 1 : 0))
+
+            Divider()
             // Action buttons
             if !statusBarModel.isRunning {
                 if snoozeTime == 0 {
@@ -99,21 +80,6 @@ struct StatusBarMenuView: View {
                     .padding(.vertical, 2)
                 }
             }
-
-            #if !SETAPP_ENABLED
-                if !teamID.isEmpty, isTeamOwner {
-                    Divider()
-                    Button("Team Dashboard") {
-                        appHandlers.teamsDashboard()
-                    }
-                    .keyboardShortcut("t")
-                    .padding(.horizontal)
-                    .padding(.vertical, 2)
-                }
-            #endif
-
-            Divider()
-
             // Settings with proper SwiftUI integration
             if #available(macOS 14.0, *) {
                 SettingsLink {
@@ -169,6 +135,30 @@ struct StatusBarMenuView: View {
         }
         .frame(minWidth: 200)
     }
+
+    // Extracted status line
+    @ViewBuilder
+    private func statusline() -> some View {
+        if !statusBarModel.isRunning {
+            if snoozeTime == 0 {
+                let title = lastCheck == 0 ? "Not checked yet" : "Last check \(Date.fromTimeStamp(timeStamp: lastCheck).timeAgoDisplay())"
+                Text(title)
+                    .foregroundColor(.secondary)
+                    .padding(.horizontal)
+                    .padding(.vertical, 4)
+            } else {
+                Text("Resumes \(Date.fromTimeStamp(timeStamp: snoozeTime).timeAgoDisplay())")
+                    .foregroundColor(.secondary)
+                    .padding(.horizontal)
+                    .padding(.vertical, 4)
+            }
+        } else {
+            Text("Running checks ...")
+                .foregroundColor(.secondary)
+                .padding(.horizontal)
+                .padding(.vertical, 4)
+        }
+    }
 }
 
 struct ClaimMenuView: View {
@@ -177,20 +167,22 @@ struct ClaimMenuView: View {
     var body: some View {
         Menu {
             ForEach(claim.checksSorted, id: \.UUID) { check in
-                CheckMenuItemView(check: check)
+                if check.isRunnable {
+                    CheckMenuItemView(check: check)
+                }
             }
         } label: {
             HStack {
                 Group {
                     if claim.checksPassed {
-                        Image(systemName: "checkmark.circle")
+                        Image(systemName: "checkmark")
                             .symbolRenderingMode(.palette)
-                            .font(.system(size: 12))
+                            .font(.system(size: 15))
                             .foregroundStyle(Color(nsColor: Defaults.OKColor()))
                     } else {
-                        Image(systemName: "xmark.circle")
+                        Image(systemName: "xmark")
                             .symbolRenderingMode(.palette)
-                            .font(.system(size: 12))
+                            .font(.system(size: 15))
                             .foregroundStyle(Color(nsColor: Defaults.FailColor()))
                     }
                 }
@@ -217,20 +209,20 @@ struct CheckMenuItemView: View {
                 Group {
                     if check.isRunnable {
                         if check.checkPassed {
-                            Image(systemName: "checkmark.circle")
+                            Image(systemName: "checkmark")
                                 .symbolRenderingMode(.palette)
-                                .font(.system(size: 10))
+                                .font(.system(size: 15))
                                 .foregroundStyle(Color(nsColor: Defaults.OKColor()))
                         } else {
-                            Image(systemName: "xmark.circle")
+                            Image(systemName: "xmark")
                                 .symbolRenderingMode(.palette)
-                                .font(.system(size: 10))
+                                .font(.system(size: 15))
                                 .foregroundStyle(Color(nsColor: Defaults.FailColor()))
                         }
                     } else {
-                        Image(systemName: "questionmark.circle")
+                        Image(systemName: "questionmark")
                             .symbolRenderingMode(.palette)
-                            .font(.system(size: 10))
+                            .font(.system(size: 15))
                             .foregroundStyle(.orange)
                     }
                 }

@@ -6,9 +6,8 @@
 //
 
 import AppKit
-import SwiftUI
 import Defaults
-
+import SwiftUI
 
 enum StatusBarState: String {
     case initial = "Icon"
@@ -21,6 +20,8 @@ class StatusBarModel: ObservableObject {
     // Default to a known-good asset with vector variants
     @Published var state = StatusBarState.idle
     @Published var isRunning = false
+    // Bump to force menu refresh re-render when checks finish
+    @Published var refreshNonce: Int = 0
 }
 
 struct StatusBarIcon: View {

@@ -200,6 +200,7 @@ struct Pareto: App {
     var body: some Scene {
         MenuBarExtra(isInserted: .constant(true)) {
             StatusBarMenuView(statusBarModel: appDelegate.statusBarModel)
+                .environmentObject(appDelegate as AppHandlers)
         } label: {
             StatusBarIcon(statusBarModel: appDelegate.statusBarModel)
         }

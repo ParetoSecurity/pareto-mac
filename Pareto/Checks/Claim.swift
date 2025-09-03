@@ -76,6 +76,11 @@ class Claim: Hashable {
             let timeInterval = endTime.timeIntervalSince(startTime)
             Logger().log("uuid=\(check.UUID, privacy: .public) timeInterval=\(timeInterval, privacy: .public)")
         }
+
+        // Notify observers that aggregated status for this claim may have changed
+        DispatchQueue.main.async {
+            Claims.global.objectWillChange.send()
+        }
     }
 
     func configure() {

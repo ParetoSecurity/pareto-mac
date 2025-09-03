@@ -52,6 +52,19 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
         }
     }
 
+    // Ensure UI state changes occur on the main thread and immediately reflect in the menu
+    private func setRunning(_ running: Bool) {
+        let apply: () -> Void = {
+            self.statusBarModel.isRunning = running
+            self.statusBarModel.refreshNonce &+= 1
+        }
+        if Thread.isMainThread {
+            apply()
+        } else {
+            DispatchQueue.main.sync(execute: apply)
+        }
+    }
+
     // New: Snooze helpers (replaces StatusBarController snooze methods)
     @objc func snoozeOneHour() {
         Defaults[.snoozeTime] = Date().currentTimeMs() + 3600 * 1000
@@ -106,10 +119,10 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
             return
         }
 
+        // Set running first so the status line flips instantly
+        setRunning(true)
+        // Then record the timestamp (this may trigger view refresh too, but isRunning already shows)
         Defaults[.lastCheck] = Date().currentTimeMs()
-        DispatchQueue.main.async {
-            self.statusBarModel.isRunning = true
-        }
 
         // Update team configuration (blocking until done)
         if !Defaults[.teamID].isEmpty {
@@ -130,7 +143,7 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
 
         // After checks finish
         workItem.notify(queue: .main) {
-            self.statusBarModel.isRunning = false
+            self.setRunning(false)
 
             // Determine overall state
             let claimsPassed = Claims.global.all.allSatisfy { $0.checksPassed }
@@ -178,8 +191,9 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
                 }
             }
 
-            // Notify views observing Claims to refresh menu content
+            // Notify views observing Claims to refresh menu content and force a re-render
             Claims.global.objectWillChange.send()
+            self.statusBarModel.refreshNonce &+= 1
 
             os_log("Checks finished running", log: Log.app)
         }
@@ -189,7 +203,7 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
             if self.statusBarModel.isRunning {
                 workItem.cancel()
                 os_log("Checks took more than 30s to finish canceling", log: Log.app)
-                self.statusBarModel.isRunning = false
+                self.setRunning(false)
             }
         }
 

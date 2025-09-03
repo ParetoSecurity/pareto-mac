@@ -215,10 +215,16 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
 
         os_log("Running check for %{public}s - %{public}s", log: Log.app, UUID, Title)
         hasError = false
-        checkPassed = checkPasses()
+        let result = checkPasses()
+        checkPassed = result
         checkTimestamp = Int(Date().currentTimeMs())
 
-        return checkPassed
+        // Notify UI observers that this check changed
+        DispatchQueue.main.async {
+            self.objectWillChange.send()
+        }
+
+        return result
     }
 
     var infoURL: URL {
