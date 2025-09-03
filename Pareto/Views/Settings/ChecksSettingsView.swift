@@ -18,9 +18,6 @@ struct ChecksSettingsView: View {
     }
 
     private var baseList: some View {
-
-
-
         List {
             Section {
                 VStack(alignment: .leading, spacing: 6) {
@@ -34,54 +31,53 @@ struct ChecksSettingsView: View {
                     }
                 }
             }
-                ForEach(Claims.global.all, id: \.self) { claim in
-                    if updater { EmptyView() }
-                    let filtered = claim.checksSorted.filter { check in
-                        check.isInstalled
-                    }
-                    if !filtered.isEmpty {
-                        Section(header: Text("\(claim.title) (\(claim.checks.count))").font(.headline)) {
-                            ForEach(filtered, id: \.self) { check in
-                                VStack(alignment: .leading, spacing: 6) {
-                                    HStack {
-                                        if check.teamEnforced {
-                                            Text("✴")
-                                            Text(check.TitleON)
-                                        } else {
-                                            Toggle(check.TitleON, isOn: Binding<Bool>(
-                                                get: { check.isActive },
-                                                set: {
-                                                    check.isActive = $0
-                                                    updater.toggle()
-                                                }
-                                            ))
-                                            .disabled(!check.showSettings)
-                                        }
-                                    }
-                                    if check.showSettingsWarnDiskAccess && !check.isRunnable {
-                                        HStack(spacing: 8) {
-                                            Text("Requires full disk access permission.").font(.footnote)
-                                            Button("Authorize") {
-                                                NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_AllFiles")!)
+            ForEach(Claims.global.all, id: \.self) { claim in
+                if updater { EmptyView() }
+                let filtered = claim.checksSorted.filter { check in
+                    check.isInstalled
+                }
+                if !filtered.isEmpty {
+                    Section(header: Text("\(claim.title) (\(claim.checks.count))").font(.headline)) {
+                        ForEach(filtered, id: \.self) { check in
+                            VStack(alignment: .leading, spacing: 6) {
+                                HStack {
+                                    if check.teamEnforced {
+                                        Text("✴")
+                                        Text(check.TitleON)
+                                    } else {
+                                        Toggle(check.TitleON, isOn: Binding<Bool>(
+                                            get: { check.isActive },
+                                            set: {
+                                                check.isActive = $0
+                                                updater.toggle()
                                             }
-                                            .font(.footnote)
-                                            Link("?", destination: URL(string: "https://paretosecurity.com/docs/mac/permissions?utm_source=\(AppInfo.utmSource)")!)
-                                        }
-                                    }
-                                    if check.showSettingsWarnEvents && !check.isRunnable {
-                                        HStack(spacing: 8) {
-                                            Text("Requires System Events access permission.").font(.footnote)
-                                            Button("Authorize") {
-                                                NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Automation")!)
-                                            }
-                                            .font(.footnote)
-                                            Link("?", destination: URL(string: "https://paretosecurity.com/docs/mac/permissions?utm_source=\(AppInfo.utmSource)")!)
-                                        }
+                                        ))
+                                        .disabled(!check.showSettings)
                                     }
                                 }
-                                .padding(.vertical, 2)
+                                if check.showSettingsWarnDiskAccess && !check.isRunnable {
+                                    HStack(spacing: 8) {
+                                        Text("Requires full disk access permission.").font(.footnote)
+                                        Button("Authorize") {
+                                            NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_AllFiles")!)
+                                        }
+                                        .font(.footnote)
+                                        Link("?", destination: URL(string: "https://paretosecurity.com/docs/mac/permissions?utm_source=\(AppInfo.utmSource)")!)
+                                    }
+                                }
+                                if check.showSettingsWarnEvents && !check.isRunnable {
+                                    HStack(spacing: 8) {
+                                        Text("Requires System Events access permission.").font(.footnote)
+                                        Button("Authorize") {
+                                            NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Automation")!)
+                                        }
+                                        .font(.footnote)
+                                        Link("?", destination: URL(string: "https://paretosecurity.com/docs/mac/permissions?utm_source=\(AppInfo.utmSource)")!)
+                                    }
+                                }
                             }
-                        
+                            .padding(.vertical, 2)
+                        }
                     }
                 }
             }

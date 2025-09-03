@@ -45,10 +45,10 @@ struct SettingsView: View {
                         .frame(minHeight: 800)
                 }
             }
-                .tabItem {
-                    Label("Checks", systemImage: "checkmark.seal")
-                }
-                .tag(Tabs.checks)
+            .tabItem {
+                Label("Checks", systemImage: "checkmark.seal")
+            }
+            .tag(Tabs.checks)
             AboutSettingsView()
                 .tabItem {
                     Label("About", systemImage: "info")
