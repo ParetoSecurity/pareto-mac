@@ -8,15 +8,14 @@
 - `.github/workflows/`: CI for lint, test, and release.
 
 ## Build, Test, and Development Commands
-- Install tooling once: `brew install mint && mint bootstrap` (installs SwiftFormat, SwiftLint, xcbeautify).
+- Install tooling once: `brew install mint && mint bootstrap` (installs SwiftFormat, xcbeautify).
 - Build: `make build` (Debug build via xcodebuild + xcbeautify).
 - Test: `make test` (runs XCTest, produces `junit.xml`).
-- Lint: `make lint`; Format: `make fmt` (SwiftFormat + SwiftLint --fix).
+- Format: `make fmt` (SwiftFormat).
 - Archive (local): `make archive-debug`; DMG (release tooling): `make dmg`.
 
 ## Coding Style & Naming Conventions
 - Formatting is enforced by SwiftFormat; run `make fmt` before committing.
-- Linting uses SwiftLint with project overrides in `.swiftlint.yml` (several complexity/length rules disabled to reduce noise).
 - Naming: Types in PascalCase; properties/methods in camelCase; files match the primary type (e.g., `UpdateService.swift`).
 - Tests follow `*Test.swift` or `*Tests.swift` and `test...` method names.
 

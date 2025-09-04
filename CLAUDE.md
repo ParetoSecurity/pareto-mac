@@ -8,8 +8,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - Build: `make build`
 - Run tests: `make test`
 - Run single test: `NSUnbufferedIO=YES xcodebuild -project "Pareto Security.xcodeproj" -scheme "Pareto Security" -test-timeouts-enabled NO -only-testing:ParetoSecurityTests/TestClassName/testMethodName -destination platform=macOS test`
-- Lint: `make lint` or `mint run swiftlint .`
-- Format: `make fmt` or `mint run swiftformat --swiftversion 5 . && mint run swiftlint . --fix`
+- Format: `make fmt` or `mint run swiftformat --swiftversion 5 .`
 - Archive builds: `make archive-debug`, `make archive-release`, `make archive-debug-setapp`, `make archive-release-setapp`
 - Create DMG: `make dmg`
 - Create PKG: `make pkg`
@@ -56,7 +55,7 @@ The `ParetoSecurityHelper` is a privileged helper tool that:
 - **Testing**: All new features should include tests
 - **Logging**: Use `os_log` for logging, with appropriate log levels
 
-This project uses SwiftLint for style enforcement and SwiftFormat for auto-formatting.
+This project uses SwiftFormat for auto-formatting.
 
 ## Key Dependencies
 - **Defaults**: User preferences management
