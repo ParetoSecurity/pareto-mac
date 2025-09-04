@@ -70,7 +70,7 @@ private extension SettingsView {
         case .permissions:
             return 280
         case .teams:
-            return teamID.isEmpty ? 280 : 240
+            return teamID.isEmpty ? 80 : 240
         case .checks:
             return 560
         case .about:
