@@ -45,6 +45,9 @@ class FirewallCheck: ParetoCheck {
     }
 
     override var isRunnable: Bool {
+        if teamEnforced {
+            return true
+        }
         if !isActive {
             return false
         }

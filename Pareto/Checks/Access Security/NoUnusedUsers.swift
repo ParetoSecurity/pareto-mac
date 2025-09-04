@@ -147,6 +147,9 @@ class NoUnusedUsers: ParetoCheck {
     }
 
     override var isRunnable: Bool {
-        isActive && isAdmin
+        if teamEnforced {
+            return true
+        }
+        return isActive && isAdmin
     }
 }

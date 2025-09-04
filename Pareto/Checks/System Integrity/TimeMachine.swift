@@ -31,6 +31,9 @@ class TimeMachineCheck: ParetoCheck {
     }
 
     override var isRunnable: Bool {
+        if teamEnforced {
+            return true
+        }
         guard let config = readDefaultsFile(path: "/Library/Preferences/com.apple.TimeMachine.plist") as! [String: Any]? else {
             return false
         }

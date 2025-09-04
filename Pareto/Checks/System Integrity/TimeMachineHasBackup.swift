@@ -22,6 +22,9 @@ class TimeMachineHasBackupCheck: ParetoCheck {
     }
 
     override var isRunnable: Bool {
+        if teamEnforced {
+            return true
+        }
         return TimeMachineCheck.sharedInstance.isRunnable && isActive
     }
 
