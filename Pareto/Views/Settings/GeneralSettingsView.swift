@@ -81,26 +81,7 @@ struct GeneralSettingsView: View {
                 #endif
             }
         }
-    }
-
-    func selectFolder() {
-        let openPanel = NSOpenPanel()
-        openPanel.title = "Select a folder to watch for custom checks"
-        openPanel.message = "Location of the customs checks you wish to run"
-        openPanel.showsResizeIndicator = true
-        openPanel.canChooseDirectories = true
-        openPanel.canChooseFiles = false
-        openPanel.allowsMultipleSelection = false
-        openPanel.canCreateDirectories = true
-
-        openPanel.begin { result in
-            if result == .OK {
-                let path = openPanel.url
-                os_log("selected folder is %{public}s", path!.absoluteString)
-                myChecksURL = path
-                Claims.global.refresh()
-            }
-        }
+        .centered()
     }
 }
 

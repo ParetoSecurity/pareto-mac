@@ -15,6 +15,7 @@ struct ChecksSettingsView: View {
     var body: some View {
         baseList
             .listStyle(.inset)
+            .centered()
     }
 
     private var baseList: some View {

@@ -99,6 +99,7 @@ struct TeamSettingsView: View {
                 }
             }
             .onAppear { DispatchQueue.main.async { teamSettings.update {} } }
+            .centered()
         } else {
             Form {
                 Section {
@@ -130,6 +131,7 @@ struct TeamSettingsView: View {
                     }
                 }
             }
+            .centered()
         }
     }
 }

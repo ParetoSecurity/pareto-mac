@@ -37,18 +37,11 @@ struct SettingsView: View {
                     }
                     .tag(Tabs.teams)
             #endif
-            Group {
-                if embedded {
-                    ChecksSettingsView()
-                } else {
-                    ChecksSettingsView()
-                        .frame(minHeight: 480)
+            ChecksSettingsView()
+                .tabItem {
+                    Label("Checks", systemImage: "checkmark.seal")
                 }
-            }
-            .tabItem {
-                Label("Checks", systemImage: "checkmark.seal")
-            }
-            .tag(Tabs.checks)
+                .tag(Tabs.checks)
             AboutSettingsView()
                 .tabItem {
                     Label("About", systemImage: "info")
@@ -57,11 +50,31 @@ struct SettingsView: View {
         }
         .onAppear(perform: decideTab)
         .padding(24)
+        .frame(width: 480, height: targetHeight, alignment: .top)
+        .id(selected) // Force layout refresh when tab changes so targetHeight applies
     }
 
     private func decideTab() {
         if Defaults[.updateNag] {
             selected = .about
+        }
+    }
+}
+
+private extension SettingsView {
+    var targetHeight: CGFloat {
+        // Tuned per-tab to balance space vs. scroll need
+        switch selected {
+        case .general:
+            return 220
+        case .permissions:
+            return 280
+        case .teams:
+            return teamID.isEmpty ? 280 : 240
+        case .checks:
+            return 560
+        case .about:
+            return 200
         }
     }
 }

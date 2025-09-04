@@ -207,7 +207,6 @@ struct Pareto: App {
 
         Settings {
             SettingsView(selected: SettingsView.Tabs.general)
-                .frame(minWidth: 480)
         }
     }
 }

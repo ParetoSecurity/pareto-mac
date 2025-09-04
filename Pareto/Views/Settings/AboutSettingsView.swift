@@ -90,7 +90,7 @@ struct AboutSettingsView: View {
                 }
             }
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
+        .centered()
         .onAppear {
             fetchHelperVersion()
             #if SETAPP_ENABLED

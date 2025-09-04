@@ -115,6 +115,7 @@ struct PermissionsSettingsView: View {
         }
         .onAppear { checker.start() }
         .onDisappear { checker.stop() }
+        .centered()
     }
 }
 
