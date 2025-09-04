@@ -14,8 +14,7 @@ struct ChecksSettingsView: View {
 
     var body: some View {
         baseList
-            .listStyle(.inset)
-            .centered()
+            .listStyle(.inset).frame(minHeight: 400)
     }
 
     private var baseList: some View {

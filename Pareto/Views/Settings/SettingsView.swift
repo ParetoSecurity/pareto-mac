@@ -11,8 +11,6 @@ import SwiftUI
 
 struct SettingsView: View {
     @State var selected: Tabs
-    var embedded: Bool = false
-    @Default(.teamID) var teamID
 
     enum Tabs: Hashable {
         case general, about, teams, checks, permissions
@@ -48,41 +46,8 @@ struct SettingsView: View {
                 }
                 .tag(Tabs.about)
         }
-        .onAppear(perform: decideTab)
         .padding(24)
-        .frame(width: 480, height: targetHeight, alignment: .top)
-        .id(selected) // Force layout refresh when tab changes so targetHeight applies
-    }
-
-    private func decideTab() {
-        if Defaults[.updateNag] {
-            selected = .about
-        }
-    }
-}
-
-private extension SettingsView {
-    var targetHeight: CGFloat {
-        // Tuned per-tab to balance space vs. scroll need
-        switch selected {
-        case .general:
-            return 220
-        case .permissions:
-            return 280
-        case .teams:
-            return teamID.isEmpty ? 80 : 240
-        case .checks:
-            return 560
-        case .about:
-            return 220
-        }
-    }
-}
-
-struct SettingsView_Previews: PreviewProvider {
-    static var previews: some View {
-        Group {
-            SettingsView(selected: SettingsView.Tabs.general)
-        }
+        // Let the window size adapt naturally without hardcoded sizes
+        .frame(width: 460) // avoid overly narrow layouts
     }
 }

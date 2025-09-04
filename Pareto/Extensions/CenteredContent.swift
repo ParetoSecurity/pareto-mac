@@ -20,4 +20,3 @@ extension View {
         .frame(maxWidth: .infinity, alignment: .center)
     }
 }
-

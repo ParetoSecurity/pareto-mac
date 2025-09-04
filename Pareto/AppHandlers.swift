@@ -417,15 +417,6 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
         }
     }
 
-    @objc func showPrefs() {
-        Defaults[.updateNag] = false
-
-        // Fallback for older macOS
-        showSettingsFallback()
-
-        NSApp.activate(ignoringOtherApps: true)
-    }
-
     @objc func quitApp() {
         NSApplication.shared.terminate(self)
     }
@@ -477,30 +468,6 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
             }
             welcomeWindow!.showWindow(nil)
         }
-    }
-
-    @MainActor
-    @objc func showSettingsFallback() {
-        if preferencesWindow == nil {
-            let hostingController = NSHostingController(rootView: SettingsView(selected: SettingsView.Tabs.general, embedded: true))
-            hostingController.preferredContentSize = NSSize(width: 520, height: 380)
-            let window = NSWindow(contentViewController: hostingController)
-            window.title = "Preferences"
-            window.standardWindowButton(.zoomButton)?.isHidden = true
-            window.standardWindowButton(.miniaturizeButton)?.isHidden = true
-            window.center()
-            window.setContentSize(NSSize(width: 520, height: 380))
-            window.isReleasedWhenClosed = false
-
-            preferencesWindow = NSWindowController(window: window)
-
-            // Clear strong reference when closed so it can be recreated later
-            NotificationCenter.default.addObserver(forName: NSWindow.willCloseNotification, object: window, queue: .main) { [weak self] _ in
-                self?.preferencesWindow = nil
-            }
-        }
-
-        preferencesWindow?.showWindow(nil)
     }
 
     func copyLogs() {
@@ -649,9 +616,6 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
             copyLogs()
         case "runChecks":
             NSApp.sendAction(#selector(runChecks), to: nil, from: nil)
-            NSApp.activate(ignoringOtherApps: true)
-        case "showPrefs":
-            NSApp.sendAction(#selector(showPrefs), to: nil, from: nil)
             NSApp.activate(ignoringOtherApps: true)
         case "showBeta":
             Defaults[.showBeta] = true

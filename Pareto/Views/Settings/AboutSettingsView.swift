@@ -90,13 +90,6 @@ struct AboutSettingsView: View {
                 }
             }
         }
-        .centered()
-        .onAppear {
-            fetchHelperVersion()
-            #if !SETAPP_ENABLED
-                fetch()
-            #endif
-        }
     }
 
     private func fetchHelperVersion() {
@@ -110,6 +103,19 @@ struct AboutSettingsView: View {
     }
 
     private func fetch() {
+        #if SETAPP_ENABLED
+            DispatchQueue.main.async {
+                isLoading = false
+                status = UpdateStates.Failed
+                let alert = NSAlert()
+                alert.messageText = "Update is not available in SetApp version"
+                alert.informativeText = "Please use SetApp to update the application"
+                alert.alertStyle = NSAlert.Style.informational
+                alert.addButton(withTitle: "OK")
+                alert.runModal()
+            }
+            return
+        #endif
         DispatchQueue.global(qos: .userInteractive).async {
             DispatchQueue.main.async {
                 isLoading = true

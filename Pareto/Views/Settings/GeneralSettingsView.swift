@@ -81,7 +81,6 @@ struct GeneralSettingsView: View {
                 #endif
             }
         }
-        .centered()
     }
 }
 

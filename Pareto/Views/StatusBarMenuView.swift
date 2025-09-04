@@ -93,7 +93,8 @@ struct StatusBarMenuView: View {
                 .padding(.vertical, 2)
             } else {
                 Button {
-                    appHandlers.showPrefs()
+                    // Opens the SwiftUI Settings scene on macOS 13
+                    NSApp.sendAction(Selector(("showPreferencesWindow:")), to: nil, from: nil)
                 } label: {
                     Label("Preferences", systemImage: "gearshape.fill")
                         .symbolRenderingMode(.multicolor)
