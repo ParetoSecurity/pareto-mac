@@ -57,6 +57,15 @@ class FirewallStealthCheck: ParetoCheck {
     }
 
     override func checkPasses() -> Bool {
+        if #available(macOS 26, *) {
+            os_log("FirewallStealthCheck: Running macOS 26+ direct command for stealth mode")
+            let out = runCMD(app: "/usr/libexec/ApplicationFirewall/socketfilterfw", args: ["--getstealthmode"])
+            os_log("FirewallStealthCheck: Command output: %{public}s", out)
+            let enabled = out.contains("enabled") || out.contains("mode is on")
+            os_log("FirewallStealthCheck: Parsed stealth enabled: %{public}s", enabled ? "true" : "false")
+            return enabled
+        }
+
         if #available(macOS 15, *) {
             let semaphore = DispatchSemaphore(value: 0)
             let result = Box(false) // Use a reference type to avoid mutation warnings

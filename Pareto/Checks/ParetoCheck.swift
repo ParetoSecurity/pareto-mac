@@ -41,7 +41,8 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
         // If a cached value exists and is still valid, return it.
         if let timestamp = cachedIsRunnableTimestamp,
            let value = cachedIsRunnableValue,
-           now.timeIntervalSince(timestamp) < cacheDuration {
+           now.timeIntervalSince(timestamp) < cacheDuration
+        {
             return value
         }
 
@@ -181,7 +182,7 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
         UserDefaults.standard.register(defaults: [
             EnabledKey: true,
             PassesKey: false,
-            TimestampKey: 0
+            TimestampKey: 0,
         ])
     }
 
@@ -235,7 +236,7 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
             components.host = "paretosecurity.com"
             components.path = "/docs/mac/privileged-helper-authorization"
             components.queryItems = [
-                URLQueryItem(name: "utm_source", value: AppInfo.utmSource)
+                URLQueryItem(name: "utm_source", value: AppInfo.utmSource),
             ]
 
             guard let url = components.url else {
@@ -250,7 +251,7 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
         components.path = "/check/\(UUID)"
         components.queryItems = [
             URLQueryItem(name: "details", value: details),
-            URLQueryItem(name: "utm_source", value: AppInfo.utmSource)
+            URLQueryItem(name: "utm_source", value: AppInfo.utmSource),
         ]
 
         guard let url = components.url else {

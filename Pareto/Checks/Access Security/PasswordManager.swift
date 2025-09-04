@@ -37,7 +37,7 @@ class PasswordManager: ParetoCheck {
             "Enpass",
             "NordPass",
             "Keeper Password Manager",
-            "Keeper"
+            "Keeper",
         ]
 
         static let installedAppNames = [
@@ -48,7 +48,7 @@ class PasswordManager: ParetoCheck {
             "Dashlane.app",
             "KeePassXC.app",
             "KeePassX.app",
-            "KeePassium.app"
+            "KeePassium.app",
         ]
 
         static let browserExtensions = [
@@ -58,21 +58,21 @@ class PasswordManager: ParetoCheck {
             "nngceckbapebfimnlniiiahkandclblb": "Bitwarden",
             "aeblfdkhhhdcdjpifhhbdiojplfjncoa": "1Password",
             "fdjamakpfbbddfjaooikfcpapjohcfmg": "Dashlane",
-            "pejdijmoenmkgeppbflobdenhhabjlaj": "Apple Passwords"
+            "pejdijmoenmkgeppbflobdenhhabjlaj": "Apple Passwords",
         ]
 
         static let browsers = [
             "Google/Chrome/Default/": "Chrome",
             "BraveSoftware/Brave-Browser/Default/": "Brave",
             "Microsoft Edge/Default/": "Edge",
-            "Arc/User Data/Default/": "Arc"
+            "Arc/User Data/Default/": "Arc",
         ]
 
         static let searchPaths = [
             "/Applications",
             "/System/Applications",
             "/Applications/Setapp",
-            NSString(string: "~/Applications").expandingTildeInPath
+            NSString(string: "~/Applications").expandingTildeInPath,
         ]
     }
 

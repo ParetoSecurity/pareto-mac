@@ -24,7 +24,7 @@ let pubKeyData = Data(base64Encoded: rsaPublicKey.replacingOccurrences(of: "\n",
 var error: Unmanaged<CFError>?
 let attributes: [String: Any] = [
     kSecAttrKeyType as String: kSecAttrKeyTypeRSA,
-    kSecAttrKeyClass as String: kSecAttrKeyClassPublic
+    kSecAttrKeyClass as String: kSecAttrKeyClassPublic,
 ]
 let publicKey = SecKeyCreateWithData(pubKeyData, attributes as CFDictionary, &error)!
 print(publicKey)

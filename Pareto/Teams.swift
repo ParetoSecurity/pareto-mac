@@ -157,7 +157,7 @@ enum Team {
     static func enrollDevice(inviteID: String, completion: @escaping (Result<(String, String), Swift.Error>) -> Void) {
         let request = DeviceEnrollmentRequest(inviteID: inviteID, device: ReportingDevice.current())
         let headers: HTTPHeaders = [
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
         ]
 
         let url = URL(string: Defaults[.teamAPI])!.appendingPathComponent("api").appendingPathComponent("v1").appendingPathComponent("team").appendingPathComponent("enroll").absoluteString
@@ -166,7 +166,8 @@ enum Team {
         os_log("Enrollment URL: %{public}s", log: Log.api, url)
         // Log request body
         if let requestData = try? JSONEncoder().encode(request),
-           let requestString = String(data: requestData, encoding: .utf8) {
+           let requestString = String(data: requestData, encoding: .utf8)
+        {
             os_log("Request body: %{public}s", log: Log.api, requestString)
         }
 
@@ -221,7 +222,7 @@ enum Team {
 
     static func update(withReport report: Report) -> DataRequest {
         let headers: HTTPHeaders = [
-            "X-Device-Auth": Defaults[.teamAuth]
+            "X-Device-Auth": Defaults[.teamAuth],
         ]
         let url = URL(string: Defaults[.teamAPI])!.appendingPathComponent("api").appendingPathComponent("v1").appendingPathComponent("team").appendingPathComponent("\(Defaults[.teamID])").appendingPathComponent("device").absoluteString
 
@@ -233,7 +234,8 @@ enum Team {
 
         // Log request body (truncated for security)
         if let reportData = try? JSONEncoder().encode(report),
-           let reportString = String(data: reportData, encoding: .utf8) {
+           let reportString = String(data: reportData, encoding: .utf8)
+        {
             let truncatedReport = reportString.count > 1000 ? String(reportString.prefix(1000)) + "... [truncated]" : reportString
             os_log("Report body: %{public}s", log: Log.api, truncatedReport)
         }
@@ -266,7 +268,7 @@ enum Team {
 
     static func settings(completion: @escaping (DeviceSettings?) -> Void) {
         let headers: HTTPHeaders = [
-            "X-Device-Auth": Defaults[.teamAuth]
+            "X-Device-Auth": Defaults[.teamAuth],
         ]
         let url = URL(string: Defaults[.teamAPI])!.appendingPathComponent("api").appendingPathComponent("v1").appendingPathComponent("team").appendingPathComponent("\(Defaults[.teamID])").appendingPathComponent("settings").absoluteString
 

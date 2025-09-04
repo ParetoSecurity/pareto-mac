@@ -86,14 +86,12 @@ enum AppInfo {
         return source
     }
 
-
     static let versionStorage = try! Storage<String, Version>(
         diskConfig: DiskConfig(name: "Version+Bundles+v2", expiry: .seconds(3600 * 24)),
         memoryConfig: MemoryConfig(expiry: .seconds(3600)),
         fileManager: FileManager.default,
         transformer: TransformerFactory.forCodable(ofType: Version.self) // Storage<String, Version>
     )
-
 
     static var hwModelName: String {
         if let modelNumber = HWInfo?.modelNumber {
@@ -148,7 +146,8 @@ enum AppInfo {
                 .compactMap({ $0 as? OSLogEntryLog })
                 .filter({ entry in
                     entry.subsystem == Bundle.main.bundleIdentifier
-                }) {
+                })
+            {
                 logs.append("\(log.subsystem): \(log.composedMessage)")
             }
         } else {

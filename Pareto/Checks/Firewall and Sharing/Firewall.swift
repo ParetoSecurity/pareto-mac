@@ -35,6 +35,9 @@ class FirewallCheck: ParetoCheck {
     }
 
     override var requiresHelper: Bool {
+        if #available(macOS 26, *) {
+            return false
+        }
         if #available(macOS 15, *) {
             return true
         }
@@ -45,6 +48,11 @@ class FirewallCheck: ParetoCheck {
         if !isActive {
             return false
         }
+
+        if #available(macOS 26, *) {
+            return true
+        }
+
         if #available(macOS 15, *) {
             if requiresHelper {
                 return HelperToolUtilities.isHelperInstalled()
@@ -54,7 +62,14 @@ class FirewallCheck: ParetoCheck {
     }
 
     override func checkPasses() -> Bool {
-        os_log("FirewallCheck: checkPasses called")
+        if #available(macOS 26, *) {
+            os_log("FirewallCheck: Running macOS 26+ direct command")
+            let out = runCMD(app: "/usr/libexec/ApplicationFirewall/socketfilterfw", args: ["--getglobalstate"])
+            os_log("FirewallCheck: Command output: %{public}s", out)
+            let enabled = out.contains("State = 1") || out.contains("State = 2")
+            os_log("FirewallCheck: Parsed enabled: %{public}s", enabled ? "true" : "false")
+            return enabled
+        }
 
         if #available(macOS 15, *) {
             os_log("FirewallCheck: Running macOS 15+ check with helper")

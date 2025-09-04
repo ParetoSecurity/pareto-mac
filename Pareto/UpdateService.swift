@@ -239,7 +239,7 @@ extension UpdateService {
             "uuid": Defaults[.machineUUID],
             "version": AppInfo.appVersion,
             "os_version": AppInfo.macOSVersionString,
-            "distribution": AppInfo.utmSource
+            "distribution": AppInfo.utmSource,
         ]
 
         request(
@@ -255,7 +255,7 @@ extension UpdateService {
             "uuid": Defaults[.machineUUID],
             "version": AppInfo.appVersion,
             "os_version": AppInfo.macOSVersionString,
-            "distribution": AppInfo.utmSource
+            "distribution": AppInfo.utmSource,
         ]
 
         return try requestSync(

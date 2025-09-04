@@ -69,7 +69,8 @@ class NoUnusedUsers: ParetoCheck {
 
             // First, check membership by short name
             if let shortNameMembers = try adminGroup.values(forAttribute: kODAttributeTypeGroupMembership) as? [String],
-               shortNameMembers.contains(username) {
+               shortNameMembers.contains(username)
+            {
                 return true
             }
 
@@ -88,7 +89,8 @@ class NoUnusedUsers: ParetoCheck {
                 if let users = try userQuery.resultsAllowingPartial(false) as? [ODRecord],
                    let userRecord = users.first,
                    let guids = try userRecord.values(forAttribute: kODAttributeTypeGUID) as? [String],
-                   let guid = guids.first {
+                   let guid = guids.first
+                {
                     return guidMembers.contains(guid)
                 }
             }
