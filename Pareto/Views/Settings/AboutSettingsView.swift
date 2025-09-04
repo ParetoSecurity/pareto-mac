@@ -53,7 +53,7 @@ struct AboutSettingsView: View {
                     Text("Helper: \(helperVersion)")
                     Text("Channel: \(AppInfo.utmSource)")
 
-                    #if SETAPP_ENABLED
+                    #if !SETAPP_ENABLED
                         HStack(spacing: 10) {
                             if !hasCheckedForUpdates || status == UpdateStates.Updated {
                                 Button("Check") {
@@ -93,7 +93,7 @@ struct AboutSettingsView: View {
         .centered()
         .onAppear {
             fetchHelperVersion()
-            #if SETAPP_ENABLED
+            #if !SETAPP_ENABLED
                 fetch()
             #endif
         }
@@ -126,9 +126,6 @@ struct AboutSettingsView: View {
 
                     if currentVersion < release.version {
                         status = UpdateStates.NewVersion
-                        #if SETAPP_ENABLED
-                            Defaults[.updateNag] = true
-                        #endif
                     } else {
                         status = UpdateStates.Updated
                         Defaults[.updateNag] = false

@@ -74,7 +74,7 @@ private extension SettingsView {
         case .checks:
             return 560
         case .about:
-            return 200
+            return 220
         }
     }
 }
