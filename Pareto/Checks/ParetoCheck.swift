@@ -184,12 +184,17 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
                     }
                 }
                 
-                // Check for app-specific conditions based on class name
-                if String(describing: type(of: self)).contains("AppCheck") || 
+                // Check for app-specific conditions
+                if String(describing: type(of: self)).contains("iTerm") {
+                    return "iTerm2 is not installed"
+                } else if String(describing: type(of: self)).contains("AppCheck") || 
                    String(describing: type(of: self)).hasSuffix("Check") {
                     // This might be an app update check
                     if TitleON.contains("up-to-date") || TitleON.contains("update") {
-                        return "App not installed or hasn't been used recently (check General settings)"
+                        // Try to extract app name from TitleON
+                        let appName = TitleON.replacingOccurrences(of: " is up-to-date", with: "")
+                            .replacingOccurrences(of: " has an available update", with: "")
+                        return "\(appName) is not installed or check is disabled"
                     }
                 }
                 

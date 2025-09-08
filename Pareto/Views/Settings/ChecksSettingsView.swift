@@ -104,12 +104,12 @@ struct ChecksSettingsView: View {
                                                     } else if let appCheck = check as? AppCheck {
                                                         // For app update checks
                                                         if !appCheck.isInstalled {
-                                                            Text("App not installed")
+                                                            Text("\(appCheck.appMarketingName) not installed")
                                                                 .font(.caption)
                                                                 .foregroundColor(.secondary)
                                                                 .lineLimit(1)
-                                                        } else if !appCheck.usedRecently {
-                                                            Text("App not used in the last week")
+                                                        } else if !appCheck.usedRecently && appCheck.supportsRecentlyUsed {
+                                                            Text("Not used in the last week")
                                                                 .font(.caption)
                                                                 .foregroundColor(.secondary)
                                                                 .lineLimit(1)
@@ -283,6 +283,11 @@ struct CheckDetailView: View {
                             .font(.caption)
                             .foregroundColor(.secondary)
                     }
+                    
+                    Link("Learn more about this check →", destination: check.infoURL)
+                        .font(.footnote)
+                        .foregroundColor(.accentColor)
+                        .padding(.top, 4)
                 }
                 
                 if check.showSettingsWarnDiskAccess && !check.isRunnable {
@@ -472,6 +477,11 @@ struct NoUnusedUsersDetailView: View {
                     Text("When failing: \(check.TitleOFF)")
                         .font(.caption)
                         .foregroundColor(.secondary)
+                    
+                    Link("Learn more about this check →", destination: check.infoURL)
+                        .font(.footnote)
+                        .foregroundColor(.accentColor)
+                        .padding(.top, 4)
                 }
                 
                 Section(header: Text("Ignored User Accounts")) {
