@@ -23,163 +23,18 @@ struct ChecksSettingsView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
                 if !teamID.isEmpty {
-                    VStack(spacing: 1) {
-                        HStack(spacing: 12) {
-                            ZStack {
-                                RoundedRectangle(cornerRadius: 8)
-                                    .fill(Color.orange.opacity(0.2))
-                                    .frame(width: 32, height: 32)
-                                
-                                Text("✴")
-                                    .font(.system(size: 16))
-                                    .foregroundColor(.orange)
-                            }
-                            
-                            Text("Team required checks")
-                                .foregroundColor(.primary)
-                            
-                            Spacer()
-                        }
-                        .padding(.horizontal)
-                        .padding(.vertical, 10)
-                        .background(Color(NSColor.controlBackgroundColor))
-                        .contentShape(Rectangle())
-                    }
-                    .background(Color(NSColor.controlBackgroundColor))
-                    .cornerRadius(10)
-                    .padding(.horizontal)
-                    
-                    Text("Checks marked with ✴ are enforced by your team and cannot be disabled")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                        .padding(.horizontal)
-                        .padding(.top, 4)
+                    TeamEnforcementHeader()
                 }
                 
                 // Security Check Sections
                 ForEach(Claims.global.all, id: \.self) { claim in
-                    let installedChecks = claim.checksSorted.filter { $0.isInstalled }
-                    if !installedChecks.isEmpty {
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text(claim.title)
-                                .font(.headline)
-                                .foregroundColor(.secondary)
-                                .padding(.horizontal)
-                            
-                            VStack(spacing: 1) {
-                                ForEach(installedChecks, id: \.UUID) { check in
-                                    Button(action: { 
-                                        selectedCheckWrapper = CheckWrapper(check: check)
-                                    }) {
-                                        HStack(spacing: 12) {
-                                            // Icon background with status-based color
-                                            ZStack {
-                                                RoundedRectangle(cornerRadius: 8)
-                                                    .fill(statusColor(for: check))
-                                                    .frame(width: 32, height: 32)
-                                                
-                                                Image(systemName: iconName(for: check))
-                                                    .font(.system(size: 16))
-                                                    .foregroundColor(.white)
-                                            }
-                                            
-                                            VStack(alignment: .leading, spacing: 2) {
-                                                HStack(spacing: 4) {
-                                                    if check.teamEnforced {
-                                                        Text("✴")
-                                                            .font(.system(size: 14))
-                                                            .foregroundColor(.orange)
-                                                    }
-                                                    Text(check.TitleON)
-                                                        .foregroundColor(.primary)
-                                                        .lineLimit(1)
-                                                }
-                                                
-                                                // Show status details
-                                                if !check.isActive {
-                                                    Text("Manually disabled")
-                                                        .font(.caption)
-                                                        .foregroundColor(.secondary)
-                                                        .lineLimit(1)
-                                                } else if check is TimeMachineHasBackupCheck && (!TimeMachineCheck.sharedInstance.isActive || !TimeMachineCheck.sharedInstance.isRunnable) {
-                                                    // Special case for Time Machine backup check when Time Machine is disabled
-                                                    Text(check.disabledReason)
-                                                        .font(.caption)
-                                                        .foregroundColor(.secondary)
-                                                        .lineLimit(1)
-                                                } else if !check.isRunnable {
-                                                    // For checks that can't run, show why (including dependency issues)
-                                                    Text(check.disabledReason)
-                                                        .font(.caption)
-                                                        .foregroundColor(.secondary)
-                                                        .lineLimit(1)
-                                                } else if check.checkPassed {
-                                                    // For passing checks, just show "Passing" - save details for the sheet
-                                                    Text("Passing")
-                                                        .font(.caption)
-                                                        .foregroundColor(.secondary)
-                                                        .lineLimit(1)
-                                                } else {
-                                                    // For failing checks, show appropriate status message
-                                                    if let appCheck = check as? AppCheck {
-                                                        // For app update checks
-                                                        if !appCheck.isInstalled {
-                                                            Text("\(appCheck.appMarketingName) not installed")
-                                                                .font(.caption)
-                                                                .foregroundColor(.secondary)
-                                                                .lineLimit(1)
-                                                        } else if !appCheck.usedRecently && appCheck.supportsRecentlyUsed {
-                                                            Text("Not used in the last week")
-                                                                .font(.caption)
-                                                                .foregroundColor(.secondary)
-                                                                .lineLimit(1)
-                                                        } else {
-                                                            Text("Update available")
-                                                                .font(.caption)
-                                                                .foregroundColor(.secondary)
-                                                                .lineLimit(1)
-                                                        }
-                                                    } else {
-                                                        // For other failing checks, show appropriate message
-                                                        let message: String
-                                                        if !check.cachedDetails.isEmpty && check.isRunnable {
-                                                            // Only use cached details if the check is actually runnable
-                                                            message = check.cachedDetails
-                                                        } else {
-                                                            message = "Needs attention"
-                                                        }
-                                                        Text(message)
-                                                            .font(.caption)
-                                                            .foregroundColor(.secondary)
-                                                            .lineLimit(1)
-                                                    }
-                                                }
-                                            }
-                                            
-                                            Spacer()
-                                            
-                                            Image(systemName: "chevron.right")
-                                                .font(.system(size: 14, weight: .semibold))
-                                                .foregroundColor(Color(NSColor.tertiaryLabelColor))
-                                        }
-                                        .padding(.horizontal)
-                                        .padding(.vertical, 10)
-                                        .background(Color(NSColor.controlBackgroundColor))
-                                        .contentShape(Rectangle())
-                                    }
-                                    .buttonStyle(.plain)
-                                    
-                                    if check != installedChecks.last {
-                                        Divider()
-                                            .padding(.leading, 56)
-                                    }
-                                }
-                            }
-                            .background(Color(NSColor.controlBackgroundColor))
-                            .cornerRadius(10)
-                            .padding(.horizontal)
+                    CheckSectionView(
+                        claimTitle: claim.title,
+                        installedChecks: claim.checksSorted.filter { $0.isInstalled },
+                        onSelect: { check in
+                            selectedCheckWrapper = CheckWrapper(check: check)
                         }
-                    }
+                    )
                 }
                 
                 Link("Learn more about security checks →", destination: URL(string: "https://paretosecurity.com/security-checks?utm_source=\(AppInfo.utmSource)")!)
@@ -202,6 +57,185 @@ struct ChecksSettingsView: View {
             }
         }
     }
+}
+
+private struct TeamEnforcementHeader: View {
+    var body: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            VStack(spacing: 1) {
+                HStack(spacing: 12) {
+                    ZStack {
+                        RoundedRectangle(cornerRadius: 8)
+                            .fill(Color.orange.opacity(0.2))
+                            .frame(width: 32, height: 32)
+                        
+                        Text("✴")
+                            .font(.system(size: 16))
+                            .foregroundColor(.orange)
+                    }
+                    
+                    Text("Team required checks")
+                        .foregroundColor(.primary)
+                    
+                    Spacer()
+                }
+                .padding(.horizontal)
+                .padding(.vertical, 10)
+                .background(Color(NSColor.controlBackgroundColor))
+                .contentShape(Rectangle())
+            }
+            .background(Color(NSColor.controlBackgroundColor))
+            .cornerRadius(10)
+            .padding(.horizontal)
+            
+            Text("Checks marked with ✴ are enforced by your team and cannot be disabled")
+                .font(.caption)
+                .foregroundColor(.secondary)
+                .padding(.horizontal)
+                .padding(.top, 4)
+        }
+    }
+}
+
+private struct CheckSectionView: View {
+    let claimTitle: String
+    let installedChecks: [ParetoCheck]
+    let onSelect: (ParetoCheck) -> Void
+    
+    var body: some View {
+        if !installedChecks.isEmpty {
+            VStack(alignment: .leading, spacing: 8) {
+                Text(claimTitle)
+                    .font(.headline)
+                    .foregroundColor(.secondary)
+                    .padding(.horizontal)
+                
+                VStack(spacing: 1) {
+                    ForEach(installedChecks, id: \.UUID) { check in
+                        CheckRowView(check: check) {
+                            onSelect(check)
+                        }
+                        
+                        if check.UUID != installedChecks.last?.UUID {
+                            Divider()
+                                .padding(.leading, 56)
+                        }
+                    }
+                }
+                .background(Color(NSColor.controlBackgroundColor))
+                .cornerRadius(10)
+                .padding(.horizontal)
+            }
+        }
+    }
+}
+
+private struct CheckRowView: View {
+    let check: ParetoCheck
+    let onTap: () -> Void
+    
+    var body: some View {
+        Button(action: onTap) {
+            HStack(spacing: 12) {
+                // Icon background with status-based color
+                ZStack {
+                    RoundedRectangle(cornerRadius: 8)
+                        .fill(statusColor(for: check))
+                        .frame(width: 32, height: 32)
+                    
+                    Image(systemName: iconName(for: check))
+                        .font(.system(size: 16))
+                        .foregroundColor(.white)
+                }
+                
+                VStack(alignment: .leading, spacing: 2) {
+                    HStack(spacing: 4) {
+                        if check.teamEnforced {
+                            Text("✴")
+                                .font(.system(size: 14))
+                                .foregroundColor(.orange)
+                        }
+                        Text(check.TitleON)
+                            .foregroundColor(.primary)
+                            .lineLimit(1)
+                    }
+                    
+                    subtitleView(for: check)
+                }
+                
+                Spacer()
+                
+                Image(systemName: "chevron.right")
+                    .font(.system(size: 14, weight: .semibold))
+                    .foregroundColor(Color(NSColor.tertiaryLabelColor))
+            }
+            .padding(.horizontal)
+            .padding(.vertical, 10)
+            .background(Color(NSColor.controlBackgroundColor))
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+    }
+    
+    @ViewBuilder
+    private func subtitleView(for check: ParetoCheck) -> some View {
+        // Show status details
+        if !check.isActive {
+            Text("Manually disabled")
+                .font(.caption)
+                .foregroundColor(.secondary)
+                .lineLimit(1)
+        } else if check is TimeMachineHasBackupCheck && (!TimeMachineCheck.sharedInstance.isActive || !TimeMachineCheck.sharedInstance.isRunnable) {
+            // Special case for Time Machine backup check when Time Machine is disabled
+            Text(check.disabledReason)
+                .font(.caption)
+                .foregroundColor(.secondary)
+                .lineLimit(1)
+        } else if !check.isRunnable {
+            // For checks that can't run, show why (including dependency issues)
+            Text(check.disabledReason)
+                .font(.caption)
+                .foregroundColor(.secondary)
+                .lineLimit(1)
+        } else if check.checkPassed {
+            // For passing checks
+            Text("Passing")
+                .font(.caption)
+                .foregroundColor(.secondary)
+                .lineLimit(1)
+        } else if let appCheck = check as? AppCheck {
+            // For app update checks
+            if !appCheck.isInstalled {
+                Text("\(appCheck.appMarketingName) not installed")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                    .lineLimit(1)
+            } else if !appCheck.usedRecently && appCheck.supportsRecentlyUsed {
+                Text("Not used in the last week")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                    .lineLimit(1)
+            } else {
+                Text("Update available")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                    .lineLimit(1)
+            }
+        } else {
+            // Other failing checks
+            let message: String = {
+                if !check.cachedDetails.isEmpty && check.isRunnable {
+                    return check.cachedDetails
+                } else {
+                    return "Needs attention"
+                }
+            }()
+            Text(message)
+                .font(.caption)
+                .foregroundColor(.secondary)
+                .lineLimit(1)
+        }
+    }
     
     private func statusColor(for check: ParetoCheck) -> Color {
         // Color based on cached check status - don't run the actual check
@@ -218,30 +252,21 @@ struct ChecksSettingsView: View {
     
     private func iconName(for check: ParetoCheck) -> String {
         // Map checks to appropriate SF Symbols
+        let titleLower = check.TitleON.lowercased()
         switch check {
         case is NoUnusedUsers:
             return "person.2.slash"
-        case _ where check.TitleON.lowercased().contains("firewall"):
-            return "flame"
-        case _ where check.TitleON.lowercased().contains("password"):
-            return "key"
-        case _ where check.TitleON.lowercased().contains("update"):
-            return "arrow.triangle.2.circlepath"
-        case _ where check.TitleON.lowercased().contains("encryption") || check.TitleON.lowercased().contains("filevault"):
-            return "lock.shield"
-        case _ where check.TitleON.lowercased().contains("screen"):
-            return "rectangle.inset.filled"
-        case _ where check.TitleON.lowercased().contains("ssh"):
-            return "terminal"
-        case _ where check.TitleON.lowercased().contains("sharing"):
-            return "person.2"
-        case _ where check.TitleON.lowercased().contains("gatekeeper"):
-            return "checkmark.shield"
-        case _ where check.TitleON.lowercased().contains("autologin"):
-            return "person.badge.clock"
-        case _ where check.TitleON.lowercased().contains("time machine"):
-            return "clock.arrow.circlepath"
         default:
+            if titleLower.contains("firewall") { return "flame" }
+            if titleLower.contains("password") { return "key" }
+            if titleLower.contains("update") { return "arrow.triangle.2.circlepath" }
+            if titleLower.contains("encryption") || titleLower.contains("filevault") { return "lock.shield" }
+            if titleLower.contains("screen") { return "rectangle.inset.filled" }
+            if titleLower.contains("ssh") { return "terminal" }
+            if titleLower.contains("sharing") { return "person.2" }
+            if titleLower.contains("gatekeeper") { return "checkmark.shield" }
+            if titleLower.contains("autologin") { return "person.badge.clock" }
+            if titleLower.contains("time machine") { return "clock.arrow.circlepath" }
             return "shield"
         }
     }
