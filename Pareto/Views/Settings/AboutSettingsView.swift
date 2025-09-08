@@ -6,6 +6,7 @@
 //
 
 import Defaults
+import ServiceManagement
 import SwiftUI
 
 struct AboutSettingsView: View {
@@ -14,6 +15,7 @@ struct AboutSettingsView: View {
     @State private var konami = 0
     @State private var helperVersion = "Checking..."
     @State private var hasCheckedForUpdates = false
+    @State private var helperCheckTimer: Timer?
 
     @StateObject private var helperManager = HelperToolManager()
     @Default(.showBeta) var showBeta
@@ -43,6 +45,16 @@ struct AboutSettingsView: View {
                             alert.addButton(withTitle: "Let me in")
                             alert.runModal()
                             fetch()
+                            // Start fetching helper version when beta mode is enabled
+                            fetchHelperVersion()
+                            helperCheckTimer = Timer.scheduledTimer(withTimeInterval: 5.0, repeats: true) { _ in
+                                fetchHelperVersion()
+                            }
+                        } else {
+                            // Stop fetching helper version when beta mode is disabled
+                            helperCheckTimer?.invalidate()
+                            helperCheckTimer = nil
+                            helperVersion = "Checking..."
                         }
                     }
                 }
@@ -50,7 +62,18 @@ struct AboutSettingsView: View {
                 Text("Pareto Security").font(.title)
                 VStack(alignment: .leading, spacing: 6) {
                     Text("Version: \(AppInfo.appVersion) - \(AppInfo.buildVersion)")
-                    Text("Helper: \(helperVersion)")
+                    if showBeta {
+                        HStack {
+                            Text("Helper: \(helperVersion)")
+                            if helperVersion.contains("System Settings") || helperVersion.contains("authorization") {
+                                Button("Open Settings") {
+                                    SMAppService.openSystemSettingsLoginItems()
+                                }
+                                .buttonStyle(.link)
+                                .font(.caption)
+                            }
+                        }
+                    }
                     Text("Channel: \(AppInfo.utmSource)")
 
                     #if !SETAPP_ENABLED
@@ -90,13 +113,62 @@ struct AboutSettingsView: View {
                 }
             }
         }
+        .onAppear {
+            if showBeta {
+                fetchHelperVersion()
+                // Set up a timer to periodically check helper version
+                helperCheckTimer = Timer.scheduledTimer(withTimeInterval: 5.0, repeats: true) { _ in
+                    fetchHelperVersion()
+                }
+            }
+        }
+        .onDisappear {
+            // Clean up timer when view disappears
+            helperCheckTimer?.invalidate()
+            helperCheckTimer = nil
+        }
     }
 
     private func fetchHelperVersion() {
         Task {
+            // First check if helper is installed
+            if !HelperToolUtilities.isHelperInstalled() {
+                await MainActor.run {
+                    self.helperVersion = "Not installed"
+                }
+                return
+            }
+            
+            // Check if we can get the helper status from launchctl
+            let launchctlOutput = await Task {
+                runCMD(app: "/bin/launchctl", args: ["print", "system/co.niteo.ParetoSecurityHelper"])
+            }.value
+            
+            if launchctlOutput.contains("state = not running") {
+                await MainActor.run {
+                    self.helperVersion = "Needs authorization in System Settings"
+                }
+                return
+            }
+            
+            // Set a timeout for the helper version fetch
+            let timeoutTask = Task {
+                try? await Task.sleep(nanoseconds: 2_000_000_000) // 2 second timeout
+                await MainActor.run {
+                    if self.helperVersion == "Checking..." {
+                        self.helperVersion = "Check System Settings > Login Items"
+                    }
+                }
+            }
+            
             await helperManager.getHelperVersion { version in
-                DispatchQueue.main.async {
-                    self.helperVersion = HelperToolUtilities.isHelperInstalled() ? version : "Not installed"
+                timeoutTask.cancel()
+                Task { @MainActor in
+                    if version == "Connection error" || version == "Connection unavailable" {
+                        self.helperVersion = "Enable in System Settings > Login Items"
+                    } else {
+                        self.helperVersion = version.isEmpty ? "Unknown" : version
+                    }
                 }
             }
         }

@@ -110,18 +110,29 @@ class ParetoUpdated: ParetoCheck {
     }
 
     override func checkPasses() -> Bool {
-        // Create a semaphore to wait for the async operation to complete
-        let semaphore = DispatchSemaphore(value: 0)
+        // Disable this check when running in SetApp or when beta channel is enabled
+        #if SETAPP_ENABLED
+            // Always pass for SetApp builds as updates are handled by SetApp
+            return true
+        #else
+            // Also disable when beta channel is enabled
+            if Defaults[.showBeta] {
+                return true
+            }
+            
+            // Create a semaphore to wait for the async operation to complete
+            let semaphore = DispatchSemaphore(value: 0)
 
-        // Call checkForUpdates with a completion handler
-        checkForUpdates { result in
-            self.updateCheckResult = result
-            semaphore.signal()
-        }
+            // Call checkForUpdates with a completion handler
+            checkForUpdates { result in
+                self.updateCheckResult = result
+                semaphore.signal()
+            }
 
-        // Wait for the completion handler to be called
-        _ = semaphore.wait(timeout: .now() + 10.0) // 10-second timeout
+            // Wait for the completion handler to be called
+            _ = semaphore.wait(timeout: .now() + 10.0) // 10-second timeout
 
-        return updateCheckResult
+            return updateCheckResult
+        #endif
     }
 }
