@@ -387,11 +387,23 @@ struct CheckDetailView: View {
                                     Label("Time Machine is disabled or not configured", systemImage: "xmark.circle.fill")
                                         .foregroundColor(.orange)
                                 } else if check is TimeMachineHasBackupCheck {
-                                    Label("No recent backup found", systemImage: "xmark.circle.fill")
-                                        .foregroundColor(.orange)
+                                    // Check if it's actually failing or just can't run
+                                    if !TimeMachineCheck.sharedInstance.isActive || !TimeMachineCheck.sharedInstance.isRunnable {
+                                        Label(check.disabledReason, systemImage: "exclamationmark.triangle.fill")
+                                            .foregroundColor(.orange)
+                                    } else {
+                                        Label("No recent backup found", systemImage: "xmark.circle.fill")
+                                            .foregroundColor(.orange)
+                                    }
                                 } else if check is TimeMachineIsEncryptedCheck {
-                                    Label("Backup disk is not encrypted", systemImage: "xmark.circle.fill")
-                                        .foregroundColor(.orange)
+                                    // Check if it's actually failing or just can't run
+                                    if !TimeMachineCheck.sharedInstance.isActive || !TimeMachineCheck.sharedInstance.isRunnable {
+                                        Label(check.disabledReason, systemImage: "exclamationmark.triangle.fill")
+                                            .foregroundColor(.orange)
+                                    } else {
+                                        Label("Backup disk is not encrypted", systemImage: "xmark.circle.fill")
+                                            .foregroundColor(.orange)
+                                    }
                                 } else if let appCheck = check as? AppCheck {
                                     // For app update checks
                                     if !appCheck.isInstalled {
@@ -558,11 +570,23 @@ struct NoUnusedUsersDetailView: View {
                                     Label("Time Machine is disabled or not configured", systemImage: "xmark.circle.fill")
                                         .foregroundColor(.orange)
                                 } else if check is TimeMachineHasBackupCheck {
-                                    Label("No recent backup found", systemImage: "xmark.circle.fill")
-                                        .foregroundColor(.orange)
+                                    // Check if it's actually failing or just can't run
+                                    if !TimeMachineCheck.sharedInstance.isActive || !TimeMachineCheck.sharedInstance.isRunnable {
+                                        Label(check.disabledReason, systemImage: "exclamationmark.triangle.fill")
+                                            .foregroundColor(.orange)
+                                    } else {
+                                        Label("No recent backup found", systemImage: "xmark.circle.fill")
+                                            .foregroundColor(.orange)
+                                    }
                                 } else if check is TimeMachineIsEncryptedCheck {
-                                    Label("Backup disk is not encrypted", systemImage: "xmark.circle.fill")
-                                        .foregroundColor(.orange)
+                                    // Check if it's actually failing or just can't run
+                                    if !TimeMachineCheck.sharedInstance.isActive || !TimeMachineCheck.sharedInstance.isRunnable {
+                                        Label(check.disabledReason, systemImage: "exclamationmark.triangle.fill")
+                                            .foregroundColor(.orange)
+                                    } else {
+                                        Label("Backup disk is not encrypted", systemImage: "xmark.circle.fill")
+                                            .foregroundColor(.orange)
+                                    }
                                 } else if let appCheck = check as? AppCheck {
                                     // For app update checks
                                     if !appCheck.isInstalled {
