@@ -116,6 +116,8 @@ struct AboutSettingsView: View {
             }
         }
         .onAppear {
+            // Clear the updates cache when About tab appears
+            UpdateService.shared.clearCache()
             fetch()
             if showBeta {
                 fetchHelperVersion()
