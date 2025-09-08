@@ -141,19 +141,19 @@ struct AboutSettingsView: View {
                 }
                 return
             }
-            
+
             // Check if we can get the helper status from launchctl
             let launchctlOutput = await Task {
                 runCMD(app: "/bin/launchctl", args: ["print", "system/co.niteo.ParetoSecurityHelper"])
             }.value
-            
+
             if launchctlOutput.contains("state = not running") {
                 await MainActor.run {
                     self.helperVersion = "Needs authorization in System Settings"
                 }
                 return
             }
-            
+
             // Set a timeout for the helper version fetch
             let timeoutTask = Task {
                 try? await Task.sleep(nanoseconds: 2_000_000_000) // 2 second timeout
@@ -163,7 +163,7 @@ struct AboutSettingsView: View {
                     }
                 }
             }
-            
+
             await helperManager.getHelperVersion { version in
                 timeoutTask.cancel()
                 Task { @MainActor in

@@ -61,6 +61,8 @@
 		4F080D1D26C50D2800686786 /* ParetoSecurityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FC81A4B26C41DC8006EABA8 /* ParetoSecurityTests.swift */; };
 		4F0BD11F284891670098316A /* ClipButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F0BD11E284891670098316A /* ClipButton.swift */; };
 		4F0BD120284891670098316A /* ClipButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F0BD11E284891670098316A /* ClipButton.swift */; };
+		4F0CC3FA2E6F014200A0BE70 /* FullDiskAccessVerifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F0CC3F92E6F014200A0BE70 /* FullDiskAccessVerifier.swift */; };
+		4F0CC3FB2E6F014200A0BE70 /* FullDiskAccessVerifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F0CC3F92E6F014200A0BE70 /* FullDiskAccessVerifier.swift */; };
 		4F103008269EE136008C1E86 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F103007269EE135008C1E86 /* SettingsView.swift */; };
 		4F103012269F1C65008C1E86 /* LaunchAtLogin in Frameworks */ = {isa = PBXBuildFile; productRef = 4F103011269F1C65008C1E86 /* LaunchAtLogin */; };
 		4F1192FD2D6DC4F4002CA181 /* ViewInspector in Frameworks */ = {isa = PBXBuildFile; productRef = 4F1192FC2D6DC4F4002CA181 /* ViewInspector */; };
@@ -364,6 +366,7 @@
 		4F020DDE2853503400D8D4E9 /* DebugView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugView.swift; sourceTree = "<group>"; };
 		4F0371BB26CD00B700B35E43 /* Boot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Boot.swift; sourceTree = "<group>"; };
 		4F0BD11E284891670098316A /* ClipButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipButton.swift; sourceTree = "<group>"; };
+		4F0CC3F92E6F014200A0BE70 /* FullDiskAccessVerifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullDiskAccessVerifier.swift; sourceTree = "<group>"; };
 		4F103007269EE135008C1E86 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		4F14487326D8EA5E00A5BA34 /* Updater.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Updater.swift; sourceTree = "<group>"; };
 		4F14487B26D8EDB000A5BA34 /* Bundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bundle.swift; sourceTree = "<group>"; };
@@ -719,6 +722,7 @@
 		4FB7C67F26AFF22C00FB1C41 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				4F0CC3F92E6F014200A0BE70 /* FullDiskAccessVerifier.swift */,
 				4F7ACFC22DE080AB003400E8 /* HelperTool.swift */,
 				4F7ACFAF2DE074FF003400E8 /* HelperProtocol.swift */,
 				4FDDE1962D53BA3200D9E853 /* String.swift */,
@@ -1178,6 +1182,7 @@
 				4F2E09AE2BA330A80031422E /* Apps.swift in Sources */,
 				4F38D8C9273AC5AE00671756 /* IntroView.swift in Sources */,
 				4F37E71D2718122E00A2B254 /* Defaults.swift in Sources */,
+				4F0CC3FA2E6F014200A0BE70 /* FullDiskAccessVerifier.swift in Sources */,
 				4FDDE1982D53BA3200D9E853 /* String.swift in Sources */,
 				4F37E71E2718122E00A2B254 /* Autologin.swift in Sources */,
 				4F38D8CF273AC62500671756 /* EndView.swift in Sources */,
@@ -1325,6 +1330,7 @@
 				4F2E09AD2BA330A80031422E /* Apps.swift in Sources */,
 				4F38D8C8273AC5AE00671756 /* IntroView.swift in Sources */,
 				4F47221026B08A0E0071CE2A /* Defaults.swift in Sources */,
+				4F0CC3FB2E6F014200A0BE70 /* FullDiskAccessVerifier.swift in Sources */,
 				4FDDE1992D53BA3200D9E853 /* String.swift in Sources */,
 				4F868DD126A5C51C005B876E /* Autologin.swift in Sources */,
 				4F38D8CE273AC62500671756 /* EndView.swift in Sources */,

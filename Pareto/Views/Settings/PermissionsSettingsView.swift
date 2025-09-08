@@ -21,7 +21,7 @@ struct PermissionsSettingsView: View {
     @Default(.myChecksURL) var myChecksURL
     @Default(.hideWhenNoFailures) var hideWhenNoFailures
     @StateObject private var helperToolManager = HelperToolManager()
-    @ObservedObject fileprivate var checker = PermissionsChecker()
+    @StateObject private var checker = PermissionsChecker()
 
     func authorizeOSAClick() {
         NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Automation")!)

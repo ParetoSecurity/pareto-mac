@@ -33,7 +33,7 @@ class PermissionsChecker: ObservableObject {
     func start() {
         timer?.invalidate() // cancel timer if any
         timer = Timer.scheduledTimer(withTimeInterval: 2.0, repeats: true) { _ in
-            self.fdaAuthorized = TimeMachineHasBackupCheck.sharedInstance.isRunnable
+            self.fdaAuthorized = FullDiskAccessVerifier.hasFullDiskAccess()
             self.osaAuthorized = self.osaIsAuthorized()
             self.firewallAuthorized = HelperToolUtilities.isHelperInstalled()
             self.ran = true
@@ -47,7 +47,7 @@ class PermissionsChecker: ObservableObject {
 
 struct PermissionsView: View {
     @Binding var step: Steps
-    @ObservedObject fileprivate var checker = PermissionsChecker()
+    @StateObject private var checker = PermissionsChecker()
 
     private var canContinue: Bool {
         // OSA is always required

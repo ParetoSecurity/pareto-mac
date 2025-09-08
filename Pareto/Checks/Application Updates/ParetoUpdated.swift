@@ -27,16 +27,16 @@ class ParetoUpdated: ParetoCheck {
     override var TitleOFF: String {
         "Pareto Security is outdated"
     }
-    
+
     override var infoURL: URL {
         var components = URLComponents()
         components.scheme = "https"
         components.host = "paretosecurity.com"
         components.path = "/check/\(UUID)"
-        
+
         // Add version parameters
         var queryItems = [URLQueryItem]()
-        
+
         // Add current and latest version information
         if !currentVersion.isEmpty {
             queryItems.append(URLQueryItem(name: "current_version", value: currentVersion))
@@ -44,9 +44,9 @@ class ParetoUpdated: ParetoCheck {
         if !latestVersion.isEmpty {
             queryItems.append(URLQueryItem(name: "latest_version", value: latestVersion))
         }
-        
+
         components.queryItems = queryItems
-        
+
         return components.url!
     }
 
@@ -108,11 +108,11 @@ class ParetoUpdated: ParetoCheck {
                 }
 
                 let latestVersionString = latestRelease.tag_name.replacingOccurrences(of: "v", with: "")
-                
+
                 // Store versions for URL construction
-                self.currentVersion = appVersion
-                self.latestVersion = latestVersionString
-                
+                currentVersion = appVersion
+                latestVersion = latestVersionString
+
                 let isUpToDate = appVersion == latestVersionString
 
                 os_log("Latest release is older than 10 days. App version: %{public}s, Latest version: %{public}s, Up to date: %{public}@",
@@ -125,10 +125,10 @@ class ParetoUpdated: ParetoCheck {
                     appVersion = String(appVersion.split(separator: "-")[0])
                 }
                 let latestVersionString = latestRelease.tag_name.replacingOccurrences(of: "v", with: "")
-                
+
                 // Store versions for URL construction
-                self.currentVersion = appVersion
-                self.latestVersion = latestVersionString
+                currentVersion = appVersion
+                latestVersion = latestVersionString
 
                 os_log("Latest release is within 10 days grace period. Published: %{public}s, Days ago: %{public}f, App version: %{public}s, Latest version: %{public}s",
                        latestRelease.published_at, abs(publishedDate.timeIntervalSinceNow) / (24 * 60 * 60), appVersion, latestVersionString)
@@ -144,7 +144,7 @@ class ParetoUpdated: ParetoCheck {
 
     override func checkPasses() -> Bool {
         // Disable this check when running in SetApp or when beta channel is enabled
-        
+
         #if SETAPP_ENABLED
             // Always pass for SetApp builds as updates are handled by SetApp
             return true
@@ -153,7 +153,7 @@ class ParetoUpdated: ParetoCheck {
             if Defaults[.showBeta] {
                 return true
             }
-            
+
             // Create a semaphore to wait for the async operation to complete
             let semaphore = DispatchSemaphore(value: 0)
 
