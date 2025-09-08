@@ -93,15 +93,31 @@ struct ChecksSettingsView: View {
                                                             .foregroundColor(.secondary)
                                                             .lineLimit(1)
                                                     } else if check is TimeMachineHasBackupCheck {
-                                                        Text("No recent backup found")
-                                                            .font(.caption)
-                                                            .foregroundColor(.secondary)
-                                                            .lineLimit(1)
+                                                        // Check if it's actually failing or just can't run
+                                                        if !TimeMachineCheck.sharedInstance.isActive || !TimeMachineCheck.sharedInstance.isRunnable {
+                                                            Text(check.disabledReason)
+                                                                .font(.caption)
+                                                                .foregroundColor(.secondary)
+                                                                .lineLimit(1)
+                                                        } else {
+                                                            Text("No recent backup found")
+                                                                .font(.caption)
+                                                                .foregroundColor(.secondary)
+                                                                .lineLimit(1)
+                                                        }
                                                     } else if check is TimeMachineIsEncryptedCheck {
-                                                        Text("Backup disk is not encrypted")
-                                                            .font(.caption)
-                                                            .foregroundColor(.secondary)
-                                                            .lineLimit(1)
+                                                        // Check if it's actually failing or just can't run
+                                                        if !TimeMachineCheck.sharedInstance.isActive || !TimeMachineCheck.sharedInstance.isRunnable {
+                                                            Text(check.disabledReason)
+                                                                .font(.caption)
+                                                                .foregroundColor(.secondary)
+                                                                .lineLimit(1)
+                                                        } else {
+                                                            Text("Backup disk is not encrypted")
+                                                                .font(.caption)
+                                                                .foregroundColor(.secondary)
+                                                                .lineLimit(1)
+                                                        }
                                                     } else if let appCheck = check as? AppCheck {
                                                         // For app update checks
                                                         if !appCheck.isInstalled {
