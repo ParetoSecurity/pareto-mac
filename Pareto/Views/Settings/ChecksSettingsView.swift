@@ -62,32 +62,7 @@ struct ChecksSettingsView: View {
 private struct TeamEnforcementHeader: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
-            VStack(spacing: 1) {
-                HStack(spacing: 12) {
-                    ZStack {
-                        RoundedRectangle(cornerRadius: 8)
-                            .fill(Color.orange.opacity(0.2))
-                            .frame(width: 32, height: 32)
-                        
-                        Text("✴")
-                            .font(.system(size: 16))
-                            .foregroundColor(.orange)
-                    }
-                    
-                    Text("Team required checks")
-                        .foregroundColor(.primary)
-                    
-                    Spacer()
-                }
-                .padding(.horizontal)
-                .padding(.vertical, 10)
-                .background(Color(NSColor.controlBackgroundColor))
-                .contentShape(Rectangle())
-            }
-            .background(Color(NSColor.controlBackgroundColor))
-            .cornerRadius(10)
-            .padding(.horizontal)
-            
+
             Text("Checks marked with ✴ are enforced by your team and cannot be disabled")
                 .font(.caption)
                 .foregroundColor(.secondary)

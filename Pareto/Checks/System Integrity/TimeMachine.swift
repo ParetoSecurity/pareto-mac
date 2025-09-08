@@ -39,6 +39,10 @@ class TimeMachineCheck: ParetoCheck {
         if config.count <= 1 {
             return false
         }
+        // Check if AutoBackup is not 0
+        if let autoBackup = config["AutoBackup"] as? Int, autoBackup == 0 {
+            return false
+        }
         // If team enforced, it's runnable regardless of isActive
         if teamEnforced {
             return true

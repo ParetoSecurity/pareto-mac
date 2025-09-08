@@ -22,7 +22,7 @@ class TimeMachineIsEncryptedCheck: ParetoCheck {
     }
 
     override var isRunnable: Bool {
-        // This check depends on Time Machine being configured, enabled and runnable
+        // This check depends on Time Machine being configured and runnable
         // Even if team enforced, it can't run if Time Machine isn't set up
         
         // First check if Time Machine check is even enabled
@@ -35,18 +35,8 @@ class TimeMachineIsEncryptedCheck: ParetoCheck {
             return false
         }
         
-        // Check if this check itself is active
-        if !isActive {
-            return false
-        }
-        
-        // Finally check if we can verify encryption (not a NAS backup)
-        let dict = readDefaultsFile(path: "/Library/Preferences/com.apple.TimeMachine.plist") as! [String: Any]?
-        guard let settings = dict else {
-            return false
-        }
-        let tmConf = TimeMachineConfig(dict: settings)
-        return tmConf.canCheckIsEncryptedBackup
+        // Finally check if this check itself is active
+        return isActive
     }
 
     override var showSettings: Bool {
