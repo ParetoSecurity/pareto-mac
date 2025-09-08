@@ -5,6 +5,7 @@
 //  Created by Janez Troha on 15/07/2021.
 //
 
+import Defaults
 import Foundation
 import OpenDirectory
 
@@ -31,15 +32,45 @@ class NoUnusedUsers: ParetoCheck {
         let users = local.filter { u in
             !adminUsers.contains(u)
         }
-        return users
+        let ignoredUsers = Defaults[.ignoredUserAccounts]
+        return users.filter { u in
+            !ignoredUsers.contains(u)
+        }
     }
 
     override var details: String {
-        let accounts = self.accounts
-        if accounts.isEmpty {
+        let adminUsers = runCMD(app: "/usr/bin/dscl", args: [".", "-read", "/Groups/admin", "GroupMembership"]).replacingAllMatches(of: "\n", with: "").components(separatedBy: " ")
+        let output = runCMD(app: "/usr/bin/dscl", args: [".", "-list", "/Users"]).components(separatedBy: "\n")
+        let local = output.filter { u in
+            !u.hasPrefix("_") && u.count > 1 && u != "root" && u != "nobody" && u != "daemon"
+        }
+        let allUnusedUsers = local.filter { u in
+            !adminUsers.contains(u)
+        }
+        let ignoredUsers = Defaults[.ignoredUserAccounts]
+        let activeAccounts = accounts
+
+        var detailLines: [String] = []
+
+        if !activeAccounts.isEmpty {
+            detailLines.append("Active unused accounts:")
+            detailLines.append(contentsOf: activeAccounts.map { "- \($0)" })
+        }
+
+        let ignoredButPresent = allUnusedUsers.filter { ignoredUsers.contains($0) }
+        if !ignoredButPresent.isEmpty {
+            if !detailLines.isEmpty {
+                detailLines.append("")
+            }
+            detailLines.append("Ignored accounts:")
+            detailLines.append(contentsOf: ignoredButPresent.map { "- \($0) (ignored)" })
+        }
+
+        if detailLines.isEmpty {
             return "None"
         }
-        return accounts.map { "- \($0)" }.joined(separator: "\n")
+
+        return detailLines.joined(separator: "\n")
     }
 
     var isAdmin: Bool {

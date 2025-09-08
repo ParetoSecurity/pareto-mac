@@ -1,0 +1,151 @@
+//
+//  IgnoredUsersSettingsView.swift
+//  Pareto Security
+//
+//  Created by Claude on 2025-09-08.
+//
+
+import Defaults
+import Foundation
+import SwiftUI
+
+struct IgnoredUsersSettingsView: View {
+    @Default(.ignoredUserAccounts) var ignoredUserAccounts
+    @State private var selectedUser: String?
+    @State private var availableUsers: [String] = []
+    @State private var isLoadingUsers = false
+
+    var body: some View {
+        Form {
+            VStack(alignment: .leading, spacing: 12) {
+                if !ignoredUserAccounts.isEmpty {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Currently Ignored:")
+                            .font(.system(size: 12, weight: .medium))
+                            .foregroundColor(.secondary)
+
+                        ForEach(ignoredUserAccounts, id: \.self) { user in
+                            HStack {
+                                Text(user)
+                                    .font(.system(.body, design: .monospaced))
+                                Spacer()
+                                Button(action: {
+                                    removeIgnoredUser(user)
+                                }) {
+                                    Image(systemName: "xmark.circle.fill")
+                                        .foregroundColor(.secondary)
+                                }
+                                .buttonStyle(.plain)
+                            }
+                            .padding(.vertical, 4)
+                            .padding(.horizontal, 8)
+                            .background(Color(NSColor.controlBackgroundColor))
+                            .cornerRadius(4)
+                        }
+                    }
+
+                    Divider()
+                }
+
+                HStack {
+                    Picker("Add user to ignore:", selection: $selectedUser) {
+                        Text("Select user...").tag(String?.none)
+                        ForEach(availableUsersNotIgnored, id: \.self) { user in
+                            Text(user).tag(String?.some(user))
+                        }
+                    }
+                    .pickerStyle(.menu)
+                    .disabled(isLoadingUsers || availableUsersNotIgnored.isEmpty)
+
+                    Button("Add") {
+                        if let user = selectedUser {
+                            addIgnoredUser(user)
+                            selectedUser = nil
+                        }
+                    }
+                    .disabled(selectedUser == nil)
+                }
+
+                if availableUsersNotIgnored.isEmpty && !isLoadingUsers {
+                    Text("No additional users available to ignore")
+                        .font(.footnote)
+                        .foregroundColor(.secondary)
+                }
+                Text("These user accounts will be excluded from the unused user accounts check. This is useful for service accounts that don't log in regularly.").font(.footnote)
+            }
+        }
+        .onAppear {
+            loadAvailableUsers()
+        }
+    }
+
+    private var availableUsersNotIgnored: [String] {
+        availableUsers.filter { !ignoredUserAccounts.contains($0) }
+    }
+
+    private func loadAvailableUsers() {
+        isLoadingUsers = true
+
+        DispatchQueue.global(qos: .background).async {
+            let adminUsers = runCMD(app: "/usr/bin/dscl", args: [".", "-read", "/Groups/admin", "GroupMembership"])
+                .replacingAllMatches(of: "\n", with: "")
+                .components(separatedBy: " ")
+
+            let output = runCMD(app: "/usr/bin/dscl", args: [".", "-list", "/Users"])
+                .components(separatedBy: "\n")
+
+            let local = output.filter { u in
+                !u.hasPrefix("_") && u.count > 1 && u != "root" && u != "nobody" && u != "daemon"
+            }
+
+            let nonAdminUsers = local.filter { u in
+                !adminUsers.contains(u)
+            }
+
+            DispatchQueue.main.async {
+                self.availableUsers = nonAdminUsers.sorted()
+                self.isLoadingUsers = false
+            }
+        }
+    }
+
+    private func addIgnoredUser(_ user: String) {
+        var users = ignoredUserAccounts
+        if !users.contains(user) {
+            users.append(user)
+            ignoredUserAccounts = users.sorted()
+        }
+    }
+
+    private func removeIgnoredUser(_ user: String) {
+        ignoredUserAccounts = ignoredUserAccounts.filter { $0 != user }
+    }
+
+    private func runCMD(app: String, args: [String]) -> String {
+        let task = Process()
+        let pipe = Pipe()
+
+        task.standardOutput = pipe
+        task.standardError = pipe
+        task.arguments = args
+        task.launchPath = app
+        task.standardInput = nil
+
+        do {
+            try task.run()
+        } catch {
+            return ""
+        }
+
+        let data = pipe.fileHandleForReading.readDataToEndOfFile()
+        let output = String(data: data, encoding: .utf8) ?? ""
+
+        return output
+    }
+}
+
+struct IgnoredUsersSettingsView_Previews: PreviewProvider {
+    static var previews: some View {
+        IgnoredUsersSettingsView()
+    }
+}

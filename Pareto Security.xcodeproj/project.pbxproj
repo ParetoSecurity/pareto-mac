@@ -221,6 +221,8 @@
 		4F9153B52D4BD7B400FCD809 /* PasswordManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F9153B32D4BD7B400FCD809 /* PasswordManager.swift */; };
 		4F923CED2756918E00070551 /* Cache in Frameworks */ = {isa = PBXBuildFile; productRef = 4F923CEC2756918E00070551 /* Cache */; };
 		4F923CF527569E6300070551 /* Cache in Frameworks */ = {isa = PBXBuildFile; productRef = 4F923CF427569E6300070551 /* Cache */; };
+		4F93F1D02E6F13EB0093FF41 /* IgnoredUsersSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F93F1CF2E6F13EB0093FF41 /* IgnoredUsersSettingsView.swift */; };
+		4F93F1D12E6F13EB0093FF41 /* IgnoredUsersSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F93F1CF2E6F13EB0093FF41 /* IgnoredUsersSettingsView.swift */; };
 		4F9791C126F5DB4F00E668F4 /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F9791C026F5DB4F00E668F4 /* Color.swift */; };
 		4FA8E5EC2B44428400B7EA9C /* NoUnusedUsers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FA8E5EB2B44428400B7EA9C /* NoUnusedUsers.swift */; };
 		4FA8E5ED2B44428400B7EA9C /* NoUnusedUsers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FA8E5EB2B44428400B7EA9C /* NoUnusedUsers.swift */; };
@@ -437,6 +439,7 @@
 		4F905C4127B6C9B20012C661 /* AutoUpdateCheck.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AutoUpdateCheck.swift; sourceTree = "<group>"; };
 		4F91060227623E4B00D1A348 /* SSHKeys.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSHKeys.swift; sourceTree = "<group>"; };
 		4F9153B32D4BD7B400FCD809 /* PasswordManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordManager.swift; sourceTree = "<group>"; };
+		4F93F1CF2E6F13EB0093FF41 /* IgnoredUsersSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IgnoredUsersSettingsView.swift; sourceTree = "<group>"; };
 		4F9791C026F5DB4F00E668F4 /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
 		4FA8E5EB2B44428400B7EA9C /* NoUnusedUsers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NoUnusedUsers.swift; sourceTree = "<group>"; };
 		4FA9756F2E4B31E4006C0D5A /* UpdateService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateService.swift; sourceTree = "<group>"; };
@@ -695,6 +698,7 @@
 		4FAAD324277B154300AA5CEF /* Settings */ = {
 			isa = PBXGroup;
 			children = (
+				4F93F1CF2E6F13EB0093FF41 /* IgnoredUsersSettingsView.swift */,
 				4F103007269EE135008C1E86 /* SettingsView.swift */,
 				4F24A08F26EB735F0036F748 /* TeamSettings.swift */,
 				4F24A09126EB73980036F748 /* AboutSettingsView.swift */,
@@ -1255,6 +1259,7 @@
 				4FB51A5827A94457003F528E /* SecurityUpdateCheck.swift in Sources */,
 				4F37E7352718122E00A2B254 /* AppInfo.swift in Sources */,
 				4F84EC9329DC3A030047C79C /* PermissionsSettingsView.swift in Sources */,
+				4F93F1D02E6F13EB0093FF41 /* IgnoredUsersSettingsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1403,6 +1408,7 @@
 				4FB51A5727A94457003F528E /* SecurityUpdateCheck.swift in Sources */,
 				4F6A92EA26C54AB7006C2F2D /* AppInfo.swift in Sources */,
 				4F84EC9229DC3A030047C79C /* PermissionsSettingsView.swift in Sources */,
+				4F93F1D12E6F13EB0093FF41 /* IgnoredUsersSettingsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

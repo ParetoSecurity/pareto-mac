@@ -53,6 +53,7 @@ extension Defaults.Keys {
     static let disableChecksEvents = Key<Bool>("disableChecksEvents", default: false, suite: extensionDefaults)
     static let checkForUpdatesRecentOnly = Key<Bool>("checkForUpdatesRecentOnly", default: true, suite: extensionDefaults)
     static let alternativeColor = Key<Bool>("alternativeColor", default: false, suite: extensionDefaults)
+    static let ignoredUserAccounts = Key<[String]>("ignoredUserAccounts", default: [], suite: extensionDefaults)
 }
 
 public extension Defaults {

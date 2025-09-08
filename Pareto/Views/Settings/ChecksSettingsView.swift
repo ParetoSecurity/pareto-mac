@@ -77,6 +77,9 @@ struct ChecksSettingsView: View {
                     }
                 }
             }
+            Section(header: Text("Ignored User Accounts").font(.headline)) {
+                IgnoredUsersSettingsView()
+            }
             Section {
                 VStack(alignment: .leading, spacing: 6) {
                     Text("Learn More").font(.headline)
