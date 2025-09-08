@@ -64,6 +64,14 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
     var TimestampKey: String {
         "ParetoCheck-" + UUID + "-TS"
     }
+    
+    var CachedDetailsKey: String {
+        "ParetoCheck-" + UUID + "-Details"
+    }
+    
+    var DisabledReasonKey: String {
+        "ParetoCheck-" + UUID + "-DisabledReason"
+    }
 
     var hasDebug: Bool {
         false
@@ -134,6 +142,30 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
     var checkPassed: Bool {
         get { UserDefaults.standard.bool(forKey: PassesKey) }
         set { UserDefaults.standard.set(newValue, forKey: PassesKey) }
+    }
+    
+    var cachedDetails: String {
+        get { UserDefaults.standard.string(forKey: CachedDetailsKey) ?? "" }
+        set { UserDefaults.standard.set(newValue, forKey: CachedDetailsKey) }
+    }
+    
+    var disabledReason: String {
+        get { 
+            if !isActive {
+                return "Manually disabled"
+            } else if !isRunnable {
+                if showSettingsWarnDiskAccess {
+                    return "Missing full disk access"
+                } else if showSettingsWarnEvents {
+                    return "Missing system events access"
+                } else if requiresHelper {
+                    return "Helper tool not installed"
+                }
+                return UserDefaults.standard.string(forKey: DisabledReasonKey) ?? "Cannot run"
+            }
+            return ""
+        }
+        set { UserDefaults.standard.set(newValue, forKey: DisabledReasonKey) }
     }
 
     func checkPasses() -> Bool {
@@ -219,6 +251,9 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
         let result = checkPasses()
         checkPassed = result
         checkTimestamp = Int(Date().currentTimeMs())
+        
+        // Cache the details after running the check
+        cachedDetails = details
 
         // Notify UI observers that this check changed
         DispatchQueue.main.async {

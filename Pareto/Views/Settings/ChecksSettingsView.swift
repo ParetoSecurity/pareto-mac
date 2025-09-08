@@ -66,12 +66,24 @@ struct ChecksSettingsView: View {
                                                         .lineLimit(1)
                                                 }
                                                 
-                                                if !check.showSettings {
-                                                    Text("Not Configurable")
+                                                // Show status details
+                                                if !check.isActive || !check.isRunnable {
+                                                    Text(check.disabledReason)
                                                         .font(.caption)
                                                         .foregroundColor(.secondary)
-                                                } else if !check.isActive {
-                                                    Text("Disabled")
+                                                        .lineLimit(1)
+                                                } else if !check.cachedDetails.isEmpty && check.cachedDetails != "None" {
+                                                    // Show cached details for active checks
+                                                    Text(check.cachedDetails.components(separatedBy: "\n").first ?? "")
+                                                        .font(.caption)
+                                                        .foregroundColor(.secondary)
+                                                        .lineLimit(1)
+                                                } else if check.checkPassed {
+                                                    Text("Passing")
+                                                        .font(.caption)
+                                                        .foregroundColor(.secondary)
+                                                } else {
+                                                    Text("Needs attention")
                                                         .font(.caption)
                                                         .foregroundColor(.secondary)
                                                 }
@@ -121,15 +133,15 @@ struct ChecksSettingsView: View {
     }
     
     private func statusColor(for check: ParetoCheck) -> Color {
-        // Color based on check status
+        // Color based on cached check status - don't run the actual check
         if !check.isActive {
             return Color.gray  // Disabled
         } else if !check.isRunnable {
             return Color.gray.opacity(0.7)  // Cannot run (missing permissions)
-        } else if check.checkPasses() {
-            return Color.green  // Passing
+        } else if check.checkPassed {
+            return Color.green  // Passing (cached)
         } else {
-            return Color.orange  // Failing
+            return Color.orange  // Failing (cached)
         }
     }
     
