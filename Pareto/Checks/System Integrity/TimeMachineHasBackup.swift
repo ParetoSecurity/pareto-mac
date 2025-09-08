@@ -22,11 +22,21 @@ class TimeMachineHasBackupCheck: ParetoCheck {
     }
 
     override var isRunnable: Bool {
-        if teamEnforced {
-            return true
-        }
         // This check depends on Time Machine being configured and runnable
-        return TimeMachineCheck.sharedInstance.isRunnable && TimeMachineCheck.sharedInstance.isActive && isActive
+        // Even if team enforced, it can't run if Time Machine isn't set up
+        
+        // First check if Time Machine check is even enabled
+        if !TimeMachineCheck.sharedInstance.isActive {
+            return false
+        }
+        
+        // Then check if Time Machine is configured
+        if !TimeMachineCheck.sharedInstance.isRunnable {
+            return false
+        }
+        
+        // Finally check if this check itself is active
+        return isActive
     }
 
     override var showSettings: Bool {
@@ -37,6 +47,54 @@ class TimeMachineHasBackupCheck: ParetoCheck {
         return true && readDefaultsFile(path: "/Library/Preferences/com.apple.TimeMachine.plist") as! [String: Any]? == nil
     }
 
+    override var details: String {
+        // If this check isn't runnable, return the reason why
+        if !isRunnable {
+            // Check if Time Machine check is disabled first
+            if !TimeMachineCheck.sharedInstance.isActive {
+                return "Depends on 'Time Machine is on' check being enabled"
+            }
+            
+            // Check if Time Machine is configured
+            if !TimeMachineCheck.sharedInstance.isRunnable {
+                return "Time Machine is not configured - no backup destination set"
+            }
+            
+            // Other reasons this check might not be runnable
+            return disabledReason
+        }
+        
+        // If we can read the Time Machine config, check backup status
+        guard let settings = readDefaultsFile(path: "/Library/Preferences/com.apple.TimeMachine.plist") as! [String: Any]? else {
+            return "Cannot read Time Machine configuration"
+        }
+        
+        let tmConf = TimeMachineConfig(dict: settings)
+        
+        if !tmConf.AutoBackup {
+            return "Automatic backups are disabled"
+        }
+        
+        if tmConf.Destinations.isEmpty {
+            return "No backup destinations configured"
+        }
+        
+        if tmConf.upToDateBackup {
+            return "Last backup was within the past 7 days"
+        } else {
+            // Find the most recent backup
+            let mostRecent = tmConf.Destinations.map { $0.ReferenceLocalSnapshotDate }.max() ?? Date.distantPast
+            let formatter = DateFormatter()
+            formatter.dateStyle = .medium
+            formatter.timeStyle = .short
+            if mostRecent == Date.distantPast {
+                return "No recent backup found"
+            } else {
+                return "Last backup: \(formatter.string(from: mostRecent))"
+            }
+        }
+    }
+    
     override func checkPasses() -> Bool {
         guard let settings = readDefaultsFile(path: "/Library/Preferences/com.apple.TimeMachine.plist") as! [String: Any]? else {
             os_log("/Library/Preferences/com.apple.TimeMachine.plist is empty")

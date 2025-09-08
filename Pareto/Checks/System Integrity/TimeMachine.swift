@@ -31,13 +31,20 @@ class TimeMachineCheck: ParetoCheck {
     }
 
     override var isRunnable: Bool {
-        if teamEnforced {
-            return true
-        }
+        // Even if team enforced, we need Time Machine to be configured
         guard let config = readDefaultsFile(path: "/Library/Preferences/com.apple.TimeMachine.plist") as! [String: Any]? else {
             return false
         }
-        return config.count > 1 && isActive
+        // Check if there's actual configuration (not just an empty or minimal plist)
+        if config.count <= 1 {
+            return false
+        }
+        // If team enforced, it's runnable regardless of isActive
+        if teamEnforced {
+            return true
+        }
+        // Otherwise, it needs to be active
+        return isActive
     }
 
     var isConfigured: Bool {
@@ -45,6 +52,38 @@ class TimeMachineCheck: ParetoCheck {
         return status.contains("ID") && status.contains("Name")
     }
 
+    override var details: String {
+        // If not runnable due to configuration, return the reason
+        if !isRunnable {
+            return disabledReason
+        }
+        
+        guard let settings = readDefaultsFile(path: "/Library/Preferences/com.apple.TimeMachine.plist") as! [String: Any]? else {
+            // Fallback to tmutil if plist not readable
+            if isConfigured {
+                return "Time Machine is configured (via tmutil)"
+            } else {
+                return "Time Machine is not configured - no backup destination set"
+            }
+        }
+        
+        let tmConf = TimeMachineConfig(dict: settings)
+        
+        if tmConf.Destinations.isEmpty {
+            return "No backup destinations configured"
+        }
+        
+        if !tmConf.AutoBackup {
+            return "Automatic backups are disabled"
+        }
+        
+        if tmConf.LastDestinationID.isEmpty {
+            return "Time Machine configured but no backups have been made yet"
+        }
+        
+        return "Time Machine is enabled with \(tmConf.Destinations.count) destination(s)"
+    }
+    
     override func checkPasses() -> Bool {
         guard let settings = readDefaultsFile(path: "/Library/Preferences/com.apple.TimeMachine.plist") as! [String: Any]? else {
             os_log("/Library/Preferences/com.apple.TimeMachine.plist use fallback")

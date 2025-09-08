@@ -23,10 +23,37 @@ struct ChecksSettingsView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
                 if !teamID.isEmpty {
-                    Text("Checks with asterisk (✴) are required by your team.")
-                        .font(.footnote)
+                    VStack(spacing: 1) {
+                        HStack(spacing: 12) {
+                            ZStack {
+                                RoundedRectangle(cornerRadius: 8)
+                                    .fill(Color.orange.opacity(0.2))
+                                    .frame(width: 32, height: 32)
+                                
+                                Text("✴")
+                                    .font(.system(size: 16))
+                                    .foregroundColor(.orange)
+                            }
+                            
+                            Text("Team required checks")
+                                .foregroundColor(.primary)
+                            
+                            Spacer()
+                        }
+                        .padding(.horizontal)
+                        .padding(.vertical, 10)
+                        .background(Color(NSColor.controlBackgroundColor))
+                        .contentShape(Rectangle())
+                    }
+                    .background(Color(NSColor.controlBackgroundColor))
+                    .cornerRadius(10)
+                    .padding(.horizontal)
+                    
+                    Text("Checks marked with ✴ are enforced by your team and cannot be disabled")
+                        .font(.caption)
                         .foregroundColor(.secondary)
                         .padding(.horizontal)
+                        .padding(.top, 4)
                 }
                 
                 // Security Check Sections
@@ -74,7 +101,14 @@ struct ChecksSettingsView: View {
                                                         .font(.caption)
                                                         .foregroundColor(.secondary)
                                                         .lineLimit(1)
+                                                } else if check is TimeMachineHasBackupCheck && (!TimeMachineCheck.sharedInstance.isActive || !TimeMachineCheck.sharedInstance.isRunnable) {
+                                                    // Special case for Time Machine backup check when Time Machine is disabled
+                                                    Text(check.disabledReason)
+                                                        .font(.caption)
+                                                        .foregroundColor(.secondary)
+                                                        .lineLimit(1)
                                                 } else if !check.isRunnable {
+                                                    // For checks that can't run, show why (including dependency issues)
                                                     Text(check.disabledReason)
                                                         .font(.caption)
                                                         .foregroundColor(.secondary)
@@ -86,39 +120,8 @@ struct ChecksSettingsView: View {
                                                         .foregroundColor(.secondary)
                                                         .lineLimit(1)
                                                 } else {
-                                                    // For failing checks, try to show why
-                                                    if check is TimeMachineCheck {
-                                                        Text("Time Machine is disabled or not configured")
-                                                            .font(.caption)
-                                                            .foregroundColor(.secondary)
-                                                            .lineLimit(1)
-                                                    } else if check is TimeMachineHasBackupCheck {
-                                                        // Check if it's actually failing or just can't run
-                                                        if !TimeMachineCheck.sharedInstance.isActive || !TimeMachineCheck.sharedInstance.isRunnable {
-                                                            Text(check.disabledReason)
-                                                                .font(.caption)
-                                                                .foregroundColor(.secondary)
-                                                                .lineLimit(1)
-                                                        } else {
-                                                            Text("No recent backup found")
-                                                                .font(.caption)
-                                                                .foregroundColor(.secondary)
-                                                                .lineLimit(1)
-                                                        }
-                                                    } else if check is TimeMachineIsEncryptedCheck {
-                                                        // Check if it's actually failing or just can't run
-                                                        if !TimeMachineCheck.sharedInstance.isActive || !TimeMachineCheck.sharedInstance.isRunnable {
-                                                            Text(check.disabledReason)
-                                                                .font(.caption)
-                                                                .foregroundColor(.secondary)
-                                                                .lineLimit(1)
-                                                        } else {
-                                                            Text("Backup disk is not encrypted")
-                                                                .font(.caption)
-                                                                .foregroundColor(.secondary)
-                                                                .lineLimit(1)
-                                                        }
-                                                    } else if let appCheck = check as? AppCheck {
+                                                    // For failing checks, show appropriate status message
+                                                    if let appCheck = check as? AppCheck {
                                                         // For app update checks
                                                         if !appCheck.isInstalled {
                                                             Text("\(appCheck.appMarketingName) not installed")
@@ -137,9 +140,18 @@ struct ChecksSettingsView: View {
                                                                 .lineLimit(1)
                                                         }
                                                     } else {
-                                                        Text("Needs attention")
+                                                        // For other failing checks, show appropriate message
+                                                        let message: String
+                                                        if !check.cachedDetails.isEmpty && check.isRunnable {
+                                                            // Only use cached details if the check is actually runnable
+                                                            message = check.cachedDetails
+                                                        } else {
+                                                            message = "Needs attention"
+                                                        }
+                                                        Text(message)
                                                             .font(.caption)
                                                             .foregroundColor(.secondary)
+                                                            .lineLimit(1)
                                                     }
                                                 }
                                             }
