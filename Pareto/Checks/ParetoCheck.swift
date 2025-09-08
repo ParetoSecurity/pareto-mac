@@ -165,22 +165,30 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
                         return "Cannot read Time Machine configuration - may need full disk access"
                     }
                 } else if self is TimeMachineHasBackupCheck {
-                    // For Time Machine backup check
+                    // For Time Machine backup check - it depends on the main Time Machine check
                     if !TimeMachineCheck.sharedInstance.isActive {
                         return "Depends on 'Time Machine is on' check being enabled"
-                    } else if !TimeMachineCheck.sharedInstance.checkPassed {
-                        return "Time Machine must be enabled first"
+                    } else if !TimeMachineCheck.sharedInstance.isRunnable {
+                        return "Time Machine check cannot run - not configured"
                     } else if let config = readDefaultsFile(path: "/Library/Preferences/com.apple.TimeMachine.plist") {
                         if config.isEmpty || config.count <= 1 {
                             return "Time Machine is not configured - no backup destination"
                         }
+                    } else {
+                        return "Cannot read Time Machine configuration"
                     }
                 } else if self is TimeMachineIsEncryptedCheck {
-                    // For Time Machine encryption check
+                    // For Time Machine encryption check - depends on main Time Machine check
                     if !TimeMachineCheck.sharedInstance.isActive {
                         return "Depends on 'Time Machine is on' check being enabled"
-                    } else if !TimeMachineCheck.sharedInstance.checkPassed {
-                        return "Time Machine must be enabled first"
+                    } else if !TimeMachineCheck.sharedInstance.isRunnable {
+                        return "Time Machine check cannot run - not configured"
+                    } else if let config = readDefaultsFile(path: "/Library/Preferences/com.apple.TimeMachine.plist") {
+                        if config.isEmpty || config.count <= 1 {
+                            return "Time Machine is not configured - no backup destination"
+                        }
+                    } else {
+                        return "Cannot read Time Machine configuration"
                     }
                 }
                 

@@ -25,7 +25,8 @@ class TimeMachineHasBackupCheck: ParetoCheck {
         if teamEnforced {
             return true
         }
-        return TimeMachineCheck.sharedInstance.isRunnable && isActive
+        // This check depends on Time Machine being configured and runnable
+        return TimeMachineCheck.sharedInstance.isRunnable && TimeMachineCheck.sharedInstance.isActive && isActive
     }
 
     override var showSettings: Bool {

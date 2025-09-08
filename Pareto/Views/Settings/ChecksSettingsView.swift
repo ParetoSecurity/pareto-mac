@@ -16,6 +16,7 @@ struct CheckWrapper: Identifiable {
 
 struct ChecksSettingsView: View {
     @State private var selectedCheckWrapper: CheckWrapper?
+    @State private var refreshID = UUID()
     @Default(.teamID) var teamID
     
     var body: some View {
@@ -160,8 +161,12 @@ struct ChecksSettingsView: View {
                     .padding(.bottom)
             }
         }
+        .id(refreshID)
         .frame(minHeight: 450)
-        .sheet(item: $selectedCheckWrapper) { wrapper in
+        .sheet(item: $selectedCheckWrapper, onDismiss: {
+            // Force refresh when sheet closes
+            refreshID = UUID()
+        }) { wrapper in
             if wrapper.check.UUID == NoUnusedUsers.sharedInstance.UUID {
                 NoUnusedUsersDetailView(check: wrapper.check)
             } else {
