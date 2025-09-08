@@ -44,10 +44,10 @@ struct ChecksSettingsView: View {
                                         selectedCheckWrapper = CheckWrapper(check: check)
                                     }) {
                                         HStack(spacing: 12) {
-                                            // Icon background with appropriate color
+                                            // Icon background with status-based color
                                             ZStack {
                                                 RoundedRectangle(cornerRadius: 8)
-                                                    .fill(iconBackgroundColor(for: check))
+                                                    .fill(statusColor(for: check))
                                                     .frame(width: 32, height: 32)
                                                 
                                                 Image(systemName: iconName(for: check))
@@ -120,25 +120,16 @@ struct ChecksSettingsView: View {
         }
     }
     
-    private func iconBackgroundColor(for check: ParetoCheck) -> Color {
-        // Map checks to appropriate colors based on their category
-        switch check {
-        case is NoUnusedUsers:
-            return Color.orange
-        case _ where check.TitleON.lowercased().contains("firewall"):
-            return Color.red
-        case _ where check.TitleON.lowercased().contains("password"):
-            return Color.purple
-        case _ where check.TitleON.lowercased().contains("update"):
-            return Color.blue
-        case _ where check.TitleON.lowercased().contains("encryption") || check.TitleON.lowercased().contains("filevault"):
-            return Color.green
-        case _ where check.TitleON.lowercased().contains("screen"):
-            return Color.cyan
-        case _ where check.TitleON.lowercased().contains("ssh"):
-            return Color.indigo
-        default:
-            return Color.blue
+    private func statusColor(for check: ParetoCheck) -> Color {
+        // Color based on check status
+        if !check.isActive {
+            return Color.gray  // Disabled
+        } else if !check.isRunnable {
+            return Color.gray.opacity(0.7)  // Cannot run (missing permissions)
+        } else if check.checkPasses() {
+            return Color.green  // Passing
+        } else {
+            return Color.orange  // Failing
         }
     }
     
