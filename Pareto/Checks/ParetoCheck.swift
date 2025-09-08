@@ -184,6 +184,15 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
                     }
                 }
                 
+                // Check for app-specific conditions based on class name
+                if String(describing: type(of: self)).contains("AppCheck") || 
+                   String(describing: type(of: self)).hasSuffix("Check") {
+                    // This might be an app update check
+                    if TitleON.contains("up-to-date") || TitleON.contains("update") {
+                        return "App not installed or hasn't been used recently (check General settings)"
+                    }
+                }
+                
                 if showSettingsWarnDiskAccess {
                     return "Requires full disk access permission to read system files"
                 } else if showSettingsWarnEvents {

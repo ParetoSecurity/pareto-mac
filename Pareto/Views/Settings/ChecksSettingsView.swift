@@ -59,6 +59,7 @@ struct ChecksSettingsView: View {
                                                 HStack(spacing: 4) {
                                                     if check.teamEnforced {
                                                         Text("✴")
+                                                            .font(.system(size: 14))
                                                             .foregroundColor(.orange)
                                                     }
                                                     Text(check.TitleON)
