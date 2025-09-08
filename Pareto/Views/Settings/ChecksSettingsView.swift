@@ -25,10 +25,6 @@ struct ChecksSettingsView: View {
                     if !teamID.isEmpty {
                         Text("Checks with asterisk (✴) are required by your team.")
                     }
-                    HStack(spacing: 0) {
-                        Link("Learn more", destination: URL(string: "https://paretosecurity.com/security-checks?utm_source=\(AppInfo.utmSource)")!)
-                        Text(" about checks on our website.")
-                    }
                 }
             }
             ForEach(Claims.global.all, id: \.self) { claim in
@@ -79,6 +75,14 @@ struct ChecksSettingsView: View {
                             .padding(.vertical, 2)
                         }
                     }
+                }
+            }
+            Section {
+                VStack(alignment: .leading, spacing: 6) {
+                    Text("Learn More").font(.headline)
+                    Link("About security checks on our website", destination: URL(string: "https://paretosecurity.com/security-checks?utm_source=\(AppInfo.utmSource)")!)
+                        .font(.footnote)
+                        .foregroundColor(.accentColor)
                 }
             }
         }
