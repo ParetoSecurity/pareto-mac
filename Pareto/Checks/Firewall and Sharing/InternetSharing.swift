@@ -31,22 +31,29 @@ class InternetShareCheck: ParetoCheck {
     }
 
     override func checkPasses() -> Bool {
-        if let dict = readDefaultsFile(path: "/Library/Preferences/SystemConfiguration/com.apple.nat.plist") {
-            if let NAT = (dict.value(forKey: "NAT") as? NSDictionary) {
-                var natPrimaryDisabled = true
-                if let primary = NAT.value(forKey: "PrimaryInterface") as? NSDictionary {
-                    natPrimaryDisabled = primary.value(forKey: "Enabled") as? Int == 0
-                }
-                var natAirPortDisabled = true
-                if let airport = NAT.value(forKey: "AirPort") as? NSDictionary {
-                    natAirPortDisabled = airport.value(forKey: "Enabled") as? Int == 0
-                }
-
-                let natDisabled = NAT.value(forKey: "Enabled") as? Int == 0
-                return natDisabled && natAirPortDisabled && natPrimaryDisabled
-            }
+        guard let dict = readDefaultsFile(path: "/Library/Preferences/SystemConfiguration/com.apple.nat.plist") else {
+            // can also be missing if it never changed, but defaults to true
+            return true
         }
-        // can also be missing if it never changed, but defaults to true
-        return true
+
+        guard let nat = dict["NAT"] as? [String: Any] else {
+            // If the NAT dictionary is missing, default to passing (off)
+            return true
+        }
+
+        // NAT Enabled flag (expects 0/1 stored as Int)
+        let natDisabled = (nat["Enabled"] as? Int) == 0
+
+        var natPrimaryDisabled = true
+        if let primary = nat["PrimaryInterface"] as? [String: Any] {
+            natPrimaryDisabled = (primary["Enabled"] as? Int) == 0
+        }
+
+        var natAirPortDisabled = true
+        if let airport = nat["AirPort"] as? [String: Any] {
+            natAirPortDisabled = (airport["Enabled"] as? Int) == 0
+        }
+
+        return natDisabled && natAirPortDisabled && natPrimaryDisabled
     }
 }

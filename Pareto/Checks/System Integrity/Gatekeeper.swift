@@ -40,14 +40,14 @@ class GatekeeperCheck: ParetoCheck {
 
         // If we are not sandboxed
         let dictionary = readDefaultsFile(path: path)
-        if let enabled = dictionary?.object(forKey: "enabled") as? String {
-            os_log("Gatekeeper file found, status %{enabled}s", log: Log.check, enabled)
+        if let enabled = dictionary?["enabled"] as? String {
+            os_log("Gatekeeper file found, status %{public}@", log: Log.check, enabled)
             return enabled == "yes"
         }
 
         // falback if global file is not present (probably due to the upgrade)
         let output = runCMD(app: "/usr/sbin/spctl", args: ["--status"])
-        os_log("spctl fallback, status %{enabled}s", log: Log.check, output)
+        os_log("spctl fallback, status %{public}@", log: Log.check, output)
         return output.contains("assessments enabled")
     }
 }

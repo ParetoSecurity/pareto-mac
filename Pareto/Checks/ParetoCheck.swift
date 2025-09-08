@@ -154,18 +154,57 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
             if !isActive {
                 return "Manually disabled"
             } else if !isRunnable {
-                if showSettingsWarnDiskAccess {
-                    return "Missing full disk access"
-                } else if showSettingsWarnEvents {
-                    return "Missing system events access"
-                } else if requiresHelper {
-                    return "Helper tool not installed"
+                // Check for specific Time Machine conditions
+                if self is TimeMachineCheck {
+                    // For the main Time Machine check
+                    if let config = readDefaultsFile(path: "/Library/Preferences/com.apple.TimeMachine.plist") {
+                        if config.isEmpty || config.count <= 1 {
+                            return "Time Machine is not configured - no backup destination set"
+                        }
+                    } else {
+                        return "Cannot read Time Machine configuration - may need full disk access"
+                    }
+                } else if self is TimeMachineHasBackupCheck {
+                    // For Time Machine backup check
+                    if !TimeMachineCheck.sharedInstance.isActive {
+                        return "Depends on 'Time Machine is on' check being enabled"
+                    } else if !TimeMachineCheck.sharedInstance.checkPassed {
+                        return "Time Machine must be enabled first"
+                    } else if let config = readDefaultsFile(path: "/Library/Preferences/com.apple.TimeMachine.plist") {
+                        if config.isEmpty || config.count <= 1 {
+                            return "Time Machine is not configured - no backup destination"
+                        }
+                    }
+                } else if self is TimeMachineIsEncryptedCheck {
+                    // For Time Machine encryption check
+                    if !TimeMachineCheck.sharedInstance.isActive {
+                        return "Depends on 'Time Machine is on' check being enabled"
+                    } else if !TimeMachineCheck.sharedInstance.checkPassed {
+                        return "Time Machine must be enabled first"
+                    }
                 }
-                return UserDefaults.standard.string(forKey: DisabledReasonKey) ?? "Cannot run"
+                
+                if showSettingsWarnDiskAccess {
+                    return "Requires full disk access permission to read system files"
+                } else if showSettingsWarnEvents {
+                    return "Requires system events access permission"
+                } else if requiresHelper {
+                    return "Requires privileged helper tool authorization in System Settings"
+                }
+                
+                // Generic fallback with more context
+                return UserDefaults.standard.string(forKey: DisabledReasonKey) ?? "Check prerequisites not met"
             }
             return ""
         }
         set { UserDefaults.standard.set(newValue, forKey: DisabledReasonKey) }
+    }
+    
+    // Helper function for reading plist files returning a Swift dictionary
+    func readDefaultsFile(path: String) -> [String: Any]? {
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: path)) else { return nil }
+        let plist = try? PropertyListSerialization.propertyList(from: data, format: nil)
+        return plist as? [String: Any]
     }
 
     func checkPasses() -> Bool {
@@ -331,14 +370,6 @@ extension ParetoCheck {
     func readDefaults(app: String, key: String) -> String? {
         let output = runCMD(app: "/usr/bin/defaults", args: ["-currentHost", "read", app, key])
         return output.contains("does not exist") ? nil : output
-    }
-
-    func readDefaultsFile(path: String) -> NSDictionary? {
-        guard let dictionary = NSDictionary(contentsOfFile: path) else {
-            // os_log("Failed reading %{public}s", path)
-            return nil
-        }
-        return dictionary
     }
 
     func readDefaultsNative(path: String, key: String) -> String? {

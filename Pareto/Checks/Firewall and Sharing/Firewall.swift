@@ -118,7 +118,7 @@ class FirewallCheck: ParetoCheck {
         }
 
         let native = readDefaultsFile(path: "/Library/Preferences/com.apple.alf.plist")
-        if let globalstate = native?.value(forKey: "globalstate") as? Int {
+        if let globalstate = native?["globalstate"] as? Int {
             return globalstate >= 1
         }
         return false

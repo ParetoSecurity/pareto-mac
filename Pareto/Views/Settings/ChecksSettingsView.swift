@@ -67,25 +67,62 @@ struct ChecksSettingsView: View {
                                                 }
                                                 
                                                 // Show status details
-                                                if !check.isActive || !check.isRunnable {
+                                                if !check.isActive {
+                                                    Text("Manually disabled")
+                                                        .font(.caption)
+                                                        .foregroundColor(.secondary)
+                                                        .lineLimit(1)
+                                                } else if !check.isRunnable {
                                                     Text(check.disabledReason)
                                                         .font(.caption)
                                                         .foregroundColor(.secondary)
                                                         .lineLimit(1)
-                                                } else if !check.cachedDetails.isEmpty && check.cachedDetails != "None" {
-                                                    // Show cached details for active checks
-                                                    Text(check.cachedDetails.components(separatedBy: "\n").first ?? "")
-                                                        .font(.caption)
-                                                        .foregroundColor(.secondary)
-                                                        .lineLimit(1)
                                                 } else if check.checkPassed {
+                                                    // For passing checks, just show "Passing" - save details for the sheet
                                                     Text("Passing")
                                                         .font(.caption)
                                                         .foregroundColor(.secondary)
+                                                        .lineLimit(1)
                                                 } else {
-                                                    Text("Needs attention")
-                                                        .font(.caption)
-                                                        .foregroundColor(.secondary)
+                                                    // For failing checks, try to show why
+                                                    if check is TimeMachineCheck {
+                                                        Text("Time Machine is disabled or not configured")
+                                                            .font(.caption)
+                                                            .foregroundColor(.secondary)
+                                                            .lineLimit(1)
+                                                    } else if check is TimeMachineHasBackupCheck {
+                                                        Text("No recent backup found")
+                                                            .font(.caption)
+                                                            .foregroundColor(.secondary)
+                                                            .lineLimit(1)
+                                                    } else if check is TimeMachineIsEncryptedCheck {
+                                                        Text("Backup disk is not encrypted")
+                                                            .font(.caption)
+                                                            .foregroundColor(.secondary)
+                                                            .lineLimit(1)
+                                                    } else if let appCheck = check as? AppCheck {
+                                                        // For app update checks
+                                                        if !appCheck.isInstalled {
+                                                            Text("App not installed")
+                                                                .font(.caption)
+                                                                .foregroundColor(.secondary)
+                                                                .lineLimit(1)
+                                                        } else if !appCheck.usedRecently {
+                                                            Text("App not used in the last week")
+                                                                .font(.caption)
+                                                                .foregroundColor(.secondary)
+                                                                .lineLimit(1)
+                                                        } else {
+                                                            Text("Update available")
+                                                                .font(.caption)
+                                                                .foregroundColor(.secondary)
+                                                                .lineLimit(1)
+                                                        }
+                                                    } else {
+                                                        Text("Needs attention")
+                                                            .font(.caption)
+                                                            .foregroundColor(.secondary)
+                                                    }
                                                 }
                                             }
                                             
@@ -284,26 +321,78 @@ struct CheckDetailView: View {
                 }
                 
                 Section(header: Text("Current Status")) {
-                    HStack {
-                        Text("Status:")
-                        Spacer()
-                        if check.checkPasses() {
-                            Label("Passing", systemImage: "checkmark.circle.fill")
-                                .foregroundColor(.green)
-                        } else {
-                            Label("Failing", systemImage: "xmark.circle.fill")
-                                .foregroundColor(.orange)
-                        }
-                    }
-                    
-                    if !check.details.isEmpty && check.details != "None" {
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text("Details:")
-                                .font(.caption)
+                    if !check.isActive {
+                        VStack(alignment: .leading, spacing: 8) {
+                            HStack {
+                                Image(systemName: "minus.circle.fill")
+                                    .foregroundColor(.gray)
+                                Text("Check is disabled")
+                                    .font(.headline)
+                                Spacer()
+                            }
+                            Text("This check has been manually disabled")
+                                .font(.body)
                                 .foregroundColor(.secondary)
-                            Text(check.details)
-                                .font(.system(.body, design: .monospaced))
-                                .textSelection(.enabled)
+                        }
+                    } else if !check.isRunnable {
+                        VStack(alignment: .leading, spacing: 8) {
+                            HStack {
+                                Image(systemName: "exclamationmark.triangle.fill")
+                                    .foregroundColor(.orange)
+                                Text("Check cannot run")
+                                    .font(.headline)
+                                Spacer()
+                            }
+                            Text(check.disabledReason)
+                                .font(.body)
+                                .foregroundColor(.secondary)
+                        }
+                    } else {
+                        HStack {
+                            Text("Status:")
+                            Spacer()
+                            if check.checkPassed {
+                                Label("Passing", systemImage: "checkmark.circle.fill")
+                                    .foregroundColor(.green)
+                            } else {
+                                // Show specific failure reason
+                                if check is TimeMachineCheck {
+                                    Label("Time Machine is disabled or not configured", systemImage: "xmark.circle.fill")
+                                        .foregroundColor(.orange)
+                                } else if check is TimeMachineHasBackupCheck {
+                                    Label("No recent backup found", systemImage: "xmark.circle.fill")
+                                        .foregroundColor(.orange)
+                                } else if check is TimeMachineIsEncryptedCheck {
+                                    Label("Backup disk is not encrypted", systemImage: "xmark.circle.fill")
+                                        .foregroundColor(.orange)
+                                } else if let appCheck = check as? AppCheck {
+                                    // For app update checks
+                                    if !appCheck.isInstalled {
+                                        Label("App not installed", systemImage: "xmark.circle.fill")
+                                            .foregroundColor(.gray)
+                                    } else if !appCheck.usedRecently {
+                                        Label("App not used in the last week", systemImage: "clock.badge.xmark.fill")
+                                            .foregroundColor(.gray)
+                                    } else {
+                                        Label("Update available", systemImage: "arrow.down.circle.fill")
+                                            .foregroundColor(.orange)
+                                    }
+                                } else {
+                                    Label("Failing", systemImage: "xmark.circle.fill")
+                                        .foregroundColor(.orange)
+                                }
+                            }
+                        }
+                        
+                        if !check.cachedDetails.isEmpty && check.cachedDetails != "None" {
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text("Details:")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                                Text(check.cachedDetails)
+                                    .font(.system(.body, design: .monospaced))
+                                    .textSelection(.enabled)
+                            }
                         }
                     }
                 }
@@ -398,26 +487,78 @@ struct NoUnusedUsersDetailView: View {
                 }
                 
                 Section(header: Text("Current Status")) {
-                    HStack {
-                        Text("Status:")
-                        Spacer()
-                        if check.checkPasses() {
-                            Label("Passing", systemImage: "checkmark.circle.fill")
-                                .foregroundColor(.green)
-                        } else {
-                            Label("Failing", systemImage: "xmark.circle.fill")
-                                .foregroundColor(.orange)
-                        }
-                    }
-                    
-                    if !check.details.isEmpty && check.details != "None" {
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text("Details:")
-                                .font(.caption)
+                    if !check.isActive {
+                        VStack(alignment: .leading, spacing: 8) {
+                            HStack {
+                                Image(systemName: "minus.circle.fill")
+                                    .foregroundColor(.gray)
+                                Text("Check is disabled")
+                                    .font(.headline)
+                                Spacer()
+                            }
+                            Text("This check has been manually disabled")
+                                .font(.body)
                                 .foregroundColor(.secondary)
-                            Text(check.details)
-                                .font(.system(.body, design: .monospaced))
-                                .textSelection(.enabled)
+                        }
+                    } else if !check.isRunnable {
+                        VStack(alignment: .leading, spacing: 8) {
+                            HStack {
+                                Image(systemName: "exclamationmark.triangle.fill")
+                                    .foregroundColor(.orange)
+                                Text("Check cannot run")
+                                    .font(.headline)
+                                Spacer()
+                            }
+                            Text(check.disabledReason)
+                                .font(.body)
+                                .foregroundColor(.secondary)
+                        }
+                    } else {
+                        HStack {
+                            Text("Status:")
+                            Spacer()
+                            if check.checkPassed {
+                                Label("Passing", systemImage: "checkmark.circle.fill")
+                                    .foregroundColor(.green)
+                            } else {
+                                // Show specific failure reason
+                                if check is TimeMachineCheck {
+                                    Label("Time Machine is disabled or not configured", systemImage: "xmark.circle.fill")
+                                        .foregroundColor(.orange)
+                                } else if check is TimeMachineHasBackupCheck {
+                                    Label("No recent backup found", systemImage: "xmark.circle.fill")
+                                        .foregroundColor(.orange)
+                                } else if check is TimeMachineIsEncryptedCheck {
+                                    Label("Backup disk is not encrypted", systemImage: "xmark.circle.fill")
+                                        .foregroundColor(.orange)
+                                } else if let appCheck = check as? AppCheck {
+                                    // For app update checks
+                                    if !appCheck.isInstalled {
+                                        Label("App not installed", systemImage: "xmark.circle.fill")
+                                            .foregroundColor(.gray)
+                                    } else if !appCheck.usedRecently {
+                                        Label("App not used in the last week", systemImage: "clock.badge.xmark.fill")
+                                            .foregroundColor(.gray)
+                                    } else {
+                                        Label("Update available", systemImage: "arrow.down.circle.fill")
+                                            .foregroundColor(.orange)
+                                    }
+                                } else {
+                                    Label("Failing", systemImage: "xmark.circle.fill")
+                                        .foregroundColor(.orange)
+                                }
+                            }
+                        }
+                        
+                        if !check.cachedDetails.isEmpty && check.cachedDetails != "None" {
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text("Details:")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                                Text(check.cachedDetails)
+                                    .font(.system(.body, design: .monospaced))
+                                    .textSelection(.enabled)
+                            }
                         }
                     }
                 }
