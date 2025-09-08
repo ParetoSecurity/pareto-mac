@@ -16,6 +16,7 @@ struct AboutSettingsView: View {
     @State private var helperVersion = "Checking..."
     @State private var hasCheckedForUpdates = false
     @State private var helperCheckTimer: Timer?
+    @State private var latestVersionFound = ""
 
     @StateObject private var helperManager = HelperToolManager()
     @Default(.showBeta) var showBeta
@@ -94,7 +95,8 @@ struct AboutSettingsView: View {
                             }
                             if status == UpdateStates.Failed {
                                 Text("Failed to update, [download update](https://github.com/ParetoSecurity/pareto-mac/releases/latest/download/ParetoSecurity.dmg)")
-
+                            } else if status == UpdateStates.NewVersion && !latestVersionFound.isEmpty {
+                                Text("New version found: \(latestVersionFound)")
                             } else {
                                 Text(status.rawValue)
                             }
@@ -114,6 +116,7 @@ struct AboutSettingsView: View {
             }
         }
         .onAppear {
+            fetch()
             if showBeta {
                 fetchHelperVersion()
                 // Set up a timer to periodically check helper version
@@ -204,8 +207,10 @@ struct AboutSettingsView: View {
 
                     if currentVersion < release.version {
                         status = UpdateStates.NewVersion
+                        latestVersionFound = release.tag_name
                     } else {
                         status = UpdateStates.Updated
+                        latestVersionFound = ""
                         Defaults[.updateNag] = false
                     }
                 }

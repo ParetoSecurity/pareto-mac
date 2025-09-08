@@ -13,6 +13,8 @@ import Version
 class ParetoUpdated: ParetoCheck {
     static let sharedInstance = ParetoUpdated()
     private var updateCheckResult: Bool = false
+    private var latestVersion: String = ""
+    private var currentVersion: String = ""
 
     override var UUID: String {
         "44e4754a-0b42-4964-9cc2-b88b2023cb1e"
@@ -24,6 +26,28 @@ class ParetoUpdated: ParetoCheck {
 
     override var TitleOFF: String {
         "Pareto Security is outdated"
+    }
+    
+    override var infoURL: URL {
+        var components = URLComponents()
+        components.scheme = "https"
+        components.host = "paretosecurity.com"
+        components.path = "/check/\(UUID)"
+        
+        // Add version parameters
+        var queryItems = [URLQueryItem]()
+        
+        // Add current and latest version information
+        if !currentVersion.isEmpty {
+            queryItems.append(URLQueryItem(name: "current_version", value: currentVersion))
+        }
+        if !latestVersion.isEmpty {
+            queryItems.append(URLQueryItem(name: "latest_version", value: latestVersion))
+        }
+        
+        components.queryItems = queryItems
+        
+        return components.url!
     }
 
     // Helper function to compare semantic versions
@@ -77,28 +101,37 @@ class ParetoUpdated: ParetoCheck {
 
             if publishedDate < tenDaysAgo {
                 // Latest release is older than 10 days, check version match
-                var currentVersion = AppInfo.appVersion
-                if currentVersion.contains("-") {
+                var appVersion = AppInfo.appVersion
+                if appVersion.contains("-") {
                     // Strip any pre-release suffix for comparison
-                    currentVersion = String(currentVersion.split(separator: "-")[0])
+                    appVersion = String(appVersion.split(separator: "-")[0])
                 }
 
                 let latestVersionString = latestRelease.tag_name.replacingOccurrences(of: "v", with: "")
-                let isUpToDate = currentVersion == latestVersionString
+                
+                // Store versions for URL construction
+                self.currentVersion = appVersion
+                self.latestVersion = latestVersionString
+                
+                let isUpToDate = appVersion == latestVersionString
 
                 os_log("Latest release is older than 10 days. App version: %{public}s, Latest version: %{public}s, Up to date: %{public}@",
-                       currentVersion, latestVersionString, isUpToDate ? "true" : "false")
+                       appVersion, latestVersionString, isUpToDate ? "true" : "false")
                 completion(isUpToDate)
             } else {
                 // Within 10 days grace period, always pass
-                var currentVersion = AppInfo.appVersion
-                if currentVersion.contains("-") {
-                    currentVersion = String(currentVersion.split(separator: "-")[0])
+                var appVersion = AppInfo.appVersion
+                if appVersion.contains("-") {
+                    appVersion = String(appVersion.split(separator: "-")[0])
                 }
                 let latestVersionString = latestRelease.tag_name.replacingOccurrences(of: "v", with: "")
+                
+                // Store versions for URL construction
+                self.currentVersion = appVersion
+                self.latestVersion = latestVersionString
 
                 os_log("Latest release is within 10 days grace period. Published: %{public}s, Days ago: %{public}f, App version: %{public}s, Latest version: %{public}s",
-                       latestRelease.published_at, abs(publishedDate.timeIntervalSinceNow) / (24 * 60 * 60), currentVersion, latestVersionString)
+                       latestRelease.published_at, abs(publishedDate.timeIntervalSinceNow) / (24 * 60 * 60), appVersion, latestVersionString)
                 completion(true)
             }
 
@@ -111,6 +144,7 @@ class ParetoUpdated: ParetoCheck {
 
     override func checkPasses() -> Bool {
         // Disable this check when running in SetApp or when beta channel is enabled
+        
         #if SETAPP_ENABLED
             // Always pass for SetApp builds as updates are handled by SetApp
             return true
