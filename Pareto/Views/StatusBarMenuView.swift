@@ -172,9 +172,31 @@ struct ClaimMenuView: View {
 
     var body: some View {
         Menu {
-            ForEach(claim.checksSorted, id: \.UUID) { check in
-                // Show runnable checks, and also show team-required but locally disabled checks (unless exempt)
-                if check.isRunnable || (check.teamEnforced && !check.storedIsActive && !check.teamEnforcedButExempt) {
+            ForEach(claim.checksSorted) { check in
+                // Show logic:
+                // - Always show team-enforced checks (unless exempt)
+                // - App checks: show only if installed, recently used (when applicable), and not manually disabled
+                // - Non-app checks: hide if manually disabled
+                // - Special case: hide Time Machine dependents if base is off/unrunnable
+                let isTeamVisible = check.teamEnforced && !check.teamEnforcedButExempt
+                let isTimeMachineDependent = (check is TimeMachineHasBackupCheck) || (check is TimeMachineIsEncryptedCheck)
+                let timeMachineUnavailable = (!TimeMachineCheck.sharedInstance.isActive || !TimeMachineCheck.sharedInstance.isRunnable)
+                let hideDueToDependency = isTimeMachineDependent && timeMachineUnavailable
+
+                var shouldShow = false
+                if isTeamVisible {
+                    shouldShow = true
+                } else if let app = check as? AppCheck {
+                    let appInstalled = app.isInstalled
+                    let appRecentlyUsed = !app.supportsRecentlyUsed || app.usedRecently
+                    let notManuallyDisabled = app.storedIsActive
+                    shouldShow = appInstalled && appRecentlyUsed && notManuallyDisabled
+                } else {
+                    // Non-app checks: show unless manually disabled
+                    shouldShow = check.storedIsActive
+                }
+
+                if shouldShow && !hideDueToDependency {
                     CheckMenuItemView(check: check)
                 }
             }

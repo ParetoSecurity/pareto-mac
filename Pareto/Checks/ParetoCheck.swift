@@ -26,6 +26,9 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
     private(set) var TitleON = "TitleON"
     private(set) var TitleOFF = "TitleOFF"
 
+    // Provide a concrete Identifiable id
+    var id: String { UUID }
+
     // Indicate check has errored
     var hasError = false
 

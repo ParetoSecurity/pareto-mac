@@ -71,11 +71,15 @@ class Claim: Hashable {
 
     func run() {
         for check in checks {
-            let startTime = Date()
-            check.run()
-            let endTime = Date()
-            let timeInterval = endTime.timeIntervalSince(startTime)
-            Logger().log("uuid=\(check.UUID, privacy: .public) timeInterval=\(timeInterval, privacy: .public)")
+            if shouldRun(check) {
+                let startTime = Date()
+                check.run()
+                let endTime = Date()
+                let timeInterval = endTime.timeIntervalSince(startTime)
+                Logger().log("uuid=\(check.UUID, privacy: .public) timeInterval=\(timeInterval, privacy: .public)")
+            } else {
+                os_log("Skipping check %{public}s due to visibility/run rules", log: Log.check, check.UUID)
+            }
         }
 
         // Notify observers that aggregated status for this claim may have changed
@@ -89,5 +93,32 @@ class Claim: Hashable {
             check.configure()
         }
         UserDefaults.standard.synchronize()
+    }
+}
+
+private extension Claim {
+    func shouldRun(_ check: ParetoCheck) -> Bool {
+        // Special dependency rule: Time Machine dependents hidden if base off/unrunnable
+        let isTimeMachineDependent = (check is TimeMachineHasBackupCheck) || (check is TimeMachineIsEncryptedCheck)
+        let timeMachineUnavailable = (!TimeMachineCheck.sharedInstance.isActive || !TimeMachineCheck.sharedInstance.isRunnable)
+        if isTimeMachineDependent && timeMachineUnavailable {
+            return false
+        }
+
+        // Team-enforced checks always run unless explicitly exempt
+        if check.teamEnforced && !check.teamEnforcedButExempt {
+            return true
+        }
+
+        // App checks: run only if installed, recently used (when applicable), and not manually disabled
+        if let app = check as? AppCheck {
+            let appInstalled = app.isInstalled
+            let appRecentlyUsed = !app.supportsRecentlyUsed || app.usedRecently
+            let notManuallyDisabled = app.storedIsActive
+            return appInstalled && appRecentlyUsed && notManuallyDisabled
+        }
+
+        // Non-app checks: run unless manually disabled
+        return check.storedIsActive
     }
 }
