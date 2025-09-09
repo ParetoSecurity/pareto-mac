@@ -37,6 +37,7 @@ extension Defaults.Keys {
     static let machineUUID = Key<String>("machineUUID", default: AppInfo.getSystemUUID() ?? UUID().uuidString, suite: extensionDefaults)
     static let sendHWInfo = Key<Bool>("sendHWInfo", default: false, suite: extensionDefaults)
     static let lastHWAsk = Key<Int>("lastHWAsk", default: 0, suite: extensionDefaults)
+    static let lastDeviceRemovedAlert = Key<Int>("lastDeviceRemovedAlert", default: 0, suite: extensionDefaults)
 
     // Updates
     static let updateNag = Key<Bool>("updateNag", default: false, suite: extensionDefaults)
@@ -109,6 +110,11 @@ public extension Defaults {
 
     static func shouldAskForHWAllow() -> Bool {
         return Defaults[.lastHWAsk] + Date.HourInMs * 24 * 7 * 30 * 6 < Date().currentTimeMs()
+    }
+
+    static func shouldShowDeviceRemovedAlert() -> Bool {
+        // Show once per week
+        return Defaults[.lastDeviceRemovedAlert] + Date.HourInMs * 24 * 7 < Date().currentTimeMs()
     }
 
     static func shouldDoTeamUpdate() -> Bool {
