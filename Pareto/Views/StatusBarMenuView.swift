@@ -173,7 +173,8 @@ struct ClaimMenuView: View {
     var body: some View {
         Menu {
             ForEach(claim.checksSorted, id: \.UUID) { check in
-                if check.isRunnable {
+                // Show runnable checks, and also show team-required but locally disabled checks (unless exempt)
+                if check.isRunnable || (check.teamEnforced && !check.storedIsActive && !check.teamEnforcedButExempt) {
                     CheckMenuItemView(check: check)
                 }
             }
@@ -231,6 +232,11 @@ struct CheckMenuItemView: View {
                             .font(.system(size: 15))
                             .foregroundStyle(.orange)
                     }
+                }
+                if check.teamEnforced && !check.storedIsActive && !check.teamEnforcedButExempt {
+                    Text("✴")
+                        .font(.system(size: 14))
+                        .foregroundColor(.orange)
                 }
                 Text(check.Title)
                 Spacer()

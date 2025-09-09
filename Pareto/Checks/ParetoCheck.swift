@@ -92,6 +92,15 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
         return AppInfo.TeamSettings.enforcedChecks.contains(where: { $0 == UUID })
     }
 
+    // Certain checks may be exempt from team enforcement under specific conditions
+    // e.g., iTerm secure entry is not required if iTerm is not installed.
+    var teamEnforcedButExempt: Bool {
+        if self is SecureiTermCheck {
+            return !AppiTermCheck.sharedInstance.isInstalled
+        }
+        return false
+    }
+
     var isActive: Bool {
         get {
             if teamEnforced {
@@ -327,7 +336,7 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
         // If this check is required by the team but the user has it disabled,
         // still consider it failing to surface policy violations.
         var overrideDetails: String?
-        if teamEnforced && !storedIsActive {
+        if teamEnforced && !storedIsActive && !teamEnforcedButExempt {
             result = false
             overrideDetails = "Disabled locally but required by team"
         }
