@@ -46,6 +46,10 @@ struct ChecksSettingsView: View {
         }
         .id(refreshID)
         .frame(minHeight: 450)
+        .onReceive(NotificationCenter.default.publisher(for: .runChecksFinished)) { _ in
+            // Force refresh of the list after checks complete
+            refreshID = UUID()
+        }
         .sheet(item: $selectedCheckWrapper, onDismiss: {
             // Force refresh when sheet closes
             refreshID = UUID()
@@ -105,7 +109,7 @@ private struct CheckSectionView: View {
 }
 
 private struct CheckRowView: View {
-    let check: ParetoCheck
+    @ObservedObject var check: ParetoCheck
     let onTap: () -> Void
 
     var body: some View {
@@ -250,13 +254,13 @@ private struct CheckRowView: View {
 }
 
 struct CheckDetailView: View {
-    let check: ParetoCheck
+    @ObservedObject var check: ParetoCheck
     @Environment(\.dismiss) var dismiss
     @State private var isActive: Bool
     @State private var hasChanges: Bool = false
 
     init(check: ParetoCheck) {
-        self.check = check
+        _check = ObservedObject(wrappedValue: check)
         _isActive = State(initialValue: check.isActive)
     }
 
@@ -473,14 +477,14 @@ struct CheckDetailView: View {
 }
 
 struct NoUnusedUsersDetailView: View {
-    let check: ParetoCheck
+    @ObservedObject var check: ParetoCheck
     @Environment(\.dismiss) var dismiss
     @State private var isActive: Bool
     @State private var hasChanges: Bool = false
     @Default(.ignoredUserAccounts) var ignoredUserAccounts
 
     init(check: ParetoCheck) {
-        self.check = check
+        _check = ObservedObject(wrappedValue: check)
         _isActive = State(initialValue: check.isActive)
     }
 

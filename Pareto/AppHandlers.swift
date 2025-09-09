@@ -125,6 +125,7 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
 
         // Set running first so the status line flips instantly
         setRunning(true)
+        NotificationCenter.default.post(name: .runChecksStarted, object: nil)
         // Then record the timestamp (this may trigger view refresh too, but isRunning already shows)
         Defaults[.lastCheck] = Date().currentTimeMs()
 
@@ -148,6 +149,7 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
         // After checks finish
         workItem.notify(queue: .main) {
             self.setRunning(false)
+            NotificationCenter.default.post(name: .runChecksFinished, object: nil)
 
             // Determine overall state
             let claimsPassed = Claims.global.all.allSatisfy { $0.checksPassed }

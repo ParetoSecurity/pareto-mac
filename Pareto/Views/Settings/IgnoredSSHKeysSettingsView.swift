@@ -83,6 +83,10 @@ struct IgnoredSSHKeysSettingsView: View {
                 .font(.footnote)
         }
         .onAppear { loadAvailableKeys() }
+        // Refresh list when checks finish running (e.g., user triggered from menu)
+        .onReceive(NotificationCenter.default.publisher(for: .runChecksFinished)) { _ in
+            loadAvailableKeys()
+        }
         .onChange(of: ignoredSSHKeys) { _ in
             // Defer to next runloop to avoid state change during update
             DispatchQueue.main.async { self.showRerunNotice = true }

@@ -90,6 +90,8 @@
 		4F1E6DDB2760081300FD3F01 /* Regex in Frameworks */ = {isa = PBXBuildFile; productRef = 4F1E6DDA2760081300FD3F01 /* Regex */; };
 		4F20E2612E701B6400E93943 /* IgnoredSSHKeysSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F20E2602E701B6400E93943 /* IgnoredSSHKeysSettingsView.swift */; };
 		4F20E2622E701B6400E93943 /* IgnoredSSHKeysSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F20E2602E701B6400E93943 /* IgnoredSSHKeysSettingsView.swift */; };
+		4F20E2642E70217400E93943 /* NotificationNames.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F20E2632E70217400E93943 /* NotificationNames.swift */; };
+		4F20E2652E70217400E93943 /* NotificationNames.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F20E2632E70217400E93943 /* NotificationNames.swift */; };
 		4F2432702E698B3E00A0DF91 /* Centered.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F24326F2E698B3E00A0DF91 /* Centered.swift */; };
 		4F2432712E698B3E00A0DF91 /* Centered.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F24326F2E698B3E00A0DF91 /* Centered.swift */; };
 		4F24A09026EB735F0036F748 /* TeamSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F24A08F26EB735F0036F748 /* TeamSettings.swift */; };
@@ -384,6 +386,7 @@
 		4F1E6C602834F98A00C8AFAB /* SecureiTerm.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SecureiTerm.swift; sourceTree = "<group>"; };
 		4F1E6C6328355B2100C8AFAB /* InternetSharing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InternetSharing.swift; sourceTree = "<group>"; };
 		4F20E2602E701B6400E93943 /* IgnoredSSHKeysSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IgnoredSSHKeysSettingsView.swift; sourceTree = "<group>"; };
+		4F20E2632E70217400E93943 /* NotificationNames.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationNames.swift; sourceTree = "<group>"; };
 		4F24326F2E698B3E00A0DF91 /* Centered.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Centered.swift; sourceTree = "<group>"; };
 		4F24A08F26EB735F0036F748 /* TeamSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeamSettings.swift; sourceTree = "<group>"; };
 		4F24A09126EB73980036F748 /* AboutSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutSettingsView.swift; sourceTree = "<group>"; };
@@ -710,6 +713,7 @@
 				4F24A09526EB73F30036F748 /* GeneralSettingsView.swift */,
 				4F84EC9129DC3A030047C79C /* PermissionsSettingsView.swift */,
 				4F24326F2E698B3E00A0DF91 /* Centered.swift */,
+				4F20E2632E70217400E93943 /* NotificationNames.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -1225,6 +1229,7 @@
 				4F4B6E85282E4C5C00FAC103 /* AirDrop.swift in Sources */,
 				4F37E7202718122E00A2B254 /* ParetoApp.swift in Sources */,
 				4F37E7212718122E00A2B254 /* Flags.swift in Sources */,
+				4F20E2642E70217400E93943 /* NotificationNames.swift in Sources */,
 				4F1E6C622834F98A00C8AFAB /* SecureiTerm.swift in Sources */,
 				4F37E7222718122E00A2B254 /* PasswordtoUnlock.swift in Sources */,
 				4F37E7232718122E00A2B254 /* Bundle.swift in Sources */,
@@ -1375,6 +1380,7 @@
 				4F4B6E84282E4C5C00FAC103 /* AirDrop.swift in Sources */,
 				4FEBA2F2269CD48F009B2469 /* ParetoApp.swift in Sources */,
 				4FF22A6526F0CFA500500213 /* Flags.swift in Sources */,
+				4F20E2652E70217400E93943 /* NotificationNames.swift in Sources */,
 				4F1E6C612834F98A00C8AFAB /* SecureiTerm.swift in Sources */,
 				4F84A94926CBE21300A1579D /* PasswordtoUnlock.swift in Sources */,
 				4F14487C26D8EDB000A5BA34 /* Bundle.swift in Sources */,
