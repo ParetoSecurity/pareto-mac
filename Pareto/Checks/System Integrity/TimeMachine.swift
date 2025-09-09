@@ -31,23 +31,16 @@ class TimeMachineCheck: ParetoCheck {
     }
 
     override var isRunnable: Bool {
-        // Even if team enforced, we need Time Machine to be configured
-        guard let config = readDefaultsFile(path: "/Library/Preferences/com.apple.TimeMachine.plist") as! [String: Any]? else {
-            return false
-        }
-        // Check if there's actual configuration (not just an empty or minimal plist)
-        if config.count <= 1 {
-            return false
-        }
-        // Check if AutoBackup is not 0
-        if let autoBackup = config["AutoBackup"] as? Int, autoBackup == 0 {
-            return false
-        }
-        // If team enforced, it's runnable regardless of isActive
+        // If team enforced, always run this check; it will fail if not enabled
         if teamEnforced {
             return true
         }
-        // Otherwise, it needs to be active
+        // Otherwise require proper configuration and enabled state
+        guard let config = readDefaultsFile(path: "/Library/Preferences/com.apple.TimeMachine.plist") as! [String: Any]? else {
+            return false
+        }
+        if config.count <= 1 { return false }
+        if let autoBackup = config["AutoBackup"] as? Int, autoBackup == 0 { return false }
         return isActive
     }
 
