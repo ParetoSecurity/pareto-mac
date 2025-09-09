@@ -64,11 +64,11 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
     var TimestampKey: String {
         "ParetoCheck-" + UUID + "-TS"
     }
-    
+
     var CachedDetailsKey: String {
         "ParetoCheck-" + UUID + "-Details"
     }
-    
+
     var DisabledReasonKey: String {
         "ParetoCheck-" + UUID + "-DisabledReason"
     }
@@ -143,14 +143,14 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
         get { UserDefaults.standard.bool(forKey: PassesKey) }
         set { UserDefaults.standard.set(newValue, forKey: PassesKey) }
     }
-    
+
     var cachedDetails: String {
         get { UserDefaults.standard.string(forKey: CachedDetailsKey) ?? "" }
         set { UserDefaults.standard.set(newValue, forKey: CachedDetailsKey) }
     }
-    
+
     var disabledReason: String {
-        get { 
+        get {
             if !isActive {
                 return "Manually disabled"
             } else if !isRunnable {
@@ -160,6 +160,13 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
                     if let config = readDefaultsFile(path: "/Library/Preferences/com.apple.TimeMachine.plist") {
                         if config.isEmpty || config.count <= 1 {
                             return "Time Machine is not configured - no backup destination set"
+                        }
+                        // If AutoBackup is disabled, report explicitly that Time Machine is not enabled
+                        if let autoBackupBool = config["AutoBackup"] as? Bool, autoBackupBool == false {
+                            return "Time Machine is not enabled - automatic backups are disabled"
+                        }
+                        if let autoBackupInt = config["AutoBackup"] as? Int, autoBackupInt == 0 {
+                            return "Time Machine is not enabled - automatic backups are disabled"
                         }
                     } else {
                         return "Cannot read Time Machine configuration - may need full disk access"
@@ -191,12 +198,13 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
                         return "Cannot read Time Machine configuration"
                     }
                 }
-                
+
                 // Check for app-specific conditions
                 if String(describing: type(of: self)).contains("iTerm") {
                     return "iTerm2 is not installed"
-                } else if String(describing: type(of: self)).contains("AppCheck") || 
-                   String(describing: type(of: self)).hasSuffix("Check") {
+                } else if String(describing: type(of: self)).contains("AppCheck") ||
+                    String(describing: type(of: self)).hasSuffix("Check")
+                {
                     // This might be an app update check
                     if TitleON.contains("up-to-date") || TitleON.contains("update") {
                         // Try to extract app name from TitleON
@@ -205,7 +213,7 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
                         return "\(appName) is not installed or check is disabled"
                     }
                 }
-                
+
                 if showSettingsWarnDiskAccess {
                     return "Requires full disk access permission to read system files"
                 } else if showSettingsWarnEvents {
@@ -213,7 +221,7 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
                 } else if requiresHelper {
                     return "Requires privileged helper tool authorization in System Settings"
                 }
-                
+
                 // Generic fallback with more context
                 return UserDefaults.standard.string(forKey: DisabledReasonKey) ?? "Check prerequisites not met"
             }
@@ -221,7 +229,7 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
         }
         set { UserDefaults.standard.set(newValue, forKey: DisabledReasonKey) }
     }
-    
+
     // Helper function for reading plist files returning a Swift dictionary
     func readDefaultsFile(path: String) -> [String: Any]? {
         guard let data = try? Data(contentsOf: URL(fileURLWithPath: path)) else { return nil }
@@ -312,7 +320,7 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
         let result = checkPasses()
         checkPassed = result
         checkTimestamp = Int(Date().currentTimeMs())
-        
+
         // Cache the details after running the check
         cachedDetails = details
 

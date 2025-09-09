@@ -18,14 +18,14 @@ struct ChecksSettingsView: View {
     @State private var selectedCheckWrapper: CheckWrapper?
     @State private var refreshID = UUID()
     @Default(.teamID) var teamID
-    
+
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
                 if !teamID.isEmpty {
                     TeamEnforcementHeader()
                 }
-                
+
                 // Security Check Sections
                 ForEach(Claims.global.all, id: \.self) { claim in
                     CheckSectionView(
@@ -36,7 +36,7 @@ struct ChecksSettingsView: View {
                         }
                     )
                 }
-                
+
                 Link("Learn more about security checks →", destination: URL(string: "https://paretosecurity.com/security-checks?utm_source=\(AppInfo.utmSource)")!)
                     .font(.footnote)
                     .foregroundColor(.accentColor)
@@ -62,7 +62,6 @@ struct ChecksSettingsView: View {
 private struct TeamEnforcementHeader: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
-
             Text("Checks marked with ✴ are enforced by your team and cannot be disabled")
                 .font(.caption)
                 .foregroundColor(.secondary)
@@ -76,7 +75,7 @@ private struct CheckSectionView: View {
     let claimTitle: String
     let installedChecks: [ParetoCheck]
     let onSelect: (ParetoCheck) -> Void
-    
+
     var body: some View {
         if !installedChecks.isEmpty {
             VStack(alignment: .leading, spacing: 8) {
@@ -84,13 +83,13 @@ private struct CheckSectionView: View {
                     .font(.headline)
                     .foregroundColor(.secondary)
                     .padding(.horizontal)
-                
+
                 VStack(spacing: 1) {
                     ForEach(installedChecks, id: \.UUID) { check in
                         CheckRowView(check: check) {
                             onSelect(check)
                         }
-                        
+
                         if check.UUID != installedChecks.last?.UUID {
                             Divider()
                                 .padding(.leading, 56)
@@ -108,7 +107,7 @@ private struct CheckSectionView: View {
 private struct CheckRowView: View {
     let check: ParetoCheck
     let onTap: () -> Void
-    
+
     var body: some View {
         Button(action: onTap) {
             HStack(spacing: 12) {
@@ -117,12 +116,12 @@ private struct CheckRowView: View {
                     RoundedRectangle(cornerRadius: 8)
                         .fill(statusColor(for: check))
                         .frame(width: 32, height: 32)
-                    
+
                     Image(systemName: iconName(for: check))
                         .font(.system(size: 16))
                         .foregroundColor(.white)
                 }
-                
+
                 VStack(alignment: .leading, spacing: 2) {
                     HStack(spacing: 4) {
                         if check.teamEnforced {
@@ -134,12 +133,12 @@ private struct CheckRowView: View {
                             .foregroundColor(.primary)
                             .lineLimit(1)
                     }
-                    
+
                     subtitleView(for: check)
                 }
-                
+
                 Spacer()
-                
+
                 Image(systemName: "chevron.right")
                     .font(.system(size: 14, weight: .semibold))
                     .foregroundColor(Color(NSColor.tertiaryLabelColor))
@@ -151,7 +150,7 @@ private struct CheckRowView: View {
         }
         .buttonStyle(.plain)
     }
-    
+
     @ViewBuilder
     private func subtitleView(for check: ParetoCheck) -> some View {
         // Show status details
@@ -211,20 +210,20 @@ private struct CheckRowView: View {
                 .lineLimit(1)
         }
     }
-    
+
     private func statusColor(for check: ParetoCheck) -> Color {
         // Color based on cached check status - don't run the actual check
         if !check.isActive {
-            return Color.gray  // Disabled
+            return Color.gray // Disabled
         } else if !check.isRunnable {
-            return Color.gray.opacity(0.7)  // Cannot run (missing permissions)
+            return Color.gray.opacity(0.7) // Cannot run (missing permissions)
         } else if check.checkPassed {
-            return Color.green  // Passing (cached)
+            return Color.green // Passing (cached)
         } else {
-            return Color.orange  // Failing (cached)
+            return Color.orange // Failing (cached)
         }
     }
-    
+
     private func iconName(for check: ParetoCheck) -> String {
         // Map checks to appropriate SF Symbols
         let titleLower = check.TitleON.lowercased()
@@ -252,12 +251,12 @@ struct CheckDetailView: View {
     @Environment(\.dismiss) var dismiss
     @State private var isActive: Bool
     @State private var hasChanges: Bool = false
-    
+
     init(check: ParetoCheck) {
         self.check = check
-        self._isActive = State(initialValue: check.isActive)
+        _isActive = State(initialValue: check.isActive)
     }
-    
+
     var body: some View {
         VStack(spacing: 0) {
             // Header
@@ -270,23 +269,23 @@ struct CheckDetailView: View {
                     dismiss()
                 }
                 .keyboardShortcut(.escape)
-                
+
                 Spacer()
-                
+
                 Text(check.TitleON)
                     .font(.headline)
-                
+
                 Spacer()
-                
+
                 Button("Done") {
                     dismiss()
                 }
                 .keyboardShortcut(.defaultAction)
             }
             .padding()
-            
+
             Divider()
-            
+
             // Content
             Form {
                 Section {
@@ -298,7 +297,7 @@ struct CheckDetailView: View {
                                 .foregroundColor(.secondary)
                         }
                     }
-                    
+
                     Toggle("Enable this check", isOn: $isActive)
                         .disabled(!check.showSettings || check.teamEnforced)
                         .onChange(of: isActive) { newValue in
@@ -306,59 +305,59 @@ struct CheckDetailView: View {
                             hasChanges = true
                         }
                 }
-                
+
                 Section(header: Text("Description")) {
                     Text(check.TitleON)
                         .font(.body)
-                    
+
                     if !check.TitleOFF.isEmpty {
                         Text("When failing: \(check.TitleOFF)")
                             .font(.caption)
                             .foregroundColor(.secondary)
                     }
-                    
+
                     Link("Learn more about this check →", destination: check.infoURL)
                         .font(.footnote)
                         .foregroundColor(.accentColor)
                         .padding(.top, 4)
                 }
-                
+
                 if check.showSettingsWarnDiskAccess && !check.isRunnable {
                     Section(header: Text("Permissions Required")) {
                         VStack(alignment: .leading, spacing: 8) {
                             Text("This check requires full disk access permission.")
                                 .font(.body)
-                            
+
                             HStack {
                                 Button("Authorize") {
                                     NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_AllFiles")!)
                                 }
-                                
+
                                 Link("Learn More", destination: URL(string: "https://paretosecurity.com/docs/mac/permissions?utm_source=\(AppInfo.utmSource)")!)
                                     .font(.footnote)
                             }
                         }
                     }
                 }
-                
+
                 if check.showSettingsWarnEvents && !check.isRunnable {
                     Section(header: Text("Permissions Required")) {
                         VStack(alignment: .leading, spacing: 8) {
                             Text("This check requires System Events access permission.")
                                 .font(.body)
-                            
+
                             HStack {
                                 Button("Authorize") {
                                     NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Automation")!)
                                 }
-                                
+
                                 Link("Learn More", destination: URL(string: "https://paretosecurity.com/docs/mac/permissions?utm_source=\(AppInfo.utmSource)")!)
                                     .font(.footnote)
                             }
                         }
                     }
                 }
-                
+
                 Section(header: Text("Current Status")) {
                     if !check.isActive {
                         VStack(alignment: .leading, spacing: 8) {
@@ -434,7 +433,7 @@ struct CheckDetailView: View {
                                 }
                             }
                         }
-                        
+
                         if !check.cachedDetails.isEmpty && check.cachedDetails != "None" {
                             VStack(alignment: .leading, spacing: 4) {
                                 Text("Details:")
@@ -460,12 +459,12 @@ struct NoUnusedUsersDetailView: View {
     @State private var isActive: Bool
     @State private var hasChanges: Bool = false
     @Default(.ignoredUserAccounts) var ignoredUserAccounts
-    
+
     init(check: ParetoCheck) {
         self.check = check
-        self._isActive = State(initialValue: check.isActive)
+        _isActive = State(initialValue: check.isActive)
     }
-    
+
     var body: some View {
         VStack(spacing: 0) {
             // Header
@@ -478,23 +477,23 @@ struct NoUnusedUsersDetailView: View {
                     dismiss()
                 }
                 .keyboardShortcut(.escape)
-                
+
                 Spacer()
-                
+
                 Text(check.TitleON)
                     .font(.headline)
-                
+
                 Spacer()
-                
+
                 Button("Done") {
                     dismiss()
                 }
                 .keyboardShortcut(.defaultAction)
             }
             .padding()
-            
+
             Divider()
-            
+
             // Content
             Form {
                 Section {
@@ -506,7 +505,7 @@ struct NoUnusedUsersDetailView: View {
                                 .foregroundColor(.secondary)
                         }
                     }
-                    
+
                     Toggle("Enable this check", isOn: $isActive)
                         .disabled(!check.showSettings || check.teamEnforced)
                         .onChange(of: isActive) { newValue in
@@ -514,34 +513,34 @@ struct NoUnusedUsersDetailView: View {
                             hasChanges = true
                         }
                 }
-                
+
                 Section(header: Text("Description")) {
                     Text("This check ensures that unused user accounts (non-admin accounts) are either removed or have logged in recently.")
                         .font(.body)
-                    
+
                     Text("When failing: \(check.TitleOFF)")
                         .font(.caption)
                         .foregroundColor(.secondary)
-                    
+
                     Link("Learn more about this check →", destination: check.infoURL)
                         .font(.footnote)
                         .foregroundColor(.accentColor)
                         .padding(.top, 4)
                 }
-                
+
                 Section(header: Text("Ignored User Accounts")) {
                     VStack(alignment: .leading, spacing: 8) {
                         Text("Configure which user accounts to exclude from this check. This is useful for service accounts that don't log in regularly.")
                             .font(.caption)
                             .foregroundColor(.secondary)
-                        
+
                         Divider()
-                        
+
                         IgnoredUsersSettingsView()
                             .padding(.vertical, 4)
                     }
                 }
-                
+
                 Section(header: Text("Current Status")) {
                     if !check.isActive {
                         VStack(alignment: .leading, spacing: 8) {
@@ -617,7 +616,7 @@ struct NoUnusedUsersDetailView: View {
                                 }
                             }
                         }
-                        
+
                         if !check.cachedDetails.isEmpty && check.cachedDetails != "None" {
                             VStack(alignment: .leading, spacing: 4) {
                                 Text("Details:")

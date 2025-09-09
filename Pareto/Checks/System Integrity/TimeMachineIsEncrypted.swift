@@ -24,17 +24,17 @@ class TimeMachineIsEncryptedCheck: ParetoCheck {
     override var isRunnable: Bool {
         // This check depends on Time Machine being configured and runnable
         // Even if team enforced, it can't run if Time Machine isn't set up
-        
+
         // First check if Time Machine check is even enabled
         if !TimeMachineCheck.sharedInstance.isActive {
             return false
         }
-        
+
         // Then check if Time Machine is configured
         if !TimeMachineCheck.sharedInstance.isRunnable {
             return false
         }
-        
+
         // Finally check if this check itself is active
         return isActive
     }
@@ -52,36 +52,36 @@ class TimeMachineIsEncryptedCheck: ParetoCheck {
         if !TimeMachineCheck.sharedInstance.isActive {
             return "Depends on 'Time Machine is on' check being enabled"
         }
-        
+
         // Check if Time Machine is configured
         if !TimeMachineCheck.sharedInstance.isRunnable {
             return "Time Machine is not configured - no backup destination set"
         }
-        
+
         // If this check itself isn't runnable for other reasons
         if !isRunnable {
             return disabledReason
         }
-        
+
         // If we can read the Time Machine config, check encryption status
         guard let settings = readDefaultsFile(path: "/Library/Preferences/com.apple.TimeMachine.plist") as! [String: Any]? else {
             return "Cannot read Time Machine configuration"
         }
-        
+
         let tmConf = TimeMachineConfig(dict: settings)
-        
+
         if !tmConf.AutoBackup {
             return "Automatic backups are disabled"
         }
-        
+
         if tmConf.Destinations.isEmpty {
             return "No backup destinations configured"
         }
-        
+
         if !tmConf.canCheckIsEncryptedBackup {
             return "Cannot verify encryption for network backup destinations"
         }
-        
+
         if tmConf.isEncryptedBackup {
             return "All backup destinations are encrypted"
         } else {
@@ -89,7 +89,7 @@ class TimeMachineIsEncryptedCheck: ParetoCheck {
             return "\(unencrypted) unencrypted backup destination(s) found"
         }
     }
-    
+
     override func checkPasses() -> Bool {
         guard let settings = readDefaultsFile(path: "/Library/Preferences/com.apple.TimeMachine.plist") as! [String: Any]? else {
             os_log("/Library/Preferences/com.apple.TimeMachine.plist is empty")

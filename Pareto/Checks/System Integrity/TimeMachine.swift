@@ -61,7 +61,7 @@ class TimeMachineCheck: ParetoCheck {
         if !isRunnable {
             return disabledReason
         }
-        
+
         guard let settings = readDefaultsFile(path: "/Library/Preferences/com.apple.TimeMachine.plist") as! [String: Any]? else {
             // Fallback to tmutil if plist not readable
             if isConfigured {
@@ -70,24 +70,24 @@ class TimeMachineCheck: ParetoCheck {
                 return "Time Machine is not configured - no backup destination set"
             }
         }
-        
+
         let tmConf = TimeMachineConfig(dict: settings)
-        
+
         if tmConf.Destinations.isEmpty {
             return "No backup destinations configured"
         }
-        
+
         if !tmConf.AutoBackup {
             return "Automatic backups are disabled"
         }
-        
+
         if tmConf.LastDestinationID.isEmpty {
             return "Time Machine configured but no backups have been made yet"
         }
-        
+
         return "Time Machine is enabled with \(tmConf.Destinations.count) destination(s)"
     }
-    
+
     override func checkPasses() -> Bool {
         guard let settings = readDefaultsFile(path: "/Library/Preferences/com.apple.TimeMachine.plist") as! [String: Any]? else {
             os_log("/Library/Preferences/com.apple.TimeMachine.plist use fallback")
