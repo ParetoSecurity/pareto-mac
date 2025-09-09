@@ -9,17 +9,59 @@ import Defaults
 import Foundation
 import SwiftUI
 
+@MainActor
+final class IgnoredUsersViewModel: ObservableObject {
+    @Published var availableUsers: [String] = []
+    @Published var isLoadingUsers = false
+    @Published var selectedUser: String?
+    @Published var showRerunNotice = false
+
+    func loadAvailableUsers() async {
+        if isLoadingUsers { return }
+        isLoadingUsers = true
+
+        // Run command off the main actor
+        let output = await withCheckedContinuation { (continuation: CheckedContinuation<String, Never>) in
+            DispatchQueue.global(qos: .userInitiated).async {
+                let out = runCMD(app: "/usr/bin/dscl", args: [".", "-list", "/Users"])
+                continuation.resume(returning: out)
+            }
+        }
+
+        let lines = output.components(separatedBy: "\n")
+        let local = lines.filter { u in
+            !u.hasPrefix("_") && u.count > 1 && u != "root" && u != "nobody" && u != "daemon"
+        }
+
+        // Back on main actor via @MainActor class
+        availableUsers = local.sorted()
+        isLoadingUsers = false
+    }
+
+    func addIgnoredUser(_ user: String) {
+        var users = Defaults[.ignoredUserAccounts]
+        if !users.contains(user) {
+            users.append(user)
+            Defaults[.ignoredUserAccounts] = users.sorted()
+            showRerunNotice = true
+        }
+    }
+
+    func removeIgnoredUser(_ user: String) {
+        let updated = Defaults[.ignoredUserAccounts].filter { $0 != user }
+        Defaults[.ignoredUserAccounts] = updated
+        showRerunNotice = true
+    }
+}
+
 struct IgnoredUsersSettingsView: View {
-    @Default(.ignoredUserAccounts) var ignoredUserAccounts
-    @State private var selectedUser: String?
-    @State private var availableUsers: [String] = []
-    @State private var isLoadingUsers = false
-    @State private var showRerunNotice = false
+    @StateObject private var model = IgnoredUsersViewModel()
+    @Default(.ignoredUserAccounts) private var ignoredUserAccounts
 
     var body: some View {
         Form {
             VStack(alignment: .leading, spacing: 12) {
-                if showRerunNotice {
+                if model.showRerunNotice {
                     HStack(alignment: .top, spacing: 8) {
                         Image(systemName: "info.circle.fill")
                             .foregroundColor(.orange)
@@ -27,13 +69,14 @@ struct IgnoredUsersSettingsView: View {
                             .font(.caption)
                             .foregroundColor(.secondary)
                         Spacer()
-                        Button("Dismiss") { showRerunNotice = false }
+                        Button("Dismiss") { model.showRerunNotice = false }
                             .buttonStyle(.link)
                     }
                     .padding(8)
                     .background(Color(NSColor.controlBackgroundColor))
                     .cornerRadius(6)
                 }
+
                 if !ignoredUserAccounts.isEmpty {
                     VStack(alignment: .leading, spacing: 8) {
                         Text("Currently Ignored:")
@@ -45,9 +88,9 @@ struct IgnoredUsersSettingsView: View {
                                 Text(user)
                                     .font(.system(.body, design: .monospaced))
                                 Spacer()
-                                Button(action: {
-                                    removeIgnoredUser(user)
-                                }) {
+                                Button {
+                                    model.removeIgnoredUser(user)
+                                } label: {
                                     Image(systemName: "xmark.circle.fill")
                                         .foregroundColor(.secondary)
                                 }
@@ -64,77 +107,44 @@ struct IgnoredUsersSettingsView: View {
                 }
 
                 HStack {
-                    Picker("Add user to ignore:", selection: $selectedUser) {
+                    Picker("Add user to ignore:", selection: $model.selectedUser) {
                         Text("Select user...").tag(String?.none)
                         ForEach(availableUsersNotIgnored, id: \.self) { user in
                             Text(user).tag(String?.some(user))
                         }
                     }
                     .pickerStyle(.menu)
-                    .disabled(isLoadingUsers || availableUsersNotIgnored.isEmpty)
 
                     Button("Add") {
-                        if let user = selectedUser {
-                            addIgnoredUser(user)
-                            selectedUser = nil
+                        if let user = model.selectedUser {
+                            model.addIgnoredUser(user)
+                            model.selectedUser = nil
                         }
                     }
-                    .disabled(selectedUser == nil)
+                    .disabled(model.selectedUser == nil)
                 }
 
-                if availableUsersNotIgnored.isEmpty && !isLoadingUsers {
+                if availableUsersNotIgnored.isEmpty && !model.isLoadingUsers {
                     Text("No additional users available to ignore")
                         .font(.footnote)
                         .foregroundColor(.secondary)
                 }
-                Text("These user accounts will be excluded from the unused user accounts check. This is useful for service accounts that don't log in regularly.").font(.footnote)
+
+                Text("These user accounts will be excluded from the unused user accounts check. This is useful for service accounts that don't log in regularly.")
+                    .font(.footnote)
             }
         }
-        .onAppear {
-            loadAvailableUsers()
+        .task {
+            await model.loadAvailableUsers()
         }
-        .onChange(of: ignoredUserAccounts) { _ in
-            // Show notice whenever ignored users list changes
-            showRerunNotice = true
+        // Also refresh the available list after checks complete (keeps parity with other views)
+        .onReceive(NotificationCenter.default.publisher(for: .runChecksFinished)) { _ in
+            Task { await model.loadAvailableUsers() }
         }
     }
 
     private var availableUsersNotIgnored: [String] {
-        availableUsers.filter { !ignoredUserAccounts.contains($0) }
-    }
-
-    private func loadAvailableUsers() {
-        isLoadingUsers = true
-
-        DispatchQueue.global(qos: .background).async {
-            // List all local users
-            let output = runCMD(app: "/usr/bin/dscl", args: [".", "-list", "/Users"])
-                .components(separatedBy: "\n")
-
-            // Keep human/local accounts; hide obvious system accounts
-            let local = output.filter { u in
-                !u.hasPrefix("_") && u.count > 1 && u != "root" && u != "nobody" && u != "daemon"
-            }
-
-            DispatchQueue.main.async {
-                self.availableUsers = local.sorted()
-                self.isLoadingUsers = false
-            }
-        }
-    }
-
-    private func addIgnoredUser(_ user: String) {
-        var users = ignoredUserAccounts
-        if !users.contains(user) {
-            users.append(user)
-            ignoredUserAccounts = users.sorted()
-            showRerunNotice = true
-        }
-    }
-
-    private func removeIgnoredUser(_ user: String) {
-        ignoredUserAccounts = ignoredUserAccounts.filter { $0 != user }
-        showRerunNotice = true
+        model.availableUsers.filter { !ignoredUserAccounts.contains($0) }
     }
 }
 

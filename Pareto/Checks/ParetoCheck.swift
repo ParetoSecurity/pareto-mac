@@ -102,6 +102,11 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
         set { UserDefaults.standard.set(newValue, forKey: EnabledKey) }
     }
 
+    // Underlying user preference regardless of team enforcement
+    var storedIsActive: Bool {
+        UserDefaults.standard.bool(forKey: EnabledKey)
+    }
+
     var isRunnable: Bool {
         return isActive
     }
@@ -317,12 +322,21 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
 
         os_log("Running check for %{public}s - %{public}s", log: Log.app, UUID, Title)
         hasError = false
-        let result = checkPasses()
+        var result = checkPasses()
+
+        // If this check is required by the team but the user has it disabled,
+        // still consider it failing to surface policy violations.
+        var overrideDetails: String?
+        if teamEnforced && !storedIsActive {
+            result = false
+            overrideDetails = "Disabled locally but required by team"
+        }
+
         checkPassed = result
         checkTimestamp = Int(Date().currentTimeMs())
 
         // Cache the details after running the check
-        cachedDetails = details
+        cachedDetails = overrideDetails ?? details
 
         // Notify UI observers that this check changed
         DispatchQueue.main.async {

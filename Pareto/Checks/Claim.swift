@@ -25,7 +25,8 @@ class Claim: Hashable {
     var checks: [ParetoCheck]
 
     var checksSorted: [ParetoCheck] {
-        checks.sorted(by: { $0.Title.lowercased() < $1.Title.lowercased() })
+        // Sort by a stable title (TitleON) so order doesn't jump
+        checks.sorted(by: { $0.TitleON.lowercased() < $1.TitleON.lowercased() })
     }
 
     init(withTitle title: String, withChecks checks: [ParetoCheck]) {
