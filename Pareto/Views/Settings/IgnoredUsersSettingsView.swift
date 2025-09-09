@@ -87,23 +87,17 @@ struct IgnoredUsersSettingsView: View {
         isLoadingUsers = true
 
         DispatchQueue.global(qos: .background).async {
-            let adminUsers = runCMD(app: "/usr/bin/dscl", args: [".", "-read", "/Groups/admin", "GroupMembership"])
-                .replacingAllMatches(of: "\n", with: "")
-                .components(separatedBy: " ")
-
+            // List all local users
             let output = runCMD(app: "/usr/bin/dscl", args: [".", "-list", "/Users"])
                 .components(separatedBy: "\n")
 
+            // Keep human/local accounts; hide obvious system accounts
             let local = output.filter { u in
                 !u.hasPrefix("_") && u.count > 1 && u != "root" && u != "nobody" && u != "daemon"
             }
 
-            let nonAdminUsers = local.filter { u in
-                !adminUsers.contains(u)
-            }
-
             DispatchQueue.main.async {
-                self.availableUsers = nonAdminUsers.sorted()
+                self.availableUsers = local.sorted()
                 self.isLoadingUsers = false
             }
         }
@@ -121,27 +115,6 @@ struct IgnoredUsersSettingsView: View {
         ignoredUserAccounts = ignoredUserAccounts.filter { $0 != user }
     }
 
-    private func runCMD(app: String, args: [String]) -> String {
-        let task = Process()
-        let pipe = Pipe()
-
-        task.standardOutput = pipe
-        task.standardError = pipe
-        task.arguments = args
-        task.launchPath = app
-        task.standardInput = nil
-
-        do {
-            try task.run()
-        } catch {
-            return ""
-        }
-
-        let data = pipe.fileHandleForReading.readDataToEndOfFile()
-        let output = String(data: data, encoding: .utf8) ?? ""
-
-        return output
-    }
 }
 
 struct IgnoredUsersSettingsView_Previews: PreviewProvider {

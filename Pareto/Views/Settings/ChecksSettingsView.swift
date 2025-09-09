@@ -330,7 +330,12 @@ struct CheckDetailView: View {
 
                             HStack {
                                 Button("Authorize") {
-                                    NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_AllFiles")!)
+                                    if #available(macOS 13.0, *) {
+                                        NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_FullDisk")!)
+                                    } else {
+                                        NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_AllFiles")!)
+                                    }
+                                    NSApp.activate(ignoringOtherApps: true)
                                 }
 
                                 Link("Learn More", destination: URL(string: "https://paretosecurity.com/docs/mac/permissions?utm_source=\(AppInfo.utmSource)")!)

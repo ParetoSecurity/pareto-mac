@@ -51,6 +51,11 @@ class TimeMachineCheck: ParetoCheck {
         return isActive
     }
 
+    override var showSettingsWarnDiskAccess: Bool {
+        // If we cannot read the TM plist, likely missing Full Disk Access
+        return readDefaultsFile(path: "/Library/Preferences/com.apple.TimeMachine.plist") as! [String: Any]? == nil
+    }
+
     var isConfigured: Bool {
         let status = runCMD(app: "/usr/bin/tmutil", args: ["destinationinfo"])
         return status.contains("ID") && status.contains("Name")
