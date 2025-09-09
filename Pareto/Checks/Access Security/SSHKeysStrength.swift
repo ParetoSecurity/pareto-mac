@@ -4,6 +4,7 @@
 //
 //  Created by Janez Troha on 15/12/2021.
 //
+import Defaults
 import Foundation
 import os.log
 import Regex
@@ -101,6 +102,11 @@ class SSHKeysStrengthCheck: SSHCheck {
             for pub in files {
                 let privateKey = pub.path.replacingOccurrences(of: ".pub", with: "")
                 if !itExists(privateKey) {
+                    continue
+                }
+                // Skip ignored keys by base filename
+                let baseName = pub.deletingPathExtension().lastPathComponent
+                if Defaults[.ignoredSSHKeys].contains(baseName) {
                     continue
                 }
                 if !isKeyStrong(withKey: pub.absoluteURL.path) {

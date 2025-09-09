@@ -169,4 +169,27 @@ class ParetoUpdated: ParetoCheck {
             return updateCheckResult
         #endif
     }
+
+    override var details: String {
+        #if SETAPP_ENABLED
+            return "Updates handled by Setapp"
+        #else
+            if hasError {
+                return "Update check failed"
+            }
+            if Defaults[.showBeta] {
+                return "Beta channel enabled"
+            }
+            // Prefer resolved versions captured during the last check
+            let current = currentVersion.isEmpty ? AppInfo.appVersion : currentVersion
+            if latestVersion.isEmpty {
+                return "Current: \(current), Latest: unknown"
+            }
+            if checkPassed {
+                return "Current: \(current) (latest \(latestVersion))"
+            } else {
+                return "Current: \(current), Latest: \(latestVersion)"
+            }
+        #endif
+    }
 }

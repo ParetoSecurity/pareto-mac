@@ -14,10 +14,26 @@ struct IgnoredUsersSettingsView: View {
     @State private var selectedUser: String?
     @State private var availableUsers: [String] = []
     @State private var isLoadingUsers = false
+    @State private var showRerunNotice = false
 
     var body: some View {
         Form {
             VStack(alignment: .leading, spacing: 12) {
+                if showRerunNotice {
+                    HStack(alignment: .top, spacing: 8) {
+                        Image(systemName: "info.circle.fill")
+                            .foregroundColor(.orange)
+                        Text("Ignored users updated. Rerun checks to refresh the report.")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                        Spacer()
+                        Button("Dismiss") { showRerunNotice = false }
+                            .buttonStyle(.link)
+                    }
+                    .padding(8)
+                    .background(Color(NSColor.controlBackgroundColor))
+                    .cornerRadius(6)
+                }
                 if !ignoredUserAccounts.isEmpty {
                     VStack(alignment: .leading, spacing: 8) {
                         Text("Currently Ignored:")
@@ -77,6 +93,10 @@ struct IgnoredUsersSettingsView: View {
         .onAppear {
             loadAvailableUsers()
         }
+        .onChange(of: ignoredUserAccounts) { _ in
+            // Show notice whenever ignored users list changes
+            showRerunNotice = true
+        }
     }
 
     private var availableUsersNotIgnored: [String] {
@@ -108,13 +128,14 @@ struct IgnoredUsersSettingsView: View {
         if !users.contains(user) {
             users.append(user)
             ignoredUserAccounts = users.sorted()
+            showRerunNotice = true
         }
     }
 
     private func removeIgnoredUser(_ user: String) {
         ignoredUserAccounts = ignoredUserAccounts.filter { $0 != user }
+        showRerunNotice = true
     }
-
 }
 
 struct IgnoredUsersSettingsView_Previews: PreviewProvider {

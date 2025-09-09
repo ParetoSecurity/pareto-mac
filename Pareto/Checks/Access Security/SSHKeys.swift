@@ -4,6 +4,7 @@
 //
 //  Created by Janez Troha on 15/07/2021.
 //
+import Defaults
 import Foundation
 import os.log
 
@@ -37,10 +38,16 @@ class SSHKeysCheck: SSHCheck {
 
     func keysWithNoPassword() -> [String] {
         var keys: [String] = []
+        let ignored = Defaults[.ignoredSSHKeys]
         do {
             let files = try FileManager.default.contentsOfDirectory(at: sshPath, includingPropertiesForKeys: nil).filter { $0.pathExtension == "pub" }
             for pub in files {
                 let privateKey = pub.path.replacingOccurrences(of: ".pub", with: "")
+                let baseName = pub.deletingPathExtension().lastPathComponent
+                // Skip ignored keys by base filename
+                if ignored.contains(baseName) {
+                    continue
+                }
                 if !itExists(privateKey) {
                     continue
                 }

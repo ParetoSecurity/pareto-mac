@@ -451,6 +451,24 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
         NSWorkspace.shared.open(AppInfo.docsURL())
     }
 
+    @objc func activateSettingsFrontmost() {
+        NSApp.activate(ignoringOtherApps: true)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+            for window in NSApp.windows {
+                if window.title == "Settings" || window.className.contains("Settings") {
+                    window.makeKeyAndOrderFront(nil)
+                    window.orderFrontRegardless()
+                }
+            }
+        }
+    }
+
+    @objc func showSettings() {
+        // Open the SwiftUI Settings scene and bring it to front
+        NSApp.sendAction(Selector(("showPreferencesWindow:")), to: nil, from: nil)
+        activateSettingsFrontmost()
+    }
+
     @objc func teamsDashboard() {
         NSWorkspace.shared.open(AppInfo.teamsURL())
     }

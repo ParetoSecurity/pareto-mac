@@ -88,13 +88,16 @@ struct StatusBarMenuView: View {
                     Label("Preferences", systemImage: "gearshape.fill")
                         .symbolRenderingMode(.multicolor)
                 }
+                // Ensure the Settings window becomes frontmost
+                .simultaneousGesture(TapGesture().onEnded {
+                    appHandlers.activateSettingsFrontmost()
+                })
                 .keyboardShortcut(",")
                 .padding(.horizontal)
                 .padding(.vertical, 2)
             } else {
                 Button {
-                    // Opens the SwiftUI Settings scene on macOS 13
-                    NSApp.sendAction(Selector(("showPreferencesWindow:")), to: nil, from: nil)
+                    appHandlers.showSettings()
                 } label: {
                     Label("Preferences", systemImage: "gearshape.fill")
                         .symbolRenderingMode(.multicolor)

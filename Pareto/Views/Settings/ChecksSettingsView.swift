@@ -198,10 +198,13 @@ private struct CheckRowView: View {
         } else {
             // Other failing checks
             let message: String = {
-                if !check.cachedDetails.isEmpty && check.isRunnable {
+                if check.isRunnable,
+                   !check.cachedDetails.isEmpty,
+                   check.cachedDetails != "None"
+                {
                     return check.cachedDetails
                 } else {
-                    return "Needs attention"
+                    return "Failing"
                 }
             }()
             Text(message)
@@ -320,6 +323,17 @@ struct CheckDetailView: View {
                         .font(.footnote)
                         .foregroundColor(.accentColor)
                         .padding(.top, 4)
+                }
+
+                // SSH-specific: allow ignoring selected SSH keys
+                if check is SSHKeysCheck || check is SSHKeysStrengthCheck {
+                    Section(header: Text("Ignored SSH Keys")) {
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("Choose SSH keys to exclude from SSH-related checks (e.g., keys without passphrases or with weak strength).").font(.caption).foregroundColor(.secondary)
+                            Divider()
+                            IgnoredSSHKeysSettingsView().padding(.vertical, 4)
+                        }
+                    }
                 }
 
                 if check.showSettingsWarnDiskAccess && !check.isRunnable {
