@@ -188,6 +188,12 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
                                 os_log("Team status was updated", log: Log.app)
                             case let .failure(err):
                                 os_log("Team status update failed: %s", log: Log.app, err.localizedDescription)
+
+                                // Check if the error is a 404 (device/team not found)
+                                if let statusCode = response.response?.statusCode, statusCode == 404 {
+                                    Team.showDeviceRemovedAlert()
+                                    os_log("Device disconnected from Cloud. Got team update response with 404 error", log: Log.app)
+                                }
                             }
                         }
                     }

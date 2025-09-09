@@ -6,6 +6,7 @@
 //
 
 import Alamofire
+import AppKit
 import CryptoKit
 import Defaults
 import Foundation
@@ -154,6 +155,25 @@ struct Report: Encodable {
 enum Team {
     private static let queue = DispatchQueue(label: "co.pareto.api", qos: .userInteractive, attributes: .concurrent)
 
+    static func showDeviceRemovedAlert() {
+        // Only show alert once per week
+        if Defaults.shouldShowDeviceRemovedAlert() {
+            DispatchQueue.main.async {
+                let alert = NSAlert()
+                alert.messageText = "Device Unlinked"
+                alert.informativeText = "This device has been removed from the Cloud.\n\nUnlink the device in the app preferences or contact your administrator to link your device again."
+                alert.alertStyle = NSAlert.Style.warning
+                alert.addButton(withTitle: "OK")
+                alert.runModal()
+
+                // Update timestamp after showing the alert
+                Defaults[.lastDeviceRemovedAlert] = Date().currentTimeMs()
+            }
+        } else {
+            os_log("Device removed alert suppressed (shown recently)", log: Log.api)
+        }
+    }
+
     static func enrollDevice(inviteID: String, completion: @escaping (Result<(String, String), Swift.Error>) -> Void) {
         let request = DeviceEnrollmentRequest(inviteID: inviteID, device: ReportingDevice.current())
         let headers: HTTPHeaders = [
@@ -248,7 +268,7 @@ enum Team {
             headers: headers
         ) { $0.timeoutInterval = 15 }.cURLDescription { cmd in
             os_log("Update cURL command: %{public}s", log: Log.api, cmd)
-        }.response(queue: queue) { response in
+        }.validate().response(queue: queue) { response in
             os_log("Update response status: %d", log: Log.api, response.response?.statusCode ?? -1)
             os_log("Update response headers: %{public}s", log: Log.api, response.response?.allHeaderFields.debugDescription ?? "None")
 
@@ -291,6 +311,13 @@ enum Team {
 
             if let error = response.error {
                 os_log("Settings request failed with error: %{public}s", log: Log.api, error.localizedDescription)
+
+                // Check if the error is a 404 (device/team not found)
+                if let statusCode = response.response?.statusCode, statusCode == 404 {
+                    os_log("Settings request failed with 404 - device removed from cloud", log: Log.api)
+                    showDeviceRemovedAlert()
+                }
+
                 completion(nil)
             } else if let settings = response.value {
                 os_log("Settings fetched successfully - Required checks: %d, Force serial push: %{public}s",
