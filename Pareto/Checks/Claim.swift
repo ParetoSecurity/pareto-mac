@@ -71,7 +71,7 @@ class Claim: Hashable {
 
     func run() {
         for check in checks {
-            if shouldRun(check) {
+            if check.isRunnable {
                 let startTime = Date()
                 check.run()
                 let endTime = Date()
@@ -93,32 +93,5 @@ class Claim: Hashable {
             check.configure()
         }
         UserDefaults.standard.synchronize()
-    }
-}
-
-private extension Claim {
-    func shouldRun(_ check: ParetoCheck) -> Bool {
-        // Special dependency rule: Time Machine dependents hidden if base off/unrunnable
-        let isTimeMachineDependent = (check is TimeMachineHasBackupCheck) || (check is TimeMachineIsEncryptedCheck)
-        let timeMachineUnavailable = (!TimeMachineCheck.sharedInstance.isActive || !TimeMachineCheck.sharedInstance.isRunnable)
-        if isTimeMachineDependent && timeMachineUnavailable {
-            return false
-        }
-
-        // Team-enforced checks always run unless explicitly exempt
-        if check.teamEnforced{
-            return true
-        }
-
-        // App checks: run only if installed, recently used (when applicable), and not manually disabled
-        if let app = check as? AppCheck {
-            let appInstalled = app.isInstalled
-            let appRecentlyUsed = !app.supportsRecentlyUsed || app.usedRecently
-            let notManuallyDisabled = app.storedIsActive
-            return appInstalled && appRecentlyUsed && notManuallyDisabled
-        }
-
-        // Non-app checks: run unless manually disabled
-        return check.storedIsActive
     }
 }

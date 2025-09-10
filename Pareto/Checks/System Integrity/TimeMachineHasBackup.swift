@@ -106,6 +106,6 @@ class TimeMachineHasBackupCheck: ParetoCheck {
     }
     
     override var showInMenu: Bool {
-        self.isActive && TimeMachineCheck.sharedInstance.isRunnableCached()
+        self.isActive && TimeMachineCheck.sharedInstance.isRunnable
     }
 }

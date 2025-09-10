@@ -31,10 +31,6 @@ class TimeMachineCheck: ParetoCheck {
     }
 
     override var isRunnable: Bool {
-        // If team enforced, always run this check; it will fail if not enabled
-        if teamEnforced {
-            return true
-        }
         // Otherwise require proper configuration and enabled state
         guard let config = readDefaultsFile(path: "/Library/Preferences/com.apple.TimeMachine.plist") as! [String: Any]? else {
             return false

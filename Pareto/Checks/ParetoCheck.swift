@@ -31,30 +31,6 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
 
     // Indicate check has errored
     var hasError = false
-
-    // Add these properties to your ParetoCheck class:
-    private var cachedIsRunnableValue: Bool?
-    private var cachedIsRunnableTimestamp: Date?
-
-    // This function caches the result of isRunnable for 5 minutes (300 seconds).
-    func isRunnableCached() -> Bool {
-        let cacheDuration: TimeInterval = 300 // 5 minutes in seconds
-        let now = Date()
-
-        // If a cached value exists and is still valid, return it.
-        if let timestamp = cachedIsRunnableTimestamp,
-           let value = cachedIsRunnableValue,
-           now.timeIntervalSince(timestamp) < cacheDuration
-        {
-            return value
-        }
-
-        // Otherwise, compute the current state, cache it, and update the timestamp.
-        let currentValue = isRunnable
-        cachedIsRunnableValue = currentValue
-        cachedIsRunnableTimestamp = now
-        return currentValue
-    }
     
     var showInMenu: Bool {
         isActive
@@ -146,8 +122,6 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
         get { UserDefaults.standard.integer(forKey: TimestampKey) }
         set {
             UserDefaults.standard.set(newValue, forKey: TimestampKey)
-            cachedIsRunnableValue = nil
-            cachedIsRunnableTimestamp = nil
         }
     }
 
