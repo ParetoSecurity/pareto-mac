@@ -172,6 +172,11 @@ class AppCheck: ParetoCheck, AppCheckProtocol {
         return isInstalled
     }
 
+    override var showInMenu: Bool {
+        isActive && isInstalled && usedRecently
+    }
+    
+    
     var currentVersion: Version {
         if applicationPath == nil {
             return Version(0, 0, 0)

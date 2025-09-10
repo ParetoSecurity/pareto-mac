@@ -99,4 +99,8 @@ class TimeMachineIsEncryptedCheck: ParetoCheck {
         let tmConf = TimeMachineConfig(dict: settings)
         return tmConf.AutoBackup && tmConf.isEncryptedBackup
     }
+    
+    override var showInMenu: Bool {
+        self.isActive && TimeMachineCheck.sharedInstance.isRunnableCached()
+    }
 }

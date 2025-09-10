@@ -55,7 +55,11 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
         cachedIsRunnableTimestamp = now
         return currentValue
     }
-
+    
+    var showInMenu: Bool {
+        isActive
+    }
+    
     var EnabledKey: String {
         "ParetoCheck-" + UUID + "-Enabled"
     }

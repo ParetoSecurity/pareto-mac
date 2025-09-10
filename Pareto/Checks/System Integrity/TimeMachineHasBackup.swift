@@ -104,4 +104,8 @@ class TimeMachineHasBackupCheck: ParetoCheck {
         let tmConf = TimeMachineConfig(dict: settings)
         return tmConf.AutoBackup && tmConf.upToDateBackup
     }
+    
+    override var showInMenu: Bool {
+        self.isActive && TimeMachineCheck.sharedInstance.isRunnableCached()
+    }
 }

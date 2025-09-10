@@ -173,8 +173,8 @@ struct ClaimMenuView: View {
 
     var body: some View {
         Menu {
-            ForEach(claim.checksSorted, id: \.id) { check in
-                    CheckMenuItemView(check: check)
+            ForEach(claim.checksSorted.filter { $0.showInMenu }, id: \.id) { check in
+                CheckMenuItemView(check: check)
             }
         } label: {
             HStack {
