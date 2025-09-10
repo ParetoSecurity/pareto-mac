@@ -161,7 +161,7 @@ enum Team {
             DispatchQueue.main.async {
                 let alert = NSAlert()
                 alert.messageText = "Device Unlinked"
-                alert.informativeText = "This device has been removed from the Cloud.\n\nUnlink the device in the app preferences or contact your administrator to link your device again."
+                alert.informativeText = "This device has been removed from Pareto Cloud.\n\nUnlink the device in the app preferences or contact your administrator to link your device again."
                 alert.alertStyle = NSAlert.Style.warning
                 alert.addButton(withTitle: "OK")
                 alert.runModal()
