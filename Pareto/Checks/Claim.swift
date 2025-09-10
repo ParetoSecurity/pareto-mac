@@ -106,7 +106,7 @@ private extension Claim {
         }
 
         // Team-enforced checks always run unless explicitly exempt
-        if check.teamEnforced && !check.teamEnforcedButExempt {
+        if check.teamEnforced{
             return true
         }
 

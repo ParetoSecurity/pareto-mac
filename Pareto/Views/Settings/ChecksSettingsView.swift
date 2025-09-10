@@ -158,7 +158,7 @@ private struct CheckRowView: View {
     @ViewBuilder
     private func subtitleView(for check: ParetoCheck) -> some View {
         // Show status details
-        if check.teamEnforced && !check.storedIsActive && !check.teamEnforcedButExempt {
+        if check.teamEnforced && !check.storedIsActive {
             Text("Disabled locally but required by team")
                 .font(.caption)
                 .foregroundColor(.orange)
