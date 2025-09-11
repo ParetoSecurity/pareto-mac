@@ -36,7 +36,7 @@ class SecureiTermCheck: ParetoCheck {
         // can also be missing if it never changed, but defaults to false
         return false
     }
-    
+
     override var showInMenu: Bool {
         return AppiTermCheck.sharedInstance.isInstalled && isActive
     }

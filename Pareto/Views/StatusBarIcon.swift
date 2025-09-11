@@ -57,11 +57,16 @@ struct StatusBarIcon: View {
         let newImage = NSImage(size: targetSize)
         // Ensure we keep original colors (not template-tinted white in menu bar)
         newImage.isTemplate = false
-        newImage.lockFocus()
-        NSGraphicsContext.current?.imageInterpolation = .high
-        let destRect = NSRect(origin: .zero, size: targetSize)
-        img.draw(in: destRect)
-        newImage.unlockFocus()
+
+        // Use the app’s effective appearance only while drawing.
+        NSApp.effectiveAppearance.performAsCurrentDrawingAppearance {
+            newImage.lockFocus()
+            NSGraphicsContext.current?.imageInterpolation = .high
+            let destRect = NSRect(origin: .zero, size: targetSize)
+            img.draw(in: destRect)
+            newImage.unlockFocus()
+        }
+
         return newImage
     }
 

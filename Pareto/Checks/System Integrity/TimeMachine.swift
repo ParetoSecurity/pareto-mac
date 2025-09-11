@@ -91,6 +91,4 @@ class TimeMachineCheck: ParetoCheck {
         let tmConf = TimeMachineConfig(dict: settings)
         return tmConf.AutoBackup && !tmConf.Destinations.isEmpty && !tmConf.LastDestinationID.isEmpty
     }
-
-    
 }

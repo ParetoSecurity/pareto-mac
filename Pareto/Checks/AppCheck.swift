@@ -175,8 +175,7 @@ class AppCheck: ParetoCheck, AppCheckProtocol {
     override var showInMenu: Bool {
         isActive && isInstalled && usedRecently
     }
-    
-    
+
     var currentVersion: Version {
         if applicationPath == nil {
             return Version(0, 0, 0)
@@ -243,7 +242,7 @@ class AppCheck: ParetoCheck, AppCheckProtocol {
             NSWorkspace.shared.open(url)
         }
     }
-    
+
     override var disabledReason: String {
         get {
             if !isActive {

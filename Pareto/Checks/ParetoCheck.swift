@@ -31,11 +31,11 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
 
     // Indicate check has errored
     var hasError = false
-    
+
     var showInMenu: Bool {
         isActive
     }
-    
+
     var EnabledKey: String {
         "ParetoCheck-" + UUID + "-Enabled"
     }

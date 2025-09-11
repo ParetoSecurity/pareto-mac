@@ -5,9 +5,9 @@
 //  Created by Claude on 20/06/2025.
 //
 
+import AppKit
 import Defaults
 import SwiftUI
-import AppKit
 
 struct StatusBarMenuView: View {
     @ObservedObject var statusBarModel: StatusBarModel

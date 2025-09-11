@@ -70,37 +70,37 @@ class TeamsTest: XCTestCase {
 
         XCTAssertEqual(response.auth, "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0ZWFtX2lkIjoiMjQyOWM0OWUtMzdiYi00MWJiLTkwNzctNmJiNjIwMmUyNTViIn0.test")
     }
-    
+
     func testShouldShowDeviceRemovedAlertFirstTime() throws {
         // Reset the last alert timestamp
         Defaults[.lastDeviceRemovedAlert] = 0
-        
+
         // Should show alert when never shown before
         XCTAssertTrue(Defaults.shouldShowDeviceRemovedAlert())
     }
-    
+
     func testShouldShowDeviceRemovedAlertAfterWeek() throws {
         // Set last alert to more than a week ago
         let moreThanWeekAgo = Date().currentTimeMs() - (Date.HourInMs * 24 * 8)
         Defaults[.lastDeviceRemovedAlert] = moreThanWeekAgo
-        
+
         // Should show alert after a week has passed
         XCTAssertTrue(Defaults.shouldShowDeviceRemovedAlert())
     }
-    
+
     func testShouldNotShowDeviceRemovedAlertWithinWeek() throws {
         // Set last alert to less than a week ago (e.g., 3 days ago)
         let threeDaysAgo = Date().currentTimeMs() - (Date.HourInMs * 24 * 3)
         Defaults[.lastDeviceRemovedAlert] = threeDaysAgo
-        
+
         // Should not show alert within a week
         XCTAssertFalse(Defaults.shouldShowDeviceRemovedAlert())
     }
-    
+
     func testShouldNotShowDeviceRemovedAlertJustShown() throws {
         // Set last alert to now
         Defaults[.lastDeviceRemovedAlert] = Date().currentTimeMs()
-        
+
         // Should not show alert immediately after showing
         XCTAssertFalse(Defaults.shouldShowDeviceRemovedAlert())
     }

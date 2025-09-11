@@ -209,7 +209,11 @@ struct Pareto: App {
         }
 
         Settings {
+            // Attach onAppear to the content view instead of the Settings scene
             SettingsView(selected: SettingsView.Tabs.general)
+                .onAppear {
+                    NSApp.activate(ignoringOtherApps: true)
+                }
         }
     }
 }
