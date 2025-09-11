@@ -76,10 +76,8 @@ struct GeneralSettingsView: View {
                             NSApp.sendAction(#selector(AppDelegate.resetSettingsClick), to: nil, from: nil)
                         }
                         Button("Show Welcome") {
-
-                                openWindow(id: AppWindowID.welcome)
-                                NSApp.activate(ignoringOtherApps: true)
-
+                            openWindow(id: AppWindowID.welcome)
+                            NSApp.activate(ignoringOtherApps: true)
                         }
                     }
                 #endif

@@ -5,6 +5,7 @@
 //  Created by Janez Troha on 12/07/2021.
 //
 
+import AppKit
 import Defaults
 import Foundation
 import LaunchAtLogin
@@ -214,14 +215,33 @@ private struct HiddenLauncherView: View {
             .onAppear {
                 // Trigger any optional side effect first.
                 action?()
-                // Open the Welcome window.
-                openWindow(id: AppWindowID.welcome)
-                // Bring the app to front so the welcome is visible.
-                NSApp.activate(ignoringOtherApps: true)
+                if Defaults.firstLaunch() {
+                    // Open the Welcome window.
+                    openWindow(id: AppWindowID.welcome)
+                    // Bring the app to front so the welcome is visible.
+                    NSApp.activate(ignoringOtherApps: true)
+                }
                 // Close this temporary launcher window.
                 dismiss()
             }
     }
+}
+
+// Helper to configure NSWindow for a SwiftUI window.
+private struct WindowConfigurator: NSViewRepresentable {
+    let configure: (NSWindow) -> Void
+
+    func makeNSView(context _: Context) -> NSView {
+        let view = NSView(frame: .zero)
+        DispatchQueue.main.async {
+            if let window = view.window {
+                configure(window)
+            }
+        }
+        return view
+    }
+
+    func updateNSView(_: NSView, context _: Context) {}
 }
 
 @main
@@ -244,16 +264,27 @@ struct Pareto: App {
             StatusBarIcon(statusBarModel: appDelegate.statusBarModel)
         }
 
-        // Welcome window managed by SwiftUI, replacing custom AppKit window controller
+        // Welcome window managed by SwiftUI, with no controls
         WindowGroup("Welcome", id: AppWindowID.welcome) {
             WelcomeView()
                 .environmentObject(appDelegate as AppHandlers)
                 .frame(minWidth: 380, idealWidth: 380, maxWidth: 480,
                        minHeight: 520, idealHeight: 520, maxHeight: 700)
+                .background(
+                    WindowConfigurator { window in
+                        window.titleVisibility = .hidden
+                        window.titlebarAppearsTransparent = true
+                        window.standardWindowButton(.miniaturizeButton)?.isHidden = true
+                        window.standardWindowButton(.zoomButton)?.isHidden = true
+                        window.isMovableByWindowBackground = true
+                        window.styleMask.remove(.resizable)
+                    }
+                )
         }
         .defaultPosition(.center)
         .defaultSize(width: 380, height: 520)
         .windowStyle(.hiddenTitleBar)
+        .windowResizability(.contentSize)
 
         // Settings window
         Settings {
