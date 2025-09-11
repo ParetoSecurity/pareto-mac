@@ -206,7 +206,27 @@ public class AppUpdater {
         let finalExecutable = installedAppBundle.path / exe.relative(to: downloadedAppBundle.path)
         if validate(downloadedAppBundle, installedAppBundle) {
             do {
-                if SystemUser.current.isAdmin {
+                // Determine if the installed app is in user's Applications (~/Applications)
+                let userApplicationsURL: URL? = {
+                    if let url = FileManager.default.urls(for: .applicationDirectory, in: .userDomainMask).first {
+                        return url
+                    }
+                    // Fallback to ~/Applications if the above ever fails
+                    return FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent("Applications", isDirectory: true)
+                }()
+
+                let installedURL = installedAppBundle.bundleURL.resolvingSymlinksInPath()
+                let userAppsURL = userApplicationsURL?.resolvingSymlinksInPath()
+
+                let isInUserApplications: Bool = {
+                    guard let userAppsURL else { return false }
+                    let installedPath = installedURL.standardizedFileURL.path
+                    let userAppsPath = userAppsURL.standardizedFileURL.path
+                    return installedPath.hasPrefix(userAppsPath + "/")
+                        || installedPath == userAppsPath // in case the bundle is exactly at ~/Applications (unlikely)
+                }()
+
+                if SystemUser.current.isAdmin || isInUserApplications {
                     try AppUpdater.safeCopyBundle(from: downloadedAppBundle.path.string, to: installedAppBundle.path.string)
                 } else {
                     let path = "\(downloadedAppBundle.path)/Contents/MacOS/Pareto Security".shellEscaped()
