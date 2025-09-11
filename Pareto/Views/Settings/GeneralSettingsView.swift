@@ -21,6 +21,7 @@ struct GeneralSettingsView: View {
     @Default(.hideWhenNoFailures) var hideWhenNoFailures
     @Default(.alternativeColor) var alternativeColor
     @ObservedObject fileprivate var checker = PermissionsChecker()
+    @Environment(\.openWindow) private var openWindow
 
     var body: some View {
         Form {
@@ -75,7 +76,10 @@ struct GeneralSettingsView: View {
                             NSApp.sendAction(#selector(AppDelegate.resetSettingsClick), to: nil, from: nil)
                         }
                         Button("Show Welcome") {
-                            NSApp.sendAction(#selector(AppDelegate.showWelcome), to: nil, from: nil)
+
+                                openWindow(id: AppWindowID.welcome)
+                                NSApp.activate(ignoringOtherApps: true)
+
                         }
                     }
                 #endif

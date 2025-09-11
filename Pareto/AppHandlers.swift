@@ -609,9 +609,6 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
         case "showMenu":
             NSApp.sendAction(#selector(showMenu), to: nil, from: nil)
             NSApp.activate(ignoringOtherApps: true)
-        case "welcome":
-            NSApp.sendAction(#selector(showWelcome), to: nil, from: nil)
-            NSApp.activate(ignoringOtherApps: true)
         case "debug":
             let check = url.queryParams()["check"] ?? ""
             copyDebug(check)

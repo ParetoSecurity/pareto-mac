@@ -11,7 +11,7 @@ import LaunchAtLogin
 import OSLog
 import SwiftUI
 
-private enum AppWindowID {
+public enum AppWindowID {
     static let welcome = "welcome"
 }
 
@@ -217,17 +217,10 @@ struct Pareto: App {
                 .environmentObject(appDelegate as AppHandlers)
                 .frame(minWidth: 380, idealWidth: 380, maxWidth: 480,
                        minHeight: 520, idealHeight: 520, maxHeight: 700)
-                // Capture openWindow environment here and install it into AppHandlers
-                .background(InstallOpenWindow { id in
-                    if #available(macOS 13.0, *) {
-                        if id == AppWindowID.welcome {
-                            // This is just a placeholder; real open happens via environment action inside InstallOpenWindow
-                        }
-                    }
-                })
         }
         .defaultPosition(.center)
         .defaultSize(width: 380, height: 520)
+        .windowStyle(.hiddenTitleBar)
 
         // Settings window
         Settings {
@@ -235,75 +228,6 @@ struct Pareto: App {
                 .onAppear {
                     NSApp.activate(ignoringOtherApps: true)
                 }
-        }
-    }
-}
-
-// Helper view to inject the openWindow action into AppHandlers
-private struct InstallOpenWindow: View {
-    @Environment(\.openWindow) private var openWindow
-    let didSet: (String) -> Void
-
-    init(_ didSet: @escaping (String) -> Void) {
-        self.didSet = didSet
-    }
-
-    var body: some View {
-        Color.clear
-            .onAppear {
-                // Provide a closure to AppHandlers so @objc showWelcome can call it.
-                (NSApp.delegate as? AppHandlers)?.openWindowHandler = { id in
-                    if #available(macOS 13.0, *) {
-                        openWindow(id: id)
-                    }
-                }
-                didSet(AppWindowID.welcome)
-            }
-    }
-}
-
-// MARK: - Welcome window opener from AppHandlers
-
-extension AppHandlers {
-    // A stored handler that SwiftUI installs so AppKit callers can open windows by id
-    @MainActor
-    @objc func showWelcome() {
-        if #available(macOS 13.0, *) {
-            // Call into the injected SwiftUI opener if available
-            if let opener = openWindowHandler {
-                opener(AppWindowID.welcome)
-                return
-            }
-        }
-        // Fallback for macOS 12: present a temporary AppKit window hosting the view
-        DispatchQueue.main.async {
-            let hostingController = NSHostingController(rootView: WelcomeView())
-            let welcomeSize = NSSize(width: 380, height: 520)
-            hostingController.preferredContentSize = welcomeSize
-            let window = NSWindow(contentViewController: hostingController)
-            window.title = "Welcome"
-            window.standardWindowButton(.zoomButton)?.isHidden = true
-            window.standardWindowButton(.miniaturizeButton)?.isHidden = true
-            window.setContentSize(welcomeSize)
-            window.contentMinSize = welcomeSize
-            window.center()
-            let wc = NSWindowController(window: window)
-            wc.showWindow(nil)
-        }
-    }
-
-    // Storage for the SwiftUI openWindow bridge
-    // Declare this in an extension to avoid touching your existing class layout elsewhere.
-    private struct OpenWindowKey {
-        static var key = "openWindowHandlerKey"
-    }
-
-    var openWindowHandler: ((String) -> Void)? {
-        get {
-            objc_getAssociatedObject(self, &OpenWindowKey.key) as? ((String) -> Void)
-        }
-        set {
-            objc_setAssociatedObject(self, &OpenWindowKey.key, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
     }
 }
