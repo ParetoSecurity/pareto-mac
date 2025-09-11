@@ -267,8 +267,6 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
             #if !DEBUG
                 LaunchAtLogin.isEnabled = true
             #endif
-            NSApp.sendAction(#selector(showWelcome), to: nil, from: nil)
-            NSApp.activate(ignoringOtherApps: true)
         } else {
             DispatchQueue.main.asyncAfter(deadline: .now() + 300) {
                 self.runChecks(isInteractive: false)
@@ -473,27 +471,6 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
 
     @objc func teamsDashboard() {
         NSWorkspace.shared.open(AppInfo.teamsURL())
-    }
-
-    @MainActor
-    @objc func showWelcome() {
-        DispatchQueue.main.async { [self] in
-            if welcomeWindow == nil {
-                let hostingController = NSHostingController(rootView: WelcomeView())
-                let welcomeSize = NSSize(width: 380, height: 520)
-                hostingController.preferredContentSize = welcomeSize
-                let window = NSWindow(contentViewController: hostingController)
-                window.title = "Welcome"
-                window.standardWindowButton(.zoomButton)?.isHidden = true
-                window.standardWindowButton(.miniaturizeButton)?.isHidden = true
-                window.setContentSize(welcomeSize)
-                window.contentMinSize = welcomeSize
-                window.center()
-
-                welcomeWindow = NSWindowController(window: window)
-            }
-            welcomeWindow!.showWindow(nil)
-        }
     }
 
     func copyLogs() {
