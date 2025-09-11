@@ -26,80 +26,14 @@ class StatusBarModel: ObservableObject {
 
 struct StatusBarIcon: View {
     @ObservedObject var statusBarModel: StatusBarModel
-    @Environment(\.colorScheme) private var colorScheme
-
-    // Load by name and allow template if the asset supports it
-    private var nsIcon: NSImage? {
-        // Try to load by current state name, fall back to gray
-        if let img = NSImage(named: statusBarModel.state.rawValue) {
-            return img
-        }
-        return NSImage(named: StatusBarState.initial.rawValue)
-    }
-
-    private var overlayColor: Color {
-        // While running, always show neutral gray regardless of last state
-        if statusBarModel.isRunning {
-            return .gray
-        }
-        switch statusBarModel.state {
-        case .allOk:
-            return Color(nsColor: Defaults.OKColor())
-        case .warning:
-            return Color(nsColor: Defaults.FailColor())
-        case .idle, .initial:
-            return .gray
-        }
-    }
-
-    // Provide an intrinsically sized NSImage to avoid hosts ignoring SwiftUI frames.
-    private func sizedIcon(from img: NSImage, side: CGFloat) -> NSImage {
-        let targetSize = NSSize(width: side, height: side)
-        let newImage = NSImage(size: targetSize)
-        // Ensure we keep original colors (not template-tinted white in menu bar)
-        newImage.isTemplate = false
-
-        // Use the app’s effective appearance only while drawing.
-        NSApp.effectiveAppearance.performAsCurrentDrawingAppearance {
-            newImage.lockFocus()
-            NSGraphicsContext.current?.imageInterpolation = .high
-            let destRect = NSRect(origin: .zero, size: targetSize)
-            img.draw(in: destRect)
-            newImage.unlockFocus()
-        }
-
-        return newImage
-    }
+    
 
     var body: some View {
-        // Center inside the status bar button area
-        ZStack(alignment: .bottomLeading) {
-            // Keep transparent background; only show the icon
-            if let img = nsIcon {
-                let side = NSStatusBar.system.thickness
-                let preSized = sizedIcon(from: img, side: side)
-
-                Image(nsImage: preSized)
-                    .renderingMode(.original)
-                    .interpolation(.high)
-                    .antialiased(true)
-                    .accessibilityHidden(true)
-            }
-
-            // Overlay: spinner while running, otherwise status dot
-            let side = NSStatusBar.system.thickness
-            // Make the overlay small relative to the bar size; keep readable
-            let overlaySide = max(10, floor(side * 0.55))
-            // Small colored status dot in the bottom-left corner
-            Circle()
-                .fill(overlayColor)
-                .frame(width: overlaySide, height: overlaySide)
-                .padding(2)
-                .accessibilityHidden(true)
-        }
-        // Force refresh when running state or nonce changes, and when appearance changes
-        .id(statusBarModel.refreshNonce
-            ^ (statusBarModel.isRunning ? 1 : 0)
-            ^ (colorScheme == .dark ? 2 : 0))
+        Image(statusBarModel.state.rawValue)
+            .resizable() // allow downscaling
+            .interpolation(.high)
+            .antialiased(true)
+            .scaledToFit()
+        .id(statusBarModel.refreshNonce ^ (statusBarModel.isRunning ? 1 : 0))
     }
 }
