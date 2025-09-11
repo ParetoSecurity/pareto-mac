@@ -243,4 +243,18 @@ class AppCheck: ParetoCheck, AppCheckProtocol {
             NSWorkspace.shared.open(url)
         }
     }
+    
+    override var disabledReason: String {
+        get {
+            if !isActive {
+                return "Manually disabled"
+            } else if !isInstalled {
+                return "App not installed"
+            } else if !usedRecently {
+                return "App was not used recently"
+            }
+            return UserDefaults.standard.string(forKey: DisabledReasonKey) ?? "Unknown reason"
+        }
+        set { UserDefaults.standard.set(newValue, forKey: DisabledReasonKey) }
+    }
 }

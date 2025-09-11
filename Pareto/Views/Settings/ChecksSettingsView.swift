@@ -37,7 +37,7 @@ struct ChecksSettingsView: View {
                     )
                 }
 
-                Link("Learn more about security checks →", destination: URL(string: "https://paretosecurity.com/security-checks?utm_source=\(AppInfo.utmSource)")!)
+                Link("Learn more about security checks →", destination: URL(string: "https://paretosecurity.com/mac/checks?utm_source=\(AppInfo.utmSource)")!)
                     .font(.footnote)
                     .foregroundColor(.accentColor)
                     .padding(.horizontal)

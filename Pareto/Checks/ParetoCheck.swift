@@ -185,21 +185,6 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
                     }
                 }
 
-                // Check for app-specific conditions
-                if String(describing: type(of: self)).contains("iTerm") {
-                    return "iTerm2 is not installed"
-                } else if String(describing: type(of: self)).contains("AppCheck") ||
-                    String(describing: type(of: self)).hasSuffix("Check")
-                {
-                    // This might be an app update check
-                    if TitleON.contains("up-to-date") || TitleON.contains("update") {
-                        // Try to extract app name from TitleON
-                        let appName = TitleON.replacingOccurrences(of: " is up-to-date", with: "")
-                            .replacingOccurrences(of: " has an available update", with: "")
-                        return "\(appName) is not installed or check is disabled"
-                    }
-                }
-
                 if showSettingsWarnDiskAccess {
                     return "Requires full disk access permission to read system files"
                 } else if showSettingsWarnEvents {

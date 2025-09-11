@@ -7,6 +7,7 @@
 
 import Foundation
 import os.log
+import OSAKit
 
 func runCMD(app: String, args: [String]) -> String {
     let task = Process()
@@ -45,13 +46,30 @@ func runShell(args: [String]) -> String {
 }
 
 func runOSA(appleScript: String) -> String? {
-    let out = runCMD(app: "/usr/bin/osascript", args: ["-e", appleScript])
-    return out
-}
+    var error: NSDictionary?
+    guard let script = NSAppleScript(source: appleScript) else {
+        os_log("NSAppleScript init failed")
+        return nil
+    }
+    let result = script.executeAndReturnError(&error)
+    if let error = error {
+        os_log("NSAppleScript error: %{public}s", error.debugDescription)
+        return nil
+    }
 
-func runOSAJS(appleScript: String) -> String? {
-    let out = runCMD(app: "/usr/bin/osascript", args: ["-l", "JavaScript", "-e", appleScript])
-    return out
+    // Prefer the string value if available
+    if let s = result.stringValue {
+        return s
+    }
+
+    // As a last resort, try the raw data of the descriptor
+    let rawData = result.data
+    if let text = String(data: rawData, encoding: .utf8) ?? String(data: rawData, encoding: .macOSRoman) {
+        return text
+    }
+
+    // Fallback to description
+    return result.description
 }
 
 func lsof(withCommand cmd: String, withPort port: Int) -> Bool {

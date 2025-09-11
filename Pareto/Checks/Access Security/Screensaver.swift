@@ -5,6 +5,8 @@
 //  Created by Janez Troha on 19/07/2021.
 //
 
+import Foundation
+
 class ScreensaverCheck: ParetoCheck {
     static let sharedInstance = ScreensaverCheck()
     override var UUID: String {
@@ -23,24 +25,56 @@ class ScreensaverCheck: ParetoCheck {
         return true
     }
 
+    // Reads the per-user, current-host screensaver delay (seconds) natively
     func checkScreensaver() -> Bool {
-        let script = "tell application \"System Events\" to tell screen saver preferences to get delay interval"
-        let out = Int(runOSA(appleScript: script)?.trim() ?? "0") ?? 0
-        return out >= 0 && out <= 60 * 20
+        let domain = "com.apple.screensaver" as CFString
+        let key = "idleTime" as CFString
+
+        let value = CFPreferencesCopyValue(
+            key,
+            domain,
+            kCFPreferencesCurrentUser,
+            kCFPreferencesCurrentHost
+        )
+
+        let seconds: Int = {
+            if let num = value as? NSNumber {
+                return num.intValue
+            } else if let str = value as? String, let intVal = Int(str) {
+                return intVal
+            } else {
+                return 0
+            }
+        }()
+
+        return seconds > 0 && seconds <= 60 * 20
     }
 
-    // https://github.com/usnistgov/macos_security/blob/e22bb0bc02290c54cb968bc3749942fa37ad752b/rules/os/os_screensaver_timeout_loginwindow_enforce.yaml#L4
+    // Native read of com.apple.screensaver loginWindowIdleTime (seconds) at loginwindow (AnyUser/CurrentHost)
+    // See: macOS security guidance references for enforcing loginwindow screensaver timeout
     func checkLock() -> Bool {
-        let script = """
-        function run() {
-            let timeout = ObjC.unwrap($.NSUserDefaults.alloc.initWithSuiteName('com.apple.screensaver')\
-          .objectForKey('loginWindowIdleTime'))
-            return timeout;
-          }
-        """
-        let val = runOSAJS(appleScript: script)
-        let out = Int(val?.trim() ?? "0") ?? 0
-        return out >= 0 && out <= 60 * 20
+        let domain = "com.apple.screensaver" as CFString
+        let key = "loginWindowIdleTime" as CFString
+
+        // Try AnyUser/CurrentHost which is where loginwindow settings typically live
+        let value = CFPreferencesCopyValue(
+            key,
+            domain,
+            kCFPreferencesAnyUser,
+            kCFPreferencesCurrentHost
+        )
+
+        let seconds: Int = {
+            if let num = value as? NSNumber {
+                return num.intValue
+            } else if let str = value as? String, let intVal = Int(str) {
+                return intVal
+            } else {
+                return 0
+            }
+        }()
+
+        return seconds >= 0 && seconds <= 60 * 20
     }
 
     override func checkPasses() -> Bool {
