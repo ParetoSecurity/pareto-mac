@@ -34,6 +34,8 @@ struct StatusBarIcon: View {
             .interpolation(.high)
             .antialiased(true)
             .scaledToFit()
-        .id(statusBarModel.refreshNonce ^ (statusBarModel.isRunning ? 1 : 0))
+            // Center the image within any available space
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+            .id(statusBarModel.refreshNonce ^ (statusBarModel.isRunning ? 1 : 0))
     }
 }
