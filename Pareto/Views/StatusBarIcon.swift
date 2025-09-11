@@ -26,6 +26,7 @@ class StatusBarModel: ObservableObject {
 
 struct StatusBarIcon: View {
     @ObservedObject var statusBarModel: StatusBarModel
+    @Environment(\.colorScheme) private var colorScheme
 
     // Load by name and allow template if the asset supports it
     private var nsIcon: NSImage? {
@@ -96,7 +97,9 @@ struct StatusBarIcon: View {
                 .padding(2)
                 .accessibilityHidden(true)
         }
-        // Force refresh when running state or nonce changes
-        .id(statusBarModel.refreshNonce ^ (statusBarModel.isRunning ? 1 : 0))
+        // Force refresh when running state or nonce changes, and when appearance changes
+        .id(statusBarModel.refreshNonce
+            ^ (statusBarModel.isRunning ? 1 : 0)
+            ^ (colorScheme == .dark ? 2 : 0))
     }
 }
