@@ -198,11 +198,44 @@ class AppDelegate: AppHandlers, NSApplicationDelegate {
     }
 }
 
+// A tiny helper view that triggers an action on appear, then closes its window.
+private struct HiddenLauncherView: View {
+    @Environment(\.openWindow) private var openWindow
+    @Environment(\.dismiss) private var dismiss
+
+    let action: (() -> Void)?
+
+    init(action: (() -> Void)? = nil) {
+        self.action = action
+    }
+
+    var body: some View {
+        Color.clear
+            .onAppear {
+                // Trigger any optional side effect first.
+                action?()
+                // Open the Welcome window.
+                openWindow(id: AppWindowID.welcome)
+                // Bring the app to front so the welcome is visible.
+                NSApp.activate(ignoringOtherApps: true)
+                // Close this temporary launcher window.
+                dismiss()
+            }
+    }
+}
+
 @main
 struct Pareto: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
 
     var body: some Scene {
+        // A tiny, hidden window that appears at launch, opens the Welcome window, then closes.
+        WindowGroup("Launcher", id: "launcher") {
+            HiddenLauncherView()
+        }
+        .windowStyle(.hiddenTitleBar)
+        .defaultSize(width: 1, height: 1)
+
         // Menu bar UI
         MenuBarExtra(isInserted: .constant(true)) {
             StatusBarMenuView(statusBarModel: appDelegate.statusBarModel)
