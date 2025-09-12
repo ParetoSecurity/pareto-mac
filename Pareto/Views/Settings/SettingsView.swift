@@ -37,7 +37,7 @@ struct SettingsView: View {
             #endif
             ChecksSettingsView()
                 .tabItem {
-                    Label("Checks", systemImage: "checkmark")
+                    Label("Checks", systemImage: "checkmark.square")
                 }
                 .tag(Tabs.checks)
             AboutSettingsView()
