@@ -92,8 +92,6 @@
 		4F20E2622E701B6400E93943 /* IgnoredSSHKeysSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F20E2602E701B6400E93943 /* IgnoredSSHKeysSettingsView.swift */; };
 		4F20E2642E70217400E93943 /* NotificationNames.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F20E2632E70217400E93943 /* NotificationNames.swift */; };
 		4F20E2652E70217400E93943 /* NotificationNames.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F20E2632E70217400E93943 /* NotificationNames.swift */; };
-		4F2432702E698B3E00A0DF91 /* Centered.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F24326F2E698B3E00A0DF91 /* Centered.swift */; };
-		4F2432712E698B3E00A0DF91 /* Centered.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F24326F2E698B3E00A0DF91 /* Centered.swift */; };
 		4F24A09026EB735F0036F748 /* TeamSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F24A08F26EB735F0036F748 /* TeamSettings.swift */; };
 		4F24A09226EB73980036F748 /* AboutSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F24A09126EB73980036F748 /* AboutSettingsView.swift */; };
 		4F24A09426EB73C80036F748 /* ChecksSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F24A09326EB73C80036F748 /* ChecksSettingsView.swift */; };
@@ -387,7 +385,6 @@
 		4F1E6C6328355B2100C8AFAB /* InternetSharing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InternetSharing.swift; sourceTree = "<group>"; };
 		4F20E2602E701B6400E93943 /* IgnoredSSHKeysSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IgnoredSSHKeysSettingsView.swift; sourceTree = "<group>"; };
 		4F20E2632E70217400E93943 /* NotificationNames.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationNames.swift; sourceTree = "<group>"; };
-		4F24326F2E698B3E00A0DF91 /* Centered.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Centered.swift; sourceTree = "<group>"; };
 		4F24A08F26EB735F0036F748 /* TeamSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeamSettings.swift; sourceTree = "<group>"; };
 		4F24A09126EB73980036F748 /* AboutSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutSettingsView.swift; sourceTree = "<group>"; };
 		4F24A09326EB73C80036F748 /* ChecksSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChecksSettingsView.swift; sourceTree = "<group>"; };
@@ -712,7 +709,6 @@
 				4F24A09326EB73C80036F748 /* ChecksSettingsView.swift */,
 				4F24A09526EB73F30036F748 /* GeneralSettingsView.swift */,
 				4F84EC9129DC3A030047C79C /* PermissionsSettingsView.swift */,
-				4F24326F2E698B3E00A0DF91 /* Centered.swift */,
 				4F20E2632E70217400E93943 /* NotificationNames.swift */,
 			);
 			path = Settings;
@@ -1248,7 +1244,6 @@
 				4F37E7282718122E00A2B254 /* Claim.swift in Sources */,
 				4F37E7292718122E00A2B254 /* ChecksSettingsView.swift in Sources */,
 				4FDA93A42771D9FC00F9D8B4 /* Checks.swift in Sources */,
-				4F2432712E698B3E00A0DF91 /* Centered.swift in Sources */,
 				4F37E72A2718122E00A2B254 /* AboutSettingsView.swift in Sources */,
 				4F37E72B2718122E00A2B254 /* FileVault.swift in Sources */,
 				4F37E72C2718122E00A2B254 /* SettingsView.swift in Sources */,
@@ -1399,7 +1394,6 @@
 				4F3EF24326CA859500841375 /* Claim.swift in Sources */,
 				4F24A09426EB73C80036F748 /* ChecksSettingsView.swift in Sources */,
 				4FDA93A32771D9FC00F9D8B4 /* Checks.swift in Sources */,
-				4F2432702E698B3E00A0DF91 /* Centered.swift in Sources */,
 				4F24A09226EB73980036F748 /* AboutSettingsView.swift in Sources */,
 				4FB7C68D26AFFD2600FB1C41 /* FileVault.swift in Sources */,
 				4F103008269EE136008C1E86 /* SettingsView.swift in Sources */,

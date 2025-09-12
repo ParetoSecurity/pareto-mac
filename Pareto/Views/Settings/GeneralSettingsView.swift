@@ -82,7 +82,7 @@ struct GeneralSettingsView: View {
                     }
                 #endif
             }
-        }
+        }            .padding(20)
     }
 }
 

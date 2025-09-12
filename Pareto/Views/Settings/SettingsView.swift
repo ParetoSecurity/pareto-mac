@@ -46,7 +46,6 @@ struct SettingsView: View {
                 }
                 .tag(Tabs.about)
         }
-        .padding(24)
         // Let the window size adapt naturally without hardcoded sizes
         .frame(width: 460) // avoid overly narrow layouts
     }

@@ -115,6 +115,7 @@ struct AboutSettingsView: View {
                 }
             }
         }
+        .padding(20)
         .onAppear {
             // Clear the updates cache when About tab appears
             UpdateService.shared.clearCache()

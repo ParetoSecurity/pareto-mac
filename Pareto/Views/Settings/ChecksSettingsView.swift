@@ -473,7 +473,7 @@ struct CheckDetailView: View {
             }
             .formStyle(.grouped)
         }
-        .frame(width: 500, height: 400)
+        .frame(height: 400)
     }
 }
 

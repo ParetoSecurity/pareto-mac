@@ -98,6 +98,7 @@ struct TeamSettingsView: View {
                     }
                 }
             }
+            .padding(20)
             .onAppear { DispatchQueue.main.async { teamSettings.update {} } }
         } else {
             Form {
@@ -129,7 +130,7 @@ struct TeamSettingsView: View {
                         }
                     }
                 }
-            }
+            }            .padding(20)
         }
     }
 }
