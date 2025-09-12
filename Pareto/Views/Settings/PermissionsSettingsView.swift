@@ -253,20 +253,22 @@ private struct PermissionCard: View {
     var secondaryAction: (() -> Void)? = nil
 
     var body: some View {
-        GroupBox(label:
-            HStack(spacing: 8) {
-                Image(systemName: icon)
-                    .symbolRenderingMode(.hierarchical)
-                    .foregroundStyle(iconTint)
-                    .imageScale(.large)
-                    .frame(width: 22)
-                Text(title)
-                    .font(.headline)
-                Spacer()
-                StatusPill(status: status, isVerifying: isVerifying)
-            }
-        ) {
+        GroupBox {
             VStack(alignment: .leading, spacing: 10) {
+                // Header moved into content so it shares the same inset as the description
+                HStack(spacing: 8) {
+                    Image(systemName: icon)
+                        .symbolRenderingMode(.hierarchical)
+                        .foregroundStyle(iconTint)
+                        .imageScale(.large)
+                        .frame(width: 22)
+                    Text(title)
+                        .font(.headline)
+                    Spacer()
+                    StatusPill(status: status, isVerifying: isVerifying)
+                }
+                .padding(.bottom, 6)
+
                 Text(message)
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
@@ -303,6 +305,9 @@ private struct PermissionCard: View {
                 .padding(.top, 2)
             }
             .padding(.top, 6)
+        } label: {
+            // Empty label so the GroupBox keeps its style but header is inside content
+            EmptyView()
         }
     }
 }
