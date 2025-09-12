@@ -107,19 +107,19 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
 
         // Snooze in effect
         if Defaults[.snoozeTime] >= Date().currentTimeMs() {
-            os_log("Checks are snoozed until %s", log: Log.app, String(Defaults[.snoozeTime]))
+            os_log("Checks are snoozed until %{public}ld", log: Log.app, Defaults[.snoozeTime])
             return
         } else {
             // snooze expired
             if Defaults[.snoozeTime] > 0 {
-                os_log("Snooze expired %s", log: Log.app, String(Defaults[.snoozeTime]))
+                os_log("Snooze expired %{public}ld", log: Log.app, Defaults[.snoozeTime])
             }
             Defaults[.snoozeTime] = 0
         }
 
         // don't run checks if not in interactive mode and it was ran less than 5 minutes ago
         if (Defaults[.lastCheck] + (60 * 1000 * 5)) >= Date().currentTimeMs(), !interactive {
-            os_log("Debounce detected, last check %sms ago", log: Log.app, String(Date().currentTimeMs() - Defaults[.lastCheck]))
+            os_log("Debounce detected, last check %{public}ldms ago", log: Log.app, Date().currentTimeMs() - Defaults[.lastCheck])
             return
         }
 
@@ -189,7 +189,7 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
                             case .success:
                                 os_log("Team status was updated", log: Log.app)
                             case let .failure(err):
-                                os_log("Team status update failed: %s", log: Log.app, err.localizedDescription)
+                                os_log("Team status update failed: %{public}@", log: Log.app, err.localizedDescription)
 
                                 // Check if the error is a 404 (device/team not found)
                                 if let statusCode = response.response?.statusCode, statusCode == 404 {
@@ -628,3 +628,4 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
         }
     }
 }
+

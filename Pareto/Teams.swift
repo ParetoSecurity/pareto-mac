@@ -182,13 +182,13 @@ enum Team {
 
         let url = URL(string: Defaults[.teamAPI])!.appendingPathComponent("api").appendingPathComponent("v1").appendingPathComponent("team").appendingPathComponent("enroll").absoluteString
 
-        os_log("Enrolling device with invite ID: %{public}s", log: Log.api, inviteID)
-        os_log("Enrollment URL: %{public}s", log: Log.api, url)
+        os_log("Enrolling device with invite ID: %{public}@", log: Log.api, inviteID)
+        os_log("Enrollment URL: %{public}@", log: Log.api, url)
         // Log request body
         if let requestData = try? JSONEncoder().encode(request),
            let requestString = String(data: requestData, encoding: .utf8)
         {
-            os_log("Request body: %{public}s", log: Log.api, requestString)
+            os_log("Request body: %{public}@", log: Log.api, requestString)
         }
 
         AF.request(
@@ -199,32 +199,32 @@ enum Team {
             headers: headers
         ) { $0.timeoutInterval = 10 }
             .cURLDescription { curl in
-                os_log("cURL command: %{public}s", log: Log.api, curl)
+                os_log("cURL command: %{public}@", log: Log.api, curl)
             }
             .validate()
             .responseDecodable(of: DeviceEnrollmentResponse.self, queue: queue) { response in
                 os_log("Enrollment response status: %d", log: Log.api, response.response?.statusCode ?? -1)
-                os_log("Enrollment response headers: %{public}s", log: Log.api, response.response?.allHeaderFields.debugDescription ?? "None")
+                os_log("Enrollment response headers: %{public}@", log: Log.api, response.response?.allHeaderFields.debugDescription ?? "None")
 
                 if let data = response.data, let responseString = String(data: data, encoding: .utf8) {
-                    os_log("Enrollment response body: %{public}s", log: Log.api, responseString)
+                    os_log("Enrollment response body: %{public}@", log: Log.api, responseString)
                 }
 
-                os_log("Full enrollment response: %{public}s", log: Log.api, response.debugDescription)
+                os_log("Full enrollment response: %{public}@", log: Log.api, response.debugDescription)
 
                 switch response.result {
                 case let .success(enrollmentResponse):
                     os_log("Device enrollment successful, auth token received", log: Log.api)
                     // Extract team ID from the JWT token
                     if let teamID = extractTeamIDFromToken(enrollmentResponse.auth) {
-                        os_log("Team ID extracted successfully: %{public}s", log: Log.api, teamID)
+                        os_log("Team ID extracted successfully: %{public}@", log: Log.api, teamID)
                         completion(.success((enrollmentResponse.auth, teamID)))
                     } else {
                         os_log("Failed to extract team ID from JWT token", log: Log.api)
                         completion(.failure(TokenError("Invalid authentication token")))
                     }
                 case let .failure(error):
-                    os_log("Device enrollment failed with error: %{public}s", log: Log.api, error.localizedDescription)
+                    os_log("Device enrollment failed with error: %{public}@", log: Log.api, error.localizedDescription)
                     completion(.failure(error))
                 }
             }
@@ -235,7 +235,7 @@ enum Team {
             let jwt = try decode(jwt: token)
             return jwt.claim(name: "team_id").string
         } catch {
-            os_log("Failed to extract team ID from token: %{public}s", error.localizedDescription)
+            os_log("Failed to extract team ID from token: %{public}@", error.localizedDescription)
             return nil
         }
     }
@@ -246,18 +246,18 @@ enum Team {
         ]
         let url = URL(string: Defaults[.teamAPI])!.appendingPathComponent("api").appendingPathComponent("v1").appendingPathComponent("team").appendingPathComponent("\(Defaults[.teamID])").appendingPathComponent("device").absoluteString
 
-        os_log("Updating device report for team ID: %{public}s", log: Log.api, Defaults[.teamID])
-        os_log("Update URL: %{public}s", log: Log.api, url)
+        os_log("Updating device report for team ID: %{public}@", log: Log.api, Defaults[.teamID])
+        os_log("Update URL: %{public}@", log: Log.api, url)
         // Log report summary
         os_log("Report summary - Passed: %d, Failed: %d, Disabled: %d", log: Log.api, report.passedCount, report.failedCount, report.disabledCount)
-        os_log("Device info - Name: %{public}s, OS: %{public}s", log: Log.api, report.device.machineName, report.device.macOSVersion)
+        os_log("Device info - Name: %{public}@, OS: %{public}@", log: Log.api, report.device.machineName, report.device.macOSVersion)
 
         // Log request body (truncated for security)
         if let reportData = try? JSONEncoder().encode(report),
            let reportString = String(data: reportData, encoding: .utf8)
         {
             let truncatedReport = reportString.count > 1000 ? String(reportString.prefix(1000)) + "... [truncated]" : reportString
-            os_log("Report body: %{public}s", log: Log.api, truncatedReport)
+            os_log("Report body: %{public}@", log: Log.api, truncatedReport)
         }
 
         return AF.request(
@@ -267,22 +267,22 @@ enum Team {
             encoder: JSONParameterEncoder.default,
             headers: headers
         ) { $0.timeoutInterval = 15 }.cURLDescription { cmd in
-            os_log("Update cURL command: %{public}s", log: Log.api, cmd)
+            os_log("Update cURL command: %{public}@", log: Log.api, cmd)
         }.validate().response(queue: queue) { response in
             os_log("Update response status: %d", log: Log.api, response.response?.statusCode ?? -1)
-            os_log("Update response headers: %{public}s", log: Log.api, response.response?.allHeaderFields.debugDescription ?? "None")
+            os_log("Update response headers: %{public}@", log: Log.api, response.response?.allHeaderFields.debugDescription ?? "None")
 
             if let data = response.data, let responseString = String(data: data, encoding: .utf8) {
-                os_log("Update response body: %{public}s", log: Log.api, responseString)
+                os_log("Update response body: %{public}@", log: Log.api, responseString)
             }
 
             if let error = response.error {
-                os_log("Update failed with error: %{public}s", log: Log.api, error.localizedDescription)
+                os_log("Update failed with error: %{public}@", log: Log.api, error.localizedDescription)
             } else {
                 os_log("Device report update successful", log: Log.api)
             }
 
-            os_log("Full update response: %{public}s", log: Log.api, response.debugDescription)
+            os_log("Full update response: %{public}@", log: Log.api, response.debugDescription)
         }
     }
 
@@ -292,25 +292,25 @@ enum Team {
         ]
         let url = URL(string: Defaults[.teamAPI])!.appendingPathComponent("api").appendingPathComponent("v1").appendingPathComponent("team").appendingPathComponent("\(Defaults[.teamID])").appendingPathComponent("settings").absoluteString
 
-        os_log("Fetching team settings for team ID: %{public}s", log: Log.api, Defaults[.teamID])
-        os_log("Settings URL: %{public}s", log: Log.api, url)
+        os_log("Fetching team settings for team ID: %{public}@", log: Log.api, Defaults[.teamID])
+        os_log("Settings URL: %{public}@", log: Log.api, url)
 
         AF.request(
             url,
             method: .get,
             headers: headers
         ) { $0.timeoutInterval = 5 }.cURLDescription { cmd in
-            os_log("Settings cURL command: %{public}s", log: Log.api, cmd)
+            os_log("Settings cURL command: %{public}@", log: Log.api, cmd)
         }.validate().responseDecodable(of: DeviceSettings.self, queue: queue) { response in
             os_log("Settings response status: %d", log: Log.api, response.response?.statusCode ?? -1)
-            os_log("Settings response headers: %{public}s", log: Log.api, response.response?.allHeaderFields.debugDescription ?? "None")
+            os_log("Settings response headers: %{public}@", log: Log.api, response.response?.allHeaderFields.debugDescription ?? "None")
 
             if let data = response.data, let responseString = String(data: data, encoding: .utf8) {
-                os_log("Settings response body: %{public}s", log: Log.api, responseString)
+                os_log("Settings response body: %{public}@", log: Log.api, responseString)
             }
 
             if let error = response.error {
-                os_log("Settings request failed with error: %{public}s", log: Log.api, error.localizedDescription)
+                os_log("Settings request failed with error: %{public}@", log: Log.api, error.localizedDescription)
 
                 // Check if the error is a 404 (device/team not found)
                 if let statusCode = response.response?.statusCode, statusCode == 404 {
@@ -322,14 +322,14 @@ enum Team {
             } else if let settings = response.value {
                 os_log("Settings fetched successfully - Required checks: %d, Force serial push: %{public}s",
                        log: Log.api, settings.requiredChecks.count, settings.forceSerialPush ? "true" : "false")
-                os_log("Enforced check IDs: %{public}s", log: Log.api, settings.enforcedList.joined(separator: ", "))
+                os_log("Enforced check IDs: %{public}@", log: Log.api, settings.enforcedList.joined(separator: ", "))
                 completion(settings)
             } else {
                 os_log("Settings response was successful but no data received", log: Log.api)
                 completion(nil)
             }
 
-            os_log("Full settings response: %{public}s", log: Log.api, response.debugDescription)
+            os_log("Full settings response: %{public}@", log: Log.api, response.debugDescription)
         }
     }
 }
@@ -342,8 +342,9 @@ class TeamSettingsUpdater: ObservableObject {
         Team.settings { res in
             self.enforcedChecks = res?.enforcedList ?? []
             self.forceSerialPush = res?.forceSerialPush ?? false
-            os_log("Team enforced checks: %s", self.enforcedChecks.debugDescription)
+            os_log("Team enforced checks: %{public}@", self.enforcedChecks.debugDescription)
             completion()
         }
     }
 }
+

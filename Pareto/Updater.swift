@@ -189,7 +189,7 @@ public class AppUpdater {
         if let scriptObject = NSAppleScript(source: code) {
             scriptObject.executeAndReturnError(&error)
             if error != nil {
-                os_log("OSA Error: %{public}s", error.debugDescription)
+                os_log("OSA Error: %{public}@", error.debugDescription)
                 return false
             }
         }
@@ -330,3 +330,4 @@ private func unzip(_ url: URL, contentType: Release.Asset.ContentType) -> URL {
 
     return try! findApp()!
 }
+

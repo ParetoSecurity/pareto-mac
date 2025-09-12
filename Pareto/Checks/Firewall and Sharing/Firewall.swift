@@ -68,9 +68,9 @@ class FirewallCheck: ParetoCheck {
         if #available(macOS 26, *) {
             os_log("FirewallCheck: Running macOS 26+ direct command")
             let out = runCMD(app: "/usr/libexec/ApplicationFirewall/socketfilterfw", args: ["--getglobalstate"])
-            os_log("FirewallCheck: Command output: %{public}s", out)
+            os_log("FirewallCheck: Command output: %{public}@", out)
             let enabled = out.contains("State = 1") || out.contains("State = 2")
-            os_log("FirewallCheck: Parsed enabled: %{public}s", enabled ? "true" : "false")
+            os_log("FirewallCheck: Parsed enabled: %{public}@", enabled ? "true" : "false")
             return enabled
         }
 
@@ -87,14 +87,14 @@ class FirewallCheck: ParetoCheck {
                     os_log("FirewallCheck: Ensuring helper is up to date")
                     // Ensure helper is up to date before running check
                     let helperReady = await helperManager.ensureHelperIsUpToDate()
-                    os_log("FirewallCheck: Helper ready status: %{public}s", helperReady ? "true" : "false")
+                    os_log("FirewallCheck: Helper ready status: %{public}@", helperReady ? "true" : "false")
 
                     if helperReady {
                         os_log("FirewallCheck: Calling isFirewallEnabled")
                         await helperManager.isFirewallEnabled { output in
-                            os_log("FirewallCheck: Received firewall output: %{public}s", output)
+                            os_log("FirewallCheck: Received firewall output: %{public}@", output)
                             result.value = output.contains("State = 1") || output.contains("State = 2")
-                            os_log("FirewallCheck: Firewall enabled result: %{public}s", result.value ? "true" : "false")
+                            os_log("FirewallCheck: Firewall enabled result: %{public}@", result.value ? "true" : "false")
                             semaphore.signal()
                         }
                     } else {
@@ -113,7 +113,7 @@ class FirewallCheck: ParetoCheck {
                 return false
             }
 
-            os_log("FirewallCheck: Check completed with result: %{public}s", result.value ? "true" : "false")
+            os_log("FirewallCheck: Check completed with result: %{public}@", result.value ? "true" : "false")
             return result.value
         }
 
