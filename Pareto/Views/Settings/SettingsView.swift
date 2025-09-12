@@ -31,13 +31,13 @@ struct SettingsView: View {
             #if !SETAPP_ENABLED
                 TeamSettingsView(teamSettings: AppInfo.TeamSettings)
                     .tabItem {
-                        Label("Cloud", systemImage: "person.3.fill")
+                        Label("Cloud", systemImage: "icloud")
                     }
                     .tag(Tabs.teams)
             #endif
             ChecksSettingsView()
                 .tabItem {
-                    Label("Checks", systemImage: "checkmark.seal")
+                    Label("Checks", systemImage: "checkmark")
                 }
                 .tag(Tabs.checks)
             AboutSettingsView()
