@@ -458,7 +458,7 @@ struct CheckDetailView: View {
                             }
                         }
 
-                        if !check.cachedDetails.isEmpty && check.cachedDetails != "None" {
+                        if !check.cachedDetails.isEmpty && check.cachedDetails != "None" && !check.checkPassed {
                             VStack(alignment: .leading, spacing: 4) {
                                 Text("Details:")
                                     .font(.caption)
