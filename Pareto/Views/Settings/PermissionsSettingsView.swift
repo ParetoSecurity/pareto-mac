@@ -86,6 +86,7 @@ struct PermissionsSettingsView: View {
                         .font(.body)
                         .foregroundStyle(.secondary)
                         .fixedSize(horizontal: false, vertical: true)
+                        .lineLimit(nil)
                 }
                 .padding(.bottom, 4)
 
@@ -166,14 +167,20 @@ private struct StatusPill: View {
     let status: PermissionStatus
     let isVerifying: Bool
 
+    // Match the SF Symbol size for .small to keep height consistent
+    private let iconSquare: CGFloat = 12
+
     var body: some View {
         HStack(spacing: 6) {
             if isVerifying {
                 ProgressView()
-                    .scaleEffect(0.6)
+                    .progressViewStyle(.circular)
+                    .controlSize(.mini)
+                    .frame(width: iconSquare, height: iconSquare, alignment: .center)
             } else {
                 Image(systemName: iconName)
                     .imageScale(.small)
+                    .frame(width: iconSquare, height: iconSquare, alignment: .center)
             }
             Text(label)
                 .font(.caption)
@@ -263,15 +270,19 @@ private struct PermissionCard: View {
                 Text(message)
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
+                    .lineLimit(nil)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .layoutPriority(1)
 
                 HStack(spacing: 8) {
-                    Button(role: primaryActionRole, action: primaryAction) {
-                        Text(primaryActionTitle)
-                            .frame(minWidth: 90)
+                    if primaryActionEnabled {
+                        Button(role: primaryActionRole, action: primaryAction) {
+                            Text(primaryActionTitle)
+                                .frame(minWidth: 90)
+                        }
+                        .buttonStyle(.borderedProminent)
+                        .tint(.accentColor)
                     }
-                    .buttonStyle(.borderedProminent)
-                    .tint(primaryActionEnabled ? .accentColor : .gray.opacity(0.6))
-                    .disabled(!primaryActionEnabled)
 
                     if let secondaryTitle = secondaryActionTitle, let secondary = secondaryAction {
                         Button(role: secondaryActionRole, action: secondary) {

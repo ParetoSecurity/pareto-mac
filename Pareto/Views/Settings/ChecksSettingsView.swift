@@ -45,6 +45,7 @@ struct ChecksSettingsView: View {
             }
         }
         .id(refreshID)
+        .padding(10)
         .frame(minHeight: 450)
         .onReceive(NotificationCenter.default.publisher(for: .runChecksFinished)) { _ in
             // Force refresh of the list after checks complete
@@ -66,11 +67,11 @@ struct ChecksSettingsView: View {
 private struct TeamEnforcementHeader: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
-            Text("Checks marked with ✴ are enforced by your team and cannot be disabled")
-                .font(.caption)
+            Text("Checks marked with ✴ are enforced by your team and cannot be disabled.")
+                .font(.body)
                 .foregroundColor(.secondary)
-                .padding(.horizontal)
-                .padding(.top, 4)
+                .padding(.horizontal, 10)
+                .padding(.top, 10)
         }
     }
 }
@@ -102,7 +103,6 @@ private struct CheckSectionView: View {
                 }
                 .background(Color(NSColor.controlBackgroundColor))
                 .cornerRadius(10)
-                .padding(.horizontal)
             }
         }
     }
