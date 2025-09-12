@@ -651,8 +651,8 @@
 			children = (
 				4F8B01B126F4A6CB00EDE14B /* WelcomeView.swift */,
 				4F38D8C7273AC5AE00671756 /* IntroView.swift */,
-				4F38D8CA273AC5F200671756 /* PermissionsView.swift */,
 				4F38D8CD273AC62500671756 /* EndView.swift */,
+				4F38D8CA273AC5F200671756 /* PermissionsView.swift */,
 				4F79F78C273BF6300082A5EB /* ChecksView.swift */,
 			);
 			path = Welcome;

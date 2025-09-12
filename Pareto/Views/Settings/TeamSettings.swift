@@ -105,10 +105,10 @@ struct TeamSettingsView: View {
                 Section {
                     VStack(alignment: .leading, spacing: 6) {
                         Text("Pareto Cloud provides a web dashboard for an overview of your company's devices. [Learn more »](https://paretosecurity.com/product/device-monitoring)")
-                            .multilineTextAlignment(.leading)
-                            .lineLimit(nil)
+                            .font(.body)
+                            .foregroundStyle(.secondary)
                             .fixedSize(horizontal: false, vertical: true)
-                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .lineLimit(nil)
                     }
                 }
                 if showBeta {
