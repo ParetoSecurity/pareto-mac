@@ -130,7 +130,7 @@ struct TeamSettingsView: View {
                         }
                     }
                 }
-            }            .padding(20)
+            }.padding(20)
         }
     }
 }

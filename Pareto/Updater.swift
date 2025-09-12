@@ -330,4 +330,3 @@ private func unzip(_ url: URL, contentType: Release.Asset.ContentType) -> URL {
 
     return try! findApp()!
 }
-

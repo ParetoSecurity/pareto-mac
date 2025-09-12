@@ -5,9 +5,9 @@
 //  Created by Janez Troha on 15/07/2021.
 //
 
+import Darwin
 import Defaults
 import Foundation
-import Darwin
 
 class NoUnusedUsers: ParetoCheck {
     static let sharedInstance = NoUnusedUsers()
@@ -90,7 +90,6 @@ class NoUnusedUsers: ParetoCheck {
 // MARK: - Helpers (no admin privileges required)
 
 private extension NoUnusedUsers {
-
     // Additional name-level filter to exclude system-style accounts by naming convention
     static func isValidUserName(_ u: String) -> Bool {
         return !u.hasPrefix("_") && u.count > 1 && u != "root" && u != "nobody" && u != "daemon"

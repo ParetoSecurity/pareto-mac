@@ -5,8 +5,8 @@
 //  Created by Janez Troha on 10/09/2021.
 //
 
-import SwiftUI
 import os.log
+import SwiftUI
 
 struct PermissionsSettingsView: View {
     @StateObject private var helperToolManager = HelperToolManager()
@@ -78,74 +78,73 @@ struct PermissionsSettingsView: View {
     // MARK: - View
 
     var body: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            // Header
+            VStack(alignment: .leading, spacing: 6) {
+                Text("Allow the app read-only access to the system. These permissions do not allow changing or running any of the system settings.")
+                    .font(.body)
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .lineLimit(nil)
+            }
+            .padding(.bottom, 4)
 
-            VStack(alignment: .leading, spacing: 16) {
-                // Header
-                VStack(alignment: .leading, spacing: 6) {
-                    Text("Allow the app read-only access to the system. These permissions do not allow changing or running any of the system settings.")
-                        .font(.body)
-                        .foregroundStyle(.secondary)
-                        .fixedSize(horizontal: false, vertical: true)
-                        .lineLimit(nil)
-                }
-                .padding(.bottom, 4)
-
-                // Firewall (macOS 15+)
-                if #available(macOS 15, *) {
-                    PermissionCard(
-                        icon: "shield.lefthalf.filled",
-                        iconTint: .blue,
-                        title: "Firewall Access",
-                        message: "App requires read-only access to firewall to perform checks.",
-                        learnMoreURL: URL(string: "https://paretosecurity.com/docs/mac/privileged-helper-authorization"),
-                        status: status(for: checker.firewallAuthorized),
-                        isVerifying: !checker.ran,
-                        primaryActionTitle: checker.firewallAuthorized ? "Authorized" : "Authorize",
-                        primaryActionRole: checker.firewallAuthorized ? .none : .none,
-                        primaryActionEnabled: checker.ran && !checker.firewallAuthorized,
-                        primaryAction: {
-                            Task { await authorizeFWClick() }
-                        },
-                        secondaryActionTitle: checker.firewallAuthorized ? "Remove" : nil,
-                        secondaryActionRole: .destructive,
-                        secondaryActionEnabled: checker.ran && checker.firewallAuthorized,
-                        secondaryAction: {
-                            Task { await authorizeFWClick() }
-                        }
-                    )
-                }
-
-                // System Events (OSA)
+            // Firewall (macOS 15+)
+            if #available(macOS 15, *) {
                 PermissionCard(
-                    icon: "gearshape.2.fill",
-                    iconTint: .indigo,
-                    title: "System Events Access",
-                    message: "App requires read-only access to system events so that it can react on connectivity changes, settings changes, and to run checks.",
-                    learnMoreURL: PrivacyPane.automation.learnMoreURL,
-                    status: status(for: checker.osaAuthorized),
+                    icon: "shield.lefthalf.filled",
+                    iconTint: .blue,
+                    title: "Firewall Access",
+                    message: "App requires read-only access to firewall to perform checks.",
+                    learnMoreURL: URL(string: "https://paretosecurity.com/docs/mac/privileged-helper-authorization"),
+                    status: status(for: checker.firewallAuthorized),
                     isVerifying: !checker.ran,
-                    primaryActionTitle: checker.osaAuthorized ? "Authorized" : "Authorize",
-                    primaryActionRole: .none,
-                    primaryActionEnabled: checker.ran && !checker.osaAuthorized,
-                    primaryAction: { authorizeOSAClick() }
-                )
-
-                // Full Disk Access
-                PermissionCard(
-                    icon: "externaldrive.fill",
-                    iconTint: .orange,
-                    title: "Full Disk Access",
-                    message: "App requires full disk access if you want to use the Time Machine checks.",
-                    learnMoreURL: PrivacyPane.fullDisk.learnMoreURL,
-                    status: status(for: checker.fdaAuthorized),
-                    isVerifying: !checker.ran,
-                    primaryActionTitle: checker.fdaAuthorized ? "Authorized" : "Authorize",
-                    primaryActionRole: .none,
-                    primaryActionEnabled: checker.ran && !checker.fdaAuthorized,
-                    primaryAction: { authorizeFDAClick() }
+                    primaryActionTitle: checker.firewallAuthorized ? "Authorized" : "Authorize",
+                    primaryActionRole: checker.firewallAuthorized ? .none : .none,
+                    primaryActionEnabled: checker.ran && !checker.firewallAuthorized,
+                    primaryAction: {
+                        Task { await authorizeFWClick() }
+                    },
+                    secondaryActionTitle: checker.firewallAuthorized ? "Remove" : nil,
+                    secondaryActionRole: .destructive,
+                    secondaryActionEnabled: checker.ran && checker.firewallAuthorized,
+                    secondaryAction: {
+                        Task { await authorizeFWClick() }
+                    }
                 )
             }
-            .padding(20)
+
+            // System Events (OSA)
+            PermissionCard(
+                icon: "gearshape.2.fill",
+                iconTint: .indigo,
+                title: "System Events Access",
+                message: "App requires read-only access to system events so that it can react on connectivity changes, settings changes, and to run checks.",
+                learnMoreURL: PrivacyPane.automation.learnMoreURL,
+                status: status(for: checker.osaAuthorized),
+                isVerifying: !checker.ran,
+                primaryActionTitle: checker.osaAuthorized ? "Authorized" : "Authorize",
+                primaryActionRole: .none,
+                primaryActionEnabled: checker.ran && !checker.osaAuthorized,
+                primaryAction: { authorizeOSAClick() }
+            )
+
+            // Full Disk Access
+            PermissionCard(
+                icon: "externaldrive.fill",
+                iconTint: .orange,
+                title: "Full Disk Access",
+                message: "App requires full disk access if you want to use the Time Machine checks.",
+                learnMoreURL: PrivacyPane.fullDisk.learnMoreURL,
+                status: status(for: checker.fdaAuthorized),
+                isVerifying: !checker.ran,
+                primaryActionTitle: checker.fdaAuthorized ? "Authorized" : "Authorize",
+                primaryActionRole: .none,
+                primaryActionEnabled: checker.ran && !checker.fdaAuthorized,
+                primaryAction: { authorizeFDAClick() }
+            )
+        }
+        .padding(20)
         .onAppear { checker.start() }
         .onDisappear { checker.stop() }
     }

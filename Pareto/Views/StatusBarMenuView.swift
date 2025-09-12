@@ -141,6 +141,7 @@ struct StatusBarMenuView: View {
             .padding(.vertical, 2)
         }
         .frame(minWidth: 200)
+        // Refresh icon/menu state whenever the menu bar extra is opened
     }
 
     // Extracted status line
@@ -165,6 +166,24 @@ struct StatusBarMenuView: View {
                 .padding(.horizontal)
                 .padding(.vertical, 4)
         }
+    }
+
+    // Ensure the status bar icon reflects the latest state when the menu opens
+    private func updateStateForCurrentStatus() {
+        // Don’t override the “running” state
+        guard !statusBarModel.isRunning else {
+            statusBarModel.state = .idle
+            statusBarModel.refreshNonce &+= 1
+            return
+        }
+
+        if snoozeTime > 0 {
+            statusBarModel.state = .idle
+        } else {
+            statusBarModel.state = claimsPassed ? .allOk : .warning
+        }
+        // Force a small refresh to ensure views re-evaluate ids
+        statusBarModel.refreshNonce &+= 1
     }
 }
 

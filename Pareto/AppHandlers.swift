@@ -628,4 +628,3 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
         }
     }
 }
-
