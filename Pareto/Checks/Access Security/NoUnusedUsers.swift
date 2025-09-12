@@ -7,10 +7,11 @@
 
 import Defaults
 import Foundation
-import OpenDirectory
+import Darwin
 
 class NoUnusedUsers: ParetoCheck {
     static let sharedInstance = NoUnusedUsers()
+
     override var UUID: String {
         "c6559a48-c7ad-450b-a9eb-765f031ef49e"
     }
@@ -23,31 +24,25 @@ class NoUnusedUsers: ParetoCheck {
         "Unused user accounts are present"
     }
 
+    // MARK: - Public computed properties
+
+    // All non-admin, local, non-ignored user short names
     var accounts: [String] {
-        let adminUsers = runCMD(app: "/usr/bin/dscl", args: [".", "-read", "/Groups/admin", "GroupMembership"]).replacingAllMatches(of: "\n", with: "").components(separatedBy: " ")
-        let output = runCMD(app: "/usr/bin/dscl", args: [".", "-list", "/Users"]).components(separatedBy: "\n")
-        let local = output.filter { u in
-            !u.hasPrefix("_") && u.count > 1 && u != "root" && u != "nobody" && u != "daemon"
-        }
-        let users = local.filter { u in
-            !adminUsers.contains(u)
-        }
-        let ignoredUsers = Defaults[.ignoredUserAccounts]
-        return users.filter { u in
-            !ignoredUsers.contains(u)
-        }
+        let allUsers = Self.localUserShortNames()
+        let adminSet = Self.adminUserShortNames()
+        let ignoredUsers = Set(Defaults[.ignoredUserAccounts])
+
+        return allUsers
+            .filter { !adminSet.contains($0) }
+            .filter { !ignoredUsers.contains($0) }
+            .sorted()
     }
 
     override var details: String {
-        let adminUsers = runCMD(app: "/usr/bin/dscl", args: [".", "-read", "/Groups/admin", "GroupMembership"]).replacingAllMatches(of: "\n", with: "").components(separatedBy: " ")
-        let output = runCMD(app: "/usr/bin/dscl", args: [".", "-list", "/Users"]).components(separatedBy: "\n")
-        let local = output.filter { u in
-            !u.hasPrefix("_") && u.count > 1 && u != "root" && u != "nobody" && u != "daemon"
-        }
-        let allUnusedUsers = local.filter { u in
-            !adminUsers.contains(u)
-        }
-        let ignoredUsers = Defaults[.ignoredUserAccounts]
+        let allUsers = Self.localUserShortNames()
+        let adminSet = Self.adminUserShortNames()
+        let allUnusedUsers = allUsers.filter { !adminSet.contains($0) }.sorted()
+        let ignoredUsers = Set(Defaults[.ignoredUserAccounts])
         let activeAccounts = accounts
 
         var detailLines: [String] = []
@@ -73,114 +68,96 @@ class NoUnusedUsers: ParetoCheck {
         return detailLines.joined(separator: "\n")
     }
 
+    // Current user is member of local admin group (no privileges needed)
     var isAdmin: Bool {
-        // Determine if the current user is in the local "admin" group using OpenDirectory
-        do {
-            let session = ODSession.default()
-            let node = try ODNode(session: session, type: UInt32(kODNodeTypeLocalNodes))
-
-            // Fetch the "admin" group record
-            let groupQuery = try ODQuery(
-                node: node,
-                forRecordTypes: kODRecordTypeGroups,
-                attribute: kODAttributeTypeRecordName,
-                matchType: ODMatchType(kODMatchEqualTo),
-                queryValues: "admin",
-                returnAttributes: kODAttributeTypeAllAttributes,
-                maximumResults: 1
-            )
-
-            guard let groups = try groupQuery.resultsAllowingPartial(false) as? [ODRecord],
-                  let adminGroup = groups.first
-            else {
-                return false
-            }
-
-            let username = NSUserName()
-
-            // First, check membership by short name
-            if let shortNameMembers = try adminGroup.values(forAttribute: kODAttributeTypeGroupMembership) as? [String],
-               shortNameMembers.contains(username)
-            {
-                return true
-            }
-
-            // Fallback: check membership by GUID if available
-            if let guidMembers = try adminGroup.values(forAttribute: kODAttributeTypeGroupMembers) as? [String] {
-                let userQuery = try ODQuery(
-                    node: node,
-                    forRecordTypes: kODRecordTypeUsers,
-                    attribute: kODAttributeTypeRecordName,
-                    matchType: ODMatchType(kODMatchEqualTo),
-                    queryValues: username,
-                    returnAttributes: [kODAttributeTypeGUID],
-                    maximumResults: 1
-                )
-
-                if let users = try userQuery.resultsAllowingPartial(false) as? [ODRecord],
-                   let userRecord = users.first,
-                   let guids = try userRecord.values(forAttribute: kODAttributeTypeGUID) as? [String],
-                   let guid = guids.first
-                {
-                    return guidMembers.contains(guid)
-                }
-            }
-        } catch {
-            // If OpenDirectory fails for any reason, treat as non-admin
-            return false
-        }
-
-        return false
+        let username = NSUserName()
+        return Self.adminUserShortNames().contains(username)
     }
 
-    func lastLoginRecent(user: String) -> Bool {
-        let output = runCMD(app: "/usr/bin/last", args: ["-w", "-y", user]).components(separatedBy: "\n")
-        let log = output.filter { u in
-            u.contains(user)
-        }
-
-        let entry = log.first?.components(separatedBy: "   ").filter { i in
-            i.count > 1
-        }
-        if (log.first?.contains("still logged in")) != nil {
-            return true
-        }
-        // parse string to date
-        if entry?.count ?? 0 > 1 {
-            let dateFormatter = DateFormatter()
-            dateFormatter.locale = Locale(identifier: "en_US_POSIX") // Use a POSIX locale
-            dateFormatter.dateFormat = "EEE MMM d yyyy HH:mm"
-
-            if let date = dateFormatter.date(from: entry![2]) {
-                let currentDate = Date()
-                let calendar = Calendar.current
-
-                let components = calendar.dateComponents([.month], from: date, to: currentDate)
-
-                if let monthDifference = components.month, monthDifference <= 1 {
-                    return true
-                } else {
-                    return false
-                }
-            }
-        }
-
-        return false
-    }
+    // MARK: - Check logic
 
     override func checkPasses() -> Bool {
         if !isAdmin {
+            // For non-admins: pass when there is only one non-admin account (your own)
             return accounts.count == 1
         }
-        return accounts.allSatisfy { u in
-            lastLoginRecent(user: u)
-        }
+
+        // For admins (no privileged last-login available): be conservative and fail if any extra non-admin accounts exist
+        return accounts.isEmpty
+    }
+}
+
+// MARK: - Helpers (no admin privileges required)
+
+private extension NoUnusedUsers {
+
+    // Additional name-level filter to exclude system-style accounts by naming convention
+    static func isValidUserName(_ u: String) -> Bool {
+        return !u.hasPrefix("_") && u.count > 1 && u != "root" && u != "nobody" && u != "daemon"
     }
 
-    override var isRunnable: Bool {
-        if teamEnforced {
-            return true
+    // Returns local user short names for “real” users (UID >= 501)
+    static func localUserShortNames() -> [String] {
+        var result: [String] = []
+        setpwent()
+        defer { endpwent() }
+
+        while let pw = getpwent() {
+            let entry = pw.pointee
+            let uid = entry.pw_uid
+
+            // macOS convention: real users start at 501; exclude root/nobody/daemon implicitly
+            guard uid >= 501 else { continue }
+
+            if let cName = entry.pw_name {
+                let name = String(cString: cName)
+                // Extra sanity filtering: skip empty names and system-style names
+                if !name.isEmpty, isValidUserName(name) {
+                    result.append(name)
+                }
+            }
         }
-        return isActive && isAdmin
+
+        return result
+    }
+
+    // Returns set of admin user short names (supplemental members + primary group = admin)
+    static func adminUserShortNames() -> Set<String> {
+        var admins = Set<String>()
+
+        guard let grpPtr = getgrnam("admin") else {
+            return admins
+        }
+
+        let group = grpPtr.pointee
+        let adminGID = group.gr_gid
+
+        // Supplemental group members (gr_mem is a NULL-terminated array of C strings)
+        if var memPtr = group.gr_mem {
+            while let cStrPtr = memPtr.pointee {
+                let name = String(cString: cStrPtr)
+                if !name.isEmpty, isValidUserName(name) {
+                    admins.insert(name)
+                }
+                memPtr = memPtr.advanced(by: 1)
+            }
+        }
+
+        // Also include users whose primary group is admin
+        setpwent()
+        defer { endpwent() }
+
+        while let pw = getpwent() {
+            let entry = pw.pointee
+            guard entry.pw_gid == adminGID else { continue }
+            if let cName = entry.pw_name {
+                let name = String(cString: cName)
+                if !name.isEmpty, isValidUserName(name) {
+                    admins.insert(name)
+                }
+            }
+        }
+
+        return admins
     }
 }
