@@ -78,6 +78,6 @@ class ScreensaverCheck: ParetoCheck {
     }
 
     override func checkPasses() -> Bool {
-        return checkScreensaver() && checkLock()
+        return checkScreensaver() || checkLock()
     }
 }
