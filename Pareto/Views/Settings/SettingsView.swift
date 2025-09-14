@@ -48,6 +48,6 @@ struct SettingsView: View {
         }
         .scenePadding()
         // Let the window size adapt naturally without hardcoded sizes
-        .frame(width: 460) // avoid overly narrow layouts
+        .frame(width: 520) // avoid overly narrow layouts
     }
 }

@@ -13,12 +13,9 @@ struct AboutSettingsView: View {
     @State private var isLoading = false
     @State private var status = UpdateStates.Checking
     @State private var konami = 0
-    @State private var helperVersion = "Checking..."
     @State private var hasCheckedForUpdates = false
-    @State private var helperCheckTimer: Timer?
     @State private var latestVersionFound = ""
 
-    @StateObject private var helperManager = HelperToolManager()
     @Default(.showBeta) var showBeta
 
     enum UpdateStates: String {
@@ -32,7 +29,7 @@ struct AboutSettingsView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             // Header
-            HStack(alignment: .top, spacing: 16) {
+            HStack(alignment: .center, spacing: 16) {
                 Image("Icon")
                     .resizable()
                     .aspectRatio(contentMode: .fit)
@@ -51,16 +48,6 @@ struct AboutSettingsView: View {
                                 alert.addButton(withTitle: "Let me in")
                                 alert.runModal()
                                 fetch()
-                                // Start fetching helper version when beta mode is enabled
-                                fetchHelperVersion()
-                                helperCheckTimer = Timer.scheduledTimer(withTimeInterval: 5.0, repeats: true) { _ in
-                                    fetchHelperVersion()
-                                }
-                            } else {
-                                // Stop fetching helper version when beta mode is disabled
-                                helperCheckTimer?.invalidate()
-                                helperCheckTimer = nil
-                                helperVersion = "Checking..."
                             }
                         }
                     }
@@ -96,29 +83,11 @@ struct AboutSettingsView: View {
                     } icon: {
                         Image(systemName: "dot.radiowaves.left.and.right")
                     }
-
-                    if showBeta {
-                        ViewThatFits(in: .horizontal) {
-                            // Horizontal fits first
-                            HStack(alignment: .firstTextBaseline, spacing: 8) {
-                                helperStatusLabel
-                                helperSettingsButton
-                                Spacer(minLength: 0)
-                            }
-
-                            // Fall back to vertical on narrow widths
-                            VStack(alignment: .leading, spacing: 6) {
-                                helperStatusLabel
-                                helperSettingsButton
-                            }
-                        }
-                        .transition(.opacity)
-                    }
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
             } label: {
                 // Keep label simple; padding handled by custom GroupBoxStyle below
-                Label("Application", systemImage: "app.dashed")
+                Text("Application")
             }
 
             // Updates
@@ -157,7 +126,7 @@ struct AboutSettingsView: View {
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
             } label: {
-                Label("Updates", systemImage: "arrow.down.circle")
+                Text("Updates")
             }
             #endif
 
@@ -185,49 +154,12 @@ struct AboutSettingsView: View {
             // Clear the updates cache when About tab appears
             UpdateService.shared.clearCache()
             fetch()
-            if showBeta {
-                fetchHelperVersion()
-                // Set up a timer to periodically check helper version
-                helperCheckTimer = Timer.scheduledTimer(withTimeInterval: 5.0, repeats: true) { _ in
-                    fetchHelperVersion()
-                }
-            }
-        }
-        .onDisappear {
-            // Clean up timer when view disappears
-            helperCheckTimer?.invalidate()
-            helperCheckTimer = nil
         }
         .animation(.default, value: showBeta)
         .animation(.default, value: status)
     }
 
     // MARK: - Subviews
-
-    private var helperStatusLabel: some View {
-        Label {
-            Text(helperVersionText)
-                .fixedSize(horizontal: false, vertical: true)
-                .layoutPriority(1)
-        } icon: {
-            Image(systemName: helperStatusSymbol)
-                .foregroundStyle(helperStatusColor)
-        }
-    }
-
-    @ViewBuilder
-    private var helperSettingsButton: some View {
-        if helperVersion.contains("System Settings")
-            || helperVersion.contains("authorization")
-            || helperVersion.contains("Login Items")
-        {
-            Button("Open Settings") {
-                SMAppService.openSystemSettingsLoginItems()
-            }
-            .buttonStyle(.link)
-            .font(.caption)
-        }
-    }
 
     @ViewBuilder
     private var updateButtons: some View {
@@ -253,44 +185,6 @@ struct AboutSettingsView: View {
             .disabled(isLoading)
             .buttonStyle(.borderedProminent)
         }
-    }
-
-    // MARK: - Helper Status
-
-    private var helperStatusSymbol: String {
-        if helperVersion.lowercased().contains("not installed") {
-            return "exclamationmark.triangle.fill"
-        }
-        if helperVersion.lowercased().contains("system settings")
-            || helperVersion.lowercased().contains("authorization")
-            || helperVersion.lowercased().contains("login items")
-        {
-            return "lock.trianglebadge.exclamationmark"
-        }
-        if helperVersion == "Checking..." {
-            return "clock"
-        }
-        return "checkmark.seal.fill"
-    }
-
-    private var helperStatusColor: Color {
-        if helperVersion.lowercased().contains("not installed") {
-            return .orange
-        }
-        if helperVersion.lowercased().contains("system settings")
-            || helperVersion.lowercased().contains("authorization")
-            || helperVersion.lowercased().contains("login items")
-        {
-            return .yellow
-        }
-        if helperVersion == "Checking..." {
-            return .secondary
-        }
-        return .green
-    }
-
-    private var helperVersionText: String {
-        "Helper: \(helperVersion)"
     }
 
     // MARK: - Update Status
@@ -340,51 +234,6 @@ struct AboutSettingsView: View {
     }
 
     // MARK: - Data Fetching
-
-    private func fetchHelperVersion() {
-        Task {
-            // First check if helper is installed
-            if !HelperToolUtilities.isHelperInstalled() {
-                await MainActor.run {
-                    self.helperVersion = "Not installed"
-                }
-                return
-            }
-
-            // Check if we can get the helper status from launchctl
-            let launchctlOutput = await Task {
-                runCMD(app: "/bin/launchctl", args: ["print", "system/co.niteo.ParetoSecurityHelper"])
-            }.value
-
-            if launchctlOutput.contains("state = not running") {
-                await MainActor.run {
-                    self.helperVersion = "Needs authorization in System Settings"
-                }
-                return
-            }
-
-            // Set a timeout for the helper version fetch
-            let timeoutTask = Task {
-                try? await Task.sleep(nanoseconds: 2_000_000_000) // 2 second timeout
-                await MainActor.run {
-                    if self.helperVersion == "Checking..." {
-                        self.helperVersion = "Check System Settings > Login Items"
-                    }
-                }
-            }
-
-            await helperManager.getHelperVersion { version in
-                timeoutTask.cancel()
-                Task { @MainActor in
-                    if version == "Connection error" || version == "Connection unavailable" {
-                        self.helperVersion = "Enable in System Settings > Login Items"
-                    } else {
-                        self.helperVersion = version.isEmpty ? "Unknown" : version
-                    }
-                }
-            }
-        }
-    }
 
     private func fetch() {
         #if SETAPP_ENABLED
@@ -510,3 +359,4 @@ private struct AboutGroupBoxStyle: GroupBoxStyle {
         .frame(maxWidth: .infinity, alignment: .leading)
     }
 }
+
