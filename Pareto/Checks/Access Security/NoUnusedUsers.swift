@@ -24,84 +24,92 @@ class NoUnusedUsers: ParetoCheck {
         "Unused user accounts are present"
     }
 
+    // MARK: - User status enum
+    
+    enum UserStatus {
+        case pass(reason: String)
+        case fail(reason: String)
+    }
+
     // MARK: - Public computed properties
-
-    // All non-admin, local, non-ignored user short names with no recent login
-    var accounts: [String] {
-        let allUsers = Self.localUserShortNames()
-        let adminSet = Self.adminUserShortNames()
-        let ignoredUsers = Set(Defaults[.ignoredUserAccounts])
-
-        let thresholdDays = Self.recentLoginDays
-        let cutoff = Date().addingTimeInterval(-TimeInterval(thresholdDays) * 24 * 60 * 60)
-
-        return allUsers
-            .filter { !adminSet.contains($0) }
-            .filter { !ignoredUsers.contains($0) }
-            // Keep only users that have NOT logged in recently (or have no record)
-            .filter { username in
-                guard let last = Self.lastLoginDate(for: username) else {
-                    // No login record -> treat as unused (include)
-                    return true
-                }
-                // Include only if last login is older than cutoff
-                return last < cutoff
-            }
+    
+    // Get all users with their statuses
+    var allUserStatuses: [(user: String, status: UserStatus)] {
+        Self.localUserShortNames()
             .sorted()
+            .map { user in (user: user, status: getUserStatus(user)) }
+    }
+
+    // All failing (unused) accounts
+    var unusedAccounts: [String] {
+        allUserStatuses
+            .compactMap { userStatus in
+                if case .fail = userStatus.status {
+                    return userStatus.user
+                }
+                return nil
+            }
     }
 
     override var details: String {
-        let allUsers = Self.localUserShortNames()
-        let adminSet = Self.adminUserShortNames()
-        let allUnusedUsers = allUsers.filter { !adminSet.contains($0) }.sorted()
-        let ignoredUsers = Set(Defaults[.ignoredUserAccounts])
-        let activeAccounts = accounts
-
-        var detailLines: [String] = []
-
-        if !activeAccounts.isEmpty {
-            detailLines.append("Active unused accounts:")
-            detailLines.append(contentsOf: activeAccounts.map { "- \($0)" })
+        let statuses = allUserStatuses
+        
+        guard !statuses.isEmpty else {
+            return "No user accounts found"
         }
-
-        let ignoredButPresent = allUnusedUsers.filter { ignoredUsers.contains($0) }
-        if !ignoredButPresent.isEmpty {
-            if !detailLines.isEmpty {
-                detailLines.append("")
+        
+        return statuses.map { userStatus in
+            switch userStatus.status {
+            case .pass(let reason):
+                return "* [PASS] \(userStatus.user): \(reason)"
+            case .fail(let reason):
+                return "* [FAIL] \(userStatus.user): \(reason)"
             }
-            detailLines.append("Ignored accounts:")
-            detailLines.append(contentsOf: ignoredButPresent.map { "- \($0) (ignored)" })
-        }
-
-        if detailLines.isEmpty {
-            return "None"
-        }
-
-        return detailLines.joined(separator: "\n")
-    }
-
-    // Current user is member of local admin group (no privileges needed)
-    var isAdmin: Bool {
-        let username = NSUserName()
-        return Self.adminUserShortNames().contains(username)
+        }.joined(separator: "\n")
     }
 
     // MARK: - Check logic
 
     override func checkPasses() -> Bool {
-        if !isAdmin {
-            // For non-admins: pass when there is only one non-admin account (your own)
-            return accounts.count == 1
-        }
-
-        // For admins (no privileged last-login available): be conservative and fail if any extra non-admin accounts exist
-        return accounts.isEmpty
+        // Check passes if there are no failing accounts
+        return unusedAccounts.isEmpty
     }
 }
 
 // MARK: - Helpers (no admin privileges required)
 
 private extension NoUnusedUsers {
+    // Get status for a specific user
+    func getUserStatus(_ user: String) -> UserStatus {
+        let currentUser = NSUserName()
+        let adminSet = Self.adminUserShortNames()
+        let ignoredUsers = Set(Defaults[.ignoredUserAccounts])
+        
+        // Check reasons for PASS
+        if user == currentUser {
+            return .pass(reason: "current account")
+        }
+        
+        if adminSet.contains(user) {
+            return .pass(reason: "admin account")
+        }
+        
+        if ignoredUsers.contains(user) {
+            return .pass(reason: "ignored by user")
+        }
+        
+        // Check if recently logged in
+        let thresholdDays = Self.recentLoginDays
+        let cutoff = Date().addingTimeInterval(-TimeInterval(thresholdDays) * 24 * 60 * 60)
+        
+        if let lastLogin = Self.lastLoginDate(for: user), lastLogin >= cutoff {
+            return .pass(reason: "recently logged in")
+        }
+        
+        // Otherwise it's an unused account
+        return .fail(reason: "unused account")
+    }
+    
     // Threshold for "recent" login
     static let recentLoginDays: Int = 7
 
