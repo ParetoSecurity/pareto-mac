@@ -245,6 +245,8 @@
 		4FB7C68126AFF25300FB1C41 /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB7C68026AFF25300FB1C41 /* Date.swift */; };
 		4FB7C68726AFF29A00FB1C41 /* NSImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB7C68626AFF29A00FB1C41 /* NSImage.swift */; };
 		4FB7C68D26AFFD2600FB1C41 /* FileVault.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB7C68C26AFFD2600FB1C41 /* FileVault.swift */; };
+		4FBF73B22E78309500E1CC53 /* SettingsAccess in Frameworks */ = {isa = PBXBuildFile; productRef = 4FBF73B12E78309500E1CC53 /* SettingsAccess */; };
+		4FBF73B42E7830A500E1CC53 /* SettingsAccess in Frameworks */ = {isa = PBXBuildFile; productRef = 4FBF73B32E7830A500E1CC53 /* SettingsAccess */; };
 		4FCAA78B2B4AD7C300A62B4E /* NoAdminUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FCAA78A2B4AD7C300A62B4E /* NoAdminUser.swift */; };
 		4FCAA78C2B4AD7C300A62B4E /* NoAdminUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FCAA78A2B4AD7C300A62B4E /* NoAdminUser.swift */; };
 		4FD0A24126A024440070BED4 /* Gatekeeper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FD0A24026A024440070BED4 /* Gatekeeper.swift */; };
@@ -514,6 +516,7 @@
 				4F37E7382718122E00A2B254 /* Version in Frameworks */,
 				4F37E7392718122E00A2B254 /* Path in Frameworks */,
 				4F37E73A2718122E00A2B254 /* Alamofire in Frameworks */,
+				4FBF73B42E7830A500E1CC53 /* SettingsAccess in Frameworks */,
 				4F37E73B2718122E00A2B254 /* Defaults in Frameworks */,
 				4F37E73C2718122E00A2B254 /* SwiftSocket in Frameworks */,
 				4F37E73D2718122E00A2B254 /* LaunchAtLogin in Frameworks */,
@@ -559,6 +562,7 @@
 				4F1AE88B26F9FC150084A381 /* SwiftSocket in Frameworks */,
 				4F103012269F1C65008C1E86 /* LaunchAtLogin in Frameworks */,
 				4F196CD62714B51900A2A7B8 /* JWTDecode in Frameworks */,
+				4FBF73B22E78309500E1CC53 /* SettingsAccess in Frameworks */,
 				4F3EF0A528AEA05F00D83F4E /* Yams in Frameworks */,
 				4F923CED2756918E00070551 /* Cache in Frameworks */,
 			);
@@ -876,6 +880,7 @@
 				4F1E6DDA2760081300FD3F01 /* Regex */,
 				4FAF5BC12895583A004E9615 /* Setapp */,
 				4F3EF0A628AEA07400D83F4E /* Yams */,
+				4FBF73B32E7830A500E1CC53 /* SettingsAccess */,
 			);
 			productName = Pareto;
 			productReference = 4F37E7472718122E00A2B254 /* Pareto Security SetApp.app */;
@@ -970,6 +975,7 @@
 				4F923CEC2756918E00070551 /* Cache */,
 				4F6EF891275FEE6C00752559 /* Regex */,
 				4F3EF0A428AEA05F00D83F4E /* Yams */,
+				4FBF73B12E78309500E1CC53 /* SettingsAccess */,
 			);
 			productName = Pareto;
 			productReference = 4FEBA2EE269CD48F009B2469 /* Pareto Security.app */;
@@ -1022,6 +1028,7 @@
 				4FAF5BC02895583A004E9615 /* XCRemoteSwiftPackageReference "Setapp-framework" */,
 				4F3EF0A328AEA05F00D83F4E /* XCRemoteSwiftPackageReference "Yams" */,
 				4FC0F2EC2A4C47FD004E7359 /* XCRemoteSwiftPackageReference "ViewInspector" */,
+				4FBF73B02E78309500E1CC53 /* XCRemoteSwiftPackageReference "SettingsAccess" */,
 			);
 			preferredProjectObjectVersion = 50;
 			productRefGroup = 4FEBA2EF269CD48F009B2469 /* Products */;
@@ -2063,6 +2070,14 @@
 				minimumVersion = 4.0.0;
 			};
 		};
+		4FBF73B02E78309500E1CC53 /* XCRemoteSwiftPackageReference "SettingsAccess" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/orchetect/SettingsAccess";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.1.0;
+			};
+		};
 		4FC0F2EC2A4C47FD004E7359 /* XCRemoteSwiftPackageReference "ViewInspector" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/nalexn/ViewInspector";
@@ -2191,6 +2206,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 4FAF5BC02895583A004E9615 /* XCRemoteSwiftPackageReference "Setapp-framework" */;
 			productName = Setapp;
+		};
+		4FBF73B12E78309500E1CC53 /* SettingsAccess */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4FBF73B02E78309500E1CC53 /* XCRemoteSwiftPackageReference "SettingsAccess" */;
+			productName = SettingsAccess;
+		};
+		4FBF73B32E7830A500E1CC53 /* SettingsAccess */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4FBF73B02E78309500E1CC53 /* XCRemoteSwiftPackageReference "SettingsAccess" */;
+			productName = SettingsAccess;
 		};
 		4FF515C026F7B362008D135E /* Alamofire */ = {
 			isa = XCSwiftPackageProductDependency;

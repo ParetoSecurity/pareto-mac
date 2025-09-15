@@ -47,7 +47,10 @@ struct SettingsView: View {
                 .tag(Tabs.about)
         }
         .scenePadding()
-        // Let the window size adapt naturally without hardcoded sizes
-        .frame(width: 520) // avoid overly narrow layouts
+        .frame(width: 520)
+        .onAppear {
+            // Bring the app (and thus the Settings window) to the front
+            NSApp.activate(ignoringOtherApps: true)
+        }
     }
 }

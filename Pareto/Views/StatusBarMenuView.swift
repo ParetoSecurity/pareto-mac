@@ -8,6 +8,7 @@
 import AppKit
 import Defaults
 import SwiftUI
+import SettingsAccess
 
 struct StatusBarMenuView: View {
     @ObservedObject var statusBarModel: StatusBarModel
@@ -88,6 +89,10 @@ struct StatusBarMenuView: View {
                 SettingsLink {
                     Label("Preferences", systemImage: "gearshape.fill")
                         .symbolRenderingMode(.multicolor)
+                } preAction: {
+                    NSApp.activate(ignoringOtherApps: true)
+                } postAction: {
+                    NSApp.activate(ignoringOtherApps: true)
                 }
                 .keyboardShortcut(",")
                 .padding(.horizontal)
@@ -95,6 +100,7 @@ struct StatusBarMenuView: View {
             } else {
                 Button {
                     NSApp.sendAction(Selector(("showPreferencesWindow:")), to: nil, from: nil)
+                    NSApp.activate(ignoringOtherApps: true)
                 } label: {
                     Label("Preferences", systemImage: "gearshape.fill")
                         .symbolRenderingMode(.multicolor)

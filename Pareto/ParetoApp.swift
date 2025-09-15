@@ -256,13 +256,6 @@ struct Pareto: App {
         .windowStyle(.hiddenTitleBar)
         .defaultSize(width: 1, height: 1)
 
-        // Menu bar UI
-        MenuBarExtra(isInserted: .constant(true)) {
-            StatusBarMenuView(statusBarModel: appDelegate.statusBarModel)
-                .environmentObject(appDelegate as AppHandlers)
-        } label: {
-            StatusBarIcon(statusBarModel: appDelegate.statusBarModel)
-        }
 
         // Welcome window managed by SwiftUI, with no controls
         WindowGroup("Welcome", id: AppWindowID.welcome) {
@@ -292,6 +285,14 @@ struct Pareto: App {
                 .onAppear {
                     NSApp.activate(ignoringOtherApps: true)
                 }
+        }
+        
+        // Menu bar UI
+        MenuBarExtra(isInserted: .constant(true)) {
+            StatusBarMenuView(statusBarModel: appDelegate.statusBarModel)
+                .environmentObject(appDelegate as AppHandlers)
+        } label: {
+            StatusBarIcon(statusBarModel: appDelegate.statusBarModel)
         }
     }
 }
