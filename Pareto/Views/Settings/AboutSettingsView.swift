@@ -104,19 +104,32 @@ struct AboutSettingsView: View {
                             ProgressView()
                                 .controlSize(.small)
                         }
-                        Spacer(minLength: 0)
-                    }
 
-                    ViewThatFits(in: .horizontal) {
-                        // Horizontal button row if space allows
-                        HStack(spacing: 8) {
-                            updateButtons
-                            Spacer(minLength: 0)
+                        Spacer(minLength: 0)
+
+                        // Inline "Install Update" button when a new version is found
+                        if hasCheckedForUpdates && status == UpdateStates.NewVersion {
+                            Button {
+                                forceUpdate()
+                            } label: {
+                                Label("Install Update", systemImage: "square.and.arrow.down")
+                                    .labelStyle(.titleAndIcon)
+                            }
+                            .disabled(isLoading)
+                            .buttonStyle(.borderedProminent)
                         }
 
-                        // Otherwise stack vertically
-                        VStack(alignment: .leading, spacing: 6) {
-                            updateButtons
+                        // Inline "Check for Updates" button when appropriate
+                        if !hasCheckedForUpdates || status == UpdateStates.Updated {
+                            Button {
+                                UpdateService.shared.clearCache()
+                                fetch()
+                            } label: {
+                                Label("Check for Updates", systemImage: "arrow.triangle.2.circlepath")
+                                    .labelStyle(.titleAndIcon)
+                            }
+                            .disabled(isLoading)
+                            .buttonStyle(.bordered)
                         }
                     }
                 }
@@ -153,34 +166,6 @@ struct AboutSettingsView: View {
         }
         .animation(.default, value: showBeta)
         .animation(.default, value: status)
-    }
-
-    // MARK: - Subviews
-
-    @ViewBuilder
-    private var updateButtons: some View {
-        if !hasCheckedForUpdates || status == UpdateStates.Updated {
-            Button {
-                UpdateService.shared.clearCache()
-                fetch()
-            } label: {
-                Label("Check for Updates", systemImage: "arrow.triangle.2.circlepath")
-                    .labelStyle(.titleAndIcon)
-            }
-            .disabled(isLoading)
-            .buttonStyle(.bordered)
-        }
-
-        if hasCheckedForUpdates && status == UpdateStates.NewVersion {
-            Button {
-                forceUpdate()
-            } label: {
-                Label("Install Update", systemImage: "square.and.arrow.down")
-                    .labelStyle(.titleAndIcon)
-            }
-            .disabled(isLoading)
-            .buttonStyle(.borderedProminent)
-        }
     }
 
     // MARK: - Update Status
@@ -355,4 +340,3 @@ private struct AboutGroupBoxStyle: GroupBoxStyle {
         .frame(maxWidth: .infinity, alignment: .leading)
     }
 }
-
