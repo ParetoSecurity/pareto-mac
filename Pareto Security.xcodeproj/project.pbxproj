@@ -92,7 +92,7 @@
 		4F20E2622E701B6400E93943 /* IgnoredSSHKeysSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F20E2602E701B6400E93943 /* IgnoredSSHKeysSettingsView.swift */; };
 		4F20E2642E70217400E93943 /* NotificationNames.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F20E2632E70217400E93943 /* NotificationNames.swift */; };
 		4F20E2652E70217400E93943 /* NotificationNames.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F20E2632E70217400E93943 /* NotificationNames.swift */; };
-		4F24A09026EB735F0036F748 /* TeamSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F24A08F26EB735F0036F748 /* TeamSettings.swift */; };
+		4F24A09026EB735F0036F748 /* CloudSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F24A08F26EB735F0036F748 /* CloudSettings.swift */; };
 		4F24A09226EB73980036F748 /* AboutSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F24A09126EB73980036F748 /* AboutSettingsView.swift */; };
 		4F24A09426EB73C80036F748 /* ChecksSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F24A09326EB73C80036F748 /* ChecksSettingsView.swift */; };
 		4F24A09626EB73F30036F748 /* GeneralSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F24A09526EB73F30036F748 /* GeneralSettingsView.swift */; };
@@ -106,7 +106,7 @@
 		4F37E70C2718122E00A2B254 /* RemoteLogin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F35395626E8AE02008F5DD3 /* RemoteLogin.swift */; };
 		4F37E70E2718122E00A2B254 /* PrinterSharingCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F6A0E0D26CE484A003B00A3 /* PrinterSharingCheck.swift */; };
 		4F37E70F2718122E00A2B254 /* FileSharingCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F6A0E0F26CE4868003B00A3 /* FileSharingCheck.swift */; };
-		4F37E7102718122E00A2B254 /* TeamSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F24A08F26EB735F0036F748 /* TeamSettings.swift */; };
+		4F37E7102718122E00A2B254 /* CloudSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F24A08F26EB735F0036F748 /* CloudSettings.swift */; };
 		4F37E7112718122E00A2B254 /* URL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F81C10726EB5D270065F548 /* URL.swift */; };
 		4F37E7122718122E00A2B254 /* NetworkHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F5B20C2270316DB0015642A /* NetworkHandler.swift */; };
 		4F37E7132718122E00A2B254 /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB7C67C26AFF1AB00FB1C41 /* Log.swift */; };
@@ -387,7 +387,7 @@
 		4F1E6C6328355B2100C8AFAB /* InternetSharing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InternetSharing.swift; sourceTree = "<group>"; };
 		4F20E2602E701B6400E93943 /* IgnoredSSHKeysSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IgnoredSSHKeysSettingsView.swift; sourceTree = "<group>"; };
 		4F20E2632E70217400E93943 /* NotificationNames.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationNames.swift; sourceTree = "<group>"; };
-		4F24A08F26EB735F0036F748 /* TeamSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeamSettings.swift; sourceTree = "<group>"; };
+		4F24A08F26EB735F0036F748 /* CloudSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudSettings.swift; sourceTree = "<group>"; };
 		4F24A09126EB73980036F748 /* AboutSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutSettingsView.swift; sourceTree = "<group>"; };
 		4F24A09326EB73C80036F748 /* ChecksSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChecksSettingsView.swift; sourceTree = "<group>"; };
 		4F24A09526EB73F30036F748 /* GeneralSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralSettingsView.swift; sourceTree = "<group>"; };
@@ -708,7 +708,7 @@
 				4F20E2602E701B6400E93943 /* IgnoredSSHKeysSettingsView.swift */,
 				4F93F1CF2E6F13EB0093FF41 /* IgnoredUsersSettingsView.swift */,
 				4F103007269EE135008C1E86 /* SettingsView.swift */,
-				4F24A08F26EB735F0036F748 /* TeamSettings.swift */,
+				4F24A08F26EB735F0036F748 /* CloudSettings.swift */,
 				4F24A09126EB73980036F748 /* AboutSettingsView.swift */,
 				4F24A09326EB73C80036F748 /* ChecksSettingsView.swift */,
 				4F24A09526EB73F30036F748 /* GeneralSettingsView.swift */,
@@ -1171,7 +1171,7 @@
 				4F3DCFCF274FD1AE00F1CB55 /* AppCheck.swift in Sources */,
 				4F37E70E2718122E00A2B254 /* PrinterSharingCheck.swift in Sources */,
 				4F37E70F2718122E00A2B254 /* FileSharingCheck.swift in Sources */,
-				4F37E7102718122E00A2B254 /* TeamSettings.swift in Sources */,
+				4F37E7102718122E00A2B254 /* CloudSettings.swift in Sources */,
 				4F20E2622E701B6400E93943 /* IgnoredSSHKeysSettingsView.swift in Sources */,
 				4F37E7112718122E00A2B254 /* URL.swift in Sources */,
 				4F38D8CC273AC5F200671756 /* PermissionsView.swift in Sources */,
@@ -1321,7 +1321,7 @@
 				4F3DCFCE274FD1AE00F1CB55 /* AppCheck.swift in Sources */,
 				4F6A0E0E26CE484A003B00A3 /* PrinterSharingCheck.swift in Sources */,
 				4F6A0E1026CE4868003B00A3 /* FileSharingCheck.swift in Sources */,
-				4F24A09026EB735F0036F748 /* TeamSettings.swift in Sources */,
+				4F24A09026EB735F0036F748 /* CloudSettings.swift in Sources */,
 				4F20E2612E701B6400E93943 /* IgnoredSSHKeysSettingsView.swift in Sources */,
 				4F81C10826EB5D270065F548 /* URL.swift in Sources */,
 				4F38D8CB273AC5F200671756 /* PermissionsView.swift in Sources */,
