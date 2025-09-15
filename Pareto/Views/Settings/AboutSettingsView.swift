@@ -69,20 +69,16 @@ struct AboutSettingsView: View {
             // App details
             GroupBox {
                 VStack(alignment: .leading, spacing: 6) {
-                    Label {
+                   
                         Text("Version \(AppInfo.appVersion) • Build \(AppInfo.buildVersion)")
                             .fixedSize(horizontal: false, vertical: true)
                             .layoutPriority(1)
-                    } icon: {
-                        Image(systemName: "number.circle")
-                    }
+                    
 
-                    Label {
+                   
                         Text("Channel: \(AppInfo.utmSource)")
                             .fixedSize(horizontal: false, vertical: true)
-                    } icon: {
-                        Image(systemName: "dot.radiowaves.left.and.right")
-                    }
+            
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
             } label: {

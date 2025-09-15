@@ -23,8 +23,6 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
 
     // Removed: var statusBar: StatusBarController?
     var updater: AppUpdater?
-    var welcomeWindow: NSWindowController?
-    var preferencesWindow: NSWindowController?
     var enrolledHandler = false
     var networkHandler = NetworkHandler.sharedInstance()
     private var idleSink: AnyCancellable?
@@ -212,10 +210,12 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
 
         // guard to prevent long running tasks
         DispatchQueue.global(qos: .userInteractive).asyncAfter(deadline: .now() + 90) {
-            if self.statusBarModel.isRunning {
-                workItem.cancel()
-                os_log("Checks took more than 30s to finish canceling", log: Log.app)
-                self.setRunning(false)
+            Task { @MainActor in
+                if self.statusBarModel.isRunning {
+                    workItem.cancel()
+                    os_log("Checks took more than 30s to finish canceling", log: Log.app)
+                    self.setRunning(false)
+                }
             }
         }
 
@@ -269,7 +269,9 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
             #endif
         } else {
             DispatchQueue.main.asyncAfter(deadline: .now() + 300) {
-                self.runChecks(isInteractive: false)
+                Task { @MainActor in
+                    self.runChecks(isInteractive: false)
+                }
             }
         }
 
@@ -300,7 +302,9 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
                 return
             }
             DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + 300) {
-                self.runChecks(isInteractive: false)
+                Task { @MainActor in
+                    self.runChecks(isInteractive: false)
+                }
             }
             #if !SETAPP_ENABLED
                 if Defaults.shouldDoUpdateCheck() {
@@ -320,7 +324,7 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
         // Schedule hourly claim updates
         NSBackgroundActivityScheduler.repeating(withName: "ClaimRunner", withInterval: 60 * 60) { (completion: NSBackgroundActivityScheduler.CompletionHandler) in
             os_log("Running checks")
-            DispatchQueue.global(qos: .userInteractive).async {
+            Task { @MainActor in
                 self.runChecks(isInteractive: false)
             }
             completion(.finished)
@@ -384,7 +388,9 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
             os_log("network condtions changed to: connected")
             // wait 30 second of stable connection before running checks
             DispatchQueue.global(qos: .userInteractive).asyncAfter(deadline: .now() + 30) {
-                self.runChecks(isInteractive: false)
+                Task { @MainActor in
+                    self.runChecks(isInteractive: false)
+                }
             }
         } else {
             os_log("network conditions changed to: disconnected")
@@ -433,12 +439,14 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
 
     @objc func runChecksDelayed() {
         DispatchQueue.global(qos: .userInteractive).asyncAfter(deadline: .now() + 2) {
-            self.runChecks(isInteractive: false)
+            Task { @MainActor in
+                self.runChecks(isInteractive: false)
+            }
         }
     }
 
     @objc func runChecks() {
-        DispatchQueue.global(qos: .userInteractive).async {
+        Task { @MainActor in
             self.runChecks(isInteractive: true)
         }
     }
@@ -449,24 +457,6 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
 
     @objc func docs() {
         NSWorkspace.shared.open(AppInfo.docsURL())
-    }
-
-    @objc func activateSettingsFrontmost() {
-        NSApp.activate(ignoringOtherApps: true)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
-            for window in NSApp.windows {
-                if window.title == "Settings" || window.className.contains("Settings") {
-                    window.makeKeyAndOrderFront(nil)
-                    window.orderFrontRegardless()
-                }
-            }
-        }
-    }
-
-    @objc func showSettings() {
-        // Open the SwiftUI Settings scene and bring it to front
-        NSApp.sendAction(Selector(("showPreferencesWindow:")), to: nil, from: nil)
-        activateSettingsFrontmost()
     }
 
     @objc func teamsDashboard() {
@@ -583,7 +573,7 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
                             #endif
                         }
                         if !Defaults.firstLaunch() {
-                            DispatchQueue.global(qos: .userInteractive).async {
+                            Task { @MainActor in
                                 self.runChecks()
                             }
                         }
