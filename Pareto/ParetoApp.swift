@@ -84,7 +84,7 @@ class AppDelegate: AppHandlers, NSApplicationDelegate {
             for claim in Claims.global.all {
                 claim.configure()
                 for check in claim.checksSorted {
-                    check.run()
+                    _ = check.run()
                     print(check.report + "\n")
                 }
             }
@@ -97,7 +97,7 @@ class AppDelegate: AppHandlers, NSApplicationDelegate {
             for claim in Claims.global.all {
                 claim.configure()
                 for check in claim.checksSorted {
-                    check.run()
+                    _ = check.run()
                     print(check.reportJSON + ",\n")
                 }
             }
@@ -111,7 +111,7 @@ class AppDelegate: AppHandlers, NSApplicationDelegate {
                 exit(0)
             }
 
-            var inviteParam = CommandLine.arguments.last ?? ""
+            let inviteParam = CommandLine.arguments.last ?? ""
 
             if inviteParam.isEmpty {
                 print("Missing team invite parameter")

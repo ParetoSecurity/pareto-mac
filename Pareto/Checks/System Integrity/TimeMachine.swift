@@ -27,12 +27,12 @@ class TimeMachineCheck: ParetoCheck {
 
     override func debugInfo() -> String {
         let tmutil = runCMD(app: "/usr/bin/tmutil", args: ["destinationinfo"])
-        return "tmutil:\n\(tmutil)\nTimeMachine: \(readDefaultsFile(path: "/Library/Preferences/com.apple.TimeMachine.plist") as! [String: Any]? as AnyObject)"
+        return "tmutil:\n\(tmutil)\nTimeMachine: \(readDefaultsFile(path: "/Library/Preferences/com.apple.TimeMachine.plist") as AnyObject)"
     }
 
     override var isRunnable: Bool {
         // Otherwise require proper configuration and enabled state
-        guard let config = readDefaultsFile(path: "/Library/Preferences/com.apple.TimeMachine.plist") as! [String: Any]? else {
+        guard let config = readDefaultsFile(path: "/Library/Preferences/com.apple.TimeMachine.plist") else {
             return false
         }
         if config.count <= 1 { return false }
@@ -42,7 +42,7 @@ class TimeMachineCheck: ParetoCheck {
 
     override var showSettingsWarnDiskAccess: Bool {
         // If we cannot read the TM plist, likely missing Full Disk Access
-        return readDefaultsFile(path: "/Library/Preferences/com.apple.TimeMachine.plist") as! [String: Any]? == nil
+        return readDefaultsFile(path: "/Library/Preferences/com.apple.TimeMachine.plist") == nil
     }
 
     var isConfigured: Bool {
@@ -56,7 +56,7 @@ class TimeMachineCheck: ParetoCheck {
             return disabledReason
         }
 
-        guard let settings = readDefaultsFile(path: "/Library/Preferences/com.apple.TimeMachine.plist") as! [String: Any]? else {
+        guard let settings = readDefaultsFile(path: "/Library/Preferences/com.apple.TimeMachine.plist") else {
             // Fallback to tmutil if plist not readable
             if isConfigured {
                 return "Time Machine is configured (via tmutil)"
@@ -83,7 +83,7 @@ class TimeMachineCheck: ParetoCheck {
     }
 
     override func checkPasses() -> Bool {
-        guard let settings = readDefaultsFile(path: "/Library/Preferences/com.apple.TimeMachine.plist") as! [String: Any]? else {
+        guard let settings = readDefaultsFile(path: "/Library/Preferences/com.apple.TimeMachine.plist") else {
             os_log("/Library/Preferences/com.apple.TimeMachine.plist use fallback")
             let status = runCMD(app: "/usr/bin/tmutil", args: ["status"])
             return isConfigured && !status.contains("Stopping = 1")

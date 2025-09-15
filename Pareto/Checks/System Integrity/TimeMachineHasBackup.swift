@@ -40,11 +40,11 @@ class TimeMachineHasBackupCheck: ParetoCheck {
     }
 
     override var showSettings: Bool {
-        return readDefaultsFile(path: "/Library/Preferences/com.apple.TimeMachine.plist") as! [String: Any]? != nil
+        return readDefaultsFile(path: "/Library/Preferences/com.apple.TimeMachine.plist") != nil
     }
 
     override var showSettingsWarnDiskAccess: Bool {
-        return true && readDefaultsFile(path: "/Library/Preferences/com.apple.TimeMachine.plist") as! [String: Any]? == nil
+        return true && readDefaultsFile(path: "/Library/Preferences/com.apple.TimeMachine.plist") == nil
     }
 
     override var details: String {
@@ -65,7 +65,7 @@ class TimeMachineHasBackupCheck: ParetoCheck {
         }
 
         // If we can read the Time Machine config, check backup status
-        guard let settings = readDefaultsFile(path: "/Library/Preferences/com.apple.TimeMachine.plist") as! [String: Any]? else {
+        guard let settings = readDefaultsFile(path: "/Library/Preferences/com.apple.TimeMachine.plist") else {
             return "Cannot read Time Machine configuration"
         }
 
@@ -96,7 +96,7 @@ class TimeMachineHasBackupCheck: ParetoCheck {
     }
 
     override func checkPasses() -> Bool {
-        guard let settings = readDefaultsFile(path: "/Library/Preferences/com.apple.TimeMachine.plist") as! [String: Any]? else {
+        guard let settings = readDefaultsFile(path: "/Library/Preferences/com.apple.TimeMachine.plist") else {
             os_log("/Library/Preferences/com.apple.TimeMachine.plist is empty")
             hasError = true
             return false

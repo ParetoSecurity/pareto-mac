@@ -77,7 +77,7 @@ class AppCheck: ParetoCheck, AppCheckProtocol {
     }
 
     func getLatestVersionAppStore(completion: @escaping (String) -> Void) {
-        let languageCode = Locale.current.regionCode ?? "US"
+        let languageCode = Locale.current.region?.identifier ?? "US"
         var url = URLComponents(url: URL(string: "https://itunes.apple.com/lookup")!, resolvingAgainstBaseURL: false)
         url?.queryItems = [
             URLQueryItem(name: "limit", value: "1"),

@@ -80,7 +80,6 @@ class UpdateService {
     func request<T: Decodable>(
         endpoint: String,
         queryParameters: [String: String] = [:],
-        responseType: T.Type,
         completion: @escaping (Result<T, APIError>) -> Void
     ) {
         guard let url = buildURL(endpoint: endpoint, queryParameters: queryParameters) else {
@@ -95,7 +94,7 @@ class UpdateService {
             do {
                 let cachedData = try cache.object(forKey: cacheKey)
                 os_log("Returning disk cached response for updates: %{public}s", url.absoluteString)
-                let result = try JSONDecoder().decode(responseType, from: cachedData)
+                let result = try JSONDecoder().decode(T.self, from: cachedData)
                 completion(.success(result))
                 return
             } catch {
@@ -113,7 +112,7 @@ class UpdateService {
                 switch response.result {
                 case let .success(data):
                     do {
-                        let result = try JSONDecoder().decode(responseType, from: data)
+                        let result = try JSONDecoder().decode(T.self, from: data)
 
                         // Save to disk cache for updates
                         if let cache = self.updatesCache {
@@ -135,8 +134,7 @@ class UpdateService {
 
     func requestSync<T: Decodable>(
         endpoint: String,
-        queryParameters: [String: String] = [:],
-        responseType: T.Type
+        queryParameters: [String: String] = [:]
     ) throws -> T {
         guard let url = buildURL(endpoint: endpoint, queryParameters: queryParameters) else {
             throw APIError.invalidURL
@@ -149,7 +147,7 @@ class UpdateService {
             do {
                 let cachedData = try cache.object(forKey: cacheKey)
                 os_log("Returning disk cached response for sync updates request: %{public}s", url.absoluteString)
-                let result = try JSONDecoder().decode(responseType, from: cachedData)
+                let result = try JSONDecoder().decode(T.self, from: cachedData)
                 return result
             } catch {
                 // Cache miss or decode error, continue with network request
@@ -169,7 +167,7 @@ class UpdateService {
                 switch response.result {
                 case let .success(data):
                     do {
-                        let decodedResult = try JSONDecoder().decode(responseType, from: data)
+                        let decodedResult = try JSONDecoder().decode(T.self, from: data)
 
                         // Save to disk cache for updates
                         if let cache = self.updatesCache {
@@ -245,7 +243,6 @@ extension UpdateService {
         request(
             endpoint: "/updates",
             queryParameters: params,
-            responseType: [Release].self,
             completion: completion
         )
     }
@@ -260,8 +257,7 @@ extension UpdateService {
 
         return try requestSync(
             endpoint: "/updates",
-            queryParameters: params,
-            responseType: [Release].self
+            queryParameters: params
         )
     }
 }

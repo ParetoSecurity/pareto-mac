@@ -73,7 +73,7 @@ class Claim: Hashable {
         for check in checks {
             if check.isRunnable {
                 let startTime = Date()
-                check.run()
+                _ = check.run()
                 let endTime = Date()
                 let timeInterval = endTime.timeIntervalSince(startTime)
                 Logger().log("uuid=\(check.UUID, privacy: .public) timeInterval=\(timeInterval, privacy: .public)")

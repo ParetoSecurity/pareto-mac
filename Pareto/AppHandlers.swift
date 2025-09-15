@@ -281,14 +281,17 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
                 os_log("Running update check from startup")
                 DispatchQueue.global(qos: .userInteractive).async {
                     if Defaults.shouldDoUpdateCheck() {
-                        if self.networkHandler.currentStatus == .satisfied {
-                            os_log("Running update check from startup")
-                            DispatchQueue.global(qos: .userInteractive).async {
-                                self.checkForRelease()
-                                Defaults.doneUpdateCheck()
+                        Task { @MainActor in
+                            let isConnected = (self.networkHandler.currentStatus == .satisfied)
+                            if isConnected {
+                                os_log("Running update check from startup")
+                                Task { @MainActor in
+                                    self.checkForRelease()
+                                    Defaults.doneUpdateCheck()
+                                }
+                            } else {
+                                os_log("Skipping update check from startup, no connection")
                             }
-                        } else {
-                            os_log("Skipping update check from startup, no connection")
                         }
                     }
                     Defaults.doneUpdateCheck()
@@ -308,14 +311,17 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
             }
             #if !SETAPP_ENABLED
                 if Defaults.shouldDoUpdateCheck() {
-                    if self.networkHandler.currentStatus == .satisfied {
-                        os_log("Running update check from wakeup")
-                        DispatchQueue.global(qos: .userInteractive).async {
-                            self.checkForRelease()
-                            Defaults.doneUpdateCheck()
+                    Task { @MainActor in
+                        let isConnected = (self.networkHandler.currentStatus == .satisfied)
+                        if isConnected {
+                            os_log("Running update check from wakeup")
+                            Task { @MainActor in
+                                self.checkForRelease()
+                                Defaults.doneUpdateCheck()
+                            }
+                        } else {
+                            os_log("Skipping update check from wakeup, no connection")
                         }
-                    } else {
-                        os_log("Skipping update check from wakeup, no connection")
                     }
                 }
             #endif
@@ -332,27 +338,33 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
         #if !SETAPP_ENABLED
             NSBackgroundActivityScheduler.repeating(withName: "UpdateRunner", withInterval: 60 * 60) { (completion: NSBackgroundActivityScheduler.CompletionHandler) in
                 if Defaults.shouldDoUpdateCheck() {
-                    if self.networkHandler.currentStatus == .satisfied {
-                        os_log("Running update check")
-                        DispatchQueue.global(qos: .userInteractive).async {
-                            self.checkForRelease()
-                            Defaults.doneUpdateCheck()
+                    Task { @MainActor in
+                        let isConnected = (self.networkHandler.currentStatus == .satisfied)
+                        if isConnected {
+                            os_log("Running update check")
+                            Task { @MainActor in
+                                self.checkForRelease()
+                                Defaults.doneUpdateCheck()
+                            }
+                        } else {
+                            os_log("Skipping update check, no connection")
                         }
-                    } else {
-                        os_log("Skipping update check, no connection")
                     }
                 }
                 completion(.finished)
             }
         #else
             NSBackgroundActivityScheduler.repeating(withName: "UpdateRunnerSetapp", withInterval: 60 * 60 * Double(AppInfo.Flags.setappUpdate)) { (completion: NSBackgroundActivityScheduler.CompletionHandler) in
-                if self.networkHandler.currentStatus == .satisfied {
-                    os_log("Running update check")
-                    DispatchQueue.main.async {
-                        self.checkForRelease()
+                Task { @MainActor in
+                    let isConnected = (self.networkHandler.currentStatus == .satisfied)
+                    if isConnected {
+                        os_log("Running update check")
+                        DispatchQueue.main.async {
+                            self.checkForRelease()
+                        }
+                    } else {
+                        os_log("Skipping update check, no connection")
                     }
-                } else {
-                    os_log("Skipping update check, no connection")
                 }
 
                 completion(.finished)
@@ -361,17 +373,20 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
 
         NSBackgroundActivityScheduler.repeating(withName: "TeamsRunner", withInterval: 60 * 59) { (completion: NSBackgroundActivityScheduler.CompletionHandler) in
             DispatchQueue.global(qos: .userInteractive).async {
-                if self.networkHandler.currentStatus == .satisfied {
-                    if !Defaults[.teamID].isEmpty {
-                        os_log("Running team flags update")
-                        AppInfo.TeamSettings.update {
-                            os_log("Updated teams settings")
+                Task { @MainActor in
+                    let isConnected = (self.networkHandler.currentStatus == .satisfied)
+                    if isConnected {
+                        if !Defaults[.teamID].isEmpty {
+                            os_log("Running team flags update")
+                            AppInfo.TeamSettings.update {
+                                os_log("Updated teams settings")
+                            }
+                        } else {
+                            os_log("Skipping flags update, no team")
                         }
                     } else {
-                        os_log("Skipping flags update, no team")
+                        os_log("Skipping flags update, no connection")
                     }
-                } else {
-                    os_log("Skipping flags update, no connection")
                 }
             }
             completion(.finished)
@@ -424,8 +439,8 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
             return
         }
 
-        DispatchQueue.global(qos: .userInteractive).async { [self] in
-            doUpdateCheck()
+        Task { @MainActor in
+            self.doUpdateCheck()
         }
     }
 

@@ -230,7 +230,7 @@ public class AppUpdater {
                     try AppUpdater.safeCopyBundle(from: downloadedAppBundle.path.string, to: installedAppBundle.path.string)
                 } else {
                     let path = "\(downloadedAppBundle.path)/Contents/MacOS/Pareto Security".shellEscaped()
-                    AppUpdater.runCMDasAdmin(cmd: "\(path) -update")
+                    _ = AppUpdater.runCMDasAdmin(cmd: "\(path) -update")
                 }
 
                 let proc = Process()
