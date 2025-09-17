@@ -37,12 +37,12 @@ struct SettingsView: View {
             #endif
             ChecksSettingsView()
                 .tabItem {
-                    Label("Checks", systemImage: "checkmark.square")
+                    Label("Checks", systemImage: "checkmark.seal.text.page")
                 }
                 .tag(Tabs.checks)
             AboutSettingsView()
                 .tabItem {
-                    Label("About", systemImage: "info")
+                    Label("About", systemImage: "info.circle")
                 }
                 .tag(Tabs.about)
         }
