@@ -98,11 +98,6 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
         // invalidate possible expired cache
         try? AppInfo.versionStorage.removeExpiredObjects()
 
-        // Clear UpdateService cache when user manually runs checks
-        if interactive {
-            UpdateService.shared.clearCache()
-        }
-
         // Snooze in effect
         if Defaults[.snoozeTime] >= Date().currentTimeMs() {
             os_log("Checks are snoozed until %{public}ld", log: Log.app, Defaults[.snoozeTime])
