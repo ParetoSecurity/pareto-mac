@@ -69,16 +69,12 @@ struct AboutSettingsView: View {
             // App details
             GroupBox {
                 VStack(alignment: .leading, spacing: 6) {
-                   
-                        Text("Version \(AppInfo.appVersion) • Build \(AppInfo.buildVersion)")
-                            .fixedSize(horizontal: false, vertical: true)
-                            .layoutPriority(1)
-                    
+                    Text("Version \(AppInfo.appVersion) • Build \(AppInfo.buildVersion)")
+                        .fixedSize(horizontal: false, vertical: true)
+                        .layoutPriority(1)
 
-                   
-                        Text("Channel: \(AppInfo.utmSource)")
-                            .fixedSize(horizontal: false, vertical: true)
-            
+                    Text("Channel: \(AppInfo.utmSource)")
+                        .fixedSize(horizontal: false, vertical: true)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
             } label: {
@@ -88,54 +84,54 @@ struct AboutSettingsView: View {
 
             // Updates
             #if !SETAPP_ENABLED
-            GroupBox {
-                VStack(alignment: .leading, spacing: 8) {
-                    HStack(alignment: .firstTextBaseline, spacing: 10) {
-                        Label {
-                            Text(updateStatusText)
-                                .fixedSize(horizontal: false, vertical: true)
-                                .layoutPriority(1)
-                        } icon: {
-                            Image(systemName: updateStatusSymbol)
-                                .foregroundStyle(updateStatusColor)
-                        }
-
-                        if self.isLoading {
-                            ProgressView()
-                                .controlSize(.small)
-                        }
-
-                        Spacer(minLength: 0)
-
-                        // Inline "Install Update" button when a new version is found
-                        if hasCheckedForUpdates && status == UpdateStates.NewVersion {
-                            Button {
-                                forceUpdate()
-                            } label: {
-                                Label("Install Update", systemImage: "square.and.arrow.down")
-                                    .labelStyle(.titleAndIcon)
+                GroupBox {
+                    VStack(alignment: .leading, spacing: 8) {
+                        HStack(alignment: .firstTextBaseline, spacing: 10) {
+                            Label {
+                                Text(updateStatusText)
+                                    .fixedSize(horizontal: false, vertical: true)
+                                    .layoutPriority(1)
+                            } icon: {
+                                Image(systemName: updateStatusSymbol)
+                                    .foregroundStyle(updateStatusColor)
                             }
-                            .disabled(isLoading)
-                            .buttonStyle(.borderedProminent)
-                        }
 
-                        // Inline "Check for Updates" button when appropriate
-                        if !hasCheckedForUpdates || status == UpdateStates.Updated {
-                            Button {
-                                fetch()
-                            } label: {
-                                Label("Check for Updates", systemImage: "arrow.triangle.2.circlepath")
-                                    .labelStyle(.titleAndIcon)
+                            if self.isLoading {
+                                ProgressView()
+                                    .controlSize(.small)
                             }
-                            .disabled(isLoading)
-                            .buttonStyle(.bordered)
+
+                            Spacer(minLength: 0)
+
+                            // Inline "Install Update" button when a new version is found
+                            if hasCheckedForUpdates && status == UpdateStates.NewVersion {
+                                Button {
+                                    forceUpdate()
+                                } label: {
+                                    Label("Install Update", systemImage: "square.and.arrow.down")
+                                        .labelStyle(.titleAndIcon)
+                                }
+                                .disabled(isLoading)
+                                .buttonStyle(.borderedProminent)
+                            }
+
+                            // Inline "Check for Updates" button when appropriate
+                            if !hasCheckedForUpdates || status == UpdateStates.Updated {
+                                Button {
+                                    fetch()
+                                } label: {
+                                    Label("Check for Updates", systemImage: "arrow.triangle.2.circlepath")
+                                        .labelStyle(.titleAndIcon)
+                                }
+                                .disabled(isLoading)
+                                .buttonStyle(.bordered)
+                            }
                         }
                     }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                } label: {
+                    Text("Updates")
                 }
-                .frame(maxWidth: .infinity, alignment: .leading)
-            } label: {
-                Text("Updates")
-            }
             #endif
 
             Divider()
@@ -216,17 +212,17 @@ struct AboutSettingsView: View {
 
     private func fetch() {
         #if SETAPP_ENABLED
-        DispatchQueue.main.async {
-            isLoading = false
-            status = UpdateStates.Failed
-            let alert = NSAlert()
-            alert.messageText = "Update is not available in SetApp version"
-            alert.informativeText = "Please use SetApp to update the application"
-            alert.alertStyle = NSAlert.Style.informational
-            alert.addButton(withTitle: "OK")
-            alert.runModal()
-        }
-        return
+            DispatchQueue.main.async {
+                isLoading = false
+                status = UpdateStates.Failed
+                let alert = NSAlert()
+                alert.messageText = "Update is not available in SetApp version"
+                alert.informativeText = "Please use SetApp to update the application"
+                alert.alertStyle = NSAlert.Style.informational
+                alert.addButton(withTitle: "OK")
+                alert.runModal()
+            }
+            return
         #endif
 
         DispatchQueue.global(qos: .userInteractive).async {
@@ -273,17 +269,17 @@ struct AboutSettingsView: View {
 
             if let release = try? updater.getLatestRelease() {
                 #if SETAPP_ENABLED
-                DispatchQueue.main.async {
-                    isLoading = false
-                    status = UpdateStates.Failed
-                    let alert = NSAlert()
-                    alert.messageText = "Force update is not available in SetApp version"
-                    alert.informativeText = "Please use SetApp to update the application"
-                    alert.alertStyle = NSAlert.Style.informational
-                    alert.addButton(withTitle: "OK")
-                    alert.runModal()
-                }
-                return
+                    DispatchQueue.main.async {
+                        isLoading = false
+                        status = UpdateStates.Failed
+                        let alert = NSAlert()
+                        alert.messageText = "Force update is not available in SetApp version"
+                        alert.informativeText = "Please use SetApp to update the application"
+                        alert.alertStyle = NSAlert.Style.informational
+                        alert.addButton(withTitle: "OK")
+                        alert.runModal()
+                    }
+                    return
                 #endif
 
                 if let zipURL = release.assets.filter({ $0.browser_download_url.path.hasSuffix(".zip") }).first {
