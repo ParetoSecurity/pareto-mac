@@ -25,14 +25,14 @@ class NoUnusedUsers: ParetoCheck {
     }
 
     // MARK: - User status enum
-    
+
     enum UserStatus {
         case pass(reason: String)
         case fail(reason: String)
     }
 
     // MARK: - Public computed properties
-    
+
     // Get all users with their statuses
     var allUserStatuses: [(user: String, status: UserStatus)] {
         Self.localUserShortNames()
@@ -53,16 +53,16 @@ class NoUnusedUsers: ParetoCheck {
 
     override var details: String {
         let statuses = allUserStatuses
-        
+
         guard !statuses.isEmpty else {
             return "No user accounts found"
         }
-        
+
         return statuses.map { userStatus in
             switch userStatus.status {
-            case .pass(let reason):
+            case let .pass(reason):
                 return "* [PASS] \(userStatus.user): \(reason)"
-            case .fail(let reason):
+            case let .fail(reason):
                 return "* [FAIL] \(userStatus.user): \(reason)"
             }
         }.joined(separator: "\n")
@@ -84,32 +84,32 @@ private extension NoUnusedUsers {
         let currentUser = NSUserName()
         let adminSet = Self.adminUserShortNames()
         let ignoredUsers = Set(Defaults[.ignoredUserAccounts])
-        
+
         // Check reasons for PASS
         if user == currentUser {
             return .pass(reason: "current account")
         }
-        
+
         if adminSet.contains(user) {
             return .pass(reason: "admin account")
         }
-        
+
         if ignoredUsers.contains(user) {
             return .pass(reason: "ignored by user")
         }
-        
+
         // Check if recently logged in
         let thresholdDays = Self.recentLoginDays
         let cutoff = Date().addingTimeInterval(-TimeInterval(thresholdDays) * 24 * 60 * 60)
-        
+
         if let lastLogin = Self.lastLoginDate(for: user), lastLogin >= cutoff {
             return .pass(reason: "recently logged in")
         }
-        
+
         // Otherwise it's an unused account
         return .fail(reason: "unused account")
     }
-    
+
     // Threshold for "recent" login
     static let recentLoginDays: Int = 7
 

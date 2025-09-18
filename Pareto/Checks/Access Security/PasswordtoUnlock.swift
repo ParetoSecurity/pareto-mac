@@ -29,4 +29,24 @@ class RequirePasswordToUnlock: ParetoCheck {
         let out = runOSA(appleScript: script) ?? "false"
         return out.contains("true")
     }
+
+    override var details: String {
+        let script = "tell application \"System Events\" to tell security preferences to get require password to unlock"
+        let rawOut = runOSA(appleScript: script)
+        let interpreted: String
+        if let out = rawOut {
+            if out.contains("true") {
+                interpreted = "enabled"
+            } else if out.contains("false") {
+                interpreted = "disabled"
+            } else {
+                interpreted = "unknown"
+            }
+        } else {
+            interpreted = "error (nil output)"
+        }
+
+        // Keep it debug-focused: show raw OSA output and our interpretation.
+        return "OSA output: \(rawOut ?? "nil"); interpreted: \(interpreted)"
+    }
 }

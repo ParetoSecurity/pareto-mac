@@ -1,5 +1,5 @@
 //
-//  TeamSettings.swift
+//  CloudSettings.swift
 //  TeamSettings
 //
 //  Created by Janez Troha on 10/09/2021.
@@ -165,4 +165,3 @@ struct TeamSettingsView: View {
         }
     }
 }
-

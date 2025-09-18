@@ -7,8 +7,8 @@
 
 import AppKit
 import Defaults
-import SwiftUI
 import SettingsAccess
+import SwiftUI
 
 struct StatusBarMenuView: View {
     @ObservedObject var statusBarModel: StatusBarModel
