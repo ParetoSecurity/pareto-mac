@@ -122,7 +122,6 @@ struct AboutSettingsView: View {
                         // Inline "Check for Updates" button when appropriate
                         if !hasCheckedForUpdates || status == UpdateStates.Updated {
                             Button {
-                                UpdateService.shared.clearCache()
                                 fetch()
                             } label: {
                                 Label("Check for Updates", systemImage: "arrow.triangle.2.circlepath")
@@ -161,7 +160,6 @@ struct AboutSettingsView: View {
         .groupBoxStyle(AboutGroupBoxStyle(compact: true))
         .onAppear {
             // Clear the updates cache when About tab appears
-            UpdateService.shared.clearCache()
             fetch()
         }
         .animation(.default, value: showBeta)

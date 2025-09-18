@@ -169,10 +169,6 @@ class AppDelegate: AppHandlers, NSApplicationDelegate {
                 return
             }
         #endif
-
-        // Clear the updates cache on app start
-        UpdateService.shared.clearCache()
-
         // Terminate any older versions of process if not running tests
         #if !DEBUG
             if !AppInfo.isRunningTests {

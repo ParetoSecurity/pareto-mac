@@ -39,9 +39,6 @@ class UpdateService {
     private let baseURL = "https://paretosecurity.com/api"
     private let session: Session
 
-    // Disk cache for updates endpoint
-    private let updatesCache: SyncStorage<String, Data>?
-
     private init() {
         // Create URLSessionConfiguration without caching (we'll handle it manually)
         let configuration = URLSessionConfiguration.default
@@ -49,32 +46,6 @@ class UpdateService {
 
         // Create Alamofire session with custom configuration
         session = Session(configuration: configuration)
-
-        // Initialize disk cache for updates
-        do {
-            let diskConfig = DiskConfig(
-                name: "ParetoUpdatesCache",
-                expiry: .seconds(60 * 4), // 4 hours
-                maxSize: 10_000_000 // 10 MB
-            )
-            let diskStorage = try DiskStorage<String, Data>(
-                config: diskConfig,
-                transformer: TransformerFactory.forData()
-            )
-
-            let memoryConfig = MemoryConfig(
-                expiry: .seconds(60 * 4), // 4 hours
-                countLimit: 10,
-                totalCostLimit: 10_000_000
-            )
-            let memoryStorage = MemoryStorage<String, Data>(config: memoryConfig)
-
-            let hybridStorage = HybridStorage(memoryStorage: memoryStorage, diskStorage: diskStorage)
-            updatesCache = SyncStorage(storage: hybridStorage, serialQueue: DispatchQueue(label: "UpdateServiceCacheSync"))
-        } catch {
-            os_log("Failed to initialize updates disk cache: %{public}s", error.localizedDescription)
-            updatesCache = nil
-        }
     }
 
     func request<T: Decodable>(
@@ -88,20 +59,6 @@ class UpdateService {
         }
 
         let cacheKey = url.absoluteString
-
-        // Use disk cache for updates
-        if let cache = updatesCache {
-            do {
-                let cachedData = try cache.object(forKey: cacheKey)
-                os_log("Returning disk cached response for updates: %{public}s", url.absoluteString)
-                let result = try JSONDecoder().decode(T.self, from: cachedData)
-                completion(.success(result))
-                return
-            } catch {
-                // Cache miss or decode error, continue with network request
-            }
-        }
-
         os_log("Making API request to: %{public}s", url.absoluteString)
 
         let request = URLRequest(url: url)
@@ -113,13 +70,6 @@ class UpdateService {
                 case let .success(data):
                     do {
                         let result = try JSONDecoder().decode(T.self, from: data)
-
-                        // Save to disk cache for updates
-                        if let cache = self.updatesCache {
-                            try? cache.setObject(data, forKey: cacheKey)
-                            os_log("API request completed and disk cached: %{public}s", url.absoluteString)
-                        }
-
                         completion(.success(result))
                     } catch {
                         os_log("Failed to decode response: %{public}s", error.localizedDescription)
@@ -142,18 +92,6 @@ class UpdateService {
 
         let cacheKey = url.absoluteString
 
-        // Use disk cache for updates
-        if let cache = updatesCache {
-            do {
-                let cachedData = try cache.object(forKey: cacheKey)
-                os_log("Returning disk cached response for sync updates request: %{public}s", url.absoluteString)
-                let result = try JSONDecoder().decode(T.self, from: cachedData)
-                return result
-            } catch {
-                // Cache miss or decode error, continue with network request
-            }
-        }
-
         os_log("Making sync API request to: %{public}s", url.absoluteString)
 
         let request = URLRequest(url: url)
@@ -168,12 +106,6 @@ class UpdateService {
                 case let .success(data):
                     do {
                         let decodedResult = try JSONDecoder().decode(T.self, from: data)
-
-                        // Save to disk cache for updates
-                        if let cache = self.updatesCache {
-                            try? cache.setObject(data, forKey: cacheKey)
-                            os_log("Sync API request completed and disk cached: %{public}s", url.absoluteString)
-                        }
 
                         result = .success(decodedResult)
                     } catch {
@@ -198,20 +130,6 @@ class UpdateService {
             return data
         case let .failure(error):
             throw error
-        }
-    }
-
-    func clearCache() {
-        // Also clear disk cache for updates
-        if let cache = updatesCache {
-            do {
-                try cache.removeAll()
-                os_log("API memory and disk cache cleared")
-            } catch {
-                os_log("Failed to clear disk cache: %{public}s", error.localizedDescription)
-            }
-        } else {
-            os_log("API memory cache cleared")
         }
     }
 
