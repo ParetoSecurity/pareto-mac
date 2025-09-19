@@ -506,24 +506,6 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
         alert.runModal()
     }
 
-    func copyDebug(_ onlyCheck: String) {
-        var data = ""
-        for claim in Claims.global.all {
-            for check in claim.checksSorted.filter({ check in
-                check.hasDebug || (!onlyCheck.isEmpty && check.hasDebug && check.UUID == onlyCheck)
-            }) {
-                data.append("Check \(check.Title):\n\(check.debugInfo())\n\n")
-            }
-        }
-        NSPasteboard.general.clearContents()
-        NSPasteboard.general.setString(data, forType: .string)
-        let alert = NSAlert()
-        alert.messageText = "Debug info has been copied to the clipboard."
-        alert.alertStyle = NSAlert.Style.informational
-        alert.addButton(withTitle: "OK")
-        alert.runModal()
-    }
-
     func resetSettings() {
         Defaults.removeAll()
         UserDefaults.standard.removeAll()
@@ -609,9 +591,6 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
         case "showMenu":
             NSApp.sendAction(#selector(showMenu), to: nil, from: nil)
             NSApp.activate(ignoringOtherApps: true)
-        case "debug":
-            let check = url.queryParams()["check"] ?? ""
-            copyDebug(check)
         case "logs":
             copyLogs()
         case "runChecks":

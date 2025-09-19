@@ -17,10 +17,6 @@ class PasswordManager: ParetoCheck {
         "Password manager is not installed"
     }
 
-    override var hasDebug: Bool {
-        true
-    }
-
     // Centralized password manager definitions
     private enum PasswordManagerData {
         static let runningAppNames = [

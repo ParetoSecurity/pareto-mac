@@ -20,7 +20,6 @@ struct GeneralSettingsView: View {
     @Default(.myChecksURL) var myChecksURL
     @Default(.hideWhenNoFailures) var hideWhenNoFailures
     @Default(.alternativeColor) var alternativeColor
-    @ObservedObject fileprivate var checker = PermissionsChecker()
     @Environment(\.openWindow) private var openWindow
 
     var body: some View {
@@ -83,11 +82,5 @@ struct GeneralSettingsView: View {
                 #endif
             }
         }.padding(20)
-    }
-}
-
-struct GeneralSettingsView_Previews: PreviewProvider {
-    static var previews: some View {
-        GeneralSettingsView()
     }
 }

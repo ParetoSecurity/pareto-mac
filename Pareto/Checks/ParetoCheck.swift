@@ -56,10 +56,6 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
         "ParetoCheck-" + UUID + "-DisabledReason"
     }
 
-    var hasDebug: Bool {
-        false
-    }
-
     func debugInfo() -> String {
         ""
     }
@@ -333,34 +329,7 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
     }
 
     @objc func moreInfo() {
-        // Check if Command key is pressed
-        if NSEvent.modifierFlags.contains(.command), hasDebug {
-            showDebugWindow()
-        } else {
-            NSWorkspace.shared.open(infoURL)
-        }
-    }
-
-    @objc func showDebugWindow() {
-        guard hasDebug else { return }
-
-        DispatchQueue.main.async { [self] in
-            let debugInfo = self.debugInfo()
-            let hostingController = NSHostingController(rootView: CheckDebugView(checkTitle: self.Title, debugInfo: debugInfo))
-            hostingController.preferredContentSize = NSSize(width: 640, height: 480)
-            if #available(macOS 13.0, *) {
-                hostingController.sizingOptions = .preferredContentSize
-            }
-            let window = NSWindow(contentViewController: hostingController)
-            window.title = "Debug Info - \(self.Title)"
-            window.standardWindowButton(.zoomButton)?.isHidden = true
-            window.standardWindowButton(.miniaturizeButton)?.isHidden = true
-            window.center()
-            window.setContentSize(NSSize(width: 640, height: 480))
-
-            let windowController = NSWindowController(window: window)
-            windowController.showWindow(nil)
-        }
+        NSWorkspace.shared.open(infoURL)
     }
 }
 

@@ -55,8 +55,6 @@
 		3F1733582D6D6487007C02B0 /* iTerm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F1733352D6D6487007C02B0 /* iTerm.swift */; };
 		3F1733592D6D6487007C02B0 /* Slack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F1733382D6D6487007C02B0 /* Slack.swift */; };
 		3F17335A2D6D6487007C02B0 /* Dashlane.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F1733312D6D6487007C02B0 /* Dashlane.swift */; };
-		4F020DDF2853503400D8D4E9 /* DebugView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F020DDE2853503400D8D4E9 /* DebugView.swift */; };
-		4F020DE02853503400D8D4E9 /* DebugView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F020DDE2853503400D8D4E9 /* DebugView.swift */; };
 		4F0371BC26CD00B700B35E43 /* Boot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F0371BB26CD00B700B35E43 /* Boot.swift */; };
 		4F080D1D26C50D2800686786 /* ParetoSecurityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FC81A4B26C41DC8006EABA8 /* ParetoSecurityTests.swift */; };
 		4F0BD11F284891670098316A /* ClipButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F0BD11E284891670098316A /* ClipButton.swift */; };
@@ -88,8 +86,6 @@
 		4F1E6C6428355B2100C8AFAB /* InternetSharing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F1E6C6328355B2100C8AFAB /* InternetSharing.swift */; };
 		4F1E6C6528355B2100C8AFAB /* InternetSharing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F1E6C6328355B2100C8AFAB /* InternetSharing.swift */; };
 		4F1E6DDB2760081300FD3F01 /* Regex in Frameworks */ = {isa = PBXBuildFile; productRef = 4F1E6DDA2760081300FD3F01 /* Regex */; };
-		4F20E2612E701B6400E93943 /* IgnoredSSHKeysSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F20E2602E701B6400E93943 /* IgnoredSSHKeysSettingsView.swift */; };
-		4F20E2622E701B6400E93943 /* IgnoredSSHKeysSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F20E2602E701B6400E93943 /* IgnoredSSHKeysSettingsView.swift */; };
 		4F20E2642E70217400E93943 /* NotificationNames.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F20E2632E70217400E93943 /* NotificationNames.swift */; };
 		4F20E2652E70217400E93943 /* NotificationNames.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F20E2632E70217400E93943 /* NotificationNames.swift */; };
 		4F24A09026EB735F0036F748 /* CloudSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F24A08F26EB735F0036F748 /* CloudSettings.swift */; };
@@ -223,8 +219,6 @@
 		4F9153B52D4BD7B400FCD809 /* PasswordManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F9153B32D4BD7B400FCD809 /* PasswordManager.swift */; };
 		4F923CED2756918E00070551 /* Cache in Frameworks */ = {isa = PBXBuildFile; productRef = 4F923CEC2756918E00070551 /* Cache */; };
 		4F923CF527569E6300070551 /* Cache in Frameworks */ = {isa = PBXBuildFile; productRef = 4F923CF427569E6300070551 /* Cache */; };
-		4F93F1D02E6F13EB0093FF41 /* IgnoredUsersSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F93F1CF2E6F13EB0093FF41 /* IgnoredUsersSettingsView.swift */; };
-		4F93F1D12E6F13EB0093FF41 /* IgnoredUsersSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F93F1CF2E6F13EB0093FF41 /* IgnoredUsersSettingsView.swift */; };
 		4F9791C126F5DB4F00E668F4 /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F9791C026F5DB4F00E668F4 /* Color.swift */; };
 		4FA8E5EC2B44428400B7EA9C /* NoUnusedUsers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FA8E5EB2B44428400B7EA9C /* NoUnusedUsers.swift */; };
 		4FA8E5ED2B44428400B7EA9C /* NoUnusedUsers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FA8E5EB2B44428400B7EA9C /* NoUnusedUsers.swift */; };
@@ -369,7 +363,6 @@
 		3F1733382D6D6487007C02B0 /* Slack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Slack.swift; sourceTree = "<group>"; };
 		3F1733392D6D6487007C02B0 /* Tailscale.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tailscale.swift; sourceTree = "<group>"; };
 		3F17333A2D6D6487007C02B0 /* WireGuard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WireGuard.swift; sourceTree = "<group>"; };
-		4F020DDE2853503400D8D4E9 /* DebugView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugView.swift; sourceTree = "<group>"; };
 		4F0371BB26CD00B700B35E43 /* Boot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Boot.swift; sourceTree = "<group>"; };
 		4F0BD11E284891670098316A /* ClipButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipButton.swift; sourceTree = "<group>"; };
 		4F0CC3F92E6F014200A0BE70 /* FullDiskAccessVerifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullDiskAccessVerifier.swift; sourceTree = "<group>"; };
@@ -385,7 +378,6 @@
 		4F1E6C5D2834F5D200C8AFAB /* SecureTerminal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SecureTerminal.swift; sourceTree = "<group>"; };
 		4F1E6C602834F98A00C8AFAB /* SecureiTerm.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SecureiTerm.swift; sourceTree = "<group>"; };
 		4F1E6C6328355B2100C8AFAB /* InternetSharing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InternetSharing.swift; sourceTree = "<group>"; };
-		4F20E2602E701B6400E93943 /* IgnoredSSHKeysSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IgnoredSSHKeysSettingsView.swift; sourceTree = "<group>"; };
 		4F20E2632E70217400E93943 /* NotificationNames.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationNames.swift; sourceTree = "<group>"; };
 		4F24A08F26EB735F0036F748 /* CloudSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudSettings.swift; sourceTree = "<group>"; };
 		4F24A09126EB73980036F748 /* AboutSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutSettingsView.swift; sourceTree = "<group>"; };
@@ -444,7 +436,6 @@
 		4F905C4127B6C9B20012C661 /* AutoUpdateCheck.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AutoUpdateCheck.swift; sourceTree = "<group>"; };
 		4F91060227623E4B00D1A348 /* SSHKeys.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSHKeys.swift; sourceTree = "<group>"; };
 		4F9153B32D4BD7B400FCD809 /* PasswordManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordManager.swift; sourceTree = "<group>"; };
-		4F93F1CF2E6F13EB0093FF41 /* IgnoredUsersSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IgnoredUsersSettingsView.swift; sourceTree = "<group>"; };
 		4F9791C026F5DB4F00E668F4 /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
 		4FA8E5EB2B44428400B7EA9C /* NoUnusedUsers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NoUnusedUsers.swift; sourceTree = "<group>"; };
 		4FA9756F2E4B31E4006C0D5A /* UpdateService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateService.swift; sourceTree = "<group>"; };
@@ -504,6 +495,7 @@
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		4F7ACFDE2DE0998F003400E8 /* ParetoSecurityHelper */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (4F7AD01E2DE09C6E003400E8 /* PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet */, 4FB751222E05A526004C7DED /* PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = ParetoSecurityHelper; sourceTree = "<group>"; };
+		4FC10DBE2E7D3F9A002E2DAD /* Checks */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Checks; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -579,7 +571,6 @@
 				4F41831627707B0800EBAE4A /* StatusBarIcon.swift */,
 				4F8E688E2E68BE4D00CD82DF /* StatusBarMenuView.swift */,
 				4F0BD11E284891670098316A /* ClipButton.swift */,
-				4F020DDE2853503400D8D4E9 /* DebugView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -705,8 +696,7 @@
 		4FAAD324277B154300AA5CEF /* Settings */ = {
 			isa = PBXGroup;
 			children = (
-				4F20E2602E701B6400E93943 /* IgnoredSSHKeysSettingsView.swift */,
-				4F93F1CF2E6F13EB0093FF41 /* IgnoredUsersSettingsView.swift */,
+				4FC10DBE2E7D3F9A002E2DAD /* Checks */,
 				4F103007269EE135008C1E86 /* SettingsView.swift */,
 				4F24A08F26EB735F0036F748 /* CloudSettings.swift */,
 				4F24A09126EB73980036F748 /* AboutSettingsView.swift */,
@@ -867,6 +857,9 @@
 			dependencies = (
 				4F7ACFAA2DE06FF5003400E8 /* PBXTargetDependency */,
 			);
+			fileSystemSynchronizedGroups = (
+				4FC10DBE2E7D3F9A002E2DAD /* Checks */,
+			);
 			name = "Pareto Security SetApp";
 			packageProductDependencies = (
 				4F37E6FB2718122E00A2B254 /* LaunchAtLogin */,
@@ -962,6 +955,9 @@
 			);
 			dependencies = (
 				4FB7510B2E05A05B004C7DED /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				4FC10DBE2E7D3F9A002E2DAD /* Checks */,
 			);
 			name = "Pareto Security";
 			packageProductDependencies = (
@@ -1172,7 +1168,6 @@
 				4F37E70E2718122E00A2B254 /* PrinterSharingCheck.swift in Sources */,
 				4F37E70F2718122E00A2B254 /* FileSharingCheck.swift in Sources */,
 				4F37E7102718122E00A2B254 /* CloudSettings.swift in Sources */,
-				4F20E2622E701B6400E93943 /* IgnoredSSHKeysSettingsView.swift in Sources */,
 				4F37E7112718122E00A2B254 /* URL.swift in Sources */,
 				4F38D8CC273AC5F200671756 /* PermissionsView.swift in Sources */,
 				4FFDC5A528215A8F0092B7BF /* TimeMachineIsEncrypted.swift in Sources */,
@@ -1247,7 +1242,6 @@
 				4F37E7262718122E00A2B254 /* IntegrationCheck.swift in Sources */,
 				4F37E7272718122E00A2B254 /* Boot.swift in Sources */,
 				4FB51A5E27A94F7C003F528E /* AutomaticDownloadCheck.swift in Sources */,
-				4F020DE02853503400D8D4E9 /* DebugView.swift in Sources */,
 				4F37E7282718122E00A2B254 /* Claim.swift in Sources */,
 				4F37E7292718122E00A2B254 /* ChecksSettingsView.swift in Sources */,
 				4FDA93A42771D9FC00F9D8B4 /* Checks.swift in Sources */,
@@ -1271,7 +1265,6 @@
 				4FB51A5827A94457003F528E /* SecurityUpdateCheck.swift in Sources */,
 				4F37E7352718122E00A2B254 /* AppInfo.swift in Sources */,
 				4F84EC9329DC3A030047C79C /* PermissionsSettingsView.swift in Sources */,
-				4F93F1D02E6F13EB0093FF41 /* IgnoredUsersSettingsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1322,7 +1315,6 @@
 				4F6A0E0E26CE484A003B00A3 /* PrinterSharingCheck.swift in Sources */,
 				4F6A0E1026CE4868003B00A3 /* FileSharingCheck.swift in Sources */,
 				4F24A09026EB735F0036F748 /* CloudSettings.swift in Sources */,
-				4F20E2612E701B6400E93943 /* IgnoredSSHKeysSettingsView.swift in Sources */,
 				4F81C10826EB5D270065F548 /* URL.swift in Sources */,
 				4F38D8CB273AC5F200671756 /* PermissionsView.swift in Sources */,
 				4FFDC5A428215A8F0092B7BF /* TimeMachineIsEncrypted.swift in Sources */,
@@ -1397,7 +1389,6 @@
 				4F6A92E826C52210006C2F2D /* IntegrationCheck.swift in Sources */,
 				4F0371BC26CD00B700B35E43 /* Boot.swift in Sources */,
 				4FB51A5D27A94F7C003F528E /* AutomaticDownloadCheck.swift in Sources */,
-				4F020DDF2853503400D8D4E9 /* DebugView.swift in Sources */,
 				4F3EF24326CA859500841375 /* Claim.swift in Sources */,
 				4F24A09426EB73C80036F748 /* ChecksSettingsView.swift in Sources */,
 				4FDA93A32771D9FC00F9D8B4 /* Checks.swift in Sources */,
@@ -1421,7 +1412,6 @@
 				4FB51A5727A94457003F528E /* SecurityUpdateCheck.swift in Sources */,
 				4F6A92EA26C54AB7006C2F2D /* AppInfo.swift in Sources */,
 				4F84EC9229DC3A030047C79C /* PermissionsSettingsView.swift in Sources */,
-				4F93F1D12E6F13EB0093FF41 /* IgnoredUsersSettingsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -28,6 +28,11 @@ struct SettingsView: View {
                     Label("Permissions", systemImage: "hand.raised.square.fill")
                 }
                 .tag(Tabs.permissions)
+            ChecksSettingsView()
+                .tabItem {
+                    Label("Checks", systemImage: "checkmark.seal.text.page")
+                }
+                .tag(Tabs.checks)
             #if !SETAPP_ENABLED
                 TeamSettingsView(teamSettings: AppInfo.TeamSettings)
                     .tabItem {
@@ -35,11 +40,7 @@ struct SettingsView: View {
                     }
                     .tag(Tabs.teams)
             #endif
-            ChecksSettingsView()
-                .tabItem {
-                    Label("Checks", systemImage: "checkmark.seal.text.page")
-                }
-                .tag(Tabs.checks)
+
             AboutSettingsView()
                 .tabItem {
                     Label("About", systemImage: "info.circle")

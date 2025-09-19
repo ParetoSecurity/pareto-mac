@@ -21,15 +21,6 @@ class InternetShareCheck: ParetoCheck {
         "Sharing internet is on"
     }
 
-    override var hasDebug: Bool {
-        true
-    }
-
-    override func debugInfo() -> String {
-        let data = readDefaultsFile(path: "/Library/Preferences/SystemConfiguration/com.apple.nat.plist")
-        return "plist: \(String(describing: data))"
-    }
-
     override func checkPasses() -> Bool {
         guard let dict = readDefaultsFile(path: "/Library/Preferences/SystemConfiguration/com.apple.nat.plist") else {
             // can also be missing if it never changed, but defaults to true
