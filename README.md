@@ -56,6 +56,30 @@ Any other checks that you want? Let us know on [GitHub discussions](https://gith
 
 Read more about the company behind the app: [niteo.co](https://niteo.co/)
 
+## Releases
+
+Our versioning strategy follows a specific pattern for stable and pre-release versions:
+
+### Version Numbering
+
+- **Stable releases** use the minor version (e.g., `1.10.0`, `1.11.0`)
+- **Pre-releases** use patch versions (e.g., `1.10.1`, `1.10.2`, `1.10.3`)
+
+### Example Release Cycle
+
+```
+1.10.0 - stable
+1.10.1 - pre-release
+1.10.2 - pre-release
+1.10.3 - pre-release
+1.10.4 - pre-release
+
+1.11.0 - stable
+1.11.1 - pre-release
+```
+
+**Note:** This versioning strategy applies only to Apple/macOS releases. Linux releases don't include pre-release versions.
+
 ### Troubleshooting
 
 ### Helper commands (1.2.0+)
