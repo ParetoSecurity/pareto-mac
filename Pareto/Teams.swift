@@ -92,7 +92,6 @@ struct Report: Encodable {
     let disabledCount: Int
     let device: ReportingDevice
     let version: String
-    let lastCheck: String
     let significantChange: String
     let state: [String: String]
     let sbom: [PublicApp]
@@ -144,7 +143,6 @@ struct Report: Encodable {
             disabledCount: disabled,
             device: ReportingDevice.current(),
             version: AppInfo.appVersion,
-            lastCheck: Date.fromTimeStamp(timeStamp: Defaults[.lastCheck]).as3339String(),
             significantChange: SHA256.hash(data: "\(disabledSeed).\(failedSeed)".data(using: .utf8)!).hexStr,
             state: checkStates,
             sbom: sendSerial ? PublicApp.all : []
