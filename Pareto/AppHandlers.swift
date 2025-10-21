@@ -12,6 +12,7 @@ import Defaults
 import Foundation
 import LaunchAtLogin
 import Network
+import os
 import os.log
 import OSLog
 import ServiceManagement
@@ -27,6 +28,10 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
     var networkHandler = NetworkHandler.sharedInstance()
     private var idleSink: AnyCancellable?
     var finishedLaunch: Bool = false
+
+    // Track the current running work item to prevent race conditions
+    // Using OSAllocatedUnfairLock for better performance and cleaner syntax
+    private let currentWorkItemID = OSAllocatedUnfairLock(initialState: 0)
 
     @Default(.hideWhenNoFailures) var hideWhenNoFailures
 
@@ -116,6 +121,14 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
             return
         }
 
+        // Increment work item ID and capture it for this run (atomic operation)
+        let workItemID = currentWorkItemID.withLock { value -> Int in
+            value += 1
+            return value
+        }
+
+        os_log("Starting check run with workItemID=%{public}d", log: Log.app, workItemID)
+
         // Set running first so the status line flips instantly
         setRunning(true)
         NotificationCenter.default.post(name: .runChecksStarted, object: nil)
@@ -140,7 +153,20 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
         }
 
         // After checks finish
-        workItem.notify(queue: .main) {
+        workItem.notify(queue: .main) { [weak self] in
+            guard let self else { return }
+
+            // Only update state if this is still the current work item
+            let (isCurrentWorkItem, currentID) = self.currentWorkItemID.withLock { value in
+                (workItemID == value, value)
+            }
+
+            if !isCurrentWorkItem {
+                os_log("Ignoring completion of old workItemID=%{public}d (current=%{public}d)", log: Log.app, workItemID, currentID)
+                return
+            }
+
+            os_log("Completing check run workItemID=%{public}d", log: Log.app, workItemID)
             self.setRunning(false)
             NotificationCenter.default.post(name: .runChecksFinished, object: nil)
 
@@ -204,12 +230,18 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
         }
 
         // guard to prevent long running tasks
-        DispatchQueue.global(qos: .userInteractive).asyncAfter(deadline: .now() + 90) {
+        DispatchQueue.global(qos: .userInteractive).asyncAfter(deadline: .now() + 90) { [weak self] in
             Task { @MainActor in
-                if self.statusBarModel.isRunning {
+                guard let self else { return }
+
+                // Only cancel if this work item is still current
+                let isCurrentWorkItem = self.currentWorkItemID.withLock { $0 == workItemID }
+
+                if self.statusBarModel.isRunning && isCurrentWorkItem {
                     workItem.cancel()
-                    os_log("Checks took more than 30s to finish canceling", log: Log.app)
+                    os_log("Checks took more than 90s to finish, canceling workItemID=%{public}d", log: Log.app, workItemID)
                     self.setRunning(false)
+                    NotificationCenter.default.post(name: .runChecksFinished, object: nil)
                 }
             }
         }
@@ -386,6 +418,32 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
             }
             completion(.finished)
         }
+
+        // Watchdog: Restart app if checks haven't run in 1 day
+        NSBackgroundActivityScheduler.repeating(withName: "CheckWatchdog", withInterval: 60 * 60) { (completion: NSBackgroundActivityScheduler.CompletionHandler) in
+            let oneDayMs: Int64 = 1 * 24 * 60 * 60 * 1000 // 86,400,000 ms
+            let lastCheck = Defaults[.lastCheck]
+
+            // Only check if we've run checks before (lastCheck > 0)
+            if lastCheck > 0 {
+                let currentTime = Date().currentTimeMs()
+                let timeSinceLastCheck = currentTime - lastCheck
+
+                if timeSinceLastCheck >= oneDayMs {
+                    os_log("WATCHDOG: Checks stale for %{public}ldms (>1 day), restarting app...", log: Log.app, type: .fault, timeSinceLastCheck)
+                    Task { @MainActor in
+                        self.restartApp()
+                    }
+                } else {
+                    let hoursAgo = timeSinceLastCheck / (60 * 60 * 1000)
+                    os_log("WATCHDOG: Checks healthy, last run %{public}ld hours ago", log: Log.app, hoursAgo)
+                }
+            } else {
+                os_log("WATCHDOG: No checks run yet, skipping", log: Log.app)
+            }
+
+            completion(.finished)
+        }
     }
 
     func statusDidChange(status: NWPath.Status) {
@@ -441,6 +499,33 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
 
     @objc func quitApp() {
         NSApplication.shared.terminate(self)
+    }
+
+    func restartApp() {
+        #if DEBUG
+            os_log("Restart disabled in DEBUG mode", log: Log.app)
+            return
+        #endif
+
+        guard !AppInfo.isRunningTests else {
+            os_log("Restart disabled during tests", log: Log.app)
+            return
+        }
+
+        guard let executableURL = Bundle.main.executableURL else {
+            os_log("Cannot restart: missing executable URL", log: Log.app, type: .error)
+            return
+        }
+
+        os_log("Restarting app due to stale checks (last check: %{public}ld)", log: Log.app, type: .fault, Defaults[.lastCheck])
+
+        let proc = Process()
+        proc.executableURL = executableURL
+        proc.launch()
+
+        DispatchQueue.main.async {
+            NSApp.terminate(self)
+        }
     }
 
     @objc func showMenu() {
