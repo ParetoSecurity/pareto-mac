@@ -239,7 +239,7 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
 
                 if self.statusBarModel.isRunning && isCurrentWorkItem {
                     workItem.cancel()
-                    os_log("Checks took more than 90s to finish, canceling workItemID=%{public}d", log: Log.app, workItemID)
+                    os_log("Checks took more than 90s to finish, cancelling workItemID=%{public}d", log: Log.app, workItemID)
                     self.setRunning(false)
                     NotificationCenter.default.post(name: .runChecksFinished, object: nil)
                 }
