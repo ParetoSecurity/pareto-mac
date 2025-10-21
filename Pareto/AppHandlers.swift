@@ -421,7 +421,7 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
 
         // Watchdog: Restart app if checks haven't run in 1 day
         NSBackgroundActivityScheduler.repeating(withName: "CheckWatchdog", withInterval: 60 * 60) { (completion: NSBackgroundActivityScheduler.CompletionHandler) in
-            let oneDayMs: Int64 = 1 * 24 * 60 * 60 * 1000 // 86,400,000 ms
+            let threeDayMs: Int64 = 3 * 24 * 60 * 60 * 1000
             let lastCheck = Defaults[.lastCheck]
 
             // Only check if we've run checks before (lastCheck > 0)
@@ -429,7 +429,7 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
                 let currentTime = Date().currentTimeMs()
                 let timeSinceLastCheck = currentTime - lastCheck
 
-                if timeSinceLastCheck >= oneDayMs {
+                if timeSinceLastCheck >= threeDayMs {
                     os_log("WATCHDOG: Checks stale for %{public}ldms (>1 day), restarting app...", log: Log.app, type: .fault, timeSinceLastCheck)
                     Task { @MainActor in
                         self.restartApp()
