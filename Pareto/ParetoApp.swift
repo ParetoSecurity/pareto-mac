@@ -9,6 +9,7 @@ import AppKit
 import Defaults
 import Foundation
 import LaunchAtLogin
+import os.log
 import OSLog
 import SwiftUI
 
@@ -18,15 +19,10 @@ public enum AppWindowID {
 
 class AppDelegate: AppHandlers, NSApplicationDelegate {
     func applicationDidBecomeActive(_: Notification) {
-        if hideWhenNoFailures {
-            // With MenuBarExtra there is no NSStatusItem visibility to toggle.
-            // If you later add a bindable `isMenuBarInserted` in AppHandlers, call updateHiddenState() to adjust it.
-            DispatchQueue.main.asyncAfter(deadline: .now() + 10) { [self] in
-                if statusBarModel.state == .idle {
-                    updateHiddenState()
-                }
-            }
-        }
+        // Menu bar visibility is now handled by:
+        // 1. Scheduled hide after checks complete and pass (10 second delay)
+        // 2. idleSink when state transitions to idle (only after checks have run)
+        os_log("applicationDidBecomeActive called", log: Log.app)
     }
 
     func moveToApplicationsFolderIfNeeded() {
@@ -240,6 +236,27 @@ private struct WindowConfigurator: NSViewRepresentable {
     func updateNSView(_: NSView, context _: Context) {}
 }
 
+// Wrapper to make MenuBarExtra reactive to AppHandlers changes
+private struct ObservableMenuBarExtra: Scene {
+    @ObservedObject var appHandlers: AppHandlers
+    @State private var isInserted: Bool = true
+
+    var body: some Scene {
+        MenuBarExtra(isInserted: $isInserted) {
+            StatusBarMenuView(statusBarModel: appHandlers.statusBarModel)
+                .environmentObject(appHandlers)
+        } label: {
+            StatusBarIcon(statusBarModel: appHandlers.statusBarModel)
+        }
+        .onChange(of: appHandlers.isMenuBarInserted) { newValue in
+            if isInserted != newValue {
+                os_log("ObservableMenuBarExtra: updating isInserted from %{public}@ to %{public}@", log: Log.app, isInserted ? "true" : "false", newValue ? "true" : "false")
+                isInserted = newValue
+            }
+        }
+    }
+}
+
 @main
 struct Pareto: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
@@ -282,12 +299,7 @@ struct Pareto: App {
                 }
         }
 
-        // Menu bar UI
-        MenuBarExtra(isInserted: .constant(true)) {
-            StatusBarMenuView(statusBarModel: appDelegate.statusBarModel)
-                .environmentObject(appDelegate as AppHandlers)
-        } label: {
-            StatusBarIcon(statusBarModel: appDelegate.statusBarModel)
-        }
+        // Menu bar UI - using wrapper to make it reactive
+        ObservableMenuBarExtra(appHandlers: appDelegate)
     }
 }

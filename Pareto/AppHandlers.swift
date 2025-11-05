@@ -29,18 +29,42 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
     private var idleSink: AnyCancellable?
     var finishedLaunch: Bool = false
 
+    // Track if checks have run at least once this session
+    private var checksHaveRun: Bool = false
+
     // Track the current running work item to prevent race conditions
     // Using OSAllocatedUnfairLock for better performance and cleaner syntax
     private let currentWorkItemID = OSAllocatedUnfairLock(initialState: 0)
 
     @Default(.hideWhenNoFailures) var hideWhenNoFailures
 
-    // With MenuBarExtra there is no NSStatusItem visibility to toggle.
-    // Keep method for compatibility; adapt if you later bind MenuBarExtra(isInserted:) to a property.
+    // Controls MenuBarExtra visibility based on check status and settings
+    @Published var isMenuBarInserted: Bool = true
+
+    // Updates menu bar visibility based on check status and settings
     func updateHiddenState() {
+        os_log("updateHiddenState called - hideWhenNoFailures: %{public}@", log: Log.app, hideWhenNoFailures ? "true" : "false")
+
+        let newValue: Bool
         if hideWhenNoFailures {
-            // Implement MenuBarExtra visibility binding here if desired.
-            // e.g., isMenuBarInserted = !(claimsPassed)
+            // Hide the menu bar icon only when all checks are passing
+            let claimsPassed = Claims.global.all.allSatisfy { $0.checksPassed }
+            newValue = !claimsPassed
+            os_log("updateHiddenState - claimsPassed: %{public}@, calculated newValue: %{public}@",
+                   log: Log.app, claimsPassed ? "true" : "false", newValue ? "true" : "false")
+        } else {
+            // Always show the menu bar icon when setting is disabled
+            newValue = true
+            os_log("updateHiddenState - hideWhenNoFailures is false, calculated newValue: true", log: Log.app)
+        }
+
+        // Only update if the value actually changes
+        if isMenuBarInserted != newValue {
+            os_log("updateHiddenState - changing isMenuBarInserted from %{public}@ to %{public}@",
+                   log: Log.app, isMenuBarInserted ? "true" : "false", newValue ? "true" : "false")
+            isMenuBarInserted = newValue
+        } else {
+            os_log("updateHiddenState - isMenuBarInserted already %{public}@, skipping update", log: Log.app, newValue ? "true" : "false")
         }
     }
 
@@ -168,6 +192,7 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
 
             os_log("Completing check run workItemID=%{public}d", log: Log.app, workItemID)
             self.setRunning(false)
+            self.checksHaveRun = true
             NotificationCenter.default.post(name: .runChecksFinished, object: nil)
 
             // Determine overall state
@@ -226,6 +251,25 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
             Claims.global.objectWillChange.send()
             self.statusBarModel.refreshNonce &+= 1
 
+            // Update menu bar visibility based on check results
+            if self.hideWhenNoFailures {
+                os_log("hideWhenNoFailures enabled - claimsPassed: %{public}@", log: Log.app, claimsPassed ? "true" : "false")
+                if claimsPassed {
+                    // Schedule hiding after the green->gray transition (10 seconds)
+                    os_log("Scheduling menu bar hide in 10 seconds", log: Log.app)
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 10) { [weak self] in
+                        os_log("Executing scheduled updateHiddenState after 10 second delay", log: Log.app)
+                        self?.updateHiddenState()
+                    }
+                } else {
+                    // Show immediately when checks fail
+                    os_log("Checks failed - calling updateHiddenState immediately", log: Log.app)
+                    self.updateHiddenState()
+                }
+            } else {
+                os_log("hideWhenNoFailures disabled - skipping menu bar visibility update", log: Log.app)
+            }
+
             os_log("Checks finished running", log: Log.app)
         }
 
@@ -271,17 +315,30 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
         // When model goes idle, update hidden state if needed
         idleSink = statusBarModel.$state.sink { [weak self] state in
             guard let self else { return }
+            os_log("statusBarModel.state changed to: %{public}@", log: Log.app, state.rawValue)
             if state == .idle {
-                updateHiddenState()
+                if self.checksHaveRun {
+                    os_log("State is idle and checks have run - calling updateHiddenState from idleSink", log: Log.app)
+                    updateHiddenState()
+                } else {
+                    os_log("State is idle but checks haven't run yet - skipping updateHiddenState", log: Log.app)
+                }
             }
         }
 
         Task {
             for await hideWhenNoFailures in Defaults.updates(.hideWhenNoFailures) {
+                os_log("hideWhenNoFailures setting changed to: %{public}@", log: Log.app, hideWhenNoFailures ? "true" : "false")
                 if !hideWhenNoFailures {
-                    // Always show MenuBarExtra if you add binding support later
+                    // Always show MenuBarExtra when setting is disabled
+                    if self.isMenuBarInserted != true {
+                        os_log("hideWhenNoFailures disabled - setting isMenuBarInserted to true", log: Log.app)
+                        self.isMenuBarInserted = true
+                    }
                 } else {
-                    updateHiddenState()
+                    // Don't hide immediately when setting is enabled
+                    // Let the state transition to idle trigger the hide
+                    os_log("hideWhenNoFailures enabled - waiting for next idle state to hide icon", log: Log.app)
                 }
             }
         }
