@@ -56,6 +56,12 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
         "ParetoCheck-" + UUID + "-DisabledReason"
     }
 
+    // Computed property that generates prerequisite failure details on-demand
+    // Subclasses can override to provide specific implementation
+    var prerequisiteFailureDetails: String? {
+        return nil
+    }
+
     func debugInfo() -> String {
         ""
     }

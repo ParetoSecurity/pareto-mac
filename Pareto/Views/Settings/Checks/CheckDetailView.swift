@@ -1,14 +1,39 @@
 import SwiftUI
 
+// Inline team badge component
+private struct TeamRequiredBadge: View {
+    var compact: Bool = false
+
+    var body: some View {
+        HStack(spacing: 4) {
+            Image(systemName: "shield.fill")
+                .font(.system(size: compact ? 10 : 11))
+            if !compact {
+                Text("REQUIRED BY TEAM")
+                    .font(.system(size: 10, weight: .semibold))
+            }
+        }
+        .foregroundColor(.white)
+        .padding(.horizontal, compact ? 6 : 8)
+        .padding(.vertical, compact ? 2 : 4)
+        .background(
+            Capsule()
+                .fill(Color.orange)
+        )
+    }
+}
+
 struct CheckDetailView: View {
     @ObservedObject var check: ParetoCheck
     @Environment(\.dismiss) var dismiss
     @State private var isActive: Bool
     @State private var hasChanges: Bool = false
+    @State private var prerequisiteDetails: String?
 
     init(check: ParetoCheck) {
         _check = ObservedObject(wrappedValue: check)
         _isActive = State(initialValue: check.isActive)
+        _prerequisiteDetails = State(initialValue: nil)
     }
 
     var body: some View {
@@ -45,11 +70,10 @@ struct CheckDetailView: View {
                 Section {
                     if check.teamEnforced {
                         HStack {
-                            Text("✴")
-                                .foregroundColor(.orange)
-                            Text("This check is required by your team")
-                                .foregroundColor(.secondary)
+                            TeamRequiredBadge(compact: false)
+                            Spacer()
                         }
+                        .padding(.bottom, 4)
                     }
 
                     Toggle("Enable this check", isOn: $isActive)
@@ -143,7 +167,7 @@ struct CheckDetailView: View {
                                 .foregroundColor(.secondary)
                         }
                     } else if !check.isRunnable {
-                        VStack(alignment: .leading, spacing: 8) {
+                        VStack(alignment: .leading, spacing: 12) {
                             HStack {
                                 Image(systemName: "exclamationmark.triangle.fill")
                                     .foregroundColor(.orange)
@@ -151,9 +175,53 @@ struct CheckDetailView: View {
                                     .font(.headline)
                                 Spacer()
                             }
-                            Text(check.disabledReason)
-                                .font(.body)
-                                .foregroundColor(.secondary)
+
+                            VStack(alignment: .leading, spacing: 8) {
+                                Text("Why:")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                                    .fontWeight(.medium)
+
+                                Text(check.disabledReason)
+                                    .font(.body)
+                                    .foregroundColor(.primary)
+                            }
+
+                            if let details = prerequisiteDetails, !details.isEmpty {
+                                Divider()
+
+                                VStack(alignment: .leading, spacing: 8) {
+                                    Text("Technical Details:")
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
+                                        .fontWeight(.medium)
+
+                                    Text(details)
+                                        .font(.system(.body, design: .monospaced))
+                                        .foregroundColor(.secondary)
+                                        .textSelection(.enabled)
+                                }
+                            }
+
+                            if check.teamEnforced {
+                                Divider()
+
+                                VStack(alignment: .leading, spacing: 8) {
+                                    HStack(spacing: 6) {
+                                        Image(systemName: "shield.fill")
+                                            .font(.caption)
+                                            .foregroundColor(.orange)
+                                        Text("Team Requirement:")
+                                            .font(.caption)
+                                            .foregroundColor(.secondary)
+                                            .fontWeight(.medium)
+                                    }
+
+                                    Text("This check is required by your team security policy. Please resolve the prerequisite issues to meet compliance requirements.")
+                                        .font(.body)
+                                        .foregroundColor(.primary)
+                                }
+                            }
                         }
                     } else {
                         HStack {
@@ -223,5 +291,11 @@ struct CheckDetailView: View {
             .formStyle(.grouped)
         }
         .frame(minHeight: 400)
+        .task {
+            // Populate prerequisite details after view renders, outside the view update cycle
+            if !check.isRunnable {
+                prerequisiteDetails = check.prerequisiteFailureDetails
+            }
+        }
     }
 }

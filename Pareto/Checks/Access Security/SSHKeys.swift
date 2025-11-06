@@ -63,6 +63,10 @@ class SSHKeysCheck: SSHCheck {
     }
 
     override func checkPasses() -> Bool {
-        keysWithNoPassword().isEmpty
+        if !hasPrerequites() {
+            return true
+        }
+        
+        return keysWithNoPassword().isEmpty
     }
 }

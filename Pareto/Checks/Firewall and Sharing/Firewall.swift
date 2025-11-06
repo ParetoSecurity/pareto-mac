@@ -60,6 +60,27 @@ class FirewallCheck: ParetoCheck {
         return true
     }
 
+    override var prerequisiteFailureDetails: String? {
+        if isRunnable {
+            return nil
+        }
+
+        if #available(macOS 15, *) {
+            if requiresHelper && !HelperToolUtilities.isHelperInstalled() {
+                let helperPath = "/Library/PrivilegedHelperTools/co.niteo.ParetoSecurityHelper"
+                let helperExists = FileManager.default.fileExists(atPath: helperPath)
+
+                if helperExists {
+                    return "Helper tool exists at \(helperPath) but is not properly authorized. Please approve in System Settings > General > Login Items > Allow in Background."
+                } else {
+                    return "Helper tool not installed at \(helperPath). The app will attempt to install it when you authorize."
+                }
+            }
+        }
+
+        return nil
+    }
+
     override func checkPasses() -> Bool {
         if #available(macOS 26, *) {
             os_log("FirewallCheck: Running macOS 26+ direct command")
