@@ -23,12 +23,41 @@ class TimeMachineCheck: ParetoCheck {
 
     override var isRunnable: Bool {
         // Otherwise require proper configuration and enabled state
-        guard let config = readDefaultsFile(path: "/Library/Preferences/com.apple.TimeMachine.plist") else {
+        let tmPlistPath = "/Library/Preferences/com.apple.TimeMachine.plist"
+        guard let config = readDefaultsFile(path: tmPlistPath) else {
             return false
         }
-        if config.count <= 1 { return false }
-        if let autoBackup = config["AutoBackup"] as? Int, autoBackup == 0 { return false }
+
+        if config.count <= 1 {
+            return false
+        }
+
+        if let autoBackup = config["AutoBackup"] as? Int, autoBackup == 0 {
+            return false
+        }
+
         return isActive
+    }
+
+    override var prerequisiteFailureDetails: String? {
+        if isRunnable {
+            return nil
+        }
+
+        let tmPlistPath = "/Library/Preferences/com.apple.TimeMachine.plist"
+        guard let config = readDefaultsFile(path: tmPlistPath) else {
+            return "Cannot read Time Machine configuration file at \(tmPlistPath). This may require Full Disk Access permission in System Settings > Privacy & Security."
+        }
+
+        if config.count <= 1 {
+            return "Time Machine configuration is empty or invalid. No backup destination has been set up."
+        }
+
+        if let autoBackup = config["AutoBackup"] as? Int, autoBackup == 0 {
+            return "Time Machine AutoBackup is disabled in configuration (AutoBackup = 0). Enable automatic backups in System Settings > General > Time Machine."
+        }
+
+        return nil
     }
 
     override var showSettingsWarnDiskAccess: Bool {

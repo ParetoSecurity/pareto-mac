@@ -36,14 +36,38 @@ class SSHCheck: ParetoCheck {
 
         return sshKeygenPath
     }
-
-    override var isRunnable: Bool {
+    
+    func hasPrerequites() -> Bool {
         if !itExists(getSSHKeygenPath()) {
             os_log("Not found /opt/homebrew/bin/ssh-keygen or /usr/bin/ssh-keygen, check disabled", log: Log.check)
         }
         if !itExists(sshPath.path) {
             os_log("Not found ~/.ssh, check disabled", log: Log.check)
         }
-        return itExists(getSSHKeygenPath()) && itExists(sshPath.path) && isActive
+        return itExists(getSSHKeygenPath()) && itExists(sshPath.path)
+    }
+    
+    override var isRunnable: Bool {
+        return isActive
+    }
+
+    override var prerequisiteFailureDetails: String? {
+        if isRunnable {
+            return nil
+        }
+
+        let sshKeygenPath = getSSHKeygenPath()
+        let sshDirPath = sshPath.path
+
+        if !itExists(sshKeygenPath) {
+            let checkedPaths = ["/opt/homebrew/bin/ssh-keygen", "/usr/bin/ssh-keygen"]
+            return "ssh-keygen command not found. Checked paths:\n" + checkedPaths.map { "- \($0)" }.joined(separator: "\n") + "\n\nThis tool is required to check SSH key security."
+        }
+
+        if !itExists(sshDirPath) {
+            return "SSH directory not found at \(sshDirPath)\n\nNo SSH keys are configured for this user account."
+        }
+
+        return nil
     }
 }

@@ -39,6 +39,29 @@ class TimeMachineHasBackupCheck: ParetoCheck {
         return isActive
     }
 
+    override var prerequisiteFailureDetails: String? {
+        if isRunnable {
+            return nil
+        }
+
+        // First check if Time Machine check is even enabled
+        if !TimeMachineCheck.sharedInstance.isActive {
+            return "Dependency: 'Time Machine is on' check must be enabled first. This check cannot run without an active Time Machine setup."
+        }
+
+        // Then check if Time Machine is configured
+        if !TimeMachineCheck.sharedInstance.isRunnable {
+            // Inherit the prerequisite failure details from the parent check
+            if let parentDetails = TimeMachineCheck.sharedInstance.prerequisiteFailureDetails {
+                return "Dependency: Time Machine check cannot run.\n\nUnderlying issue: \(parentDetails)"
+            } else {
+                return "Dependency: Time Machine is not properly configured. Please ensure Time Machine is set up with a backup destination and automatic backups are enabled."
+            }
+        }
+
+        return nil
+    }
+
     override var showSettings: Bool {
         return readDefaultsFile(path: "/Library/Preferences/com.apple.TimeMachine.plist") != nil
     }

@@ -1,5 +1,28 @@
 import SwiftUI
 
+// Inline team badge component
+private struct TeamRequiredBadge: View {
+    var compact: Bool = false
+
+    var body: some View {
+        HStack(spacing: 4) {
+            Image(systemName: "shield.fill")
+                .font(.system(size: compact ? 10 : 11))
+            if !compact {
+                Text("REQUIRED BY TEAM")
+                    .font(.system(size: 10, weight: .semibold))
+            }
+        }
+        .foregroundColor(.white)
+        .padding(.horizontal, compact ? 6 : 8)
+        .padding(.vertical, compact ? 2 : 4)
+        .background(
+            Capsule()
+                .fill(Color.orange)
+        )
+    }
+}
+
 struct CheckRowView: View {
     @ObservedObject var check: ParetoCheck
     let onTap: () -> Void
@@ -18,16 +41,15 @@ struct CheckRowView: View {
                         .foregroundColor(.white)
                 }
 
-                VStack(alignment: .leading, spacing: 2) {
-                    HStack(spacing: 4) {
-                        if check.teamEnforced {
-                            Text("✴")
-                                .font(.system(size: 14))
-                                .foregroundColor(.orange)
-                        }
+                VStack(alignment: .leading, spacing: 4) {
+                    HStack(spacing: 6) {
                         Text(check.TitleON)
                             .foregroundColor(.primary)
                             .lineLimit(1)
+
+                        if check.teamEnforced {
+                            TeamRequiredBadge(compact: true)
+                        }
                     }
 
                     subtitleView(for: check)
