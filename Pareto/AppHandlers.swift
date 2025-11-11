@@ -41,17 +41,77 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
     // Controls MenuBarExtra visibility based on check status and settings
     @Published var isMenuBarInserted: Bool = true
 
+    // Track if icon is temporarily shown due to user activation
+    private var temporarilyVisible: Bool = false
+
+    // Timer to auto-hide after inactivity
+    private var autoHideTimer: Task<Void, Never>?
+
+    // Track if Settings window is open
+    @Published var isSettingsWindowOpen: Bool = false
+
+    // Show icon temporarily (e.g., when user activates app)
+    func showTemporarily() {
+        os_log("showTemporarily called", log: Log.app)
+
+        guard hideWhenNoFailures else { return }
+
+        temporarilyVisible = true
+        isMenuBarInserted = true
+
+        // Schedule auto-hide after 30 seconds if still passing
+        scheduleAutoHide()
+    }
+
+    // Cancel any pending auto-hide
+    func cancelAutoHide() {
+        os_log("cancelAutoHide called", log: Log.app)
+        autoHideTimer?.cancel()
+        autoHideTimer = nil
+    }
+
+    // Schedule auto-hide after inactivity
+    func scheduleAutoHide() {
+        cancelAutoHide()
+
+        os_log("scheduleAutoHide: will hide in 30 seconds if inactive", log: Log.app)
+
+        autoHideTimer = Task { [weak self] in
+            try? await Task.sleep(nanoseconds: 30 * 1_000_000_000)
+
+            guard let self, !Task.isCancelled else { return }
+
+            await MainActor.run {
+                // Only hide if still temporarily visible, checks pass, and settings not open
+                if self.temporarilyVisible && !self.isSettingsWindowOpen {
+                    let claimsPassed = Claims.global.all.allSatisfy { $0.checksPassed }
+                    if claimsPassed {
+                        os_log("Auto-hide timer expired - hiding icon", log: Log.app)
+                        self.temporarilyVisible = false
+                        self.updateHiddenState()
+                    }
+                }
+            }
+        }
+    }
+
     // Updates menu bar visibility based on check status and settings
     func updateHiddenState() {
         os_log("updateHiddenState called - hideWhenNoFailures: %{public}@", log: Log.app, hideWhenNoFailures ? "true" : "false")
 
         let newValue: Bool
         if hideWhenNoFailures {
-            // Hide the menu bar icon only when all checks are passing
-            let claimsPassed = Claims.global.all.allSatisfy { $0.checksPassed }
-            newValue = !claimsPassed
-            os_log("updateHiddenState - claimsPassed: %{public}@, calculated newValue: %{public}@",
-                   log: Log.app, claimsPassed ? "true" : "false", newValue ? "true" : "false")
+            // If temporarily visible, keep icon shown
+            if temporarilyVisible {
+                newValue = true
+                os_log("updateHiddenState - temporarilyVisible=true, keeping icon visible", log: Log.app)
+            } else {
+                // Hide the menu bar icon only when all checks are passing
+                let claimsPassed = Claims.global.all.allSatisfy { $0.checksPassed }
+                newValue = !claimsPassed
+                os_log("updateHiddenState - claimsPassed: %{public}@, calculated newValue: %{public}@",
+                       log: Log.app, claimsPassed ? "true" : "false", newValue ? "true" : "false")
+            }
         } else {
             // Always show the menu bar icon when setting is disabled
             newValue = true
@@ -255,6 +315,9 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
             if self.hideWhenNoFailures {
                 os_log("hideWhenNoFailures enabled - claimsPassed: %{public}@", log: Log.app, claimsPassed ? "true" : "false")
                 if claimsPassed {
+                    // Clear temporary visibility flag
+                    self.temporarilyVisible = false
+
                     // Schedule hiding after the green->gray transition (10 seconds)
                     os_log("Scheduling menu bar hide in 10 seconds", log: Log.app)
                     DispatchQueue.main.asyncAfter(deadline: .now() + 10) { [weak self] in
@@ -262,8 +325,10 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
                         self?.updateHiddenState()
                     }
                 } else {
-                    // Show immediately when checks fail
+                    // Show immediately when checks fail and cancel any auto-hide
                     os_log("Checks failed - calling updateHiddenState immediately", log: Log.app)
+                    self.temporarilyVisible = false
+                    self.cancelAutoHide()
                     self.updateHiddenState()
                 }
             } else {

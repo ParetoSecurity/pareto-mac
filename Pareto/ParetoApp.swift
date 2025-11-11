@@ -19,10 +19,10 @@ public enum AppWindowID {
 
 class AppDelegate: AppHandlers, NSApplicationDelegate {
     func applicationDidBecomeActive(_: Notification) {
-        // Menu bar visibility is now handled by:
-        // 1. Scheduled hide after checks complete and pass (10 second delay)
-        // 2. idleSink when state transitions to idle (only after checks have run)
         os_log("applicationDidBecomeActive called", log: Log.app)
+
+        // Show icon temporarily when app is activated
+        showTemporarily()
     }
 
     func moveToApplicationsFolderIfNeeded() {
@@ -158,6 +158,24 @@ class AppDelegate: AppHandlers, NSApplicationDelegate {
         }
     }
 
+    @objc func settingsWindowOpened(_ notification: Notification) {
+        if let window = notification.object as? NSWindow,
+           window.title.contains("Settings") || window.title.contains("Preferences") {
+            os_log("Settings window opened", log: Log.app)
+            isSettingsWindowOpen = true
+            cancelAutoHide() // Don't auto-hide while settings open
+        }
+    }
+
+    @objc func settingsWindowClosed(_ notification: Notification) {
+        if let window = notification.object as? NSWindow,
+           window.title.contains("Settings") || window.title.contains("Preferences") {
+            os_log("Settings window closed", log: Log.app)
+            isSettingsWindowOpen = false
+            scheduleAutoHide() // Resume auto-hide timer
+        }
+    }
+
     func applicationDidFinishLaunching(_: Notification) {
         #if DEBUG
             // disable any other code if in preview mode
@@ -186,6 +204,21 @@ class AppDelegate: AppHandlers, NSApplicationDelegate {
         #endif
 
         updater = AppUpdater(owner: "ParetoSecurity", repo: "pareto-mac")
+
+        // Watch for Settings window state
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(settingsWindowOpened),
+            name: NSWindow.didBecomeKeyNotification,
+            object: nil
+        )
+
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(settingsWindowClosed),
+            name: NSWindow.didResignKeyNotification,
+            object: nil
+        )
 
         runApp()
     }

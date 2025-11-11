@@ -143,7 +143,14 @@ struct StatusBarMenuView: View {
             .padding(.vertical, 2)
         }
         .frame(minWidth: 200)
-        // Refresh icon/menu state whenever the menu bar extra is opened
+        .onAppear {
+            // Cancel auto-hide while menu is open
+            appHandlers.cancelAutoHide()
+        }
+        .onDisappear {
+            // Resume auto-hide timer when menu closes
+            appHandlers.scheduleAutoHide()
+        }
     }
 
     // Extracted status line
