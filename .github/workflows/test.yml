@@ -61,7 +61,7 @@ jobs:
           security import $CERTIFICATE_PATH -P "$APPLICATION_CERTIFICATE_PASSPHRASE" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
           security list-keychain -d user -s $KEYCHAIN_PATH
       - name: Repository checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: Cache mint modules
         uses: actions/cache@v4
         env:
@@ -133,7 +133,7 @@ jobs:
           security import $CERTIFICATE_PATH -P "$APPLICATION_CERTIFICATE_PASSPHRASE" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
           security list-keychain -d user -s $KEYCHAIN_PATH
       - name: Repository checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: Cache mint modules
         uses: actions/cache@v4
         env:
@@ -237,7 +237,7 @@ jobs:
           security import $CERTIFICATE_PATH -P "$APPLICATION_CERTIFICATE_PASSPHRASE" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
           security list-keychain -d user -s $KEYCHAIN_PATH
       - name: Repository checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: Cache mint modules
         uses: actions/cache@v4
         env:
