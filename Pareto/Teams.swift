@@ -189,7 +189,7 @@ enum Team {
             os_log("Request body: %{public}@", log: Log.api, requestString)
         }
 
-        AF.request(
+        NetworkSession.shared.request(
             url,
             method: .post,
             parameters: request,
@@ -258,7 +258,10 @@ enum Team {
             os_log("Report body: %{public}@", log: Log.api, truncatedReport)
         }
 
-        return AF.request(
+        // Record that we're attempting to send a report
+        Defaults[.lastReportAttempt] = Date().currentTimeMs()
+
+        return NetworkSession.shared.request(
             url,
             method: .patch,
             parameters: report,
@@ -276,8 +279,10 @@ enum Team {
 
             if let error = response.error {
                 os_log("Update failed with error: %{public}@", log: Log.api, error.localizedDescription)
+                Defaults[.lastReportSuccess] = false
             } else {
                 os_log("Device report update successful", log: Log.api)
+                Defaults[.lastReportSuccess] = true
             }
 
             os_log("Full update response: %{public}@", log: Log.api, response.debugDescription)
@@ -293,7 +298,7 @@ enum Team {
         os_log("Fetching team settings for team ID: %{public}@", log: Log.api, Defaults[.teamID])
         os_log("Settings URL: %{public}@", log: Log.api, url)
 
-        AF.request(
+        NetworkSession.shared.request(
             url,
             method: .get,
             headers: headers

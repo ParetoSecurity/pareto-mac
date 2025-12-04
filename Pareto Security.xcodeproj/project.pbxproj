@@ -250,6 +250,20 @@
 		4FDDE1982D53BA3200D9E853 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FDDE1962D53BA3200D9E853 /* String.swift */; };
 		4FDDE1992D53BA3200D9E853 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FDDE1962D53BA3200D9E853 /* String.swift */; };
 		4FDDE19A2D53BA3200D9E853 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FDDE1962D53BA3200D9E853 /* String.swift */; };
+		4FDF3A902EE17E2E00CE9495 /* FailedRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FDF3A8D2EE17E2E00CE9495 /* FailedRequest.swift */; };
+		4FDF3A912EE17E2E00CE9495 /* NetworkSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FDF3A8F2EE17E2E00CE9495 /* NetworkSession.swift */; };
+		4FDF3A922EE17E2E00CE9495 /* HTTPFailureStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FDF3A8E2EE17E2E00CE9495 /* HTTPFailureStore.swift */; };
+		4FDF3A932EE17E2E00CE9495 /* FailedRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FDF3A8D2EE17E2E00CE9495 /* FailedRequest.swift */; };
+		4FDF3A942EE17E2E00CE9495 /* NetworkSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FDF3A8F2EE17E2E00CE9495 /* NetworkSession.swift */; };
+		4FDF3A952EE17E2E00CE9495 /* HTTPFailureStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FDF3A8E2EE17E2E00CE9495 /* HTTPFailureStore.swift */; };
+		4FDF3A9A2EE17E5800CE9495 /* HTTPFailureMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FDF3A972EE17E5800CE9495 /* HTTPFailureMonitor.swift */; };
+		4FDF3A9B2EE17E5800CE9495 /* CenteredContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FDF3A962EE17E5800CE9495 /* CenteredContent.swift */; };
+		4FDF3A9D2EE17E5800CE9495 /* HTTPFailureMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FDF3A972EE17E5800CE9495 /* HTTPFailureMonitor.swift */; };
+		4FDF3A9E2EE17E5800CE9495 /* CenteredContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FDF3A962EE17E5800CE9495 /* CenteredContent.swift */; };
+		4FDF3AA12EE17E6A00CE9495 /* CriticalIssuesMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FDF3AA02EE17E6A00CE9495 /* CriticalIssuesMenuView.swift */; };
+		4FDF3AA22EE17E6A00CE9495 /* CriticalIssuesDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FDF3A9F2EE17E6A00CE9495 /* CriticalIssuesDetailView.swift */; };
+		4FDF3AA32EE17E6A00CE9495 /* CriticalIssuesMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FDF3AA02EE17E6A00CE9495 /* CriticalIssuesMenuView.swift */; };
+		4FDF3AA42EE17E6A00CE9495 /* CriticalIssuesDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FDF3A9F2EE17E6A00CE9495 /* CriticalIssuesDetailView.swift */; };
 		4FE9C35A28B76117002C28FE /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FE9C35928B76117002C28FE /* User.swift */; };
 		4FE9C35B28B76117002C28FE /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FE9C35928B76117002C28FE /* User.swift */; };
 		4FEBA2F2269CD48F009B2469 /* ParetoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEBA2F1269CD48F009B2469 /* ParetoApp.swift */; };
@@ -456,6 +470,13 @@
 		4FD0A24026A024440070BED4 /* Gatekeeper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Gatekeeper.swift; sourceTree = "<group>"; };
 		4FDA93A22771D9FC00F9D8B4 /* Checks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Checks.swift; sourceTree = "<group>"; };
 		4FDDE1962D53BA3200D9E853 /* String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
+		4FDF3A8D2EE17E2E00CE9495 /* FailedRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FailedRequest.swift; sourceTree = "<group>"; };
+		4FDF3A8E2EE17E2E00CE9495 /* HTTPFailureStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPFailureStore.swift; sourceTree = "<group>"; };
+		4FDF3A8F2EE17E2E00CE9495 /* NetworkSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkSession.swift; sourceTree = "<group>"; };
+		4FDF3A962EE17E5800CE9495 /* CenteredContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CenteredContent.swift; sourceTree = "<group>"; };
+		4FDF3A972EE17E5800CE9495 /* HTTPFailureMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPFailureMonitor.swift; sourceTree = "<group>"; };
+		4FDF3A9F2EE17E6A00CE9495 /* CriticalIssuesDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CriticalIssuesDetailView.swift; sourceTree = "<group>"; };
+		4FDF3AA02EE17E6A00CE9495 /* CriticalIssuesMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CriticalIssuesMenuView.swift; sourceTree = "<group>"; };
 		4FE9C35928B76117002C28FE /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		4FEBA2EE269CD48F009B2469 /* Pareto Security.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Pareto Security.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4FEBA2F1269CD48F009B2469 /* ParetoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParetoApp.swift; sourceTree = "<group>"; };
@@ -566,6 +587,8 @@
 		4F103006269EDB82008C1E86 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				4FDF3A9F2EE17E6A00CE9495 /* CriticalIssuesDetailView.swift */,
+				4FDF3AA02EE17E6A00CE9495 /* CriticalIssuesMenuView.swift */,
 				4FAAD324277B154300AA5CEF /* Settings */,
 				4F38D8C6273AC57500671756 /* Welcome */,
 				4F41831627707B0800EBAE4A /* StatusBarIcon.swift */,
@@ -797,6 +820,11 @@
 		4FEBA2F0269CD48F009B2469 /* Pareto */ = {
 			isa = PBXGroup;
 			children = (
+				4FDF3A962EE17E5800CE9495 /* CenteredContent.swift */,
+				4FDF3A972EE17E5800CE9495 /* HTTPFailureMonitor.swift */,
+				4FDF3A8D2EE17E2E00CE9495 /* FailedRequest.swift */,
+				4FDF3A8E2EE17E2E00CE9495 /* HTTPFailureStore.swift */,
+				4FDF3A8F2EE17E2E00CE9495 /* NetworkSession.swift */,
 				4FAF5BBE2895573F004E9615 /* setappPublicKey.pem */,
 				4FFDC59F2821539F0092B7BF /* Models */,
 				4F10300A269F0568008C1E86 /* Checks */,
@@ -1172,6 +1200,8 @@
 				4F38D8CC273AC5F200671756 /* PermissionsView.swift in Sources */,
 				4FFDC5A528215A8F0092B7BF /* TimeMachineIsEncrypted.swift in Sources */,
 				4F8E688F2E68BE4D00CD82DF /* StatusBarMenuView.swift in Sources */,
+				4FDF3A9A2EE17E5800CE9495 /* HTTPFailureMonitor.swift in Sources */,
+				4FDF3A9B2EE17E5800CE9495 /* CenteredContent.swift in Sources */,
 				4F37E7122718122E00A2B254 /* NetworkHandler.swift in Sources */,
 				4F7ACFC32DE080AB003400E8 /* HelperTool.swift in Sources */,
 				4F37E7132718122E00A2B254 /* Log.swift in Sources */,
@@ -1195,6 +1225,8 @@
 				4F37E71D2718122E00A2B254 /* Defaults.swift in Sources */,
 				4F0CC3FA2E6F014200A0BE70 /* FullDiskAccessVerifier.swift in Sources */,
 				4FDDE1982D53BA3200D9E853 /* String.swift in Sources */,
+				4FDF3AA12EE17E6A00CE9495 /* CriticalIssuesMenuView.swift in Sources */,
+				4FDF3AA22EE17E6A00CE9495 /* CriticalIssuesDetailView.swift in Sources */,
 				4F37E71E2718122E00A2B254 /* Autologin.swift in Sources */,
 				4F38D8CF273AC62500671756 /* EndView.swift in Sources */,
 				4FA975702E4B31E4006C0D5A /* UpdateService.swift in Sources */,
@@ -1231,6 +1263,9 @@
 				4F1E6C622834F98A00C8AFAB /* SecureiTerm.swift in Sources */,
 				4F37E7222718122E00A2B254 /* PasswordtoUnlock.swift in Sources */,
 				4F37E7232718122E00A2B254 /* Bundle.swift in Sources */,
+				4FDF3A902EE17E2E00CE9495 /* FailedRequest.swift in Sources */,
+				4FDF3A912EE17E2E00CE9495 /* NetworkSession.swift in Sources */,
+				4FDF3A922EE17E2E00CE9495 /* HTTPFailureStore.swift in Sources */,
 				4F1E6C5C2834F37500C8AFAB /* AutoUpdateAppCheck.swift in Sources */,
 				4F37E7242718122E00A2B254 /* WelcomeView.swift in Sources */,
 				4F7ACFB02DE074FF003400E8 /* HelperProtocol.swift in Sources */,
@@ -1319,6 +1354,8 @@
 				4F38D8CB273AC5F200671756 /* PermissionsView.swift in Sources */,
 				4FFDC5A428215A8F0092B7BF /* TimeMachineIsEncrypted.swift in Sources */,
 				4F8E68902E68BE4D00CD82DF /* StatusBarMenuView.swift in Sources */,
+				4FDF3A9D2EE17E5800CE9495 /* HTTPFailureMonitor.swift in Sources */,
+				4FDF3A9E2EE17E5800CE9495 /* CenteredContent.swift in Sources */,
 				4F5B20C3270316DB0015642A /* NetworkHandler.swift in Sources */,
 				4F7ACFC42DE080AB003400E8 /* HelperTool.swift in Sources */,
 				4FB7C67D26AFF1AB00FB1C41 /* Log.swift in Sources */,
@@ -1342,6 +1379,8 @@
 				4F47221026B08A0E0071CE2A /* Defaults.swift in Sources */,
 				4F0CC3FB2E6F014200A0BE70 /* FullDiskAccessVerifier.swift in Sources */,
 				4FDDE1992D53BA3200D9E853 /* String.swift in Sources */,
+				4FDF3AA32EE17E6A00CE9495 /* CriticalIssuesMenuView.swift in Sources */,
+				4FDF3AA42EE17E6A00CE9495 /* CriticalIssuesDetailView.swift in Sources */,
 				4F868DD126A5C51C005B876E /* Autologin.swift in Sources */,
 				4F38D8CE273AC62500671756 /* EndView.swift in Sources */,
 				4FA975712E4B31E4006C0D5A /* UpdateService.swift in Sources */,
@@ -1378,6 +1417,9 @@
 				4F1E6C612834F98A00C8AFAB /* SecureiTerm.swift in Sources */,
 				4F84A94926CBE21300A1579D /* PasswordtoUnlock.swift in Sources */,
 				4F14487C26D8EDB000A5BA34 /* Bundle.swift in Sources */,
+				4FDF3A932EE17E2E00CE9495 /* FailedRequest.swift in Sources */,
+				4FDF3A942EE17E2E00CE9495 /* NetworkSession.swift in Sources */,
+				4FDF3A952EE17E2E00CE9495 /* HTTPFailureStore.swift in Sources */,
 				4F1E6C5B2834F37500C8AFAB /* AutoUpdateAppCheck.swift in Sources */,
 				4F8B01B226F4A6CB00EDE14B /* WelcomeView.swift in Sources */,
 				4F7ACFB12DE074FF003400E8 /* HelperProtocol.swift in Sources */,
