@@ -31,6 +31,9 @@ struct StatusBarMenuView: View {
         VStack(alignment: .leading, spacing: 0) {
             // Security checks (hidden while running)
             if !statusBarModel.isRunning {
+                // Critical issues section (if any network failures exist)
+                CriticalIssuesMenuView()
+
                 ForEach(claims.all, id: \.title) { claim in
                     if !claim.checks.isEmpty {
                         ClaimMenuView(claim: claim)

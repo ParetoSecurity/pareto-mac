@@ -15,6 +15,7 @@ import SwiftUI
 
 public enum AppWindowID {
     static let welcome = "welcome"
+    static let networkIssues = "networkIssues"
 }
 
 class AppDelegate: AppHandlers, NSApplicationDelegate {
@@ -323,6 +324,13 @@ struct Pareto: App {
         .defaultSize(width: 380, height: 520)
         .windowStyle(.hiddenTitleBar)
         .windowResizability(.contentSize)
+
+        // Network Issues window
+        WindowGroup("Network Issues", id: AppWindowID.networkIssues) {
+            CriticalIssuesDetailView()
+                .frame(minWidth: 600, minHeight: 400)
+        }
+        .defaultSize(width: 600, height: 500)
 
         // Settings window
         Settings {

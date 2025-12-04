@@ -44,8 +44,9 @@ class UpdateService {
         let configuration = URLSessionConfiguration.default
         configuration.requestCachePolicy = .reloadIgnoringLocalCacheData
 
-        // Create Alamofire session with custom configuration
-        session = Session(configuration: configuration)
+        // Create Alamofire session with custom configuration and failure monitor
+        let monitor = HTTPFailureMonitor()
+        session = Session(configuration: configuration, eventMonitors: [monitor])
     }
 
     func request<T: Decodable>(

@@ -15,6 +15,8 @@ struct TeamSettingsView: View {
     @Default(.machineUUID) var machineUUID
     @Default(.sendHWInfo) var sendHWInfo
     @Default(.showBeta) var showBeta
+    @Default(.lastReportAttempt) var lastReportAttempt
+    @Default(.lastReportSuccess) var lastReportSuccess
 
     @State private var debugLinkURL: String = ""
 
@@ -22,6 +24,7 @@ struct TeamSettingsView: View {
     @State private var alertData: InlineAlert?
 
     @Environment(\.openURL) private var openURL
+    @Environment(\.openWindow) private var openWindow
 
     private struct InlineAlert: Identifiable {
         let id = UUID()
@@ -64,6 +67,7 @@ struct TeamSettingsView: View {
         debugLinkURL = ""
     }
 
+
     var body: some View {
         Group {
             if !teamID.isEmpty {
@@ -82,6 +86,25 @@ struct TeamSettingsView: View {
                             .contextMenu {
                                 Button("Copy", action: copyIDsToPasteboard)
                             }
+                    }
+                    Section(footer: Text("Last Report").font(.caption)) {
+                        if lastReportAttempt > 0 {
+                            if lastReportSuccess {
+                                Text(Date.fromTimeStamp(timeStamp: lastReportAttempt).timeAgoDisplay())
+                                    .textSelection(.enabled)
+                            } else {
+                                Text("Failed \(Date.fromTimeStamp(timeStamp: lastReportAttempt).timeAgoDisplay())")
+                                    .foregroundColor(.red)
+                                    .textSelection(.enabled)
+                                Button("View details") {
+                                    openWindow(id: AppWindowID.networkIssues)
+                                }
+                                .font(.footnote)
+                            }
+                        } else {
+                            Text("Not sent yet")
+                                .foregroundStyle(.secondary)
+                        }
                     }
                     Section(footer: Text("When enabled, send model name and serial number.").font(.footnote)) {
                         if teamSettings.forceSerialPush {
@@ -113,6 +136,10 @@ struct TeamSettingsView: View {
                     Section {
                         HStack {
                             Button("Unlink this device") { Defaults.toOpenSource() }
+                            Button("Send report") {
+                                _ = Team.update(withReport: Report.now())
+                                alertData = InlineAlert(title: "Report Sent", message: "Device report has been sent to Pareto Cloud.")
+                            }
                             Spacer()
                             Link("Cloud Dashboard »", destination: AppInfo.teamsURL())
                         }

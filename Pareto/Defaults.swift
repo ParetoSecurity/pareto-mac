@@ -38,6 +38,8 @@ extension Defaults.Keys {
     static let sendHWInfo = Key<Bool>("sendHWInfo", default: false, suite: extensionDefaults)
     static let lastHWAsk = Key<Int>("lastHWAsk", default: 0, suite: extensionDefaults)
     static let lastDeviceRemovedAlert = Key<Int>("lastDeviceRemovedAlert", default: 0, suite: extensionDefaults)
+    static let lastReportAttempt = Key<Int>("lastReportAttempt", default: 0, suite: extensionDefaults)
+    static let lastReportSuccess = Key<Bool>("lastReportSuccess", default: true, suite: extensionDefaults)
 
     // Updates
     static let updateNag = Key<Bool>("updateNag", default: false, suite: extensionDefaults)
