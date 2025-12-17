@@ -20,31 +20,33 @@ class PasswordManager: ParetoCheck {
     // Centralized password manager definitions
     private enum PasswordManagerData {
         static let runningAppNames = [
-            "1Password",
-            "1Password 8",
             "1Password 7",
+            "1Password 8",
+            "1Password",
             "Bitwarden",
             "Dashlane",
-            "KeePassXC",
-            "KeePassX",
-            "KeePassium",
-            "LastPass",
-            "RoboForm",
             "Enpass",
-            "NordPass",
+            "KeePassium",
+            "KeePassX",
+            "KeePassXC",
             "Keeper Password Manager",
             "Keeper",
+            "LastPass",
+            "NordPass",
+            "RoboForm",
+            "Strongbox",
         ]
 
         static let installedAppNames = [
-            "1Password.app",
-            "1Password 8.app",
             "1Password 7.app",
+            "1Password 8.app",
+            "1Password.app",
             "Bitwarden.app",
             "Dashlane.app",
-            "KeePassXC.app",
-            "KeePassX.app",
             "KeePassium.app",
+            "KeePassX.app",
+            "KeePassXC.app",
+            "Strongbox.app",
         ]
 
         static let browserExtensions = [
@@ -58,16 +60,17 @@ class PasswordManager: ParetoCheck {
         ]
 
         static let browsers = [
-            "Google/Chrome/Default/": "Chrome",
-            "BraveSoftware/Brave-Browser/Default/": "Brave",
-            "Microsoft Edge/Default/": "Edge",
             "Arc/User Data/Default/": "Arc",
+            "BraveSoftware/Brave-Browser/Default/": "Brave",
+            "Google/Chrome/Default/": "Chrome",
+            "Microsoft Edge/Default/": "Edge",
         ]
 
         static let searchPaths = [
             "/Applications",
-            "/System/Applications",
+            "/Applications/Nix Apps";
             "/Applications/Setapp",
+            "/System/Applications",
             NSString(string: "~/Applications").expandingTildeInPath,
         ]
     }
