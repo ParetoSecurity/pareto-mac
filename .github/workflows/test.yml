@@ -169,7 +169,7 @@ jobs:
       - name: Compress app for storage
         run: ditto -V -c -k --keepParent Export/Pareto\ Security.app ParetoSecurity.app.zip
       - name: Upload App to Artifacts
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: ParetoSecurity.app
           path: ParetoSecurity.app.zip
@@ -275,7 +275,7 @@ jobs:
         run: ditto -V -c -k --keepParent SetAppExport/Pareto\ Security.app ParetoSecuritySetApp.app.zip
 
       - name: Upload App to Artifacts
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: ParetoSecuritySetApp.app
           path: ParetoSecuritySetApp.app.zip
