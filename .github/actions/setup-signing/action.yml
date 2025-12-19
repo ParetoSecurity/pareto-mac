@@ -1,0 +1,79 @@
+name: "Setup Code Signing"
+description: "Import Apple certificates and configure keychain for code signing"
+
+inputs:
+  development-certificate:
+    description: "Base64-encoded development certificate (.p12)"
+    required: true
+  development-passphrase:
+    description: "Passphrase for development certificate"
+    required: true
+  application-certificate:
+    description: "Base64-encoded Developer ID Application certificate (.p12)"
+    required: true
+  application-passphrase:
+    description: "Passphrase for application certificate"
+    required: true
+  release-certificate:
+    description: "Base64-encoded release certificate (.p12)"
+    required: false
+    default: ""
+  release-passphrase:
+    description: "Passphrase for release certificate"
+    required: false
+    default: ""
+  keychain-password:
+    description: "Password for the temporary keychain"
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Create keychain
+      shell: bash
+      env:
+        KEYCHAIN_PASSWORD: ${{ inputs.keychain-password }}
+      run: |
+        KEYCHAIN_PATH="$RUNNER_TEMP/app-signing.keychain-db"
+
+        # Create and configure keychain
+        security create-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH" 2>/dev/null || true
+        security set-keychain-settings -lut 21600 "$KEYCHAIN_PATH"
+        security unlock-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+        security list-keychain -d user -s "$KEYCHAIN_PATH"
+
+        echo "KEYCHAIN_PATH=$KEYCHAIN_PATH" >> "$GITHUB_ENV"
+
+    - name: Import Development Certificate
+      shell: bash
+      env:
+        CERTIFICATE_DATA: ${{ inputs.development-certificate }}
+        CERTIFICATE_PASSPHRASE: ${{ inputs.development-passphrase }}
+      run: |
+        CERT_PATH="$RUNNER_TEMP/development.p12"
+        echo -n "$CERTIFICATE_DATA" | base64 --decode > "$CERT_PATH"
+        security import "$CERT_PATH" -P "$CERTIFICATE_PASSPHRASE" -A -t cert -f pkcs12 -k "$KEYCHAIN_PATH"
+        rm -f "$CERT_PATH"
+
+    - name: Import Developer ID Application Certificate
+      shell: bash
+      env:
+        CERTIFICATE_DATA: ${{ inputs.application-certificate }}
+        CERTIFICATE_PASSPHRASE: ${{ inputs.application-passphrase }}
+      run: |
+        CERT_PATH="$RUNNER_TEMP/application.p12"
+        echo -n "$CERTIFICATE_DATA" | base64 --decode > "$CERT_PATH"
+        security import "$CERT_PATH" -P "$CERTIFICATE_PASSPHRASE" -A -t cert -f pkcs12 -k "$KEYCHAIN_PATH"
+        rm -f "$CERT_PATH"
+
+    - name: Import Release Certificate
+      if: inputs.release-certificate != ''
+      shell: bash
+      env:
+        CERTIFICATE_DATA: ${{ inputs.release-certificate }}
+        CERTIFICATE_PASSPHRASE: ${{ inputs.release-passphrase }}
+      run: |
+        CERT_PATH="$RUNNER_TEMP/release.p12"
+        echo -n "$CERTIFICATE_DATA" | base64 --decode > "$CERT_PATH"
+        security import "$CERT_PATH" -P "$CERTIFICATE_PASSPHRASE" -A -t cert -f pkcs12 -k "$KEYCHAIN_PATH"
+        rm -f "$CERT_PATH"

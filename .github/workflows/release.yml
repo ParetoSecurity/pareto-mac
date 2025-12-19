@@ -5,336 +5,238 @@ on:
     tags:
       - "*"
 
+# Prevent duplicate releases
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+# Minimal permissions at workflow level
+permissions:
+  contents: read
+
+env:
+  XCODE_VERSION: "26"
+
 jobs:
   release:
-    name: Release and Archive Native
+    name: Release Native
     runs-on: macos-latest
-    timeout-minutes: 30
+    timeout-minutes: 45
     permissions:
-      issues: write
       contents: write
       deployments: write
     steps:
-      - uses: maxim-lobanov/setup-xcode@v1
-        with:
-          xcode-version: "26"
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - name: "Import Certificate: Development"
-        env:
-          DEVELOPMENT_CERTIFICATE_DATA: ${{ secrets.DEVELOPMENT_CERTIFICATE_DATA }}
-          DEVELOPMENT_CERTIFICATE_PASSPHRASE: ${{ secrets.DEVELOPMENT_CERTIFICATE_PASSPHRASE }}
-          KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
-        run: |
-          # create variables
-          CERTIFICATE_PATH=$RUNNER_TEMP/dev_certificate.p12
-          KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
-
-          # import certificate and provisioning profile from secrets
-          echo -n "$DEVELOPMENT_CERTIFICATE_DATA" | base64 --decode > $CERTIFICATE_PATH
-
-          # create temporary keychain
-          security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH || true
-          security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
-          security unlock-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
-
-          # import certificate to keychain
-          security import $CERTIFICATE_PATH -P "$DEVELOPMENT_CERTIFICATE_PASSPHRASE" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
-          security list-keychain -d user -s $KEYCHAIN_PATH
-      - name: "Import Certificate: Release"
-        env:
-          RELEASE_CERTIFICATE_DATA: ${{ secrets.RELEASE_CERTIFICATE_DATA }}
-          RELEASE_CERTIFICATE_PASSPHRASE: ${{ secrets.RELEASE_CERTIFICATE_PASSPHRASE }}
-          KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
-        run: |
-          # create variables
-          CERTIFICATE_PATH=$RUNNER_TEMP/dev_certificate.p12
-          KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
-
-          # import certificate and provisioning profile from secrets
-          echo -n "$RELEASE_CERTIFICATE_DATA" | base64 --decode > $CERTIFICATE_PATH
-
-          # create temporary keychain
-          security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH || true
-          security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
-          security unlock-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
-
-          # import certificate to keychain
-          security import $CERTIFICATE_PATH -P "$RELEASE_CERTIFICATE_PASSPHRASE" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
-          security list-keychain -d user -s $KEYCHAIN_PATH
-      - name: "Import Certificate: Developer ID Application"
-        env:
-          APPLICATION_CERTIFICATE_DATA: ${{ secrets.APPLICATION_CERTIFICATE_DATA }}
-          APPLICATION_CERTIFICATE_PASSPHRASE: ${{ secrets.APPLICATION_CERTIFICATE_PASSPHRASE }}
-          KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
-        run: |
-          # create variables
-          CERTIFICATE_PATH=$RUNNER_TEMP/dev_certificate.p12
-          KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
-
-          # import certificate and provisioning profile from secrets
-          echo -n "$APPLICATION_CERTIFICATE_DATA" | base64 --decode > $CERTIFICATE_PATH
-
-          # create temporary keychain
-          security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH || true
-          security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
-          security unlock-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
-
-          # import certificate to keychain
-          security import $CERTIFICATE_PATH -P "$APPLICATION_CERTIFICATE_PASSPHRASE" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
-          security list-keychain -d user -s $KEYCHAIN_PATH
-          
-      - name: Repository checkout
-        uses: actions/checkout@v6
-      - name: Expose release info to actions
+      - name: Get release tag
         id: release
-        run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
-      - name: Cache mint modules
-        uses: actions/cache@v5
-        env:
-          cache-name: cache-mint-v2
+        run: echo "tag=${GITHUB_REF#refs/tags/}" >> "$GITHUB_OUTPUT"
+
+      - name: Setup build environment
+        uses: ./.github/actions/setup-build-env
         with:
-          path: ~/.mint
-          key: ${{ runner.os }}-mint-${{ env.cache-name }}-${{ hashFiles('Mintfile') }}
-          restore-keys: |
-            ${{ runner.os }}-mint-${{ env.cache-name }}-
-      - name: Install mint and packages
-        run: brew install mint && mint bootstrap
-      - name: Cache DerivedData
-        uses: actions/cache@v5
-        env:
-          cache-name: release-derived-data-v1
+          xcode-version: ${{ env.XCODE_VERSION }}
+          derived-data-key: release
+
+      - name: Setup code signing
+        uses: ./.github/actions/setup-signing
         with:
-          path: ~/Library/Developer/Xcode/DerivedData
-          key: ${{ runner.os }}-${{ env.cache-name }}
-          restore-keys: |
-            ${{ runner.os }}-${{ env.cache-name }}-
-      - name: Cache SPM modules
-        uses: actions/cache@v5
+          development-certificate: ${{ secrets.DEVELOPMENT_CERTIFICATE_DATA }}
+          development-passphrase: ${{ secrets.DEVELOPMENT_CERTIFICATE_PASSPHRASE }}
+          application-certificate: ${{ secrets.APPLICATION_CERTIFICATE_DATA }}
+          application-passphrase: ${{ secrets.APPLICATION_CERTIFICATE_PASSPHRASE }}
+          release-certificate: ${{ secrets.RELEASE_CERTIFICATE_DATA }}
+          release-passphrase: ${{ secrets.RELEASE_CERTIFICATE_PASSPHRASE }}
+          keychain-password: ${{ secrets.KEYCHAIN_PASSWORD }}
+
+      - name: Patch version from tag
         env:
-          cache-name: cache-spm-v2
-        with:
-          path: SourcePackages
-          key: ${{ runner.os }}-spm-${{ env.cache-name }}-${{ hashFiles('Pareto Security.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved') }}
-          restore-keys: |
-            ${{ runner.os }}-spm-${{ env.cache-name }}-
-      - name: Patch version from release
+          VERSION: ${{ steps.release.outputs.tag }}
         run: |
-          sed -E -i '' 's/MARKETING_VERSION = .*;/MARKETING_VERSION = ${{ steps.release.outputs.tag }};/g' Pareto\ Security.xcodeproj/project.pbxproj
-      - name: "Archive for dist"
+          sed -E -i '' "s/MARKETING_VERSION = .*;/MARKETING_VERSION = ${VERSION};/g" "Pareto Security.xcodeproj/project.pbxproj"
+
+      - name: Archive for distribution
         run: make archive-release
 
-      - name: Compress app for storage
-        run: ditto -V -c -k --keepParent Export/Pareto\ Security.app ParetoSecurity.app.zip
-      
-      - name: Upload App to Artifacts
-        uses: actions/upload-artifact@v6
+      - name: Compress app
+        run: ditto -c -k --keepParent "Export/Pareto Security.app" ParetoSecurity.app.zip
+
+      - name: Upload app artifact
+        uses: actions/upload-artifact@v4
         with:
           name: ParetoSecurity.app
           path: ParetoSecurity.app.zip
+          retention-days: 90
 
-      - name: Build dmg for release
+      - name: Build DMG
         run: npm install --global create-dmg && make dmg
 
-      - name: "Notarize Release Build"
-        run: xcrun notarytool submit ParetoSecurity.dmg --password ${{ secrets.NOTARIZATION_PASSWORD }} --apple-id ${{ secrets.NOTARIZATION_USERNAME }} --team-id PM784W7B8X --progress --wait
+      - name: Notarize release build
+        env:
+          NOTARIZATION_PASSWORD: ${{ secrets.NOTARIZATION_PASSWORD }}
+          NOTARIZATION_USERNAME: ${{ secrets.NOTARIZATION_USERNAME }}
+        run: |
+          xcrun notarytool submit ParetoSecurity.dmg \
+            --password "$NOTARIZATION_PASSWORD" \
+            --apple-id "$NOTARIZATION_USERNAME" \
+            --team-id PM784W7B8X \
+            --progress \
+            --wait
 
-      - name: Upload DMG to Artifacts
-        uses: actions/upload-artifact@v6
+      - name: Upload DMG artifact
+        uses: actions/upload-artifact@v4
         with:
           name: ParetoSecurity.dmg
           path: ParetoSecurity.dmg
+          retention-days: 90
 
-      - name: "Staple Release DMG"
-        run: for i in {1..3}; do xcrun stapler staple ParetoSecurity.dmg && break || sleep 15; done
+      - name: Staple DMG
+        run: |
+          for i in {1..3}; do
+            xcrun stapler staple ParetoSecurity.dmg && break || sleep 15
+          done
 
       - name: Release DMG
         uses: softprops/action-gh-release@v2
         with:
           files: ParetoSecurity.dmg
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Cleanup
-        run: rm -f ParetoSecurity.app.zip
-
-      - name: Compress app for release
-        run: ditto -V -c -k --keepParent Export/Pareto\ Security.app ParetoSecurity.app.zip
+      - name: Prepare app for release
+        run: |
+          rm -f ParetoSecurity.app.zip
+          ditto -c -k --keepParent "Export/Pareto Security.app" ParetoSecurity.app.zip
 
       - name: Release app
         uses: softprops/action-gh-release@v2
         with:
           files: ParetoSecurity.app.zip
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Generate checks info
-        run: Export/Pareto\ Security.app/Contents/MacOS/Pareto\ Security -export > checks.json
+      - name: Generate checks manifest
+        run: '"Export/Pareto Security.app/Contents/MacOS/Pareto Security" -export > checks.json'
 
-      - name: Upload checks info
+      - name: Release checks manifest
         uses: softprops/action-gh-release@v2
         with:
           files: checks.json
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Publish hashes
-        run: |  
-          echo "## Native" >> $GITHUB_STEP_SUMMARY
-          openssl md5 Export/Pareto\ Security.app/Contents/MacOS/Pareto\ Security >> $GITHUB_STEP_SUMMARY
-          openssl sha1 Export/Pareto\ Security.app/Contents/MacOS/Pareto\ Security >> $GITHUB_STEP_SUMMARY
-          openssl sha256 Export/Pareto\ Security.app/Contents/MacOS/Pareto\ Security >> $GITHUB_STEP_SUMMARY
-      - name: Install sentry-cli
+
+      - name: Publish build hashes
+        run: |
+          {
+            echo "## Native Release"
+            echo '```'
+            openssl dgst -md5 "Export/Pareto Security.app/Contents/MacOS/Pareto Security"
+            openssl dgst -sha1 "Export/Pareto Security.app/Contents/MacOS/Pareto Security"
+            openssl dgst -sha256 "Export/Pareto Security.app/Contents/MacOS/Pareto Security"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Install Sentry CLI
         run: brew install getsentry/tools/sentry-cli
-      - name: "Upload debug symbols"
-        run: make sentry-debug-upload
+
+      - name: Upload debug symbols
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+        run: make sentry-debug-upload
+
+      - name: Cleanup keychain
+        if: always()
+        run: security delete-keychain "$KEYCHAIN_PATH" 2>/dev/null || true
+
   release-setapp:
-    name: Release and Archive Setapp
+    name: Release SetApp
     runs-on: macos-latest
-    timeout-minutes: 30
+    timeout-minutes: 45
     permissions:
-      issues: write
       contents: write
       deployments: write
     steps:
-      - uses: maxim-lobanov/setup-xcode@v1
-        with:
-          xcode-version: "26"
-      - name: Install sentry-cli
-        run: brew install getsentry/tools/sentry-cli
-      - name: "Import Certificate: Development"
-        env:
-          DEVELOPMENT_CERTIFICATE_DATA: ${{ secrets.DEVELOPMENT_CERTIFICATE_DATA }}
-          DEVELOPMENT_CERTIFICATE_PASSPHRASE: ${{ secrets.DEVELOPMENT_CERTIFICATE_PASSPHRASE }}
-          KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
-        run: |
-          # create variables
-          CERTIFICATE_PATH=$RUNNER_TEMP/dev_certificate.p12
-          KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-          # import certificate and provisioning profile from secrets
-          echo -n "$DEVELOPMENT_CERTIFICATE_DATA" | base64 --decode > $CERTIFICATE_PATH
-
-          # create temporary keychain
-          security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH || true
-          security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
-          security unlock-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
-
-          # import certificate to keychain
-          security import $CERTIFICATE_PATH -P "$DEVELOPMENT_CERTIFICATE_PASSPHRASE" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
-          security list-keychain -d user -s $KEYCHAIN_PATH
-      - name: "Import Certificate: Release"
-        env:
-          RELEASE_CERTIFICATE_DATA: ${{ secrets.RELEASE_CERTIFICATE_DATA }}
-          RELEASE_CERTIFICATE_PASSPHRASE: ${{ secrets.RELEASE_CERTIFICATE_PASSPHRASE }}
-          KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
-        run: |
-          # create variables
-          CERTIFICATE_PATH=$RUNNER_TEMP/dev_certificate.p12
-          KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
-
-          # import certificate and provisioning profile from secrets
-          echo -n "$RELEASE_CERTIFICATE_DATA" | base64 --decode > $CERTIFICATE_PATH
-
-          # create temporary keychain
-          security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH || true
-          security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
-          security unlock-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
-
-          # import certificate to keychain
-          security import $CERTIFICATE_PATH -P "$RELEASE_CERTIFICATE_PASSPHRASE" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
-          security list-keychain -d user -s $KEYCHAIN_PATH
-      - name: "Import Certificate: Developer ID Application"
-        env:
-          APPLICATION_CERTIFICATE_DATA: ${{ secrets.APPLICATION_CERTIFICATE_DATA }}
-          APPLICATION_CERTIFICATE_PASSPHRASE: ${{ secrets.APPLICATION_CERTIFICATE_PASSPHRASE }}
-          KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
-        run: |
-          # create variables
-          CERTIFICATE_PATH=$RUNNER_TEMP/dev_certificate.p12
-          KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
-
-          # import certificate and provisioning profile from secrets
-          echo -n "$APPLICATION_CERTIFICATE_DATA" | base64 --decode > $CERTIFICATE_PATH
-
-          # create temporary keychain
-          security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH || true
-          security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
-          security unlock-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
-
-          # import certificate to keychain
-          security import $CERTIFICATE_PATH -P "$APPLICATION_CERTIFICATE_PASSPHRASE" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
-          security list-keychain -d user -s $KEYCHAIN_PATH
-          
-      - name: Repository checkout
-        uses: actions/checkout@v6
-      - name: Expose release info to actions
+      - name: Get release tag
         id: release
-        run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
-      - name: Cache mint modules
-        uses: actions/cache@v5
-        env:
-          cache-name: cache-mint-v2
+        run: echo "tag=${GITHUB_REF#refs/tags/}" >> "$GITHUB_OUTPUT"
+
+      - name: Setup build environment
+        uses: ./.github/actions/setup-build-env
         with:
-          path: ~/.mint
-          key: ${{ runner.os }}-mint-${{ env.cache-name }}-${{ hashFiles('Mintfile') }}
-          restore-keys: |
-            ${{ runner.os }}-mint-${{ env.cache-name }}-
-      - name: Install mint and packages
-        run: brew install mint && mint bootstrap
-      - name: Cache DerivedData
-        uses: actions/cache@v5
-        env:
-          cache-name: release-derived-data-v1
+          xcode-version: ${{ env.XCODE_VERSION }}
+          derived-data-key: release-setapp
+
+      - name: Setup code signing
+        uses: ./.github/actions/setup-signing
         with:
-          path: ~/Library/Developer/Xcode/DerivedData
-          key: ${{ runner.os }}-${{ env.cache-name }}
-          restore-keys: |
-            ${{ runner.os }}-${{ env.cache-name }}-
-      - name: Cache SPM modules
-        uses: actions/cache@v5
+          development-certificate: ${{ secrets.DEVELOPMENT_CERTIFICATE_DATA }}
+          development-passphrase: ${{ secrets.DEVELOPMENT_CERTIFICATE_PASSPHRASE }}
+          application-certificate: ${{ secrets.APPLICATION_CERTIFICATE_DATA }}
+          application-passphrase: ${{ secrets.APPLICATION_CERTIFICATE_PASSPHRASE }}
+          release-certificate: ${{ secrets.RELEASE_CERTIFICATE_DATA }}
+          release-passphrase: ${{ secrets.RELEASE_CERTIFICATE_PASSPHRASE }}
+          keychain-password: ${{ secrets.KEYCHAIN_PASSWORD }}
+
+      - name: Install Sentry CLI
+        run: brew install getsentry/tools/sentry-cli
+
+      - name: Patch version from tag
         env:
-          cache-name: cache-spm-v2
-        with:
-          path: SourcePackages
-          key: ${{ runner.os }}-spm-${{ env.cache-name }}-${{ hashFiles('Pareto Security.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved') }}
-          restore-keys: |
-            ${{ runner.os }}-spm-${{ env.cache-name }}-
-      - name: Patch version from release
+          VERSION: ${{ steps.release.outputs.tag }}
         run: |
-          sed -E -i '' 's/MARKETING_VERSION = .*;/MARKETING_VERSION = ${{ steps.release.outputs.tag }};/g' Pareto\ Security.xcodeproj/project.pbxproj
-      - name: "Archive for dist"
+          sed -E -i '' "s/MARKETING_VERSION = .*;/MARKETING_VERSION = ${VERSION};/g" "Pareto Security.xcodeproj/project.pbxproj"
+
+      - name: Archive for distribution
         run: make archive-release-setapp
 
-      - name: "Upload debug symbols"
-        run: make sentry-debug-upload-setapp
+      - name: Upload debug symbols
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+        run: make sentry-debug-upload-setapp
 
       - name: Compress app for notarization
-        run: ditto -V -c -k --keepParent SetAppExport/Pareto\ Security.app ParetoSecurity.app.zip
+        run: ditto -c -k --keepParent "SetAppExport/Pareto Security.app" ParetoSecurity.app.zip
 
-      - name: "Notarize Release Build"
-        run: xcrun notarytool submit ParetoSecurity.app.zip --password ${{ secrets.NOTARIZATION_PASSWORD }} --apple-id ${{ secrets.NOTARIZATION_USERNAME }} --team-id PM784W7B8X --progress --wait
+      - name: Notarize release build
+        env:
+          NOTARIZATION_PASSWORD: ${{ secrets.NOTARIZATION_PASSWORD }}
+          NOTARIZATION_USERNAME: ${{ secrets.NOTARIZATION_USERNAME }}
+        run: |
+          xcrun notarytool submit ParetoSecurity.app.zip \
+            --password "$NOTARIZATION_PASSWORD" \
+            --apple-id "$NOTARIZATION_USERNAME" \
+            --team-id PM784W7B8X \
+            --progress \
+            --wait
 
-      - name: "Staple Release App"
-        run: for i in {1..3}; do xcrun stapler staple SetAppExport/Pareto\ Security.app && break || sleep 15; done
+      - name: Staple app
+        run: |
+          for i in {1..3}; do
+            xcrun stapler staple "SetAppExport/Pareto Security.app" && break || sleep 15
+          done
 
       - name: Compress app for storage
-        run: ditto -V -c -k --keepParent SetAppExport/Pareto\ Security.app ParetoSecuritySetApp.app.zip
+        run: ditto -c -k --keepParent "SetAppExport/Pareto Security.app" ParetoSecuritySetApp.app.zip
 
-      - name: "Attach AppIcon for SetApp"
+      - name: Attach AppIcon for SetApp
         run: make build-release-setapp
 
-      - name: Upload App to Artifacts
-        uses: actions/upload-artifact@v6
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
         with:
           name: ParetoSecuritySetApp.app
           path: ParetoSecuritySetApp.app.zip
+          retention-days: 90
 
-      - name: Publish hashes
-        run: |  
-          echo "## Setapp" >> $GITHUB_STEP_SUMMARY
-          openssl md5 SetAppExport/Pareto\ Security.app/Contents/MacOS/Pareto\ Security\ SetApp >> $GITHUB_STEP_SUMMARY
-          openssl sha1 SetAppExport/Pareto\ Security.app/Contents/MacOS/Pareto\ Security\ SetApp >> $GITHUB_STEP_SUMMARY
-          openssl sha256 SetAppExport/Pareto\ Security.app/Contents/MacOS/Pareto\ Security\ SetApp >> $GITHUB_STEP_SUMMARY
+      - name: Publish build hashes
+        run: |
+          {
+            echo "## SetApp Release"
+            echo '```'
+            openssl dgst -md5 "SetAppExport/Pareto Security.app/Contents/MacOS/Pareto Security SetApp"
+            openssl dgst -sha1 "SetAppExport/Pareto Security.app/Contents/MacOS/Pareto Security SetApp"
+            openssl dgst -sha256 "SetAppExport/Pareto Security.app/Contents/MacOS/Pareto Security SetApp"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Cleanup keychain
+        if: always()
+        run: security delete-keychain "$KEYCHAIN_PATH" 2>/dev/null || true
