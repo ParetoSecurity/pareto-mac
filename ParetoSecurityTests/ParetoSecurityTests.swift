@@ -26,15 +26,23 @@ class ParetoSecurityTests: XCTestCase {
         XCTAssertTrue(AppInfo.bugReportURL().absoluteString.contains("paretosecurity.com"))
     }
 
+    @MainActor
     func testSnooze() throws {
-        let bar = StatusBarController()
-        bar.snoozeOneDay()
-        XCTAssertGreaterThan(bar.snoozeTime, 0)
-        bar.snoozeOneHour()
-        XCTAssertGreaterThan(bar.snoozeTime, 3600)
-        bar.snoozeOneWeek()
-        XCTAssertGreaterThan(bar.snoozeTime, 3600 * 24 * 7)
-        bar.unsnooze()
-        XCTAssertEqual(bar.snoozeTime, 0)
+        let handlers = AppHandlers()
+
+        // Reset snooze before testing
+        Defaults[.snoozeTime] = 0
+
+        handlers.snoozeOneDay()
+        XCTAssertGreaterThan(Defaults[.snoozeTime], 0)
+
+        handlers.snoozeOneHour()
+        XCTAssertGreaterThan(Defaults[.snoozeTime], 0)
+
+        handlers.snoozeOneWeek()
+        XCTAssertGreaterThan(Defaults[.snoozeTime], 0)
+
+        handlers.unsnooze()
+        XCTAssertEqual(Defaults[.snoozeTime], 0)
     }
 }
