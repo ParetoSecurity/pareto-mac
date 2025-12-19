@@ -103,9 +103,14 @@ class UpdateService {
             .responseData { response in
                 // Check for ignorable status codes (503, 403) before validation
                 if let statusCode = response.response?.statusCode {
-                    if statusCode == 503 || statusCode == 403 {
-                        os_log("Ignoring HTTP %{public}d response for API request", statusCode)
+                    if statusCode == 503 {
+                        os_log("Ignoring HTTP %{public}d response for API request (service temporarily unavailable)", statusCode)
                         result = .failure(.networkError("HTTP \(statusCode) - temporarily unavailable"))
+                        semaphore.signal()
+                        return
+                    } else if statusCode == 403 {
+                        os_log("Ignoring HTTP %{public}d response for API request (access forbidden)", statusCode)
+                        result = .failure(.networkError("HTTP \(statusCode) - access forbidden"))
                         semaphore.signal()
                         return
                     }
