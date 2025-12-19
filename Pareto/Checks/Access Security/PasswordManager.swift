@@ -68,7 +68,7 @@ class PasswordManager: ParetoCheck {
 
         static let searchPaths = [
             "/Applications",
-            "/Applications/Nix Apps";
+            "/Applications/Nix Apps",
             "/Applications/Setapp",
             "/System/Applications",
             NSString(string: "~/Applications").expandingTildeInPath,

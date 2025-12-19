@@ -160,7 +160,8 @@ class AppDelegate: AppHandlers, NSApplicationDelegate {
 
     @objc func settingsWindowOpened(_ notification: Notification) {
         if let window = notification.object as? NSWindow,
-           window.title.contains("Settings") || window.title.contains("Preferences") {
+           window.title.contains("Settings") || window.title.contains("Preferences")
+        {
             os_log("Settings window opened", log: Log.app)
             isSettingsWindowOpen = true
             cancelAutoHide() // Don't auto-hide while settings open
@@ -169,7 +170,8 @@ class AppDelegate: AppHandlers, NSApplicationDelegate {
 
     @objc func settingsWindowClosed(_ notification: Notification) {
         if let window = notification.object as? NSWindow,
-           window.title.contains("Settings") || window.title.contains("Preferences") {
+           window.title.contains("Settings") || window.title.contains("Preferences")
+        {
             os_log("Settings window closed", log: Log.app)
             isSettingsWindowOpen = false
             scheduleAutoHide() // Resume auto-hide timer

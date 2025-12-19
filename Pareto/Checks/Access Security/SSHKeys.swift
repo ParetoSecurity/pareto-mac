@@ -66,7 +66,7 @@ class SSHKeysCheck: SSHCheck {
         if !hasPrerequites() {
             return true
         }
-        
+
         return keysWithNoPassword().isEmpty
     }
 }

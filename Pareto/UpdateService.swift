@@ -100,8 +100,28 @@ class UpdateService {
         var result: Result<T, APIError>?
 
         session.request(request)
-            .validate()
             .responseData { response in
+                // Check for ignorable status codes (503, 403) before validation
+                if let statusCode = response.response?.statusCode {
+                    if statusCode == 503 || statusCode == 403 {
+                        os_log("Ignoring HTTP %{public}d response for API request", statusCode)
+                        result = .failure(.networkError("HTTP \(statusCode) - temporarily unavailable"))
+                        semaphore.signal()
+                        return
+                    }
+                }
+
+                // Validate response for other status codes
+                guard let httpResponse = response.response,
+                      (200 ... 299).contains(httpResponse.statusCode)
+                else {
+                    let statusCode = response.response?.statusCode ?? 0
+                    os_log("Sync API request failed with status: %{public}d", statusCode)
+                    result = .failure(.networkError("HTTP \(statusCode)"))
+                    semaphore.signal()
+                    return
+                }
+
                 switch response.result {
                 case let .success(data):
                     do {

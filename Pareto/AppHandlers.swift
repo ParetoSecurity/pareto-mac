@@ -346,7 +346,7 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
                 // Only cancel if this work item is still current
                 let isCurrentWorkItem = self.currentWorkItemID.withLock { $0 == workItemID }
 
-                if self.statusBarModel.isRunning && isCurrentWorkItem {
+                if self.statusBarModel.isRunning, isCurrentWorkItem {
                     workItem.cancel()
                     os_log("Checks took more than 90s to finish, cancelling workItemID=%{public}d", log: Log.app, workItemID)
                     self.setRunning(false)

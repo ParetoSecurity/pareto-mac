@@ -66,7 +66,7 @@ class FirewallCheck: ParetoCheck {
         }
 
         if #available(macOS 15, *) {
-            if requiresHelper && !HelperToolUtilities.isHelperInstalled() {
+            if requiresHelper, !HelperToolUtilities.isHelperInstalled() {
                 let helperPath = "/Library/PrivilegedHelperTools/co.niteo.ParetoSecurityHelper"
                 let helperExists = FileManager.default.fileExists(atPath: helperPath)
 
