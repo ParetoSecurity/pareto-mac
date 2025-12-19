@@ -47,7 +47,7 @@ jobs:
 
       - name: Cleanup keychain
         if: always()
-        run: security delete-keychain "$KEYCHAIN_PATH" 2>/dev/null || true
+        run: security delete-keychain "$RUNNER_TEMP/app-signing.keychain-db" 2>/dev/null || true
 
   build:
     name: Build Native
@@ -102,7 +102,7 @@ jobs:
 
       - name: Cleanup keychain
         if: always()
-        run: security delete-keychain "$KEYCHAIN_PATH" 2>/dev/null || true
+        run: security delete-keychain "$RUNNER_TEMP/app-signing.keychain-db" 2>/dev/null || true
 
   build-setapp:
     name: Build SetApp
@@ -157,4 +157,4 @@ jobs:
 
       - name: Cleanup keychain
         if: always()
-        run: security delete-keychain "$KEYCHAIN_PATH" 2>/dev/null || true
+        run: security delete-keychain "$RUNNER_TEMP/app-signing.keychain-db" 2>/dev/null || true
