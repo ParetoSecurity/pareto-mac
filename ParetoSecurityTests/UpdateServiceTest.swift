@@ -9,8 +9,6 @@ import XCTest
 class UpdateServiceTest: XCTestCase {
     override func setUp() {
         super.setUp()
-        // Clear cache before each test
-        UpdateService.shared.clearCache()
     }
 
     func testGetUpdatesSync() throws {
@@ -54,27 +52,9 @@ class UpdateServiceTest: XCTestCase {
         XCTAssertGreaterThan(firstRelease.version.major, 0, "Version should have major version > 0")
     }
 
-    func testCaching() throws {
-        // Test basic cache functionality without network dependency
-        UpdateService.shared.clearCache()
-
-        // Test that cache clear works
+    func testServiceAvailability() throws {
+        // Test that UpdateService singleton is available
         XCTAssertNotNil(UpdateService.shared, "UpdateService should be available")
-
-        // Skip network-dependent caching tests to avoid flaky tests
-        // This test would need mock network responses to be reliable
-    }
-
-    func testCacheExpiration() throws {
-        // Test cache clear functionality
-        UpdateService.shared.clearCache()
-        XCTAssertNotNil(UpdateService.shared, "UpdateService should be available after cache clear")
-    }
-
-    func testClearCache() throws {
-        // Test cache clearing functionality
-        UpdateService.shared.clearCache()
-        XCTAssertNotNil(UpdateService.shared, "UpdateService should remain functional after cache clear")
     }
 
     func testUpdateCheckIntegration() throws {

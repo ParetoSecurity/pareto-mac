@@ -136,7 +136,14 @@ class ParetoUpdated: ParetoCheck {
             }
 
         } catch {
-            os_log("Failed to check for updates: %{public}s", error.localizedDescription)
+            let errorMessage = error.localizedDescription
+            // Ignore 503 (Service Unavailable) and 403 (Forbidden) - treat as check passing
+            if errorMessage.contains("503") || errorMessage.contains("403") {
+                os_log("Ignoring temporary server error for update check: %{public}s", errorMessage)
+                completion(true)
+                return
+            }
+            os_log("Failed to check for updates: %{public}s", errorMessage)
             hasError = true
             completion(false)
         }

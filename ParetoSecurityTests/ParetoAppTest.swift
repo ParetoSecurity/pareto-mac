@@ -8,6 +8,7 @@
 @testable import Pareto_Security
 import XCTest
 
+@MainActor
 class ParetoAppTest: XCTestCase {
     func testActionLinkDevice() throws {
         let app = AppHandlers()

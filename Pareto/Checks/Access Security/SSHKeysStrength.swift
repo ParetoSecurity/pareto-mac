@@ -97,11 +97,10 @@ class SSHKeysStrengthCheck: SSHCheck {
     }
 
     override func checkPasses() -> Bool {
-        
         if !hasPrerequites() {
             return true
         }
-        
+
         do {
             let files = try FileManager.default.contentsOfDirectory(at: sshPath, includingPropertiesForKeys: nil).filter { $0.pathExtension == "pub" }
             for pub in files {

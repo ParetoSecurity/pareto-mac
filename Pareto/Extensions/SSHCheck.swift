@@ -36,7 +36,7 @@ class SSHCheck: ParetoCheck {
 
         return sshKeygenPath
     }
-    
+
     func hasPrerequites() -> Bool {
         if !itExists(getSSHKeygenPath()) {
             os_log("Not found /opt/homebrew/bin/ssh-keygen or /usr/bin/ssh-keygen, check disabled", log: Log.check)
@@ -46,7 +46,7 @@ class SSHCheck: ParetoCheck {
         }
         return itExists(getSSHKeygenPath()) && itExists(sshPath.path)
     }
-    
+
     override var isRunnable: Bool {
         return isActive
     }
