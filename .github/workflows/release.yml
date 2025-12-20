@@ -63,7 +63,7 @@ jobs:
         run: ditto -c -k --keepParent "Export/Pareto Security.app" ParetoSecurity.app.zip
 
       - name: Upload app artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: ParetoSecurity.app
           path: ParetoSecurity.app.zip
@@ -85,7 +85,7 @@ jobs:
             --wait
 
       - name: Upload DMG artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: ParetoSecurity.dmg
           path: ParetoSecurity.dmg
@@ -220,7 +220,7 @@ jobs:
         run: make build-release-setapp
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: ParetoSecuritySetApp.app
           path: ParetoSecuritySetApp.app.zip
