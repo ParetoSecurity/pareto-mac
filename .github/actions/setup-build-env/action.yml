@@ -24,7 +24,7 @@ runs:
         xcode-version: ${{ inputs.xcode-version }}
 
     - name: Cache Homebrew
-      uses: actions/cache@v4
+      uses: actions/cache@v5
       with:
         path: |
           ~/Library/Caches/Homebrew
@@ -34,7 +34,7 @@ runs:
           ${{ runner.os }}-homebrew-
 
     - name: Cache Mint packages
-      uses: actions/cache@v4
+      uses: actions/cache@v5
       with:
         path: ~/.mint
         key: ${{ runner.os }}-mint-${{ hashFiles('Mintfile') }}
@@ -48,7 +48,7 @@ runs:
         mint bootstrap --link
 
     - name: Cache SPM packages
-      uses: actions/cache@v4
+      uses: actions/cache@v5
       with:
         path: SourcePackages
         key: ${{ runner.os }}-spm-${{ hashFiles('Pareto Security.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved') }}
@@ -57,7 +57,7 @@ runs:
 
     - name: Cache DerivedData
       if: inputs.cache-derived-data == 'true'
-      uses: actions/cache@v4
+      uses: actions/cache@v5
       with:
         path: ~/Library/Developer/Xcode/DerivedData
         key: ${{ runner.os }}-deriveddata-${{ inputs.derived-data-key }}-${{ github.sha }}
