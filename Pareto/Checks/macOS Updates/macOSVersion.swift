@@ -68,7 +68,11 @@ class MacOSVersionCheck: ParetoCheck {
             tempVersion = version
             lock.signal()
         }
-        lock.wait()
+        let timeoutResult = lock.wait(timeout: .now() + 10.0)
+        if timeoutResult == .timedOut {
+            os_log("macOSVersion: Timed out waiting for latest version", log: Log.app)
+            // Return default version on timeout
+        }
         return Version(tempVersion) ?? Version(0, 0, 0)
     }
 

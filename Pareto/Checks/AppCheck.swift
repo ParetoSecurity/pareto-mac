@@ -117,7 +117,12 @@ class AppCheck: ParetoCheck, AppCheckProtocol {
                 try! AppInfo.versionStorage.setObject(latestVersion, forKey: self.appBundle)
                 lock.signal()
             }
-            lock.wait()
+            let timeoutResult = lock.wait(timeout: .now() + 10.0)
+            if timeoutResult == .timedOut {
+                os_log("AppCheck: Timed out waiting for latest version for %{public}@", log: Log.app, self.appBundle)
+                // Return current version as fallback
+                return self.currentVersion
+            }
             return try! AppInfo.versionStorage.object(forKey: appBundle)
         }
     }

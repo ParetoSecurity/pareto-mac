@@ -173,7 +173,11 @@ public class AppUpdater {
                 }
 
             }.resume()
-            lock.wait()
+            let timeoutResult = lock.wait(timeout: .now() + 60.0)
+            if timeoutResult == .timedOut {
+                os_log("Update download timed out after 60s", log: Log.app)
+                state = false
+            }
             try? FileManager.default.removeItem(at: tmpDir)
             return state
         #endif
