@@ -71,6 +71,7 @@ The app supports custom URL scheme `paretosecurity://` for:
 - `update` - Force update check (not available in SetApp build)
 - `welcome` - Show welcome window
 - `runChecks` - Trigger security checks
+- `restart` - Restart the application
 - `debug` - Output detailed check status (supports `?check=<checkname>` parameter)
 - `logs` - Copy system logs
 - `showPrefs` - Show preferences window

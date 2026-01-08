@@ -101,6 +101,8 @@ paretosecurity://showPrefs > Show Preferences
 
 paretosecurity://runChecks > Run Checks
 
+paretosecurity://restart > Restart app
+
 paretosecurity://debug > Output detailed status of the checks
 
 paretosecurity://logs > Copy system logs for ParetoSecurity
