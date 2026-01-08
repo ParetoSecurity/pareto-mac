@@ -34,4 +34,11 @@ class ParetoAppTest: XCTestCase {
         let app = AppHandlers()
         app.runApp()
     }
+
+    func testActionRestart() throws {
+        let app = AppHandlers()
+        // In tests, restartApp() should be disabled (it checks AppInfo.isRunningTests)
+        // This test verifies the action is handled without throwing
+        app.processAction(URL(string: "paretosecurity://restart")!)
+    }
 }
