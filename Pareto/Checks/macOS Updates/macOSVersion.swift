@@ -62,13 +62,20 @@ class MacOSVersionCheck: ParetoCheck {
         if #available(macOS 15, *) {
             doc = "120283"
         }
+        if #available(macOS 26, *) {
+            doc = "122868"
+        }
         var tempVersion = "0.0.0"
         let lock = DispatchSemaphore(value: 0)
         getLatestVersion(doc: doc) { version in
             tempVersion = version
             lock.signal()
         }
-        lock.wait()
+        let timeoutResult = lock.wait(timeout: .now() + 10.0)
+        if timeoutResult == .timedOut {
+            os_log("macOSVersion: Timed out waiting for latest version", log: Log.app)
+            // Return default version on timeout
+        }
         return Version(tempVersion) ?? Version(0, 0, 0)
     }
 

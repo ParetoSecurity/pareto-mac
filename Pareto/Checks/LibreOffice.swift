@@ -57,7 +57,11 @@ class AppLibreOfficeCheck: AppCheck {
             tempVersions = versions.map { Version($0) ?? Version(0, 0, 0) }
             lock.signal()
         }
-        lock.wait()
+        let timeoutResult = lock.wait(timeout: .now() + 10.0)
+        if timeoutResult == .timedOut {
+            os_log("LibreOffice: Timed out waiting for latest versions", log: Log.app)
+            // Return default version on timeout
+        }
         return tempVersions
     }
 

@@ -36,6 +36,9 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
     // Using OSAllocatedUnfairLock for better performance and cleaner syntax
     private let currentWorkItemID = OSAllocatedUnfairLock(initialState: 0)
 
+    // Track when checks started to detect stuck state
+    private let checksStartTime = OSAllocatedUnfairLock<Date?>(initialState: nil)
+
     @Default(.hideWhenNoFailures) var hideWhenNoFailures
 
     // Controls MenuBarExtra visibility based on check status and settings
@@ -146,6 +149,11 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
             // Show neutral/gray indicator while running
             if running {
                 self.statusBarModel.state = .idle
+                // Track when checks started
+                self.checksStartTime.withLock { $0 = Date() }
+            } else {
+                // Clear start time when checks complete
+                self.checksStartTime.withLock { $0 = nil }
             }
             self.statusBarModel.refreshNonce &+= 1
         }
@@ -226,7 +234,11 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
                 os_log("Updated teams settings")
                 lock.signal()
             }
-            lock.wait()
+            let timeoutResult = lock.wait(timeout: .now() + 10.0)
+            if timeoutResult == .timedOut {
+                os_log("Team settings update timed out after 10s", log: Log.app)
+                // Continue with checks even if team settings update failed
+            }
         }
 
         // Run the checks
@@ -447,6 +459,23 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
                 }
             }
         #endif
+        // Cancel running checks when going to sleep to prevent stuck state
+        NSWorkspace.onSleep { _ in
+            Task { @MainActor in
+                if self.statusBarModel.isRunning {
+                    let startTime = self.checksStartTime.withLock { $0 }
+                    if let startTime = startTime {
+                        let runningDuration = Date().timeIntervalSince(startTime)
+                        os_log("System going to sleep while checks are running (running for %.0f seconds) - resetting state", log: Log.app, runningDuration)
+                    } else {
+                        os_log("System going to sleep while checks are running - resetting state", log: Log.app)
+                    }
+                    self.setRunning(false)
+                    NotificationCenter.default.post(name: .runChecksFinished, object: nil)
+                }
+            }
+        }
+
         // Update when waking up from sleep
         NSWorkspace.onWakeup { _ in
             if Defaults[.disableChecksEvents] {
@@ -474,6 +503,25 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
                     }
                 }
             #endif
+        }
+
+        // Schedule hourly watchdog to detect and reset stuck checks
+        NSBackgroundActivityScheduler.repeating(withName: "ChecksWatchdog", withInterval: 60 * 60) { (completion: NSBackgroundActivityScheduler.CompletionHandler) in
+            Task { @MainActor in
+                if self.statusBarModel.isRunning {
+                    let startTime = self.checksStartTime.withLock { $0 }
+                    if let startTime = startTime {
+                        let runningDuration = Date().timeIntervalSince(startTime)
+                        // If checks have been running for more than 5 minutes, they're stuck
+                        if runningDuration > 300 { // 5 minutes = 300 seconds
+                            os_log("Watchdog: Checks stuck for %.0f seconds (>5 minutes), resetting state", log: Log.app, runningDuration)
+                            self.setRunning(false)
+                            NotificationCenter.default.post(name: .runChecksFinished, object: nil)
+                        }
+                    }
+                }
+            }
+            completion(.finished)
         }
 
         // Schedule hourly claim updates
