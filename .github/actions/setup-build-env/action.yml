@@ -6,14 +6,6 @@ inputs:
     description: "Xcode version to use"
     required: false
     default: "26"
-  cache-derived-data:
-    description: "Whether to cache DerivedData"
-    required: false
-    default: "true"
-  derived-data-key:
-    description: "Key suffix for DerivedData cache"
-    required: false
-    default: "default"
 
 runs:
   using: "composite"
@@ -54,13 +46,3 @@ runs:
         key: ${{ runner.os }}-spm-${{ hashFiles('Pareto Security.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved') }}
         restore-keys: |
           ${{ runner.os }}-spm-
-
-    - name: Cache DerivedData
-      if: inputs.cache-derived-data == 'true'
-      uses: actions/cache@v5
-      with:
-        path: ~/Library/Developer/Xcode/DerivedData
-        key: ${{ runner.os }}-deriveddata-${{ inputs.derived-data-key }}-${{ github.sha }}
-        restore-keys: |
-          ${{ runner.os }}-deriveddata-${{ inputs.derived-data-key }}-
-          ${{ runner.os }}-deriveddata-

@@ -31,7 +31,6 @@ jobs:
         uses: ./.github/actions/setup-build-env
         with:
           xcode-version: ${{ env.XCODE_VERSION }}
-          derived-data-key: test
 
       - name: Setup code signing
         uses: ./.github/actions/setup-signing
@@ -65,7 +64,6 @@ jobs:
         uses: ./.github/actions/setup-build-env
         with:
           xcode-version: ${{ env.XCODE_VERSION }}
-          derived-data-key: build
 
       - name: Setup code signing
         uses: ./.github/actions/setup-signing
@@ -120,7 +118,6 @@ jobs:
         uses: ./.github/actions/setup-build-env
         with:
           xcode-version: ${{ env.XCODE_VERSION }}
-          derived-data-key: setapp
 
       - name: Setup code signing
         uses: ./.github/actions/setup-signing
