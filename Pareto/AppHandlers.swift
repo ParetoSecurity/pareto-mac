@@ -871,7 +871,7 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
             NSApp.sendAction(#selector(runChecks), to: nil, from: nil)
             NSApp.activate(ignoringOtherApps: true)
         case "showBeta":
-            Defaults[.showBeta] = true        
+            Defaults[.showBeta] = true
         case "restart":
             restartApp()
         #if !SETAPP_ENABLED
