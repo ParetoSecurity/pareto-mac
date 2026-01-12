@@ -78,6 +78,9 @@ struct GeneralSettingsView: View {
                             openWindow(id: AppWindowID.welcome)
                             NSApp.activate(ignoringOtherApps: true)
                         }
+                        Button("Show Menu") {
+                            NSApp.sendAction(#selector(AppDelegate.showMenuClick), to: nil, from: nil)
+                        }
                     }
                 #endif
             }

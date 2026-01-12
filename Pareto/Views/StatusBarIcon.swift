@@ -7,7 +7,40 @@
 
 import AppKit
 import Defaults
+import os.log
 import SwiftUI
+
+// Utility to find and click the status bar button
+@MainActor
+enum StatusBarButtonHelper {
+    static func findAndClickButton() {
+        // Search through all windows to find status bar button
+        for window in NSApp.windows {
+            if let button = findStatusBarButton(in: window.contentView) {
+                os_log("Found NSStatusBarButton, performing click", log: Log.app)
+                button.performClick(nil)
+                return
+            }
+        }
+        os_log("Could not find NSStatusBarButton", log: Log.app)
+    }
+
+    private static func findStatusBarButton(in view: NSView?) -> NSStatusBarButton? {
+        guard let view = view else { return nil }
+
+        if let button = view as? NSStatusBarButton {
+            return button
+        }
+
+        for subview in view.subviews {
+            if let button = findStatusBarButton(in: subview) {
+                return button
+            }
+        }
+
+        return nil
+    }
+}
 
 enum StatusBarState: String {
     case initial = "Icon"
@@ -54,26 +87,20 @@ struct StatusBarIcon: View {
     var body: some View {
         if statusBarModel.isRunning {
             Image(StatusBarState.running.rawValue)
-                .resizable() // allow downscaling
+                .resizable()
                 .interpolation(.high)
                 .antialiased(true)
                 .scaledToFit()
-                // Center the image within any available space
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
                 .id(statusBarModel.refreshNonce ^ (statusBarModel.isRunning ? 1 : 0))
-            // When the user clicks the menu bar icon, if we're currently idle,
-            // restore the latest computed state (green/orange) unless snoozed.
         } else {
             Image(statusBarModel.state.rawValue)
-                .resizable() // allow downscaling
+                .resizable()
                 .interpolation(.high)
                 .antialiased(true)
                 .scaledToFit()
-                // Center the image within any available space
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
                 .id(statusBarModel.refreshNonce ^ (statusBarModel.isRunning ? 1 : 0))
-            // When the user clicks the menu bar icon, if we're currently idle,
-            // restore the latest computed state (green/orange) unless snoozed.
         }
     }
 }

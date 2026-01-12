@@ -772,6 +772,17 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
         Defaults[.showBeta] = true
     }
 
+    @objc func showMenuClick() {
+        temporarilyVisible = true
+        isMenuBarInserted = true
+        scheduleAutoHide()
+
+        // Give the menu bar icon time to appear, then click it
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+            StatusBarButtonHelper.findAndClickButton()
+        }
+    }
+
     func processAction(_ url: URL) {
         switch url.host {
         #if !SETAPP_ENABLED
@@ -844,8 +855,16 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
                 NSApplication.shared.terminate(self)
             }
         case "showMenu":
-            NSApp.sendAction(#selector(showMenu), to: nil, from: nil)
+            // Ensure the menu bar icon is visible and open the menu
+            temporarilyVisible = true
+            isMenuBarInserted = true
+            scheduleAutoHide()
             NSApp.activate(ignoringOtherApps: true)
+
+            // Give the menu bar icon time to appear, then click it
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                StatusBarButtonHelper.findAndClickButton()
+            }
         case "logs":
             copyLogs()
         case "runChecks":
