@@ -872,6 +872,8 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
             NSApp.activate(ignoringOtherApps: true)
         case "showBeta":
             Defaults[.showBeta] = true
+        case "restart":
+            restartApp()
         #if !SETAPP_ENABLED
             case "update":
                 checkForRelease()
