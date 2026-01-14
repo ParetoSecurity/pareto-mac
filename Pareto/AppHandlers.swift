@@ -304,6 +304,7 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
                             switch response.result {
                             case .success:
                                 os_log("Team status was updated", log: Log.app)
+                                Defaults.doneTeamReportSuccess()
                             case let .failure(err):
                                 os_log("Team status update failed: %{public}@", log: Log.app, err.localizedDescription)
 

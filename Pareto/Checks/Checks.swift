@@ -60,6 +60,7 @@ class Claims: ObservableObject {
                 SecureiTermCheck.sharedInstance,
                 TimeMachineHasBackupCheck.sharedInstance,
                 TimeMachineIsEncryptedCheck.sharedInstance,
+                TeamReportSentCheck.sharedInstance,
             ]),
             Claim(withTitle: "Application Updates", withChecks: Claims.updateChecks + [AutoUpdateAppCheck.sharedInstance, ParetoUpdated.sharedInstance]),
         ].sorted(by: { $0.title.lowercased() < $1.title.lowercased() })

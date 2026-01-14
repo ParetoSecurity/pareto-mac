@@ -15,6 +15,7 @@ struct TeamSettingsView: View {
     @Default(.machineUUID) var machineUUID
     @Default(.sendHWInfo) var sendHWInfo
     @Default(.showBeta) var showBeta
+    @Default(.lastTeamReportSuccess) var lastTeamReportSuccess
 
     @State private var debugLinkURL: String = ""
 
@@ -53,6 +54,16 @@ struct TeamSettingsView: View {
         }
     }
 
+    private var lastSyncTimeString: String {
+        if lastTeamReportSuccess == 0 {
+            return "Never"
+        }
+        let date = Date(timeIntervalSince1970: TimeInterval(lastTeamReportSuccess) / 1000)
+        let formatter = RelativeDateTimeFormatter()
+        formatter.unitsStyle = .full
+        return formatter.localizedString(for: date, relativeTo: Date())
+    }
+
     private func processDebugLinkURL() {
         let trimmed = debugLinkURL.trimmingCharacters(in: .whitespacesAndNewlines)
         guard let url = URL(string: trimmed), !trimmed.isEmpty else {
@@ -82,6 +93,12 @@ struct TeamSettingsView: View {
                             .contextMenu {
                                 Button("Copy", action: copyIDsToPasteboard)
                             }
+                    }
+                    Section(
+                        header: Text("Last Report Sent"),
+                        footer: Text("The time of the last successful team report.").font(.footnote)
+                    ) {
+                        Text(lastSyncTimeString)
                     }
                     Section(footer: Text("When enabled, send model name and serial number.").font(.footnote)) {
                         if teamSettings.forceSerialPush {
