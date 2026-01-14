@@ -94,7 +94,10 @@ struct TeamSettingsView: View {
                                 Button("Copy", action: copyIDsToPasteboard)
                             }
                     }
-                    Section(footer: Text("Last Report Sent").font(.caption)) {
+                    Section(
+                        header: Text("Last Report Sent"),
+                        footer: Text("The time of the last successful team report.").font(.footnote)
+                    ) {
                         Text(lastSyncTimeString)
                     }
                     Section(footer: Text("When enabled, send model name and serial number.").font(.footnote)) {
