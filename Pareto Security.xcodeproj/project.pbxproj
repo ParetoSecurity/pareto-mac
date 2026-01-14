@@ -188,6 +188,8 @@
 		4F6A92E826C52210006C2F2D /* IntegrationCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F6A92E726C52210006C2F2D /* IntegrationCheck.swift */; };
 		4F6A92EA26C54AB7006C2F2D /* AppInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F6A92E926C54AB7006C2F2D /* AppInfo.swift */; };
 		4F6A92F226C555C6006C2F2D /* ParetoSecurityUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F6A92F126C555C6006C2F2D /* ParetoSecurityUITests.swift */; };
+		4F6E417C2F17402400EFD3E2 /* TeamReportSent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F6E417B2F17402400EFD3E2 /* TeamReportSent.swift */; };
+		4F6E417D2F17402400EFD3E2 /* TeamReportSent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F6E417B2F17402400EFD3E2 /* TeamReportSent.swift */; };
 		4F6EF892275FEE6C00752559 /* Regex in Frameworks */ = {isa = PBXBuildFile; productRef = 4F6EF891275FEE6C00752559 /* Regex */; };
 		4F79F78D273BF6300082A5EB /* ChecksView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F79F78C273BF6300082A5EB /* ChecksView.swift */; };
 		4F79F78E273BF6300082A5EB /* ChecksView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F79F78C273BF6300082A5EB /* ChecksView.swift */; };
@@ -417,6 +419,7 @@
 		4F6A92E926C54AB7006C2F2D /* AppInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppInfo.swift; sourceTree = "<group>"; };
 		4F6A92EF26C555C6006C2F2D /* ParetoSecurityUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ParetoSecurityUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4F6A92F126C555C6006C2F2D /* ParetoSecurityUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParetoSecurityUITests.swift; sourceTree = "<group>"; };
+		4F6E417B2F17402400EFD3E2 /* TeamReportSent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeamReportSent.swift; sourceTree = "<group>"; };
 		4F79F78C273BF6300082A5EB /* ChecksView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChecksView.swift; sourceTree = "<group>"; };
 		4F7ACFAF2DE074FF003400E8 /* HelperProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelperProtocol.swift; sourceTree = "<group>"; };
 		4F7ACFC22DE080AB003400E8 /* HelperTool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelperTool.swift; sourceTree = "<group>"; };
@@ -637,6 +640,7 @@
 				4FFDC5A328215A8F0092B7BF /* TimeMachineIsEncrypted.swift */,
 				4FD0A24026A024440070BED4 /* Gatekeeper.swift */,
 				4F5B20C027030BEB0015642A /* OpenWiFi.swift */,
+				4F6E417B2F17402400EFD3E2 /* TeamReportSent.swift */,
 			);
 			path = "System Integrity";
 			sourceTree = "<group>";
@@ -1187,6 +1191,7 @@
 				4F196F982D772DA7001031F0 /* ParetoUpdated.swift in Sources */,
 				4F37E7192718122E00A2B254 /* RemoteManagment.swift in Sources */,
 				4F37E71A2718122E00A2B254 /* Date.swift in Sources */,
+				4F6E417D2F17402400EFD3E2 /* TeamReportSent.swift in Sources */,
 				4F37E71B2718122E00A2B254 /* Teams.swift in Sources */,
 				4F1E6C5F2834F5D200C8AFAB /* SecureTerminal.swift in Sources */,
 				4F1E6C6528355B2100C8AFAB /* InternetSharing.swift in Sources */,
@@ -1334,6 +1339,7 @@
 				4F196F992D772DA7001031F0 /* ParetoUpdated.swift in Sources */,
 				4F35395526E8AD4C008F5DD3 /* RemoteManagment.swift in Sources */,
 				4FB7C68126AFF25300FB1C41 /* Date.swift in Sources */,
+				4F6E417C2F17402400EFD3E2 /* TeamReportSent.swift in Sources */,
 				4F343A5F26F7A3D4007D2F7D /* Teams.swift in Sources */,
 				4F1E6C5E2834F5D200C8AFAB /* SecureTerminal.swift in Sources */,
 				4F1E6C6428355B2100C8AFAB /* InternetSharing.swift in Sources */,

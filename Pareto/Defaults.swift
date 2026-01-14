@@ -34,6 +34,7 @@ extension Defaults.Keys {
     static let teamAuth = Key<String>("teamAuth", default: "", suite: extensionDefaults)
     static let teamAPI = Key<String>("teamAPI", default: "https://cloud.paretosecurity.com/", suite: extensionDefaults)
     static let lastTeamUpdate = Key<Int>("lastTeamUpdate", default: 0, suite: extensionDefaults)
+    static let lastTeamReportSuccess = Key<Int>("lastTeamReportSuccess", default: 0, suite: extensionDefaults)
     static let machineUUID = Key<String>("machineUUID", default: AppInfo.getSystemUUID() ?? UUID().uuidString, suite: extensionDefaults)
     static let sendHWInfo = Key<Bool>("sendHWInfo", default: false, suite: extensionDefaults)
     static let lastHWAsk = Key<Int>("lastHWAsk", default: 0, suite: extensionDefaults)
@@ -124,6 +125,10 @@ public extension Defaults {
 
     static func doneTeamUpdate() {
         Defaults[.lastTeamUpdate] = Date().currentTimeMs()
+    }
+
+    static func doneTeamReportSuccess() {
+        Defaults[.lastTeamReportSuccess] = Date().currentTimeMs()
     }
 
     static func toOpenSource() {
