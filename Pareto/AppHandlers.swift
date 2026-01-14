@@ -740,7 +740,7 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
             alert.addButton(withTitle: "OK")
             alert.addButton(withTitle: "Open Guide")
             if alert.runModal() == NSApplication.ModalResponse.alertSecondButtonReturn {
-                NSWorkspace.shared.open(URL(string: "https://paretosecurity.com/docs/mac/logs")!)
+                NSWorkspace.shared.open(URL(string: "https://paretosecurity.com/docs/mac/logs?utm_source=\(AppInfo.utmSource)")!)
             }
         }
 

@@ -169,7 +169,7 @@ struct TeamSettingsView: View {
                             .frame(maxWidth: 360)
                     }
 
-                    Link(destination: URL(string: "https://paretosecurity.com/product/device-monitoring")!) {
+                    Link(destination: URL(string: "https://paretosecurity.com/product/device-monitoring?utm_source=\(AppInfo.utmSource)")!) {
                         Text("Learn More")
                             .frame(minWidth: 100)
                     }

@@ -34,9 +34,9 @@ struct PermissionsSettingsView: View {
         var learnMoreURL: URL {
             switch self {
             case .automation:
-                return URL(string: "https://paretosecurity.com/docs/mac/permissions")!
+                return URL(string: "https://paretosecurity.com/docs/mac/permissions?utm_source=\(AppInfo.utmSource)")!
             case .fullDisk:
-                return URL(string: "https://paretosecurity.com/docs/mac/permissions")!
+                return URL(string: "https://paretosecurity.com/docs/mac/permissions?utm_source=\(AppInfo.utmSource)")!
             }
         }
     }
@@ -96,7 +96,7 @@ struct PermissionsSettingsView: View {
                     iconTint: .blue,
                     title: "Firewall Access",
                     message: "App requires read-only access to firewall to perform checks.",
-                    learnMoreURL: URL(string: "https://paretosecurity.com/docs/mac/privileged-helper-authorization"),
+                    learnMoreURL: URL(string: "https://paretosecurity.com/docs/mac/privileged-helper-authorization?utm_source=\(AppInfo.utmSource)"),
                     status: status(for: checker.firewallAuthorized),
                     isVerifying: !checker.ran,
                     primaryActionTitle: checker.firewallAuthorized ? "Authorized" : "Authorize",
