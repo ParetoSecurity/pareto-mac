@@ -150,40 +150,52 @@ struct TeamSettingsView: View {
                     teamSettings.update {}
                 }
             } else {
-                Form {
-                    Section {
-                        VStack(alignment: .leading, spacing: 6) {
-                            Text("Pareto Cloud provides a web dashboard for an overview of your company's devices. [Learn more »](https://paretosecurity.com/product/device-monitoring)")
-                                .font(.body)
-                                .foregroundStyle(.secondary)
-                                .fixedSize(horizontal: false, vertical: true)
-                                .lineLimit(nil)
-                        }
-                    }
-                    if showBeta {
-                        Section {
-                            // Use inline placeholder to avoid wide left-side form label
-                            TextField("Debug URL", text: $debugLinkURL, prompt: Text("paretosecurity://linkDevice/?invite_id=..."))
-                                .textFieldStyle(RoundedBorderTextFieldStyle())
-                                .onSubmit { processDebugLinkURL() }
+                VStack(spacing: 24) {
+                    Spacer()
 
+                    Image(systemName: "cloud")
+                        .font(.system(size: 56))
+                        .foregroundStyle(.secondary)
+
+                    VStack(spacing: 12) {
+                        Text("Connect to Pareto Cloud")
+                            .font(.title2)
+                            .fontWeight(.semibold)
+
+                        Text("Get a web dashboard for an overview of your company's devices and centralized security monitoring.")
+                            .font(.body)
+                            .foregroundStyle(.secondary)
+                            .multilineTextAlignment(.center)
+                            .frame(maxWidth: 360)
+                    }
+
+                    Link(destination: URL(string: "https://paretosecurity.com/product/device-monitoring")!) {
+                        Text("Learn More")
+                            .frame(minWidth: 100)
+                    }
+                    .buttonStyle(.borderedProminent)
+
+                    Spacer()
+
+                    if showBeta {
+                        Divider()
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("Debug")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
                             HStack {
-                                Button("Process URL", action: processDebugLinkURL)
-                                    .keyboardShortcut(.defaultAction)
+                                TextField("Debug URL", text: $debugLinkURL, prompt: Text("paretosecurity://linkDevice/?invite_id=..."))
+                                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                                    .onSubmit { processDebugLinkURL() }
+                                Button("Process", action: processDebugLinkURL)
                                     .disabled(debugLinkURL.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
-                                Spacer()
-                            }
-                        } footer: {
-                            VStack(alignment: .leading, spacing: 4) {
-                                Text("DEBUG: Enter a paretosecurity:// URL to trigger device linking").font(.footnote)
-                                Text("Host parameter options:").font(.footnote).fontWeight(.medium)
-                                Text("• Default (cloud): paretosecurity://linkDevice/?invite_id=123").font(.footnote)
-                                Text("• Complete URL: paretosecurity://linkDevice/?invite_id=123&host=https://api.example.com").font(.footnote)
                             }
                         }
+                        .padding(.horizontal)
+                        .padding(.bottom, 16)
                     }
                 }
-                .padding(20)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
         }
         .alert(item: $alertData) { data in
