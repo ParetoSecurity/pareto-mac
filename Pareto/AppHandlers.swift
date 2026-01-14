@@ -305,8 +305,10 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
                             case .success:
                                 os_log("Team status was updated", log: Log.app)
                                 Defaults.doneTeamReportSuccess()
+                                TeamReportSentCheck.sharedInstance.checkPassed = true
                             case let .failure(err):
                                 os_log("Team status update failed: %{public}@", log: Log.app, err.localizedDescription)
+                                TeamReportSentCheck.sharedInstance.checkPassed = false
 
                                 // Check if the error is a 404 (device/team not found)
                                 if let statusCode = response.response?.statusCode, statusCode == 404 {

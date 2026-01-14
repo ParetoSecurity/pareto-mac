@@ -79,63 +79,72 @@ struct TeamSettingsView: View {
         Group {
             if !teamID.isEmpty {
                 Form {
-                    Section(footer: Text("Device Name").font(.caption)) {
-                        Text(AppInfo.machineName)
-                            .textSelection(.enabled)
-                            .contextMenu {
-                                Button("How to change", action: help)
-                            }
-                    }
-                    Section(footer: Text("Device ID").font(.caption)) {
-                        Text(machineUUID)
-                            .font(.system(.body, design: .monospaced))
-                            .textSelection(.enabled)
-                            .contextMenu {
-                                Button("Copy", action: copyIDsToPasteboard)
-                            }
-                    }
-                    Section(
-                        header: Text("Last Report Sent"),
-                        footer: Text("The time of the last successful team report.").font(.footnote)
-                    ) {
-                        Text(lastSyncTimeString)
-                    }
-                    Section(footer: Text("When enabled, send model name and serial number.").font(.footnote)) {
-                        if teamSettings.forceSerialPush {
-                            Toggle("Send inventory info on update", isOn: $sendHWInfo)
-                            Text("Sending is requested by the team policy.")
-                                .font(.footnote)
-                                .foregroundStyle(.secondary)
-                        } else {
-                            Toggle("Send inventory info on update", isOn: $sendHWInfo)
+                    Section {
+                        LabeledContent("Device Name") {
+                            Text(AppInfo.machineName)
+                                .textSelection(.enabled)
+                                .contextMenu {
+                                    Button("How to change", action: help)
+                                }
                         }
-                        Button("Copy App list") { copyApps() }
-                    }
-
-                    if showBeta {
-                        Section(footer: Text("Cloud API Endpoint").font(.caption)) {
-                            Text(Defaults[.teamAPI])
+                        LabeledContent("Device ID") {
+                            Text(machineUUID)
                                 .font(.system(.body, design: .monospaced))
                                 .textSelection(.enabled)
                                 .contextMenu {
-                                    Button("Copy") {
-                                        NSPasteboard.general.clearContents()
-                                        NSPasteboard.general.setString(Defaults[.teamAPI], forType: .string)
-                                        alertData = InlineAlert(title: "Copied", message: "Cloud API Endpoint copied to the clipboard.")
-                                    }
+                                    Button("Copy", action: copyIDsToPasteboard)
                                 }
+                        }
+                        LabeledContent("Last Report") {
+                            Text(lastSyncTimeString)
+                                .foregroundStyle(.secondary)
+                        }
+                        Button("Copy App List") { copyApps() }
+                    } header: {
+                        Text("Device")
+                    }
+
+                    Section {
+                        Toggle("Send inventory info", isOn: $sendHWInfo)
+                        if teamSettings.forceSerialPush {
+                            Text("Required by team policy")
+                                .font(.footnote)
+                                .foregroundStyle(.secondary)
+                        }
+                    } header: {
+                        Text("Inventory")
+                    } footer: {
+                        Text("When enabled, model name and serial number are included in reports.")
+                    }
+
+                    if showBeta {
+                        Section {
+                            LabeledContent("API Endpoint") {
+                                Text(Defaults[.teamAPI])
+                                    .font(.system(.caption, design: .monospaced))
+                                    .textSelection(.enabled)
+                                    .contextMenu {
+                                        Button("Copy") {
+                                            NSPasteboard.general.clearContents()
+                                            NSPasteboard.general.setString(Defaults[.teamAPI], forType: .string)
+                                            alertData = InlineAlert(title: "Copied", message: "Cloud API Endpoint copied to the clipboard.")
+                                        }
+                                    }
+                            }
+                        } header: {
+                            Text("Advanced")
                         }
                     }
 
                     Section {
                         HStack {
-                            Button("Unlink this device") { Defaults.toOpenSource() }
+                            Button("Unlink Device") { Defaults.toOpenSource() }
                             Spacer()
-                            Link("Cloud Dashboard »", destination: AppInfo.teamsURL())
+                            Link("Open Dashboard", destination: AppInfo.teamsURL())
                         }
                     }
                 }
-                .padding(20)
+                .formStyle(.grouped)
                 .task {
                     // Refresh team settings when the view appears
                     teamSettings.update {}
