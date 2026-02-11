@@ -8,16 +8,10 @@
 import Foundation
 import os.log
 
-// Reference type to avoid Swift 6 concurrency mutation warnings
-private class Box<T> {
-    var value: T
-    init(_ value: T) {
-        self.value = value
-    }
-}
-
 class FirewallStealthCheck: ParetoCheck {
     static let sharedInstance = FirewallStealthCheck()
+    private let helperResultLock = OSAllocatedUnfairLock<Bool?>(initialState: nil)
+    private let helperCheckInFlight = OSAllocatedUnfairLock(initialState: false)
     override var UUID: String {
         "2e46c89a-5461-4865-a92e-3b799c12034b"
     }
@@ -31,6 +25,9 @@ class FirewallStealthCheck: ParetoCheck {
     }
 
     override var requiresHelper: Bool {
+        if #available(macOS 26, *) {
+            return false
+        }
         if #available(macOS 15, *) {
             return true
         }
@@ -43,6 +40,9 @@ class FirewallStealthCheck: ParetoCheck {
         }
         if !FirewallCheck.sharedInstance.isActive || !isActive {
             return false
+        }
+        if #available(macOS 26, *) {
+            return true
         }
         if #available(macOS 15, *) {
             if requiresHelper {
@@ -61,46 +61,50 @@ class FirewallStealthCheck: ParetoCheck {
 
     override func checkPasses() -> Bool {
         if #available(macOS 26, *) {
-            os_log("FirewallStealthCheck: Running macOS 26+ direct command for stealth mode")
             let out = runCMD(app: "/usr/libexec/ApplicationFirewall/socketfilterfw", args: ["--getstealthmode"])
-            os_log("FirewallStealthCheck: Command output: %{public}s", out)
-            let enabled = out.contains("enabled") || out.contains("mode is on")
-            os_log("FirewallStealthCheck: Parsed stealth enabled: %{public}s", enabled ? "true" : "false")
-            return enabled
+            return out.contains("enabled") || out.contains("mode is on")
         }
 
         if #available(macOS 15, *) {
-            let semaphore = DispatchSemaphore(value: 0)
-            let result = Box(false) // Use a reference type to avoid mutation warnings
-
-            DispatchQueue.global(qos: .userInteractive).async {
-                Task { @MainActor in
-                    let helperManager = HelperToolManager()
-
-                    // Ensure helper is up to date before running check
-                    let helperReady = await helperManager.ensureHelperIsUpToDate()
-                    if helperReady {
-                        await helperManager.isFirewallStealthEnabled { output in
-                            result.value = output.contains("enabled") || output.contains("mode is on")
-                            semaphore.signal()
-                        }
-                    } else {
-                        // Helper failed to install/update, signal failure
-                        semaphore.signal()
-                    }
-                }
-            }
-
-            // Wait with timeout to prevent blocking forever
-            let timeoutResult = semaphore.wait(timeout: .now() + 10.0)
-            if timeoutResult == .timedOut {
-                os_log("Firewall stealth check timed out", log: Log.app)
-                return false
-            }
-
-            return result.value
+            refreshHelperResultIfNeeded()
+            return helperResultLock.withLock { $0 } ?? checkPassed
         }
+
         let out = runCMD(app: "/usr/libexec/ApplicationFirewall/socketfilterfw", args: ["--getstealthmode"])
         return out.contains("enabled") || out.contains("mode is on")
+    }
+
+    private func refreshHelperResultIfNeeded() {
+        let shouldStart = helperCheckInFlight.withLock { inFlight in
+            if inFlight { return false }
+            inFlight = true
+            return true
+        }
+        guard shouldStart else { return }
+
+        Task.detached(priority: .utility) { [weak self] in
+            guard let self else { return }
+            let enabled = await self.fetchStealthEnabledViaHelper()
+            self.helperResultLock.withLock { $0 = enabled }
+            self.helperCheckInFlight.withLock { $0 = false }
+        }
+    }
+
+    private func fetchStealthEnabledViaHelper() async -> Bool {
+        await withCheckedContinuation { continuation in
+            Task { @MainActor in
+                let helperManager = HelperToolManager()
+                let helperReady = await helperManager.ensureHelperIsUpToDate()
+                guard helperReady else {
+                    continuation.resume(returning: false)
+                    return
+                }
+
+                await helperManager.isFirewallStealthEnabled { output in
+                    let enabled = output.contains("enabled") || output.contains("mode is on")
+                    continuation.resume(returning: enabled)
+                }
+            }
+        }
     }
 }

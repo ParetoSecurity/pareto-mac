@@ -5,6 +5,7 @@
 //  Created by Janez Troha on 10/09/2021.
 //
 
+import AppKit
 import Defaults
 import ServiceManagement
 import SwiftUI
@@ -17,6 +18,16 @@ struct AboutSettingsView: View {
     @State private var latestVersionFound = ""
 
     @Default(.showBeta) var showBeta
+
+    private func presentAlertNonBlocking(_ alert: NSAlert) {
+        DispatchQueue.main.async {
+            if let window = NSApp.keyWindow ?? NSApp.mainWindow ?? NSApp.windows.first(where: { $0.isVisible }) {
+                alert.beginSheetModal(for: window, completionHandler: nil)
+            } else {
+                _ = alert.runModal()
+            }
+        }
+    }
 
     enum UpdateStates: String {
         case Checking = "Checking for updates"
@@ -46,7 +57,7 @@ struct AboutSettingsView: View {
                                 alert.messageText = "You are now part of a secret society seeing somewhat mysterious things."
                                 alert.alertStyle = NSAlert.Style.informational
                                 alert.addButton(withTitle: "Let me in")
-                                alert.runModal()
+                                presentAlertNonBlocking(alert)
                                 fetch()
                             }
                         }
@@ -220,13 +231,13 @@ struct AboutSettingsView: View {
                 alert.informativeText = "Please use SetApp to update the application"
                 alert.alertStyle = NSAlert.Style.informational
                 alert.addButton(withTitle: "OK")
-                alert.runModal()
+                presentAlertNonBlocking(alert)
             }
             return
         #endif
 
-        DispatchQueue.global(qos: .userInteractive).async {
-            DispatchQueue.main.async {
+        Task.detached(priority: .userInitiated) {
+            await MainActor.run {
                 isLoading = true
                 status = UpdateStates.Checking
             }
@@ -234,8 +245,8 @@ struct AboutSettingsView: View {
             let updater = AppUpdater(owner: "ParetoSecurity", repo: "pareto-mac")
             let currentVersion = Bundle.main.version
 
-            if let release = try? updater.getLatestRelease() {
-                DispatchQueue.main.async {
+            if let release = try? await updater.getLatestRelease() {
+                await MainActor.run {
                     hasCheckedForUpdates = true
                     isLoading = false
 
@@ -249,7 +260,7 @@ struct AboutSettingsView: View {
                     }
                 }
             } else {
-                DispatchQueue.main.async {
+                await MainActor.run {
                     hasCheckedForUpdates = true
                     status = UpdateStates.Failed
                     isLoading = false
@@ -259,17 +270,17 @@ struct AboutSettingsView: View {
     }
 
     private func forceUpdate() {
-        DispatchQueue.global(qos: .userInteractive).async {
-            DispatchQueue.main.async {
+        Task.detached(priority: .userInitiated) {
+            await MainActor.run {
                 isLoading = true
                 status = UpdateStates.Installing
             }
 
             let updater = AppUpdater(owner: "ParetoSecurity", repo: "pareto-mac")
 
-            if let release = try? updater.getLatestRelease() {
+            if let release = try? await updater.getLatestRelease() {
                 #if SETAPP_ENABLED
-                    DispatchQueue.main.async {
+                    await MainActor.run {
                         isLoading = false
                         status = UpdateStates.Failed
                         let alert = NSAlert()
@@ -277,27 +288,27 @@ struct AboutSettingsView: View {
                         alert.informativeText = "Please use SetApp to update the application"
                         alert.alertStyle = NSAlert.Style.informational
                         alert.addButton(withTitle: "OK")
-                        alert.runModal()
+                        presentAlertNonBlocking(alert)
                     }
                     return
                 #endif
 
                 if let zipURL = release.assets.filter({ $0.browser_download_url.path.hasSuffix(".zip") }).first {
-                    let done = updater.downloadAndUpdate(withAsset: zipURL)
+                    let done = await updater.downloadAndUpdate(withAsset: zipURL)
                     if !done {
-                        DispatchQueue.main.async {
+                        await MainActor.run {
                             status = UpdateStates.Failed
                             isLoading = false
                         }
                     }
                 } else {
-                    DispatchQueue.main.async {
+                    await MainActor.run {
                         status = UpdateStates.Failed
                         isLoading = false
                     }
                 }
             } else {
-                DispatchQueue.main.async {
+                await MainActor.run {
                     status = UpdateStates.Failed
                     isLoading = false
                 }

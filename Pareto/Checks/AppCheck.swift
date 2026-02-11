@@ -42,6 +42,7 @@ private struct AppStoreResult: Codable {
 }
 
 class AppCheck: ParetoCheck, AppCheckProtocol {
+    private let latestVersionRequestInFlight = OSAllocatedUnfairLock(initialState: false)
     var appName: String { "" }
     var appMarketingName: String { "" }
     var appBundle: String { "" }
@@ -85,21 +86,22 @@ class AppCheck: ParetoCheck, AppCheckProtocol {
             URLQueryItem(name: "country", value: languageCode),
             URLQueryItem(name: "bundleId", value: appBundle),
         ]
-        if let request = url?.url {
-            os_log("Requesting %{public}s", request.debugDescription)
-            AF.request(viaEdgeCache(request.description)).responseDecodable(of: AppStoreResponse.self, queue: AppCheck.queue, completionHandler: { response in
-                if let version = response.value?.results.first, response.error == nil {
-                    completion(version.version)
-                    return
-                } else {
-                    os_log("%{public}s failed: %{public}s", self.appBundle, response.error.debugDescription)
-                    completion("0.0.0")
-                    self.hasError = true
-                    return
-                }
-            })
+        guard let request = url?.url else {
+            completion("0.0.0")
+            return
         }
-        completion("0.0.0")
+        os_log("Requesting %{public}s", request.debugDescription)
+        AF.request(viaEdgeCache(request.description)).responseDecodable(of: AppStoreResponse.self, queue: AppCheck.queue, completionHandler: { response in
+            if let version = response.value?.results.first, response.error == nil {
+                completion(version.version)
+                return
+            } else {
+                os_log("%{public}s failed: %{public}s", self.appBundle, response.error.debugDescription)
+                completion("0.0.0")
+                self.hasError = true
+                return
+            }
+        })
     }
 
     override var help: String? {
@@ -108,22 +110,28 @@ class AppCheck: ParetoCheck, AppCheckProtocol {
 
     static let queue = DispatchQueue(label: "co.pareto.check_versions", qos: .userInteractive, attributes: .concurrent)
     var latestVersion: Version {
-        if try! AppInfo.versionStorage.existsObject(forKey: appBundle) {
-            return try! AppInfo.versionStorage.object(forKey: appBundle)
-        } else {
-            let lock = DispatchSemaphore(value: 0)
-            getLatestVersion { version in
-                let latestVersion = Version(version) ?? Version(0, 0, 0)
-                try! AppInfo.versionStorage.setObject(latestVersion, forKey: self.appBundle)
-                lock.signal()
+        if let cached = try? AppInfo.versionStorage.object(forKey: appBundle) {
+            return cached
+        }
+        refreshLatestVersionIfNeeded()
+        return currentVersion
+    }
+
+    private func refreshLatestVersionIfNeeded() {
+        let shouldStart = latestVersionRequestInFlight.withLock { inFlight in
+            if inFlight { return false }
+            inFlight = true
+            return true
+        }
+        guard shouldStart else { return }
+
+        getLatestVersion { version in
+            let latest = Version(version) ?? Version(0, 0, 0)
+            try? AppInfo.versionStorage.setObject(latest, forKey: self.appBundle)
+            self.latestVersionRequestInFlight.withLock { $0 = false }
+            DispatchQueue.main.async {
+                self.objectWillChange.send()
             }
-            let timeoutResult = lock.wait(timeout: .now() + 10.0)
-            if timeoutResult == .timedOut {
-                os_log("AppCheck: Timed out waiting for latest version for %{public}@", log: Log.app, self.appBundle)
-                // Return current version as fallback
-                return self.currentVersion
-            }
-            return try! AppInfo.versionStorage.object(forKey: appBundle)
         }
     }
 

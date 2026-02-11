@@ -9,6 +9,109 @@ import Foundation
 import os.log
 import OSAKit
 
+enum CommandRunnerError: Swift.Error {
+    case launchFailed(String)
+    case timedOut
+}
+
+private final class ProcessBox {
+    var process: Process?
+}
+
+private final class OutputBuffer: @unchecked Sendable {
+    private let lock = NSLock()
+    private var data = Data()
+
+    func append(_ newData: Data) {
+        lock.lock()
+        data.append(newData)
+        lock.unlock()
+    }
+
+    func output() -> String {
+        lock.lock()
+        let value = String(data: data, encoding: .utf8) ?? ""
+        lock.unlock()
+        return value
+    }
+}
+
+private final class ResumeGate: @unchecked Sendable {
+    private let lock = NSLock()
+    private var resumed = false
+
+    func run(_ block: () -> Void) {
+        lock.lock()
+        guard !resumed else {
+            lock.unlock()
+            return
+        }
+        resumed = true
+        lock.unlock()
+        block()
+    }
+}
+
+func runCMDAsync(app: String, args: [String], timeout: TimeInterval = 15.0) async throws -> String {
+    let processBox = ProcessBox()
+    let outputBuffer = OutputBuffer()
+    let resumeGate = ResumeGate()
+
+    return try await withTaskCancellationHandler {
+        try await withCheckedThrowingContinuation { continuation in
+            let task = Process()
+            let pipe = Pipe()
+
+            @Sendable func resumeOnce(_ result: Result<String, Swift.Error>) {
+                resumeGate.run {
+                    continuation.resume(with: result)
+                }
+            }
+
+            task.standardOutput = pipe
+            task.standardError = pipe
+            task.arguments = args
+            task.launchPath = app
+            processBox.process = task
+
+            pipe.fileHandleForReading.readabilityHandler = { handle in
+                let data = handle.availableData
+                guard !data.isEmpty else { return }
+                outputBuffer.append(data)
+            }
+
+            task.terminationHandler = { _ in
+                pipe.fileHandleForReading.readabilityHandler = nil
+                let remaining = pipe.fileHandleForReading.readDataToEndOfFile()
+                if !remaining.isEmpty {
+                    outputBuffer.append(remaining)
+                }
+                let output = outputBuffer.output()
+                resumeOnce(.success(output))
+            }
+
+            do {
+                try task.run()
+            } catch {
+                pipe.fileHandleForReading.readabilityHandler = nil
+                resumeOnce(.failure(CommandRunnerError.launchFailed(error.localizedDescription)))
+                return
+            }
+
+            DispatchQueue.global(qos: .utility).asyncAfter(deadline: .now() + timeout) {
+                if task.isRunning {
+                    task.terminate()
+                    resumeOnce(.failure(CommandRunnerError.timedOut))
+                }
+            }
+        }
+    } onCancel: {
+        if let process = processBox.process, process.isRunning {
+            process.terminate()
+        }
+    }
+}
+
 func runCMD(app: String, args: [String]) -> String {
     let task = Process()
     let pipe = Pipe()
@@ -18,9 +121,8 @@ func runCMD(app: String, args: [String]) -> String {
     task.arguments = args
     task.launchPath = app
     task.launch()
-    task.waitUntilExit()
-
     let data = pipe.fileHandleForReading.readDataToEndOfFile()
+    task.waitUntilExit()
     let output = String(data: data, encoding: .utf8)!
     return output
 }
@@ -35,14 +137,13 @@ func runShell(args: [String]) -> String {
     task.executableURL = URL(fileURLWithPath: "/bin/bash")
     do {
         try task.run()
+        let data = pipe.fileHandleForReading.readDataToEndOfFile()
         task.waitUntilExit()
+        let output = String(data: data, encoding: .utf8)!
+        return output
     } catch {
         return error.localizedDescription
     }
-
-    let data = pipe.fileHandleForReading.readDataToEndOfFile()
-    let output = String(data: data, encoding: .utf8)!
-    return output
 }
 
 func runOSA(appleScript: String) -> String? {

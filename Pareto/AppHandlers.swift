@@ -53,6 +53,18 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
     // Track if Settings window is open
     @Published var isSettingsWindowOpen: Bool = false
 
+    @MainActor
+    private func presentAlertNonBlocking(_ alert: NSAlert, completion: ((NSApplication.ModalResponse) -> Void)? = nil) {
+        if let window = NSApp.keyWindow ?? NSApp.mainWindow ?? NSApp.windows.first(where: { $0.isVisible }) {
+            alert.beginSheetModal(for: window) { response in
+                completion?(response)
+            }
+        } else {
+            let response = alert.runModal()
+            completion?(response)
+        }
+    }
+
     // Show icon temporarily (e.g., when user activates app)
     func showTemporarily() {
         os_log("showTemporarily called", log: Log.app)
@@ -160,7 +172,7 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
         if Thread.isMainThread {
             apply()
         } else {
-            DispatchQueue.main.sync(execute: apply)
+            DispatchQueue.main.async(execute: apply)
         }
     }
 
@@ -227,17 +239,11 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
         // Then record the timestamp (this may trigger view refresh too, but isRunning already shows)
         Defaults[.lastCheck] = Date().currentTimeMs()
 
-        // Update team configuration (blocking until done)
+        // Update team configuration in the background.
+        // Do not block check execution on network/API latency.
         if !Defaults[.teamID].isEmpty {
-            let lock = DispatchSemaphore(value: 0)
             AppInfo.TeamSettings.update {
                 os_log("Updated teams settings")
-                lock.signal()
-            }
-            let timeoutResult = lock.wait(timeout: .now() + 10.0)
-            if timeoutResult == .timedOut {
-                os_log("Team settings update timed out after 10s", log: Log.app)
-                // Continue with checks even if team settings update failed
             }
         }
 
@@ -289,11 +295,12 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
                             alert.alertStyle = NSAlert.Style.warning
                             alert.addButton(withTitle: "OK")
                             alert.addButton(withTitle: "Don't Allow")
-                            if alert.runModal() == .alertFirstButtonReturn {
-                                Defaults[.sendHWInfo] = true
-                                Defaults[.lastHWAsk] = Date().currentTimeMs()
-                            } else {
-                                Defaults[.sendHWInfo] = false
+                            self.presentAlertNonBlocking(alert) { response in
+                                if response == .alertFirstButtonReturn {
+                                    Defaults[.sendHWInfo] = true
+                                } else {
+                                    Defaults[.sendHWInfo] = false
+                                }
                                 Defaults[.lastHWAsk] = Date().currentTimeMs()
                             }
                         }
@@ -640,21 +647,25 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
 
     func doUpdateCheck() {
         let currentVersion = Bundle.main.version
-        if let release = try? updater!.getLatestRelease() {
-            if currentVersion < release.version {
-                if !SystemUser.current.isAdmin {
-                    Defaults[.updateNag] = true
-                    return
-                }
-                #if !SETAPP_ENABLED
-                    if let zipURL = release.assets.filter({ $0.browser_download_url.path.hasSuffix(".zip") }).first {
-                        let done = updater!.downloadAndUpdate(withAsset: zipURL)
-                        // Failed to update
-                        if !done, !SystemUser.current.isAdmin {
-                            Defaults[.updateNag] = true
-                        }
+        let updater = self.updater
+        Task.detached(priority: .userInitiated) { [updater] in
+            guard let updater else { return }
+            if let release = try? await updater.getLatestRelease() {
+                if currentVersion < release.version {
+                    if !SystemUser.current.isAdmin {
+                        Defaults[.updateNag] = true
+                        return
                     }
-                #endif
+                    #if !SETAPP_ENABLED
+                        if let zipURL = release.assets.filter({ $0.browser_download_url.path.hasSuffix(".zip") }).first {
+                            let done = await updater.downloadAndUpdate(withAsset: zipURL)
+                            // Failed to update
+                            if !done, !SystemUser.current.isAdmin {
+                                Defaults[.updateNag] = true
+                            }
+                        }
+                    #endif
+                }
             }
         }
     }
@@ -664,7 +675,6 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
             os_log("non-admin user cannot update the app")
             return
         }
-
         Task { @MainActor in
             self.doUpdateCheck()
         }
@@ -677,28 +687,27 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
     func restartApp() {
         #if DEBUG
             os_log("Restart disabled in DEBUG mode", log: Log.app)
-            return
+        #else
+            guard !AppInfo.isRunningTests else {
+                os_log("Restart disabled during tests", log: Log.app)
+                return
+            }
+
+            guard let executableURL = Bundle.main.executableURL else {
+                os_log("Cannot restart: missing executable URL", log: Log.app, type: .error)
+                return
+            }
+
+            os_log("Restarting app due to stale checks (last check: %{public}ld)", log: Log.app, type: .fault, Defaults[.lastCheck])
+
+            let proc = Process()
+            proc.executableURL = executableURL
+            proc.launch()
+
+            DispatchQueue.main.async {
+                NSApp.terminate(self)
+            }
         #endif
-
-        guard !AppInfo.isRunningTests else {
-            os_log("Restart disabled during tests", log: Log.app)
-            return
-        }
-
-        guard let executableURL = Bundle.main.executableURL else {
-            os_log("Cannot restart: missing executable URL", log: Log.app, type: .error)
-            return
-        }
-
-        os_log("Restarting app due to stale checks (last check: %{public}ld)", log: Log.app, type: .fault, Defaults[.lastCheck])
-
-        let proc = Process()
-        proc.executableURL = executableURL
-        proc.launch()
-
-        DispatchQueue.main.async {
-            NSApp.terminate(self)
-        }
     }
 
     @objc func showMenu() {
@@ -739,8 +748,12 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
             alert.alertStyle = NSAlert.Style.informational
             alert.addButton(withTitle: "OK")
             alert.addButton(withTitle: "Open Guide")
-            if alert.runModal() == NSApplication.ModalResponse.alertSecondButtonReturn {
-                NSWorkspace.shared.open(URL(string: "https://paretosecurity.com/docs/mac/logs")!)
+            DispatchQueue.main.async {
+                self.presentAlertNonBlocking(alert) { response in
+                    if response == .alertSecondButtonReturn {
+                        NSWorkspace.shared.open(URL(string: "https://paretosecurity.com/docs/mac/logs")!)
+                    }
+                }
             }
         }
 
@@ -752,7 +765,9 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
                 alert.messageText = "Logs have been copied to the clipboard."
                 alert.alertStyle = NSAlert.Style.informational
                 alert.addButton(withTitle: "OK")
-                alert.runModal()
+                DispatchQueue.main.async {
+                    self.presentAlertNonBlocking(alert)
+                }
                 return
             }
         }
@@ -761,7 +776,9 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
         alert.messageText = "Thre are no logs to copy. App logs are only available after the application has been running for a while."
         alert.alertStyle = NSAlert.Style.informational
         alert.addButton(withTitle: "OK")
-        alert.runModal()
+        DispatchQueue.main.async {
+            self.presentAlertNonBlocking(alert)
+        }
     }
 
     func resetSettings() {
@@ -807,7 +824,7 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
                         alert.alertStyle = NSAlert.Style.critical
                         alert.addButton(withTitle: "OK")
                         #if !DEBUG
-                            alert.runModal()
+                            self.presentAlertNonBlocking(alert)
                         #endif
                     }
                     return
@@ -830,7 +847,7 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
                             alert.alertStyle = NSAlert.Style.informational
                             alert.addButton(withTitle: "OK")
                             #if !DEBUG
-                                alert.runModal()
+                                self.presentAlertNonBlocking(alert)
                             #endif
                         }
                         if !Defaults.firstLaunch() {
@@ -846,7 +863,7 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
                             alert.alertStyle = NSAlert.Style.critical
                             alert.addButton(withTitle: "OK")
                             #if !DEBUG
-                                alert.runModal()
+                                self.presentAlertNonBlocking(alert)
                             #endif
                         }
                     }
