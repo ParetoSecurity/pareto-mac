@@ -245,12 +245,13 @@ struct AboutSettingsView: View {
             let updater = AppUpdater(owner: "ParetoSecurity", repo: "pareto-mac")
             let currentVersion = Bundle.main.version
 
-            if let release = try? await updater.getLatestRelease() {
+            do {
+                let release = try await updater.getLatestRelease()
                 await MainActor.run {
                     hasCheckedForUpdates = true
                     isLoading = false
 
-                    if currentVersion < release.version {
+                    if let release, currentVersion < release.version {
                         status = UpdateStates.NewVersion
                         latestVersionFound = release.tag_name
                     } else {
@@ -259,7 +260,7 @@ struct AboutSettingsView: View {
                         Defaults[.updateNag] = false
                     }
                 }
-            } else {
+            } catch {
                 await MainActor.run {
                     hasCheckedForUpdates = true
                     status = UpdateStates.Failed
