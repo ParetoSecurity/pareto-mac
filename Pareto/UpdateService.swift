@@ -38,6 +38,10 @@ class UpdateService {
 
     private let baseURL = "https://paretosecurity.com/api"
     private let session: Session
+    private let responseQueue = DispatchQueue(
+        label: "com.paretosecurity.updateservice.response",
+        qos: .userInitiated
+    )
 
     private init() {
         // Create URLSessionConfiguration without caching (we'll handle it manually)
@@ -94,7 +98,7 @@ class UpdateService {
         let request = URLRequest(url: url)
         return try await withCheckedThrowingContinuation { continuation in
             session.request(request)
-                .responseData { response in
+                .responseData(queue: responseQueue) { response in
                     if let statusCode = response.response?.statusCode {
                         if statusCode == 503 {
                             os_log("Ignoring HTTP %{public}d response for API request (service temporarily unavailable)", statusCode)
