@@ -11,25 +11,11 @@ class UpdateServiceTest: XCTestCase {
         super.setUp()
     }
 
-    func testGetUpdatesSync() throws {
-        // Skip network tests in CI environment or if network is unavailable
-        let expectation = self.expectation(description: "API call")
-        var testResult: Result<[Release], Swift.Error>?
-
-        DispatchQueue.global().async {
-            do {
-                let releases = try UpdateService.shared.getUpdatesSync()
-                testResult = .success(releases)
-            } catch {
-                testResult = .failure(error)
-            }
-            expectation.fulfill()
-        }
-
-        // Wait up to 15 seconds for network request
-        wait(for: [expectation], timeout: 15.0)
-
-        guard case let .success(releases) = testResult else {
+    func testGetUpdatesAsync() async throws {
+        let releases: [Release]
+        do {
+            releases = try await UpdateService.shared.getUpdatesAsync()
+        } catch {
             // If network fails, test basic UpdateService structure instead
             XCTAssertNotNil(UpdateService.shared, "UpdateService should be initialized")
             return

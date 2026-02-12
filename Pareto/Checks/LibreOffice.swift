@@ -16,6 +16,8 @@ import Version
 
 class AppLibreOfficeCheck: AppCheck {
     static let sharedInstance = AppLibreOfficeCheck()
+    private let latestVersionsLock = OSAllocatedUnfairLock<[Version]>(initialState: [Version(0, 0, 0)])
+    private let latestVersionsInFlight = OSAllocatedUnfairLock(initialState: false)
 
     override var appName: String { "LibreOffice" }
     override var appMarketingName: String { "LibreOffice" }
@@ -51,18 +53,26 @@ class AppLibreOfficeCheck: AppCheck {
     }
 
     var latestVersions: [Version] {
-        var tempVersions = [Version(0, 0, 0)]
-        let lock = DispatchSemaphore(value: 0)
+        refreshLatestVersionsIfNeeded()
+        return latestVersionsLock.withLock { $0 }
+    }
+
+    private func refreshLatestVersionsIfNeeded() {
+        let shouldStart = latestVersionsInFlight.withLock { inFlight in
+            if inFlight { return false }
+            inFlight = true
+            return true
+        }
+        guard shouldStart else { return }
+
         getLatestVersions { versions in
-            tempVersions = versions.map { Version($0) ?? Version(0, 0, 0) }
-            lock.signal()
+            let parsed = versions.map { Version($0) ?? Version(0, 0, 0) }
+            self.latestVersionsLock.withLock { $0 = parsed }
+            self.latestVersionsInFlight.withLock { $0 = false }
+            DispatchQueue.main.async {
+                self.objectWillChange.send()
+            }
         }
-        let timeoutResult = lock.wait(timeout: .now() + 10.0)
-        if timeoutResult == .timedOut {
-            os_log("LibreOffice: Timed out waiting for latest versions", log: Log.app)
-            // Return default version on timeout
-        }
-        return tempVersions
     }
 
     override func checkPasses() -> Bool {

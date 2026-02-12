@@ -38,6 +38,11 @@ class UpdateService {
 
     private let baseURL = "https://paretosecurity.com/api"
     private let session: Session
+    private let requestTimeoutInterval: TimeInterval = 10
+    private let responseQueue = DispatchQueue(
+        label: "com.paretosecurity.updateservice.response",
+        qos: .userInitiated
+    )
 
     private init() {
         // Create URLSessionConfiguration without caching (we'll handle it manually)
@@ -58,7 +63,6 @@ class UpdateService {
             return
         }
 
-        let cacheKey = url.absoluteString
         os_log("Making API request to: %{public}s", url.absoluteString)
 
         let request = URLRequest(url: url)
@@ -82,80 +86,69 @@ class UpdateService {
             }
     }
 
-    func requestSync<T: Decodable>(
+    func requestAsync<T: Decodable>(
         endpoint: String,
         queryParameters: [String: String] = [:]
-    ) throws -> T {
+    ) async throws -> T {
         guard let url = buildURL(endpoint: endpoint, queryParameters: queryParameters) else {
             throw APIError.invalidURL
         }
 
-        let cacheKey = url.absoluteString
+        os_log("Making async API request to: %{public}s", url.absoluteString)
 
-        os_log("Making sync API request to: %{public}s", url.absoluteString)
+        var request = URLRequest(url: url)
+        request.timeoutInterval = requestTimeoutInterval
 
-        let request = URLRequest(url: url)
-
-        let semaphore = DispatchSemaphore(value: 0)
-        var result: Result<T, APIError>?
-
-        session.request(request)
-            .responseData { response in
-                // Check for ignorable status codes (503, 403) before validation
-                if let statusCode = response.response?.statusCode {
-                    if statusCode == 503 {
-                        os_log("Ignoring HTTP %{public}d response for API request (service temporarily unavailable)", statusCode)
-                        result = .failure(.networkError("HTTP \(statusCode) - temporarily unavailable"))
-                        semaphore.signal()
-                        return
-                    } else if statusCode == 403 {
-                        os_log("Ignoring HTTP %{public}d response for API request (access forbidden)", statusCode)
-                        result = .failure(.networkError("HTTP \(statusCode) - access forbidden"))
-                        semaphore.signal()
+        let dataRequest = session.request(request)
+        return try await withTaskCancellationHandler(operation: {
+            try await withCheckedThrowingContinuation { continuation in
+                dataRequest.responseData(queue: responseQueue) { response in
+                    if let error = response.error,
+                       error.isExplicitlyCancelledError || Task.isCancelled
+                    {
+                        continuation.resume(throwing: CancellationError())
                         return
                     }
-                }
 
-                // Validate response for other status codes
-                guard let httpResponse = response.response,
-                      (200 ... 299).contains(httpResponse.statusCode)
-                else {
-                    let statusCode = response.response?.statusCode ?? 0
-                    os_log("Sync API request failed with status: %{public}d", statusCode)
-                    result = .failure(.networkError("HTTP \(statusCode)"))
-                    semaphore.signal()
-                    return
-                }
-
-                switch response.result {
-                case let .success(data):
-                    do {
-                        let decodedResult = try JSONDecoder().decode(T.self, from: data)
-
-                        result = .success(decodedResult)
-                    } catch {
-                        os_log("Failed to decode response: %{public}s", error.localizedDescription)
-                        result = .failure(.decodingError(error.localizedDescription))
+                    if let statusCode = response.response?.statusCode {
+                        if statusCode == 503 {
+                            os_log("Ignoring HTTP %{public}d response for API request (service temporarily unavailable)", statusCode)
+                            continuation.resume(throwing: APIError.networkError("HTTP \(statusCode) - temporarily unavailable"))
+                            return
+                        } else if statusCode == 403 {
+                            os_log("Ignoring HTTP %{public}d response for API request (access forbidden)", statusCode)
+                            continuation.resume(throwing: APIError.networkError("HTTP \(statusCode) - access forbidden"))
+                            return
+                        }
                     }
-                case let .failure(error):
-                    os_log("Sync API request failed: %{public}s", error.localizedDescription)
-                    result = .failure(.networkError(error.localizedDescription))
+
+                    guard let httpResponse = response.response,
+                          (200 ... 299).contains(httpResponse.statusCode)
+                    else {
+                        let statusCode = response.response?.statusCode ?? 0
+                        os_log("Async API request failed with status: %{public}d", statusCode)
+                        continuation.resume(throwing: APIError.networkError("HTTP \(statusCode)"))
+                        return
+                    }
+
+                    switch response.result {
+                    case let .success(data):
+                        do {
+                            let decodedResult = try JSONDecoder().decode(T.self, from: data)
+                            continuation.resume(returning: decodedResult)
+                        } catch {
+                            os_log("Failed to decode response: %{public}s", error.localizedDescription)
+                            continuation.resume(throwing: APIError.decodingError(error.localizedDescription))
+                        }
+                    case let .failure(error):
+                        os_log("Async API request failed: %{public}s", error.localizedDescription)
+                        continuation.resume(throwing: APIError.networkError(error.localizedDescription))
+                    }
                 }
-                semaphore.signal()
             }
-
-        _ = semaphore.wait(timeout: .now() + 10.0)
-
-        guard let finalResult = result else {
-            throw APIError.networkError("Request timeout")
-        }
-
-        switch finalResult {
-        case let .success(data):
-            return data
-        case let .failure(error):
-            throw error
-        }
+        }, onCancel: {
+            dataRequest.cancel()
+        })
     }
 
     private func buildURL(endpoint: String, queryParameters: [String: String]) -> URL? {
@@ -190,7 +183,7 @@ extension UpdateService {
         )
     }
 
-    func getUpdatesSync() throws -> [Release] {
+    func getUpdatesAsync() async throws -> [Release] {
         let params = [
             "uuid": Defaults[.machineUUID],
             "version": AppInfo.appVersion,
@@ -198,7 +191,7 @@ extension UpdateService {
             "distribution": AppInfo.utmSource,
         ]
 
-        return try requestSync(
+        return try await requestAsync(
             endpoint: "/updates",
             queryParameters: params
         )

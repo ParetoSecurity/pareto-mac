@@ -42,6 +42,18 @@ struct SPHardware: Codable {
         let info: SPHardwareWrapper = try! JSONDecoder().decode(SPHardwareWrapper.self, from: jsonData)
         return info.spHardwareDataType.first
     }
+
+    static func gatherAsync() async -> SPHardware? {
+        do {
+            let output = try await runCMDAsync(app: "/usr/sbin/system_profiler", args: ["SPHardwareDataType", "-json"], timeout: 20.0)
+            guard let jsonData = output.data(using: .utf8) else { return nil }
+            let info = try JSONDecoder().decode(SPHardwareWrapper.self, from: jsonData)
+            return info.spHardwareDataType.first
+        } catch {
+            os_log("Failed to gather hardware info asynchronously: %{public}@", log: Log.app, error.localizedDescription)
+            return nil
+        }
+    }
 }
 
 enum AppInfo {
@@ -56,7 +68,13 @@ enum AppInfo {
 
     static var secExp = false
     static let Flags = FlagsUpdater()
-    static let HWInfo = SPHardware.gather()
+    private static let hwInfoLock = OSAllocatedUnfairLock<SPHardware?>(initialState: nil)
+    private static let hwInfoLoadStarted = OSAllocatedUnfairLock(initialState: false)
+
+    static var HWInfo: SPHardware? {
+        warmHWInfo()
+        return hwInfoLock.withLock { $0 }
+    }
     static let TeamSettings = TeamSettingsUpdater()
     static var utmSource: String {
         var source = "app"
@@ -102,6 +120,20 @@ enum AppInfo {
 
     static var hwSerial: String {
         HWInfo?.serialNumber ?? "Unknown"
+    }
+
+    static func warmHWInfo() {
+        let shouldStart = hwInfoLoadStarted.withLock { started in
+            if started { return false }
+            started = true
+            return true
+        }
+        guard shouldStart else { return }
+
+        Task.detached(priority: .utility) {
+            let info = await SPHardware.gatherAsync()
+            hwInfoLock.withLock { $0 = info }
+        }
     }
 
     static let teamsURL = { () -> URL in

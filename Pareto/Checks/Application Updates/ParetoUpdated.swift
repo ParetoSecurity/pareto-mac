@@ -12,9 +12,10 @@ import Version
 
 class ParetoUpdated: ParetoCheck {
     static let sharedInstance = ParetoUpdated()
-    private var updateCheckResult: Bool = false
+    private var updateCheckResult: Bool = true
     private var latestVersion: String = ""
     private var currentVersion: String = ""
+    private let updateCheckInFlight = OSAllocatedUnfairLock(initialState: false)
 
     override var UUID: String {
         "44e4754a-0b42-4964-9cc2-b88b2023cb1e"
@@ -58,14 +59,13 @@ class ParetoUpdated: ParetoCheck {
         return v1.compare(v2, options: .numeric)
     }
 
-    private func checkForUpdates(completion: @escaping (Bool) -> Void) {
+    private func checkForUpdates() async -> Bool {
         do {
-            let releases = try UpdateService.shared.getUpdatesSync()
+            let releases = try await UpdateService.shared.getUpdatesAsync()
 
             if releases.isEmpty {
                 os_log("No releases found during update check")
-                completion(false)
-                return
+                return false
             }
 
             // Sort releases by version (descending order)
@@ -85,8 +85,7 @@ class ParetoUpdated: ParetoCheck {
 
             guard let latestRelease = filteredReleases.first else {
                 os_log("No valid releases found after filtering")
-                completion(false)
-                return
+                return false
             }
 
             // Only fail if latest release is older than 10 days and current version does not match
@@ -95,8 +94,7 @@ class ParetoUpdated: ParetoCheck {
 
             guard let publishedDate = dateFormatter.date(from: latestRelease.published_at) else {
                 os_log("Could not parse published date for latest release")
-                completion(false)
-                return
+                return false
             }
 
             if publishedDate < tenDaysAgo {
@@ -117,7 +115,7 @@ class ParetoUpdated: ParetoCheck {
 
                 os_log("Latest release is older than 10 days. App version: %{public}s, Latest version: %{public}s, Up to date: %{public}@",
                        appVersion, latestVersionString, isUpToDate ? "true" : "false")
-                completion(isUpToDate)
+                return isUpToDate
             } else {
                 // Within 10 days grace period, always pass
                 var appVersion = AppInfo.appVersion
@@ -132,7 +130,7 @@ class ParetoUpdated: ParetoCheck {
 
                 os_log("Latest release is within 10 days grace period. Published: %{public}s, Days ago: %{public}f, App version: %{public}s, Latest version: %{public}s",
                        latestRelease.published_at, abs(publishedDate.timeIntervalSinceNow) / (24 * 60 * 60), appVersion, latestVersionString)
-                completion(true)
+                return true
             }
 
         } catch {
@@ -140,12 +138,27 @@ class ParetoUpdated: ParetoCheck {
             // Ignore 503 (Service Unavailable) and 403 (Forbidden) - treat as check passing
             if errorMessage.contains("503") || errorMessage.contains("403") {
                 os_log("Ignoring temporary server error for update check: %{public}s", errorMessage)
-                completion(true)
-                return
+                return true
             }
             os_log("Failed to check for updates: %{public}s", errorMessage)
             hasError = true
-            completion(false)
+            return false
+        }
+    }
+
+    private func refreshUpdateStatusIfNeeded() {
+        let shouldStart = updateCheckInFlight.withLock { inFlight in
+            if inFlight { return false }
+            inFlight = true
+            return true
+        }
+        guard shouldStart else { return }
+
+        Task.detached(priority: .utility) { [weak self] in
+            guard let self else { return }
+            let result = await self.checkForUpdates()
+            self.updateCheckResult = result
+            self.updateCheckInFlight.withLock { $0 = false }
         }
     }
 
@@ -161,18 +174,7 @@ class ParetoUpdated: ParetoCheck {
                 return true
             }
 
-            // Create a semaphore to wait for the async operation to complete
-            let semaphore = DispatchSemaphore(value: 0)
-
-            // Call checkForUpdates with a completion handler
-            checkForUpdates { result in
-                self.updateCheckResult = result
-                semaphore.signal()
-            }
-
-            // Wait for the completion handler to be called
-            _ = semaphore.wait(timeout: .now() + 10.0) // 10-second timeout
-
+            refreshUpdateStatusIfNeeded()
             return updateCheckResult
         #endif
     }

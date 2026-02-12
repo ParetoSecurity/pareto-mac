@@ -114,72 +114,56 @@ public class AppUpdater {
         b1.codeSigningIdentity == b2.codeSigningIdentity
     }
 
-    func downloadAndUpdate(withAsset asset: Release.Asset) -> Bool {
+    func downloadAndUpdate(withAsset asset: Release.Asset) async -> Bool {
         #if DEBUG
             os_log("In debug build updates are disabled")
             return false
         #else
-            let lock = DispatchSemaphore(value: 0)
-            var state = false
-            let tmpDir = try! FileManager.default.url(for: .itemReplacementDirectory, in: .userDomainMask, appropriateFor: Bundle.main.bundleURL, create: true)
-            URLSession.shared.downloadTask(with: asset.browser_download_url) { tempLocalUrl, response, error in
-                if error != nil {
-                    os_log("Error took place while downloading a file: \(error!.localizedDescription)")
-                    lock.signal()
-                    return
-                }
+            guard let tmpDir = try? FileManager.default.url(
+                for: .itemReplacementDirectory,
+                in: .userDomainMask,
+                appropriateFor: Bundle.main.bundleURL,
+                create: true
+            ) else {
+                os_log("Failed to create temporary directory for update", log: Log.app)
+                return false
+            }
+            defer { try? FileManager.default.removeItem(at: tmpDir) }
 
-                guard let localUrl = tempLocalUrl else {
-                    os_log("Error updating from \(asset.browser_download_url), missing local file")
-                    lock.signal()
-                    return
-                }
+            do {
+                var request = URLRequest(url: asset.browser_download_url)
+                request.timeoutInterval = 60.0
+                let (localUrl, response) = try await URLSession.shared.download(for: request)
 
                 guard let statusCode = (response as? HTTPURLResponse)?.statusCode else {
-                    os_log("Could not parse response of \(asset.browser_download_url)")
-                    lock.signal()
-                    return
+                    os_log("Could not parse response of %{public}@", log: Log.app, asset.browser_download_url.absoluteString)
+                    return false
                 }
 
-                if statusCode != 200 {
-                    os_log("Failed to download \(asset.browser_download_url). Status code: \(statusCode)")
-                    lock.signal()
-                    return
+                guard statusCode == 200 else {
+                    os_log("Failed to download %{public}@. Status code: %{public}d", log: Log.app, asset.browser_download_url.absoluteString, statusCode)
+                    return false
                 }
 
                 guard localUrl.fileSize == asset.size else {
-                    os_log("Error updating from \(asset.browser_download_url), wrong file size")
-                    lock.signal()
-                    return
+                    os_log("Error updating from %{public}@, wrong file size", log: Log.app, asset.browser_download_url.absoluteString)
+                    return false
                 }
 
-                os_log("Successfully downloaded \(asset.browser_download_url). Status code: \(statusCode)")
+                os_log("Successfully downloaded %{public}@. Status code: %{public}d", log: Log.app, asset.browser_download_url.absoluteString, statusCode)
                 let downloadPath = tmpDir.appendingPathComponent("download")
-                do {
-                    try FileManager.default.copyItem(at: localUrl, to: downloadPath)
-                } catch let writeError {
-                    os_log("Error moving a file \(localUrl) to \(downloadPath): \(writeError.localizedDescription)")
-                    lock.signal()
+                if FileManager.default.fileExists(atPath: downloadPath.path) {
+                    try? FileManager.default.removeItem(at: downloadPath)
                 }
+                try FileManager.default.copyItem(at: localUrl, to: downloadPath)
 
-                os_log("Doing update from \(localUrl)")
-                do {
-                    try self.update(withApp: downloadPath, withAsset: asset)
-                    state = true
-                    lock.signal()
-                } catch let writeError {
-                    os_log("Error updating with file \(downloadPath) : \(writeError.localizedDescription)")
-                    lock.signal()
-                }
-
-            }.resume()
-            let timeoutResult = lock.wait(timeout: .now() + 60.0)
-            if timeoutResult == .timedOut {
-                os_log("Update download timed out after 60s", log: Log.app)
-                state = false
+                os_log("Doing update from %{public}@", log: Log.app, localUrl.path)
+                try self.update(withApp: downloadPath, withAsset: asset)
+                return true
+            } catch {
+                os_log("Error updating with asset %{public}@ : %{public}@", log: Log.app, asset.browser_download_url.absoluteString, error.localizedDescription)
+                return false
             }
-            try? FileManager.default.removeItem(at: tmpDir)
-            return state
         #endif
     }
 
@@ -259,12 +243,12 @@ public class AppUpdater {
         }
     }
 
-    func getLatestRelease() throws -> Release? {
+    func getLatestRelease() async throws -> Release? {
         guard Bundle.main.executableURL != nil else {
             throw Error.bundleExecutableURL
         }
         do {
-            let releases = try UpdateService.shared.getUpdatesSync()
+            let releases = try await UpdateService.shared.getUpdatesAsync()
             let release = try releases.findViableUpdate(prerelease: Defaults.betaChannelComputed)
             return release
         } catch {

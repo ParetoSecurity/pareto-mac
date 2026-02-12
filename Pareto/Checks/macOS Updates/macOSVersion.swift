@@ -12,6 +12,8 @@ import Version
 
 class MacOSVersionCheck: ParetoCheck {
     static let sharedInstance = MacOSVersionCheck()
+    private let latestVersionLock = OSAllocatedUnfairLock<Version>(initialState: Version(0, 0, 0))
+    private let latestVersionInFlight = OSAllocatedUnfairLock(initialState: false)
     override var UUID: String {
         "284162c2-f911-4b5e-8c81-30b2cf1ba73f"
     }
@@ -65,18 +67,26 @@ class MacOSVersionCheck: ParetoCheck {
         if #available(macOS 26, *) {
             doc = "122868"
         }
-        var tempVersion = "0.0.0"
-        let lock = DispatchSemaphore(value: 0)
+        refreshLatestVersionIfNeeded(doc: doc)
+        return latestVersionLock.withLock { $0 }
+    }
+
+    private func refreshLatestVersionIfNeeded(doc: String) {
+        let shouldStart = latestVersionInFlight.withLock { inFlight in
+            if inFlight { return false }
+            inFlight = true
+            return true
+        }
+        guard shouldStart else { return }
+
         getLatestVersion(doc: doc) { version in
-            tempVersion = version
-            lock.signal()
+            let parsed = Version(version) ?? Version(0, 0, 0)
+            self.latestVersionLock.withLock { $0 = parsed }
+            self.latestVersionInFlight.withLock { $0 = false }
+            DispatchQueue.main.async {
+                self.objectWillChange.send()
+            }
         }
-        let timeoutResult = lock.wait(timeout: .now() + 10.0)
-        if timeoutResult == .timedOut {
-            os_log("macOSVersion: Timed out waiting for latest version", log: Log.app)
-            // Return default version on timeout
-        }
-        return Version(tempVersion) ?? Version(0, 0, 0)
     }
 
     override func checkPasses() -> Bool {
