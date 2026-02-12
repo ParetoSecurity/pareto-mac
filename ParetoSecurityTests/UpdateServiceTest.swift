@@ -4,6 +4,7 @@
 //
 
 @testable import Pareto_Security
+import Version
 import XCTest
 
 class UpdateServiceTest: XCTestCase {
@@ -83,18 +84,18 @@ class UpdateServiceTest: XCTestCase {
         // Test Release array filtering without network dependency
         let mockAsset = Release.Asset(name: "test.zip", browser_download_url: URL(string: "https://example.com/test.zip")!, size: 1000, content_type: .zip)
         let mockReleases = [
-            Release(tag_name: "v1.0.0", body: "", prerelease: false, html_url: URL(string: "https://example.com")!, published_at: "2024-01-01T00:00:00Z", assets: [mockAsset]),
-            Release(tag_name: "v1.1.0-beta", body: "", prerelease: true, html_url: URL(string: "https://example.com")!, published_at: "2024-02-01T00:00:00Z", assets: [mockAsset]),
+            Release(tag_name: "v1.12.0", body: "", prerelease: false, html_url: URL(string: "https://example.com")!, published_at: "2024-01-01T00:00:00Z", assets: [mockAsset]),
+            Release(tag_name: "v1.12.1", body: "", prerelease: true, html_url: URL(string: "https://example.com")!, published_at: "2024-02-01T00:00:00Z", assets: [mockAsset]),
         ]
 
         // Test that we can find a viable update
-        let viableUpdate = try mockReleases.findViableUpdate(prerelease: false)
+        let viableUpdate = try mockReleases.findViableUpdate(prerelease: false, currentVersion: Version(1, 11, 0))
         XCTAssertNotNil(viableUpdate, "Should find a viable non-prerelease update")
-        XCTAssertEqual(viableUpdate?.tag_name, "v1.0.0", "Should return stable release")
+        XCTAssertEqual(viableUpdate?.tag_name, "v1.12.0", "Should return stable release")
 
         // Test prerelease filtering
-        let prereleaseUpdate = try mockReleases.findViableUpdate(prerelease: true)
+        let prereleaseUpdate = try mockReleases.findViableUpdate(prerelease: true, currentVersion: Version(1, 12, 0))
         XCTAssertNotNil(prereleaseUpdate, "Should find a viable prerelease update")
-        XCTAssertEqual(prereleaseUpdate?.tag_name, "v1.1.0-beta", "Should return prerelease")
+        XCTAssertEqual(prereleaseUpdate?.tag_name, "v1.12.1", "Should return prerelease")
     }
 }

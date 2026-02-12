@@ -88,12 +88,11 @@ struct Release: Decodable {
 }
 
 extension Array where Element == Release {
-    func findViableUpdate(prerelease: Bool) throws -> Release? {
-        let suitableReleases = !prerelease ? filter { $0.prerelease == false } : filter { $0.prerelease == true }
-        guard let latestRelease = suitableReleases.sorted(by: {
-            $0.version < $1.version
-        }).filter({ $0.assets.count > 0 }).last else { return nil }
-        return latestRelease
+    func findViableUpdate(prerelease: Bool, currentVersion: Version) throws -> Release? {
+        let suitableReleases = prerelease ? self : filter { !$0.prerelease }
+        return suitableReleases
+            .filter { !$0.assets.isEmpty && $0.version > currentVersion }
+            .max(by: { $0.version < $1.version })
     }
 }
 
@@ -249,7 +248,7 @@ public class AppUpdater {
         }
         do {
             let releases = try await UpdateService.shared.getUpdatesAsync()
-            let release = try releases.findViableUpdate(prerelease: Defaults.betaChannelComputed)
+            let release = try releases.findViableUpdate(prerelease: Defaults.betaChannelComputed, currentVersion: Bundle.main.version)
             return release
         } catch {
             if let apiError = error as? APIError {
