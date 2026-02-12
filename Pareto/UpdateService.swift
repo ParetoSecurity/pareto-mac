@@ -38,6 +38,7 @@ class UpdateService {
 
     private let baseURL = "https://paretosecurity.com/api"
     private let session: Session
+    private let requestTimeoutInterval: TimeInterval = 10
     private let responseQueue = DispatchQueue(
         label: "com.paretosecurity.updateservice.response",
         qos: .userInitiated
@@ -95,10 +96,20 @@ class UpdateService {
 
         os_log("Making async API request to: %{public}s", url.absoluteString)
 
-        let request = URLRequest(url: url)
-        return try await withCheckedThrowingContinuation { continuation in
-            session.request(request)
-                .responseData(queue: responseQueue) { response in
+        var request = URLRequest(url: url)
+        request.timeoutInterval = requestTimeoutInterval
+
+        let dataRequest = session.request(request)
+        return try await withTaskCancellationHandler(operation: {
+            try await withCheckedThrowingContinuation { continuation in
+                dataRequest.responseData(queue: responseQueue) { response in
+                    if let error = response.error,
+                       error.isExplicitlyCancelledError || Task.isCancelled
+                    {
+                        continuation.resume(throwing: CancellationError())
+                        return
+                    }
+
                     if let statusCode = response.response?.statusCode {
                         if statusCode == 503 {
                             os_log("Ignoring HTTP %{public}d response for API request (service temporarily unavailable)", statusCode)
@@ -134,7 +145,10 @@ class UpdateService {
                         continuation.resume(throwing: APIError.networkError(error.localizedDescription))
                     }
                 }
-        }
+            }
+        }, onCancel: {
+            dataRequest.cancel()
+        })
     }
 
     private func buildURL(endpoint: String, queryParameters: [String: String]) -> URL? {
