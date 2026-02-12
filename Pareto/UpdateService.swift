@@ -145,14 +145,10 @@ class UpdateService {
                         continuation.resume(throwing: APIError.networkError(error.localizedDescription))
                     }
                 }
-<<<<<<< HEAD
             }
         }, onCancel: {
             dataRequest.cancel()
         })
-=======
-        }
->>>>>>> 8560a06 (feat: Async code rewrite)
     }
 
     private func buildURL(endpoint: String, queryParameters: [String: String]) -> URL? {
