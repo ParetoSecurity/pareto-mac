@@ -146,31 +146,88 @@ func runShell(args: [String]) -> String {
     }
 }
 
-func runOSA(appleScript: String) -> String? {
-    var error: NSDictionary?
-    guard let script = NSAppleScript(source: appleScript) else {
-        os_log("NSAppleScript init failed")
+func runOSAAsync(appleScript: String, timeout: TimeInterval = 10.0) async -> String? {
+    let resumeGate = ResumeGate()
+
+    return await withCheckedContinuation { continuation in
+        let timeoutWork = DispatchWorkItem {
+            os_log("NSAppleScript timed out after %{public}f seconds", timeout)
+            resumeGate.run {
+                continuation.resume(returning: nil)
+            }
+        }
+
+        DispatchQueue.global(qos: .userInitiated).async {
+            var error: NSDictionary?
+            guard let script = NSAppleScript(source: appleScript) else {
+                os_log("NSAppleScript init failed")
+                timeoutWork.cancel()
+                resumeGate.run { continuation.resume(returning: nil) }
+                return
+            }
+            let result = script.executeAndReturnError(&error)
+            timeoutWork.cancel()
+            if let error = error {
+                os_log("NSAppleScript error: %{public}s", error.debugDescription)
+                resumeGate.run { continuation.resume(returning: nil) }
+                return
+            }
+
+            if let s = result.stringValue {
+                resumeGate.run { continuation.resume(returning: s) }
+                return
+            }
+
+            let rawData = result.data
+            if let text = String(data: rawData, encoding: .utf8) ?? String(data: rawData, encoding: .macOSRoman) {
+                resumeGate.run { continuation.resume(returning: text) }
+                return
+            }
+
+            resumeGate.run { continuation.resume(returning: result.description) }
+        }
+
+        DispatchQueue.global(qos: .utility).asyncAfter(deadline: .now() + timeout, execute: timeoutWork)
+    }
+}
+
+func runOSA(appleScript: String, timeout: TimeInterval = 10.0) -> String? {
+    let semaphore = DispatchSemaphore(value: 0)
+    var scriptResult: String?
+
+    DispatchQueue.global(qos: .userInitiated).async {
+        var error: NSDictionary?
+        guard let script = NSAppleScript(source: appleScript) else {
+            os_log("NSAppleScript init failed")
+            semaphore.signal()
+            return
+        }
+        let result = script.executeAndReturnError(&error)
+        if let error = error {
+            os_log("NSAppleScript error: %{public}s", error.debugDescription)
+            semaphore.signal()
+            return
+        }
+
+        if let s = result.stringValue {
+            scriptResult = s
+        } else {
+            let rawData = result.data
+            if let text = String(data: rawData, encoding: .utf8) ?? String(data: rawData, encoding: .macOSRoman) {
+                scriptResult = text
+            } else {
+                scriptResult = result.description
+            }
+        }
+        semaphore.signal()
+    }
+
+    if semaphore.wait(timeout: .now() + timeout) == .timedOut {
+        os_log("NSAppleScript timed out after %{public}f seconds", timeout)
         return nil
     }
-    let result = script.executeAndReturnError(&error)
-    if let error = error {
-        os_log("NSAppleScript error: %{public}s", error.debugDescription)
-        return nil
-    }
 
-    // Prefer the string value if available
-    if let s = result.stringValue {
-        return s
-    }
-
-    // As a last resort, try the raw data of the descriptor
-    let rawData = result.data
-    if let text = String(data: rawData, encoding: .utf8) ?? String(data: rawData, encoding: .macOSRoman) {
-        return text
-    }
-
-    // Fallback to description
-    return result.description
+    return scriptResult
 }
 
 func lsof(withCommand cmd: String, withPort port: Int) -> Bool {
