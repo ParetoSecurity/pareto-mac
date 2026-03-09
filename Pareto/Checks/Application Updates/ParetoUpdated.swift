@@ -51,12 +51,26 @@ class ParetoUpdated: ParetoCheck {
         return components.url!
     }
 
-    // Helper function to compare semantic versions
-    private func compareVersions(_ version1: String, _ version2: String) -> ComparisonResult {
-        let v1 = version1.replacingOccurrences(of: "v", with: "")
-        let v2 = version2.replacingOccurrences(of: "v", with: "")
+    func normalizedVersionString(_ rawVersion: String) -> String {
+        let versionWithoutPrefix = rawVersion.replacingOccurrences(of: "v", with: "")
+        if versionWithoutPrefix.contains("-") {
+            return String(versionWithoutPrefix.split(separator: "-")[0])
+        }
+        return versionWithoutPrefix
+    }
 
-        return v1.compare(v2, options: .numeric)
+    func isCurrentVersionUpToDate(currentVersion: String, latestVersion: String) -> Bool {
+        let normalizedCurrent = normalizedVersionString(currentVersion)
+        let normalizedLatest = normalizedVersionString(latestVersion)
+
+        guard
+            let current = Version(normalizedCurrent),
+            let latest = Version(normalizedLatest)
+        else {
+            return normalizedCurrent.compare(normalizedLatest, options: .numeric) != .orderedAscending
+        }
+
+        return current >= latest
     }
 
     private func checkForUpdates() async -> Bool {
@@ -74,14 +88,10 @@ class ParetoUpdated: ParetoCheck {
             // Log the sorted releases for debugging
             os_log("Sorted releases: %{public}@", sortedReleases.map { $0.tag_name }.joined(separator: ", "))
 
-            // Filter out pre-releases if showBeta is false
-            let filteredReleases = Defaults[.showBeta] ? sortedReleases : sortedReleases.filter { !$0.prerelease }
-
-            if !Defaults[.showBeta] {
-                os_log("Excluding beta releases in update check")
-            } else {
-                os_log("Including beta releases in update check")
-            }
+            // This check reports whether the installed app is at least as new as the
+            // latest stable release, even when prerelease updates are enabled.
+            let filteredReleases = sortedReleases.filter { !$0.prerelease }
+            os_log("Comparing installed app against latest stable release")
 
             guard let latestRelease = filteredReleases.first else {
                 os_log("No valid releases found after filtering")
@@ -99,36 +109,28 @@ class ParetoUpdated: ParetoCheck {
 
             if publishedDate < tenDaysAgo {
                 // Latest release is older than 10 days, check version match
-                var appVersion = AppInfo.appVersion
-                if appVersion.contains("-") {
-                    // Strip any pre-release suffix for comparison
-                    appVersion = String(appVersion.split(separator: "-")[0])
-                }
-
+                let appVersion = normalizedVersionString(AppInfo.appVersion)
                 let latestVersionString = latestRelease.tag_name.replacingOccurrences(of: "v", with: "")
 
                 // Store versions for URL construction
                 currentVersion = appVersion
                 latestVersion = latestVersionString
 
-                let isUpToDate = appVersion == latestVersionString
+                let isUpToDate = isCurrentVersionUpToDate(currentVersion: appVersion, latestVersion: latestVersionString)
 
-                os_log("Latest release is older than 10 days. App version: %{public}s, Latest version: %{public}s, Up to date: %{public}@",
+                os_log("Latest stable release is older than 10 days. App version: %{public}s, Latest version: %{public}s, Up to date: %{public}@",
                        appVersion, latestVersionString, isUpToDate ? "true" : "false")
                 return isUpToDate
             } else {
                 // Within 10 days grace period, always pass
-                var appVersion = AppInfo.appVersion
-                if appVersion.contains("-") {
-                    appVersion = String(appVersion.split(separator: "-")[0])
-                }
+                let appVersion = normalizedVersionString(AppInfo.appVersion)
                 let latestVersionString = latestRelease.tag_name.replacingOccurrences(of: "v", with: "")
 
                 // Store versions for URL construction
                 currentVersion = appVersion
                 latestVersion = latestVersionString
 
-                os_log("Latest release is within 10 days grace period. Published: %{public}s, Days ago: %{public}f, App version: %{public}s, Latest version: %{public}s",
+                os_log("Latest stable release is within 10 days grace period. Published: %{public}s, Days ago: %{public}f, App version: %{public}s, Latest version: %{public}s",
                        latestRelease.published_at, abs(publishedDate.timeIntervalSinceNow) / (24 * 60 * 60), appVersion, latestVersionString)
                 return true
             }
@@ -169,11 +171,6 @@ class ParetoUpdated: ParetoCheck {
             // Always pass for SetApp builds as updates are handled by SetApp
             return true
         #else
-            // Also disable when beta channel is enabled
-            if Defaults[.showBeta] {
-                return true
-            }
-
             refreshUpdateStatusIfNeeded()
             return updateCheckResult
         #endif
@@ -185,9 +182,6 @@ class ParetoUpdated: ParetoCheck {
         #else
             if hasError {
                 return "Update check failed"
-            }
-            if Defaults[.showBeta] {
-                return "Beta channel enabled"
             }
             // Prefer resolved versions captured during the last check
             let current = currentVersion.isEmpty ? AppInfo.appVersion : currentVersion

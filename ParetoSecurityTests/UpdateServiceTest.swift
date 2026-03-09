@@ -98,4 +98,13 @@ class UpdateServiceTest: XCTestCase {
         XCTAssertNotNil(prereleaseUpdate, "Should find a viable prerelease update")
         XCTAssertEqual(prereleaseUpdate?.tag_name, "v1.12.1", "Should return prerelease")
     }
+
+    func testParetoUpdatedTreatsExamplePrereleaseVersionAsUpToDate() {
+        let paretoUpdated = ParetoUpdated()
+
+        XCTAssertTrue(
+            paretoUpdated.isCurrentVersionUpToDate(currentVersion: "1.21.4", latestVersion: "1.21.0"),
+            "The example prerelease version should be treated as up to date against the latest stable release"
+        )
+    }
 }
