@@ -91,7 +91,7 @@ class AppCheck: ParetoCheck, AppCheckProtocol {
             return
         }
         os_log("Requesting %{public}s", request.debugDescription)
-        AF.request(viaEdgeCache(request.description)).responseDecodable(of: AppStoreResponse.self, queue: AppCheck.queue, completionHandler: { response in
+        Network.session.request(viaEdgeCache(request.description)).responseDecodable(of: AppStoreResponse.self, queue: AppCheck.queue, completionHandler: { response in
             if let version = response.value?.results.first, response.error == nil {
                 completion(version.version)
                 return
@@ -214,7 +214,7 @@ class AppCheck: ParetoCheck, AppCheckProtocol {
             os_log("Requesting %{public}s", sparkleURL)
             let versionRegex = Regex("sparkle:shortVersionString=\"([\\.\\d]+)\"")
             let versionFallbackRegex = Regex("sparkle:version=\"([\\.\\d]+)\"")
-            AF.request(sparkleURL).responseString(queue: AppCheck.queue, completionHandler: { response in
+            Network.session.request(sparkleURL).responseString(queue: AppCheck.queue, completionHandler: { response in
                 if response.error == nil {
                     let versionNew = versionRegex.allMatches(in: response.value ?? "")
                     let versionOld = versionFallbackRegex.allMatches(in: response.value ?? "")

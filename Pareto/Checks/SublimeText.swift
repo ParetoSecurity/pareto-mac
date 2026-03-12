@@ -38,7 +38,7 @@ class AppSublimeTextCheck: AppCheck {
         let versionRegex = Regex("Build (\\d+)")
         os_log("Requesting %{public}s", url)
 
-        AF.request(url).responseString(queue: AppCheck.queue, completionHandler: { response in
+        Network.session.request(url).responseString(queue: AppCheck.queue, completionHandler: { response in
             if response.error == nil {
                 let yaml = response.value ?? "Build 3121"
                 let version = versionRegex.firstMatch(in: yaml)?.groups.first?.value ?? "3121"

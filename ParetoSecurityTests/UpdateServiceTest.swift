@@ -107,4 +107,92 @@ class UpdateServiceTest: XCTestCase {
             "The example prerelease version should be treated as up to date against the latest stable release"
         )
     }
+
+    func testMacOSVersionParserReadsSupportPageHTML() {
+        let html = """
+        <html>
+        <body>
+        <h2>macOS Sequoia 15.7</h2>
+        </body>
+        </html>
+        """
+
+        let version = MacOSVersionCheck.parseLatestVersion(fromSupportPageHTML: html)
+
+        XCTAssertEqual(version?.description, "15.7.0")
+    }
+
+    func testMacOSVersionParserReadsSoftwareUpdateTitleOutput() {
+        let output = """
+        Software Update Tool
+
+        Finding available software
+        Software Update found the following new or updated software:
+        * Label: macOS Sequoia 15.7-24H101
+            Title: macOS Sequoia 15.7, Version: 15.7, Size: 3123456KiB, Recommended: YES,
+        * Label: Safari16.1VenturaAuto-16.1
+            Title: Safari, Version: 16.1, Size: 123456KiB, Recommended: YES,
+        """
+
+        let version = MacOSVersionCheck.parseLatestVersion(fromSoftwareUpdateOutput: output, currentMajor: 15)
+
+        XCTAssertEqual(version?.description, "15.7.0")
+    }
+
+    func testMacOSVersionParserReadsSoftwareUpdateLabelFallback() {
+        let output = """
+        Software Update found the following new or updated software:
+        * Label: macOS Tahoe 26.5-25F80
+        """
+
+        let version = MacOSVersionCheck.parseLatestVersion(fromSoftwareUpdateOutput: output, currentMajor: 26)
+
+        XCTAssertEqual(version?.description, "26.5.0")
+    }
+
+    func testMacOSVersionSoftwareUpdateUsesExpectedBinaryAndArgs() async {
+        let check = MacOSVersionCheck()
+        check.commandRunner = { app, args, timeout in
+            XCTAssertEqual(app, "/usr/sbin/softwareupdate")
+            XCTAssertEqual(args, ["--list"])
+            XCTAssertEqual(timeout, 20.0)
+            return """
+            Software Update found the following new or updated software:
+            * Label: macOS Tahoe 26.5-25F80
+            """
+        }
+
+        let version = await check.getLatestVersionFromSoftwareUpdate()
+
+        XCTAssertEqual(version?.description, "26.5.0")
+    }
+
+    func testMacOSVersionFallsBackToSoftwareUpdateWhenSupportPageFails() async {
+        let check = MacOSVersionCheck()
+        check.supportPageVersionProvider = { _ in nil }
+        check.commandRunner = { _, _, _ in
+            """
+            Software Update found the following new or updated software:
+            * Label: macOS Tahoe 26.5-25F80
+            """
+        }
+
+        let version = await withCheckedContinuation { continuation in
+            check.getLatestVersion(doc: "ignored") { version, source in
+                continuation.resume(returning: (version, source))
+            }
+        }
+
+        XCTAssertEqual(version.0.description, "26.5.0")
+        XCTAssertEqual(version.1, "softwareupdate")
+    }
+
+    func testMacOSVersionDetailsIncludeCurrentAndResolvedVersion() {
+        let check = MacOSVersionCheck()
+        check.storeResolvedLatestVersion(Version(26, 3, 1), source: "apple-support")
+
+        XCTAssertTrue(check.details.contains("current=\(check.currentVersion)"))
+        XCTAssertTrue(check.details.contains("latest=26.3.1"))
+        XCTAssertTrue(check.details.contains("source=apple-support"))
+    }
 }

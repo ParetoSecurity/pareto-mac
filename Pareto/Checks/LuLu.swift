@@ -30,7 +30,7 @@ class AppLuLuCheck: AppCheck {
         let versionRegex = Regex("VERSION ([\\.\\d]+) ")
         os_log("Requesting %{public}s", url)
 
-        AF.request(url).responseString(queue: AppCheck.queue, completionHandler: { response in
+        Network.session.request(url).responseString(queue: AppCheck.queue, completionHandler: { response in
             if response.error == nil {
                 let txt = response.value ?? "VERSION 1.4.1 (11/01/2021)"
                 let version = versionRegex.firstMatch(in: txt)?.groups.first?.value ?? "1.4.1"

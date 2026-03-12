@@ -27,7 +27,7 @@ class AppDockerCheck: AppCheck {
         let url = viaEdgeCache("https://raw.githubusercontent.com/docker/docker.github.io/master/desktop/mac/release-notes/index.md")
         let versionRegex = Regex("## Docker Desktop ([\\d.]+)")
         os_log("Requesting %{public}s", url)
-        AF.request(url).responseString(queue: AppCheck.queue, completionHandler: { response in
+        Network.session.request(url).responseString(queue: AppCheck.queue, completionHandler: { response in
             if response.data != nil {
                 let result = versionRegex.firstMatch(in: response.value ?? "")
                 completion(result?.groups.first?.value ?? "0.0.0")

@@ -23,7 +23,7 @@ class App1Password8Check: AppCheck {
         let url = "https://releases.1password.com/mac/8.9/"
         let versionRegex = Regex("([\\d\\.]+)</h6>")
         os_log("Requesting %{public}s", url)
-        AF.request(url).responseString(queue: AppCheck.queue, completionHandler: { response in
+        Network.session.request(url).responseString(queue: AppCheck.queue, completionHandler: { response in
             if response.data != nil {
                 let result = versionRegex.allMatches(in: response.value ?? "8.9.1")
 

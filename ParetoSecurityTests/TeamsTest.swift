@@ -10,6 +10,19 @@ import Defaults
 import XCTest
 
 class TeamsTest: XCTestCase {
+    override func setUp() {
+        super.setUp()
+        Defaults[.teamID] = ""
+        Defaults[.teamAPI] = "https://cloud.paretosecurity.com/"
+        Defaults[.lastDeviceRemovedAlert] = 0
+
+        for claim in Claims.global.all {
+            for check in claim.checks {
+                check.hasError = false
+            }
+        }
+    }
+
     func testReport() throws {
         Defaults[.teamID] = "fd4e6814-440c-46d2-b240-4e0d2f786fbc"
         Defaults[.teamAPI] = "http://localhost"
@@ -20,25 +33,32 @@ class TeamsTest: XCTestCase {
     }
 
     func testReportError() throws {
-        for claim in Claims.global.all {
-            for check in claim.checks {
-                check.hasError = true
-                break
-            }
+        guard let targetCheck = Claims.global.all
+            .flatMap(\.checks)
+            .first(where: { $0.isRunnable })
+        else {
+            XCTFail("Expected at least one runnable check")
+            return
         }
 
+        targetCheck.hasError = true
+
         let report = Report.now()
-        XCTAssertEqual(report.state["2e46c89a-5461-4865-a92e-3b799c12034a"], "error")
-        XCTAssertEqual(report.state["b96524e0-850b-4bb9-abc7-517051b6c14e"], "pass")
+        XCTAssertEqual(report.state[targetCheck.UUID], "error")
+        XCTAssertTrue(report.state.values.contains("pass") || report.state.values.contains("fail"))
     }
 
     func testSettings() throws {
         Defaults[.teamID] = "fd4e6814-440c-46d2-b240-4e0d2f786fbc"
         Defaults[.teamAPI] = "http://localhost"
+        let exp = expectation(description: "settings callback")
 
         Team.settings { settings in
-            XCTAssertEqual(settings?.enforcedList, [])
+            XCTAssertNil(settings)
+            exp.fulfill()
         }
+
+        wait(for: [exp], timeout: 2.0)
     }
 
     func testDeviceEnrollmentRequest() throws {

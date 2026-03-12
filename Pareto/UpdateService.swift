@@ -50,7 +50,7 @@ class UpdateService {
         configuration.requestCachePolicy = .reloadIgnoringLocalCacheData
 
         // Create Alamofire session with custom configuration
-        session = Session(configuration: configuration)
+        session = Session(configuration: configuration, eventMonitors: [Network.logger])
     }
 
     func request<T: Decodable>(
