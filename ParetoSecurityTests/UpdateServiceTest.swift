@@ -195,4 +195,13 @@ class UpdateServiceTest: XCTestCase {
         XCTAssertTrue(check.details.contains("latest=26.3.1"))
         XCTAssertTrue(check.details.contains("source=apple-support"))
     }
+
+    func testMacOSVersionTreatsMacBookNeoPatchLagAsUpToDate() {
+        XCTAssertTrue(
+            MacOSVersionCheck.isCurrentVersionUpToDate(
+                current: Version(26, 3, 1),
+                latest: Version(26, 3, 2)
+            )
+        )
+    }
 }

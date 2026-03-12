@@ -102,6 +102,16 @@ class MacOSVersionCheck: ParetoCheck {
         return nil
     }
 
+    static func isCurrentVersionUpToDate(current: Version, latest: Version) -> Bool {
+        // Special case: macOS 26.3.2 is only offered to MacBook Neo devices, but this check
+        // compares against Apple's global latest version and would otherwise warn all 26.3.1 Macs.
+        if current == Version(26, 3, 1), latest == Version(26, 3, 2) {
+            return true
+        }
+
+        return current >= latest
+    }
+
     func getLatestVersion(doc: String, completion: @escaping (Version, String) -> Void) {
         Task.detached(priority: .utility) { [weak self] in
             guard let self else {
@@ -203,6 +213,6 @@ class MacOSVersionCheck: ParetoCheck {
     }
 
     override func checkPasses() -> Bool {
-        return currentVersion >= latestXX
+        return Self.isCurrentVersionUpToDate(current: currentVersion, latest: latestXX)
     }
 }
