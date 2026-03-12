@@ -5,7 +5,7 @@
 //  Created by Janez Troha on 30/08/2021.
 //
 
-import Foundation
+@preconcurrency import Foundation
 import os.log
 import OSAKit
 

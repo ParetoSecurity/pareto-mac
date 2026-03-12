@@ -30,7 +30,7 @@ class AppSignalCheck: AppCheck {
         let versionRegex = Regex("version: ?([\\.\\d]+)")
         os_log("Requesting %{public}s", url)
 
-        AF.request(url).responseString(queue: AppCheck.queue, completionHandler: { response in
+        Network.session.request(url).responseString(queue: AppCheck.queue, completionHandler: { response in
             if response.error == nil {
                 let yaml = response.value ?? "version: 1.25.0"
                 let version = versionRegex.firstMatch(in: yaml)?.groups.first?.value ?? "1.25.0"

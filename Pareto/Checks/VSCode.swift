@@ -30,7 +30,7 @@ class AppVSCodeCheck: AppCheck {
         let versionRegex = Regex("<strong>Update ([\\.\\d]+)</strong>")
         os_log("Requesting %{public}s", url)
 
-        AF.request(url).responseString(queue: AppCheck.queue, completionHandler: { response in
+        Network.session.request(url).responseString(queue: AppCheck.queue, completionHandler: { response in
             if response.error == nil {
                 let html = response.value ?? "<strong>Update 1.12.1</strong>"
                 let versions = versionRegex.allMatches(in: html).map { $0.groups.first!.value }

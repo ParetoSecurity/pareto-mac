@@ -189,7 +189,7 @@ enum Team {
             os_log("Request body: %{public}@", log: Log.api, requestString)
         }
 
-        AF.request(
+        Network.session.request(
             url,
             method: .post,
             parameters: request,
@@ -258,7 +258,7 @@ enum Team {
             os_log("Report body: %{public}@", log: Log.api, truncatedReport)
         }
 
-        return AF.request(
+        return Network.session.request(
             url,
             method: .patch,
             parameters: report,
@@ -293,7 +293,7 @@ enum Team {
         os_log("Fetching team settings for team ID: %{public}@", log: Log.api, Defaults[.teamID])
         os_log("Settings URL: %{public}@", log: Log.api, url)
 
-        AF.request(
+        Network.session.request(
             url,
             method: .get,
             headers: headers

@@ -39,7 +39,7 @@ class AppLibreOfficeCheck: AppCheck {
         let url = viaEdgeCache("https://www.libreoffice.org/download/download/")
         os_log("Requesting %{public}s", url)
         let versionRegex = Regex("<span class=\"dl_version_number\">?([\\.\\d]+)</span>")
-        AF.request(url).responseString(queue: AppCheck.queue, completionHandler: { response in
+        Network.session.request(url).responseString(queue: AppCheck.queue, completionHandler: { response in
             if response.error == nil {
                 let html = response.value ?? "<span class=\"dl_version_number\">1.2.4</span>"
                 let versions = versionRegex.allMatches(in: html).map { $0.groups.first?.value ?? "1.2.4" }

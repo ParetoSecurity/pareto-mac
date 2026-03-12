@@ -28,7 +28,7 @@ class AdobeReaderCheck: AppCheck {
         let linksRegex = Regex("<a .+ReleaseNotesDC.+>(.+)</a>")
         let versionRegex = Regex(".+\\((.+)\\)")
         os_log("Requesting %{public}s", url)
-        AF.request(url).responseString(queue: AppCheck.queue, completionHandler: { response in
+        Network.session.request(url).responseString(queue: AppCheck.queue, completionHandler: { response in
             if response.data != nil {
                 let links = linksRegex.firstMatch(in: response.value ?? "")
                 let result = versionRegex.firstMatch(in: links?.groups.first?.value ?? "DC Sep 2021 (21.007.2009x)")

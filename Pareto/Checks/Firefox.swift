@@ -42,7 +42,7 @@ class AppFirefoxCheck: AppCheck {
     override func getLatestVersion(completion: @escaping (String) -> Void) {
         let url = viaEdgeCache("https://product-details.mozilla.org/1.0/firefox_versions.json")
         os_log("Requesting %{public}s", url)
-        AF.request(url).responseDecodable(of: FirefoxVersions.self, queue: AppCheck.queue) { response in
+        Network.session.request(url).responseDecodable(of: FirefoxVersions.self, queue: AppCheck.queue) { response in
             if response.error == nil {
                 let version = response.value?.LATEST_FIREFOX_VERSION ?? "0.0.0"
                 os_log("%{public}s version=%{public}s", self.appBundle, version)
