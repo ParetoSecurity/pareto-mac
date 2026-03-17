@@ -39,12 +39,12 @@ class UpdateServiceTest: XCTestCase {
         XCTAssertGreaterThan(firstRelease.version.major, 0, "Version should have major version > 0")
     }
 
-    func testServiceAvailability() throws {
+    func testServiceAvailability() {
         // Test that UpdateService singleton is available
         XCTAssertNotNil(UpdateService.shared, "UpdateService should be available")
     }
 
-    func testUpdateCheckIntegration() throws {
+    func testUpdateCheckIntegration() {
         let paretoUpdated = ParetoUpdated()
 
         // Test that the check can run without errors
@@ -61,11 +61,11 @@ class UpdateServiceTest: XCTestCase {
 
     func testReleaseVersionParsing() throws {
         // Test version parsing with mock data instead of network calls
-        let mockRelease = Release(
+        let mockRelease = try Release(
             tag_name: "v1.2.3",
             body: "Test release",
             prerelease: false,
-            html_url: URL(string: "https://example.com")!,
+            html_url: XCTUnwrap(URL(string: "https://example.com")),
             published_at: "2025-01-01T00:00:00Z",
             assets: []
         )
@@ -82,10 +82,10 @@ class UpdateServiceTest: XCTestCase {
 
     func testAPIEndpointParameters() throws {
         // Test Release array filtering without network dependency
-        let mockAsset = Release.Asset(name: "test.zip", browser_download_url: URL(string: "https://example.com/test.zip")!, size: 1000, content_type: .zip)
-        let mockReleases = [
-            Release(tag_name: "v1.12.0", body: "", prerelease: false, html_url: URL(string: "https://example.com")!, published_at: "2024-01-01T00:00:00Z", assets: [mockAsset]),
-            Release(tag_name: "v1.12.1", body: "", prerelease: true, html_url: URL(string: "https://example.com")!, published_at: "2024-02-01T00:00:00Z", assets: [mockAsset]),
+        let mockAsset = try Release.Asset(name: "test.zip", browser_download_url: XCTUnwrap(URL(string: "https://example.com/test.zip")), size: 1000, content_type: .zip)
+        let mockReleases = try [
+            Release(tag_name: "v1.12.0", body: "", prerelease: false, html_url: XCTUnwrap(URL(string: "https://example.com")), published_at: "2024-01-01T00:00:00Z", assets: [mockAsset]),
+            Release(tag_name: "v1.12.1", body: "", prerelease: true, html_url: XCTUnwrap(URL(string: "https://example.com")), published_at: "2024-02-01T00:00:00Z", assets: [mockAsset]),
         ]
 
         // Test that we can find a viable update
@@ -106,6 +106,108 @@ class UpdateServiceTest: XCTestCase {
             paretoUpdated.isCurrentVersionUpToDate(currentVersion: "1.21.4", latestVersion: "1.21.0"),
             "The example prerelease version should be treated as up to date against the latest stable release"
         )
+    }
+
+    func testParetoUpdatedFailsOnlyForConcreteOlderVersionMismatch() throws {
+        let paretoUpdated = ParetoUpdated()
+        let now = Date(timeIntervalSince1970: 1_742_000_000)
+        let release = try Release(
+            tag_name: "v1.21.0",
+            body: "",
+            prerelease: false,
+            html_url: XCTUnwrap(URL(string: "https://example.com")),
+            published_at: "2025-02-20T00:00:00Z",
+            assets: []
+        )
+
+        let outcome = paretoUpdated.evaluateUpdateCheckOutcome(
+            releases: [release],
+            appVersion: "1.20.0",
+            now: now
+        )
+
+        XCTAssertEqual(
+            outcome,
+            .resolved(isUpToDate: false, currentVersion: "1.20.0", latestVersion: "1.21.0")
+        )
+    }
+
+    func testParetoUpdatedTreatsInvalidPublishedDateAsInconclusive() throws {
+        let paretoUpdated = ParetoUpdated()
+        let release = try Release(
+            tag_name: "v1.21.0",
+            body: "",
+            prerelease: false,
+            html_url: XCTUnwrap(URL(string: "https://example.com")),
+            published_at: "not-a-date",
+            assets: []
+        )
+
+        let outcome = paretoUpdated.evaluateUpdateCheckOutcome(
+            releases: [release],
+            appVersion: "1.20.0",
+            now: Date(timeIntervalSince1970: 1_742_000_000)
+        )
+
+        XCTAssertEqual(outcome, .inconclusive)
+    }
+
+    func testParetoUpdatedTreatsUnparseableVersionsAsInconclusive() throws {
+        let paretoUpdated = ParetoUpdated()
+        let now = Date(timeIntervalSince1970: 1_742_000_000)
+        let release = try Release(
+            tag_name: "latest",
+            body: "",
+            prerelease: false,
+            html_url: XCTUnwrap(URL(string: "https://example.com")),
+            published_at: "2025-02-20T00:00:00Z",
+            assets: []
+        )
+
+        let outcome = paretoUpdated.evaluateUpdateCheckOutcome(
+            releases: [release],
+            appVersion: "1.20.0",
+            now: now
+        )
+
+        XCTAssertEqual(outcome, .inconclusive)
+    }
+
+    func testParetoUpdatedNetworkErrorsDoNotChangePreviousResult() async {
+        let paretoUpdated = ParetoUpdated()
+        _ = paretoUpdated.applyUpdateCheckOutcome(
+            .resolved(isUpToDate: false, currentVersion: "1.20.0", latestVersion: "1.21.0")
+        )
+        paretoUpdated.updatesProvider = {
+            throw APIError.networkError("timed out")
+        }
+
+        let outcome = await paretoUpdated.fetchUpdateCheckOutcome(
+            appVersion: "1.20.0",
+            now: Date(timeIntervalSince1970: 1_742_000_000)
+        )
+        let result = paretoUpdated.applyUpdateCheckOutcome(outcome)
+
+        XCTAssertEqual(outcome, .inconclusive)
+        XCTAssertFalse(result)
+        XCTAssertFalse(paretoUpdated.hasError)
+    }
+
+    func testParetoUpdatedNetworkErrorsKeepInitialPassingState() async {
+        let paretoUpdated = ParetoUpdated()
+        paretoUpdated.updatesProvider = {
+            throw APIError.networkError("timed out")
+        }
+
+        let outcome = await paretoUpdated.fetchUpdateCheckOutcome(
+            appVersion: "1.20.0",
+            now: Date(timeIntervalSince1970: 1_742_000_000)
+        )
+        let result = paretoUpdated.applyUpdateCheckOutcome(outcome)
+
+        XCTAssertEqual(outcome, .inconclusive)
+        XCTAssertTrue(result)
+        XCTAssertFalse(paretoUpdated.hasError)
     }
 
     func testMacOSVersionParserReadsSupportPageHTML() {
