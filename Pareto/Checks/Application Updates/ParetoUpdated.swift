@@ -11,11 +11,19 @@ import os.log
 import Version
 
 class ParetoUpdated: ParetoCheck {
+    enum UpdateCheckOutcome: Equatable {
+        case resolved(isUpToDate: Bool, currentVersion: String, latestVersion: String)
+        case inconclusive
+    }
+
     static let sharedInstance = ParetoUpdated()
     private var updateCheckResult: Bool = true
     private var latestVersion: String = ""
     private var currentVersion: String = ""
     private let updateCheckInFlight = OSAllocatedUnfairLock(initialState: false)
+    var updatesProvider: () async throws -> [Release] = {
+        try await UpdateService.shared.getUpdatesAsync()
+    }
 
     override var UUID: String {
         "44e4754a-0b42-4964-9cc2-b88b2023cb1e"
@@ -73,79 +81,106 @@ class ParetoUpdated: ParetoCheck {
         return current >= latest
     }
 
-    private func checkForUpdates() async -> Bool {
-        do {
-            let releases = try await UpdateService.shared.getUpdatesAsync()
+    func compareVersionsIfConcrete(currentVersion: String, latestVersion: String) -> Bool? {
+        let normalizedCurrent = normalizedVersionString(currentVersion)
+        let normalizedLatest = normalizedVersionString(latestVersion)
 
-            if releases.isEmpty {
-                os_log("No releases found during update check")
-                return false
-            }
-
-            // Sort releases by version (descending order)
-            let sortedReleases = releases.sorted { $0.version > $1.version }
-
-            // Log the sorted releases for debugging
-            os_log("Sorted releases: %{public}@", sortedReleases.map { $0.tag_name }.joined(separator: ", "))
-
-            // This check reports whether the installed app is at least as new as the
-            // latest stable release, even when prerelease updates are enabled.
-            let filteredReleases = sortedReleases.filter { !$0.prerelease }
-            os_log("Comparing installed app against latest stable release")
-
-            guard let latestRelease = filteredReleases.first else {
-                os_log("No valid releases found after filtering")
-                return false
-            }
-
-            // Only fail if latest release is older than 10 days and current version does not match
-            let tenDaysAgo = Date().addingTimeInterval(-10 * 24 * 60 * 60)
-            let dateFormatter = ISO8601DateFormatter()
-
-            guard let publishedDate = dateFormatter.date(from: latestRelease.published_at) else {
-                os_log("Could not parse published date for latest release")
-                return false
-            }
-
-            if publishedDate < tenDaysAgo {
-                // Latest release is older than 10 days, check version match
-                let appVersion = normalizedVersionString(AppInfo.appVersion)
-                let latestVersionString = latestRelease.tag_name.replacingOccurrences(of: "v", with: "")
-
-                // Store versions for URL construction
-                currentVersion = appVersion
-                latestVersion = latestVersionString
-
-                let isUpToDate = isCurrentVersionUpToDate(currentVersion: appVersion, latestVersion: latestVersionString)
-
-                os_log("Latest stable release is older than 10 days. App version: %{public}s, Latest version: %{public}s, Up to date: %{public}@",
-                       appVersion, latestVersionString, isUpToDate ? "true" : "false")
-                return isUpToDate
-            } else {
-                // Within 10 days grace period, always pass
-                let appVersion = normalizedVersionString(AppInfo.appVersion)
-                let latestVersionString = latestRelease.tag_name.replacingOccurrences(of: "v", with: "")
-
-                // Store versions for URL construction
-                currentVersion = appVersion
-                latestVersion = latestVersionString
-
-                os_log("Latest stable release is within 10 days grace period. Published: %{public}s, Days ago: %{public}f, App version: %{public}s, Latest version: %{public}s",
-                       latestRelease.published_at, abs(publishedDate.timeIntervalSinceNow) / (24 * 60 * 60), appVersion, latestVersionString)
-                return true
-            }
-
-        } catch {
-            let errorMessage = error.localizedDescription
-            // Ignore 503 (Service Unavailable) and 403 (Forbidden) - treat as check passing
-            if errorMessage.contains("503") || errorMessage.contains("403") {
-                os_log("Ignoring temporary server error for update check: %{public}s", errorMessage)
-                return true
-            }
-            os_log("Failed to check for updates: %{public}s", errorMessage)
-            hasError = true
-            return false
+        guard
+            let current = Version(normalizedCurrent),
+            let latest = Version(normalizedLatest)
+        else {
+            return nil
         }
+
+        return current >= latest
+    }
+
+    func evaluateUpdateCheckOutcome(
+        releases: [Release],
+        appVersion: String = AppInfo.appVersion,
+        now: Date = Date()
+    ) -> UpdateCheckOutcome {
+        guard !releases.isEmpty else {
+            os_log("Ignoring empty release list during update check")
+            return .inconclusive
+        }
+
+        let sortedReleases = releases.sorted { $0.version > $1.version }
+        os_log("Sorted releases: %{public}@", sortedReleases.map { $0.tag_name }.joined(separator: ", "))
+
+        let filteredReleases = sortedReleases.filter { !$0.prerelease }
+        os_log("Comparing installed app against latest stable release")
+
+        guard let latestRelease = filteredReleases.first else {
+            os_log("Ignoring update check without a stable release")
+            return .inconclusive
+        }
+
+        let normalizedAppVersion = normalizedVersionString(appVersion)
+        let latestVersionString = normalizedVersionString(latestRelease.tag_name)
+
+        let tenDaysAgo = now.addingTimeInterval(-10 * 24 * 60 * 60)
+        let dateFormatter = ISO8601DateFormatter()
+
+        guard let publishedDate = dateFormatter.date(from: latestRelease.published_at) else {
+            os_log("Ignoring update check with invalid published date: %{public}s", latestRelease.published_at)
+            return .inconclusive
+        }
+
+        guard publishedDate < tenDaysAgo else {
+            os_log("Latest stable release is within 10 days grace period. Published: %{public}s, Days ago: %{public}f, App version: %{public}s, Latest version: %{public}s",
+                   latestRelease.published_at, abs(publishedDate.timeIntervalSince(now)) / (24 * 60 * 60), normalizedAppVersion, latestVersionString)
+            return .resolved(
+                isUpToDate: true,
+                currentVersion: normalizedAppVersion,
+                latestVersion: latestVersionString
+            )
+        }
+
+        guard let isUpToDate = compareVersionsIfConcrete(
+            currentVersion: normalizedAppVersion,
+            latestVersion: latestVersionString
+        ) else {
+            os_log("Ignoring update check with non-concrete version comparison. App version: %{public}s, Latest version: %{public}s",
+                   normalizedAppVersion, latestVersionString)
+            return .inconclusive
+        }
+
+        os_log("Latest stable release is older than 10 days. App version: %{public}s, Latest version: %{public}s, Up to date: %{public}@",
+               normalizedAppVersion, latestVersionString, isUpToDate ? "true" : "false")
+        return .resolved(
+            isUpToDate: isUpToDate,
+            currentVersion: normalizedAppVersion,
+            latestVersion: latestVersionString
+        )
+    }
+
+    func fetchUpdateCheckOutcome(
+        appVersion: String = AppInfo.appVersion,
+        now: Date = Date()
+    ) async -> UpdateCheckOutcome {
+        do {
+            let releases = try await updatesProvider()
+            return evaluateUpdateCheckOutcome(releases: releases, appVersion: appVersion, now: now)
+        } catch {
+            os_log("Ignoring inconclusive update check result: %{public}s", error.localizedDescription)
+            return .inconclusive
+        }
+    }
+
+    @discardableResult
+    func applyUpdateCheckOutcome(_ outcome: UpdateCheckOutcome) -> Bool {
+        switch outcome {
+        case let .resolved(isUpToDate, currentVersion, latestVersion):
+            updateCheckResult = isUpToDate
+            self.currentVersion = currentVersion
+            self.latestVersion = latestVersion
+        case .inconclusive:
+            break
+        }
+
+        hasError = false
+        return updateCheckResult
     }
 
     private func refreshUpdateStatusIfNeeded() {
@@ -158,8 +193,8 @@ class ParetoUpdated: ParetoCheck {
 
         Task.detached(priority: .utility) { [weak self] in
             guard let self else { return }
-            let result = await self.checkForUpdates()
-            self.updateCheckResult = result
+            let outcome = await self.fetchUpdateCheckOutcome()
+            self.applyUpdateCheckOutcome(outcome)
             self.updateCheckInFlight.withLock { $0 = false }
         }
     }
