@@ -193,6 +193,23 @@ class UpdateServiceTest: XCTestCase {
         XCTAssertFalse(paretoUpdated.hasError)
     }
 
+    func testParetoUpdatedNetworkErrorsKeepInitialPassingState() async {
+        let paretoUpdated = ParetoUpdated()
+        paretoUpdated.updatesProvider = {
+            throw APIError.networkError("timed out")
+        }
+
+        let outcome = await paretoUpdated.fetchUpdateCheckOutcome(
+            appVersion: "1.20.0",
+            now: Date(timeIntervalSince1970: 1_742_000_000)
+        )
+        let result = paretoUpdated.applyUpdateCheckOutcome(outcome)
+
+        XCTAssertEqual(outcome, .inconclusive)
+        XCTAssertTrue(result)
+        XCTAssertFalse(paretoUpdated.hasError)
+    }
+
     func testMacOSVersionParserReadsSupportPageHTML() {
         let html = """
         <html>
