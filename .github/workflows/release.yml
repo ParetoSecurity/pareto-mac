@@ -97,7 +97,7 @@ jobs:
           done
 
       - name: Release DMG
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           files: ParetoSecurity.dmg
 
@@ -107,7 +107,7 @@ jobs:
           ditto -c -k --keepParent "Export/Pareto Security.app" ParetoSecurity.app.zip
 
       - name: Release app
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           files: ParetoSecurity.app.zip
 
@@ -115,7 +115,7 @@ jobs:
         run: '"Export/Pareto Security.app/Contents/MacOS/Pareto Security" -export > checks.json'
 
       - name: Release checks manifest
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           files: checks.json
 
