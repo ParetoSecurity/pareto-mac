@@ -13,14 +13,27 @@ import os.log
 import OSLog
 import Version
 
+struct EndOfLifeProductResponse: Decodable {
+    let result: EndOfLifeProduct
+}
+
+struct EndOfLifeProduct: Decodable {
+    let releases: [EndOfLifeRelease]
+}
+
+struct EndOfLifeRelease: Decodable {
+    let isMaintained: Bool
+    let latest: EndOfLifeLatestRelease
+}
+
+struct EndOfLifeLatestRelease: Decodable {
+    let name: String
+}
+
 class AppLibreOfficeCheck: AppCheck {
     static let sharedInstance = AppLibreOfficeCheck()
     private let latestVersionsLock = OSAllocatedUnfairLock<[Version]>(initialState: [Version(0, 0, 0)])
     private let latestVersionsInFlight = OSAllocatedUnfairLock(initialState: false)
-    private static let versionPatterns = [
-        "<option value=\"(?:latest|previous)\">LibreOffice ([\\.\\d]+)</option>",
-        "<span class=\"dl_version_number\">?([\\.\\d]+)</span>",
-    ]
 
     override var appName: String { "LibreOffice" }
     override var appMarketingName: String { "LibreOffice" }
@@ -38,30 +51,27 @@ class AppLibreOfficeCheck: AppCheck {
         return Version(Int(v[0]) ?? 0, Int(v[1]) ?? 0, Int(v[2]) ?? 0)
     }
 
-    static func parseLatestVersions(from html: String) -> [String] {
+    static func latestVersions(from response: EndOfLifeProductResponse) -> [String] {
         var versions = [String]()
-        let nsHTML = html as NSString
-        for pattern in versionPatterns {
-            guard let regex = try? NSRegularExpression(pattern: pattern) else { continue }
-            let matches = regex.matches(in: html, range: NSRange(location: 0, length: nsHTML.length))
-            for match in matches {
-                guard match.numberOfRanges > 1 else { continue }
-                let version = nsHTML.substring(with: match.range(at: 1))
-                if !versions.contains(version) {
-                    versions.append(version)
-                }
+        for release in response.result.releases where release.isMaintained {
+            let version = normalizeVersion(release.latest.name)
+            if !versions.contains(version) {
+                versions.append(version)
             }
         }
         return versions
     }
 
+    private static func normalizeVersion(_ version: String) -> String {
+        version.split(separator: ".").prefix(3).joined(separator: ".")
+    }
+
     func getLatestVersions(completion: @escaping ([String]) -> Void) {
-        let url = viaEdgeCache("https://www.libreoffice.org/download/")
+        let url = viaEdgeCache("https://endoflife.date/api/v1/products/libreoffice/")
         os_log("Requesting %{public}s", url)
-        Network.session.request(url).responseString(queue: AppCheck.queue, completionHandler: { response in
-            if response.error == nil {
-                let html = response.value ?? "<span class=\"dl_version_number\">1.2.4</span>"
-                completion(Self.parseLatestVersions(from: html))
+        Network.session.request(url).responseDecodable(of: EndOfLifeProductResponse.self, queue: AppCheck.queue, completionHandler: { response in
+            if let value = response.value, response.error == nil {
+                completion(Self.latestVersions(from: value))
             } else {
                 os_log("%{public}s failed: %{public}s", self.appBundle, response.error.debugDescription)
                 self.hasError = true

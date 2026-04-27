@@ -9,28 +9,38 @@
 import XCTest
 
 class ApplicationUpdatesTest: XCTestCase {
-    func testLibreOfficeParserReadsCurrentDownloadPageVersions() {
-        let html = """
-        <select id="version">
-            <option value="latest">LibreOffice 26.2.2</option>
-            <option value="previous">LibreOffice 25.8.6</option>
-        </select>
+    func testLibreOfficeParserReadsMaintainedEndOfLifeVersions() throws {
+        let json = """
+        {
+          "result": {
+            "releases": [
+              {
+                "isMaintained": true,
+                "latest": {
+                  "name": "26.2.2.2"
+                }
+              },
+              {
+                "isMaintained": true,
+                "latest": {
+                  "name": "25.8.6.2"
+                }
+              },
+              {
+                "isMaintained": false,
+                "latest": {
+                  "name": "25.2.7.2"
+                }
+              }
+            ]
+          }
+        }
         """
 
-        let versions = AppLibreOfficeCheck.parseLatestVersions(from: html)
+        let response = try JSONDecoder().decode(EndOfLifeProductResponse.self, from: Data(json.utf8))
+        let versions = AppLibreOfficeCheck.latestVersions(from: response)
 
         XCTAssertEqual(versions, ["26.2.2", "25.8.6"])
-    }
-
-    func testLibreOfficeParserReadsLegacyDownloadPageVersions() {
-        let html = """
-        <span class="dl_version_number">26.2.1</span>
-        <span class="dl_version_number">25.8.5</span>
-        """
-
-        let versions = AppLibreOfficeCheck.parseLatestVersions(from: html)
-
-        XCTAssertEqual(versions, ["26.2.1", "25.8.5"])
     }
 
     func testAppVersionFetchers() throws {
