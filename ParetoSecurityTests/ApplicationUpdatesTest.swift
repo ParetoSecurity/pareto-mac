@@ -9,6 +9,30 @@
 import XCTest
 
 class ApplicationUpdatesTest: XCTestCase {
+    func testLibreOfficeParserReadsCurrentDownloadPageVersions() {
+        let html = """
+        <select id="version">
+            <option value="latest">LibreOffice 26.2.2</option>
+            <option value="previous">LibreOffice 25.8.6</option>
+        </select>
+        """
+
+        let versions = AppLibreOfficeCheck.parseLatestVersions(from: html)
+
+        XCTAssertEqual(versions, ["26.2.2", "25.8.6"])
+    }
+
+    func testLibreOfficeParserReadsLegacyDownloadPageVersions() {
+        let html = """
+        <span class="dl_version_number">26.2.1</span>
+        <span class="dl_version_number">25.8.5</span>
+        """
+
+        let versions = AppLibreOfficeCheck.parseLatestVersions(from: html)
+
+        XCTAssertEqual(versions, ["26.2.1", "25.8.5"])
+    }
+
     func testAppVersionFetchers() throws {
         var redirects = [String]()
         var names = [String]()

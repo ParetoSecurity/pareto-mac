@@ -11,13 +11,16 @@ import Combine
 import Foundation
 import os.log
 import OSLog
-import Regex
 import Version
 
 class AppLibreOfficeCheck: AppCheck {
     static let sharedInstance = AppLibreOfficeCheck()
     private let latestVersionsLock = OSAllocatedUnfairLock<[Version]>(initialState: [Version(0, 0, 0)])
     private let latestVersionsInFlight = OSAllocatedUnfairLock(initialState: false)
+    private static let versionPatterns = [
+        "<option value=\"(?:latest|previous)\">LibreOffice ([\\.\\d]+)</option>",
+        "<span class=\"dl_version_number\">?([\\.\\d]+)</span>",
+    ]
 
     override var appName: String { "LibreOffice" }
     override var appMarketingName: String { "LibreOffice" }
@@ -35,15 +38,30 @@ class AppLibreOfficeCheck: AppCheck {
         return Version(Int(v[0]) ?? 0, Int(v[1]) ?? 0, Int(v[2]) ?? 0)
     }
 
+    static func parseLatestVersions(from html: String) -> [String] {
+        var versions = [String]()
+        let nsHTML = html as NSString
+        for pattern in versionPatterns {
+            guard let regex = try? NSRegularExpression(pattern: pattern) else { continue }
+            let matches = regex.matches(in: html, range: NSRange(location: 0, length: nsHTML.length))
+            for match in matches {
+                guard match.numberOfRanges > 1 else { continue }
+                let version = nsHTML.substring(with: match.range(at: 1))
+                if !versions.contains(version) {
+                    versions.append(version)
+                }
+            }
+        }
+        return versions
+    }
+
     func getLatestVersions(completion: @escaping ([String]) -> Void) {
-        let url = viaEdgeCache("https://www.libreoffice.org/download/download/")
+        let url = viaEdgeCache("https://www.libreoffice.org/download/")
         os_log("Requesting %{public}s", url)
-        let versionRegex = Regex("<span class=\"dl_version_number\">?([\\.\\d]+)</span>")
         Network.session.request(url).responseString(queue: AppCheck.queue, completionHandler: { response in
             if response.error == nil {
                 let html = response.value ?? "<span class=\"dl_version_number\">1.2.4</span>"
-                let versions = versionRegex.allMatches(in: html).map { $0.groups.first?.value ?? "1.2.4" }
-                completion(versions)
+                completion(Self.parseLatestVersions(from: html))
             } else {
                 os_log("%{public}s failed: %{public}s", self.appBundle, response.error.debugDescription)
                 self.hasError = true
