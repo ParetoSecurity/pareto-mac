@@ -9,6 +9,40 @@
 import XCTest
 
 class ApplicationUpdatesTest: XCTestCase {
+    func testLibreOfficeParserReadsMaintainedEndOfLifeVersions() throws {
+        let json = """
+        {
+          "result": {
+            "releases": [
+              {
+                "isMaintained": true,
+                "latest": {
+                  "name": "26.2.2.2"
+                }
+              },
+              {
+                "isMaintained": true,
+                "latest": {
+                  "name": "25.8.6.2"
+                }
+              },
+              {
+                "isMaintained": false,
+                "latest": {
+                  "name": "25.2.7.2"
+                }
+              }
+            ]
+          }
+        }
+        """
+
+        let response = try JSONDecoder().decode(EndOfLifeProductResponse.self, from: Data(json.utf8))
+        let versions = AppLibreOfficeCheck.latestVersions(from: response)
+
+        XCTAssertEqual(versions, ["26.2.2", "25.8.6"])
+    }
+
     func testAppVersionFetchers() throws {
         var redirects = [String]()
         var names = [String]()

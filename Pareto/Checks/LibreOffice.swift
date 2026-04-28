@@ -11,8 +11,24 @@ import Combine
 import Foundation
 import os.log
 import OSLog
-import Regex
 import Version
+
+struct EndOfLifeProductResponse: Decodable {
+    let result: EndOfLifeProduct
+}
+
+struct EndOfLifeProduct: Decodable {
+    let releases: [EndOfLifeRelease]
+}
+
+struct EndOfLifeRelease: Decodable {
+    let isMaintained: Bool
+    let latest: EndOfLifeLatestRelease
+}
+
+struct EndOfLifeLatestRelease: Decodable {
+    let name: String
+}
 
 class AppLibreOfficeCheck: AppCheck {
     static let sharedInstance = AppLibreOfficeCheck()
@@ -35,15 +51,27 @@ class AppLibreOfficeCheck: AppCheck {
         return Version(Int(v[0]) ?? 0, Int(v[1]) ?? 0, Int(v[2]) ?? 0)
     }
 
+    static func latestVersions(from response: EndOfLifeProductResponse) -> [String] {
+        var versions = [String]()
+        for release in response.result.releases where release.isMaintained {
+            let version = normalizeVersion(release.latest.name)
+            if !versions.contains(version) {
+                versions.append(version)
+            }
+        }
+        return versions
+    }
+
+    private static func normalizeVersion(_ version: String) -> String {
+        version.split(separator: ".").prefix(3).joined(separator: ".")
+    }
+
     func getLatestVersions(completion: @escaping ([String]) -> Void) {
-        let url = viaEdgeCache("https://www.libreoffice.org/download/download/")
+        let url = viaEdgeCache("https://endoflife.date/api/v1/products/libreoffice/")
         os_log("Requesting %{public}s", url)
-        let versionRegex = Regex("<span class=\"dl_version_number\">?([\\.\\d]+)</span>")
-        Network.session.request(url).responseString(queue: AppCheck.queue, completionHandler: { response in
-            if response.error == nil {
-                let html = response.value ?? "<span class=\"dl_version_number\">1.2.4</span>"
-                let versions = versionRegex.allMatches(in: html).map { $0.groups.first?.value ?? "1.2.4" }
-                completion(versions)
+        Network.session.request(url).responseDecodable(of: EndOfLifeProductResponse.self, queue: AppCheck.queue, completionHandler: { response in
+            if let value = response.value, response.error == nil {
+                completion(Self.latestVersions(from: value))
             } else {
                 os_log("%{public}s failed: %{public}s", self.appBundle, response.error.debugDescription)
                 self.hasError = true
