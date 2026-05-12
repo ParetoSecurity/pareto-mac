@@ -272,14 +272,15 @@ struct CheckDetailView: View {
                             }
                         }
 
-                        if !check.cachedDetails.isEmpty && check.cachedDetails != "None" && !check.checkPassed {
+                        let statusDetails = check.cachedDetails.isEmpty ? check.details : check.cachedDetails
+                        if !statusDetails.isEmpty && statusDetails != "None" && (!check.checkPassed || check.showDetailsWhenPassing) {
                             VStack(alignment: .leading, spacing: 4) {
                                 Text("Details:")
                                     .font(.caption)
                                     .foregroundColor(.secondary)
 
                                 // Safely attempt to parse markdown; fall back to plain text if it fails
-                                let attributed = (try? AttributedString(markdown: check.cachedDetails)) ?? AttributedString(check.cachedDetails)
+                                let attributed = (try? AttributedString(markdown: statusDetails)) ?? AttributedString(statusDetails)
                                 Text(attributed)
                                     .font(.system(.body, design: .monospaced))
                                     .textSelection(.enabled)

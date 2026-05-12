@@ -108,6 +108,10 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
         return true
     }
 
+    var showDetailsWhenPassing: Bool {
+        return false
+    }
+
     var showSettingsWarnDiskAccess: Bool {
         return false
     }
