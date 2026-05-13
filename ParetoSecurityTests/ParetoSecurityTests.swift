@@ -26,6 +26,117 @@ class ParetoSecurityTests: XCTestCase {
         XCTAssertTrue(AppInfo.bugReportURL().absoluteString.contains("paretosecurity.com"))
     }
 
+    func testPackageManagerSupplyChainPassesWithoutConfigs() throws {
+        let temporaryDirectory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        try FileManager.default.createDirectory(at: temporaryDirectory, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: temporaryDirectory) }
+
+        let check = PackageManagerSupplyChainCheck(homeDirectory: temporaryDirectory, installedBinaries: [])
+
+        XCTAssertTrue(check.checkPasses())
+    }
+
+    func testPackageManagerSupplyChainDoesNotRunWithoutConfigsOrBinaries() throws {
+        let temporaryDirectory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        try FileManager.default.createDirectory(at: temporaryDirectory, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: temporaryDirectory) }
+
+        let check = PackageManagerSupplyChainCheck(homeDirectory: temporaryDirectory, installedBinaries: [])
+        check.configure()
+
+        XCTAssertFalse(check.isRunnable)
+    }
+
+    func testPackageManagerSupplyChainRunsWithDetectedBinary() throws {
+        let temporaryDirectory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        try FileManager.default.createDirectory(at: temporaryDirectory, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: temporaryDirectory) }
+
+        let check = PackageManagerSupplyChainCheck(homeDirectory: temporaryDirectory, installedBinaries: ["npm"])
+        check.configure()
+
+        XCTAssertTrue(check.isRunnable)
+        XCTAssertFalse(check.checkPasses())
+        XCTAssertEqual(check.details, "- ~/.npmrc is missing")
+    }
+
+    func testPackageManagerSupplyChainPassesWithProtectedConfigs() throws {
+        let temporaryDirectory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        let uvDirectory = temporaryDirectory.appendingPathComponent(".config/uv")
+        try FileManager.default.createDirectory(at: uvDirectory, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: temporaryDirectory) }
+
+        try """
+        min-release-age=7
+        minimum-release-age=10080
+        save-exact=true
+        """.write(to: temporaryDirectory.appendingPathComponent(".npmrc"), atomically: true, encoding: .utf8)
+        try """
+        [install]
+        minimumReleaseAge = 604800
+        """.write(to: temporaryDirectory.appendingPathComponent(".bunfig.toml"), atomically: true, encoding: .utf8)
+        try """
+        [pip]
+        exclude-newer = "7d"
+        """.write(to: uvDirectory.appendingPathComponent("uv.toml"), atomically: true, encoding: .utf8)
+
+        let check = PackageManagerSupplyChainCheck(homeDirectory: temporaryDirectory, installedBinaries: [])
+
+        XCTAssertTrue(check.checkPasses())
+        XCTAssertEqual(check.details, """
+        - ~/.npmrc delays npm-compatible package releases and pins exact versions
+        - ~/.bunfig.toml delays Bun package releases
+        - ~/.config/uv/uv.toml excludes Python packages newer than 7 days
+        """)
+    }
+
+    func testPackageManagerSupplyChainFailsWithUnprotectedConfigs() throws {
+        let temporaryDirectory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        let uvDirectory = temporaryDirectory.appendingPathComponent(".config/uv")
+        try FileManager.default.createDirectory(at: uvDirectory, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: temporaryDirectory) }
+
+        try """
+        min-release-age=6
+        minimum-release-age=10079
+        save-exact=false
+        """.write(to: temporaryDirectory.appendingPathComponent(".npmrc"), atomically: true, encoding: .utf8)
+        try """
+        [install]
+        minimumReleaseAge = 604799
+        """.write(to: temporaryDirectory.appendingPathComponent(".bunfig.toml"), atomically: true, encoding: .utf8)
+        try """
+        [pip]
+        exclude-newer = "6d"
+        """.write(to: uvDirectory.appendingPathComponent("uv.toml"), atomically: true, encoding: .utf8)
+
+        let check = PackageManagerSupplyChainCheck(homeDirectory: temporaryDirectory, installedBinaries: [])
+
+        XCTAssertFalse(check.checkPasses())
+        XCTAssertEqual(check.validationFailures().count, 5)
+    }
+
+    func testPackageManagerSupplyChainFailsWithPypircCredentials() throws {
+        let temporaryDirectory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        try FileManager.default.createDirectory(at: temporaryDirectory, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: temporaryDirectory) }
+
+        try """
+        [distutils]
+        index-servers =
+            pypi
+
+        [pypi]
+        username = __token__
+        password = pypi-secret
+        """.write(to: temporaryDirectory.appendingPathComponent(".pypirc"), atomically: true, encoding: .utf8)
+
+        let check = PackageManagerSupplyChainCheck(homeDirectory: temporaryDirectory, installedBinaries: [])
+
+        XCTAssertFalse(check.checkPasses())
+        XCTAssertEqual(check.details, "- ~/.pypirc contains plaintext credentials")
+    }
+
     @MainActor
     func testSnooze() throws {
         let handlers = AppHandlers()
