@@ -317,10 +317,9 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
                                 os_log("Team status update failed: %{public}@", log: Log.app, err.localizedDescription)
                                 TeamReportSentCheck.sharedInstance.checkPassed = false
 
-                                // Check if the error is a 404 (device/team not found)
-                                if let statusCode = response.response?.statusCode, statusCode == 404 {
-                                    Team.showDeviceRemovedAlert()
-                                    os_log("Device disconnected from Cloud. Got team update response with 404 error", log: Log.app)
+                                if Team.isDeviceLinkInvalidStatusCode(response.response?.statusCode) {
+                                    Team.showDeviceLinkInvalidAlert()
+                                    os_log("Device disconnected from Cloud. Got team update response with invalid link error", log: Log.app)
                                 }
                             }
                         }

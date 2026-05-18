@@ -124,4 +124,12 @@ class TeamsTest: XCTestCase {
         // Should not show alert immediately after showing
         XCTAssertFalse(Defaults.shouldShowDeviceRemovedAlert())
     }
+
+    func testDeviceLinkInvalidStatusCodes() throws {
+        XCTAssertTrue(Team.isDeviceLinkInvalidStatusCode(401))
+        XCTAssertTrue(Team.isDeviceLinkInvalidStatusCode(404))
+        XCTAssertFalse(Team.isDeviceLinkInvalidStatusCode(400))
+        XCTAssertFalse(Team.isDeviceLinkInvalidStatusCode(500))
+        XCTAssertFalse(Team.isDeviceLinkInvalidStatusCode(nil))
+    }
 }

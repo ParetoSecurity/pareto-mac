@@ -57,7 +57,7 @@ class AppCheck: ParetoCheck, AppCheckProtocol {
     }
 
     override var details: String {
-        "local=\(currentVersion) online=\(latestVersion) applicationPath=\(String(describing: applicationPath))"
+        applicationLocation ?? "not found"
     }
 
     override var reportIfDisabled: Bool {
@@ -135,19 +135,24 @@ class AppCheck: ParetoCheck, AppCheckProtocol {
         }
     }
 
-    var applicationPath: String? {
-        let globalPath = "/Applications/\(appName).app/Contents/Info.plist"
-        if FileManager.default.fileExists(atPath: globalPath) {
-            return globalPath
-        }
-
+    var applicationSearchDirectories: [String] {
         let homeDirURL = FileManager.default.homeDirectoryForCurrentUser
-        let localPath = "\(homeDirURL.path)/Applications/\(appName).app/Contents/Info.plist"
-        if FileManager.default.fileExists(atPath: localPath) {
-            return localPath
+        return ["/Applications", "\(homeDirURL.path)/Applications"]
+    }
+
+    var applicationPath: String? {
+        for directory in applicationSearchDirectories {
+            let path = "\(directory)/\(appName).app/Contents/Info.plist"
+            if FileManager.default.fileExists(atPath: path) {
+                return path
+            }
         }
 
         return nil
+    }
+
+    var applicationLocation: String? {
+        applicationPath?.components(separatedBy: "/Contents/").first
     }
 
     override var isInstalled: Bool {
@@ -244,6 +249,9 @@ class AppCheck: ParetoCheck, AppCheckProtocol {
     }
 
     override func checkPasses() -> Bool {
+        if !isInstalled {
+            return true
+        }
         if NetworkHandler.sharedInstance().currentStatus != .satisfied {
             return checkPassed
         }

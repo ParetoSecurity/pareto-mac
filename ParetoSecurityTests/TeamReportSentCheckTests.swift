@@ -99,7 +99,7 @@ class TeamReportSentCheckTests: XCTestCase {
         Defaults[.lastTeamReportSuccess] = 0
 
         let check = TeamReportSentCheck.sharedInstance
-        XCTAssertEqual(check.details, "No successful report has been sent")
+        XCTAssertEqual(check.details, "No successful report has been sent. Unlink this device and use a new invite link to link it again.")
     }
 
     func testDetailsShowsRelativeTime() throws {
@@ -108,6 +108,15 @@ class TeamReportSentCheckTests: XCTestCase {
 
         let check = TeamReportSentCheck.sharedInstance
         XCTAssertTrue(check.details.contains("Last successful report:"))
+        XCTAssertFalse(check.details.contains("new invite link"))
+    }
+
+    func testDetailsWarnsWhenLastReportIsOld() throws {
+        Defaults[.lastTeamReportSuccess] = Date().currentTimeMs() - (Date.HourInMs * 30)
+
+        let check = TeamReportSentCheck.sharedInstance
+        XCTAssertTrue(check.details.contains("Last successful report:"))
+        XCTAssertTrue(check.details.contains("Unlink this device and use a new invite link to link it again."))
     }
 
     func testDoneTeamReportSuccessUpdatesTimestamp() throws {
