@@ -63,10 +63,14 @@ class TeamReportSentCheck: ParetoCheck {
     override var details: String {
         let lastSuccess = Defaults[.lastTeamReportSuccess]
         if lastSuccess == 0 {
-            return "No successful report has been sent"
+            return "No successful report has been sent. Unlink this device and use a new invite link to link it again."
         }
         let date = Date(timeIntervalSince1970: TimeInterval(lastSuccess) / 1000)
         let formatter = RelativeDateTimeFormatter()
-        return "Last successful report: \(formatter.localizedString(for: date, relativeTo: Date()))"
+        let relativeDate = formatter.localizedString(for: date, relativeTo: Date())
+        if checkPasses() {
+            return "Last successful report: \(relativeDate)"
+        }
+        return "Last successful report: \(relativeDate). Unlink this device and use a new invite link to link it again."
     }
 }
