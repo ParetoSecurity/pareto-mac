@@ -36,6 +36,23 @@ struct CheckDetailView: View {
         _prerequisiteDetails = State(initialValue: nil)
     }
 
+    private var statusDetails: String {
+        if let appCheck = check as? AppCheck {
+            return appCheck.applicationLocation ?? "not found"
+        }
+        return check.cachedDetails.isEmpty ? check.details : check.cachedDetails
+    }
+
+    private var shouldShowDetails: Bool {
+        if check is AppCheck {
+            return true
+        }
+        if statusDetails.isEmpty || statusDetails == "None" {
+            return false
+        }
+        return !check.checkPassed || check.showDetailsWhenPassing
+    }
+
     var body: some View {
         VStack(spacing: 0) {
             // Header
@@ -272,8 +289,7 @@ struct CheckDetailView: View {
                             }
                         }
 
-                        let statusDetails = check.cachedDetails.isEmpty ? check.details : check.cachedDetails
-                        if !statusDetails.isEmpty && statusDetails != "None" && (!check.checkPassed || check.showDetailsWhenPassing) {
+                        if shouldShowDetails {
                             VStack(alignment: .leading, spacing: 4) {
                                 Text("Details:")
                                     .font(.caption)
