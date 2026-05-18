@@ -54,6 +54,7 @@ class Claims: ObservableObject {
                 GatekeeperCheck.sharedInstance,
                 FileVaultCheck.sharedInstance,
                 BootCheck.sharedInstance,
+                UptimeCheck.sharedInstance,
                 OpenWiFiCheck.sharedInstance,
                 TimeMachineCheck.sharedInstance,
                 SecureTerminalCheck.sharedInstance,
