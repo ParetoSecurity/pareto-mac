@@ -12,10 +12,16 @@ class PackageManagerSupplyChainCheck: ParetoCheck {
 
     let homeDirectory: URL
     let installedBinaries: Set<String>?
+    let environment: [String: String]
 
-    init(homeDirectory: URL = FileManager.default.homeDirectoryForCurrentUser, installedBinaries: Set<String>? = nil) {
+    init(
+        homeDirectory: URL = FileManager.default.homeDirectoryForCurrentUser,
+        installedBinaries: Set<String>? = nil,
+        environment: [String: String] = ProcessInfo.processInfo.environment
+    ) {
         self.homeDirectory = homeDirectory
         self.installedBinaries = installedBinaries
+        self.environment = environment
     }
 
     override var UUID: String {
@@ -56,6 +62,7 @@ class PackageManagerSupplyChainCheck: ParetoCheck {
 
     func validationFailures() -> [String] {
         let npmrc = homeDirectory.appendingPathComponent(".npmrc")
+        let pnpm = pnpmConfigPath()
         let bunfig = homeDirectory.appendingPathComponent(".bunfig.toml")
         let uv = homeDirectory.appendingPathComponent(".config/uv/uv.toml")
         let pypirc = homeDirectory.appendingPathComponent(".pypirc")
@@ -65,6 +72,11 @@ class PackageManagerSupplyChainCheck: ParetoCheck {
             failures.append(contentsOf: Self.validateNpmrc(contents))
         } else if isBinaryInstalled("npm") || isBinaryInstalled("yarn") {
             failures.append("~/.npmrc is missing")
+        }
+        if let contents = readFile(pnpm) {
+            failures.append(contentsOf: Self.validatePnpmConfig(contents, displayPath: pnpmConfigDisplayPath()))
+        } else if isBinaryInstalled("pnpm") {
+            failures.append("\(pnpmConfigDisplayPath()) is missing")
         }
         if let contents = readFile(bunfig) {
             failures.append(contentsOf: Self.validateBunfig(contents))
@@ -89,6 +101,9 @@ class PackageManagerSupplyChainCheck: ParetoCheck {
         if let contents = readFile(homeDirectory.appendingPathComponent(".npmrc")), Self.validateNpmrc(contents).isEmpty {
             details.append("~/.npmrc delays npm-compatible package releases and pins exact versions")
         }
+        if let contents = readFile(pnpmConfigPath()), Self.validatePnpmConfig(contents, displayPath: pnpmConfigDisplayPath()).isEmpty {
+            details.append("\(pnpmConfigDisplayPath()) delays pnpm package releases")
+        }
         if let contents = readFile(homeDirectory.appendingPathComponent(".bunfig.toml")), Self.validateBunfig(contents).isEmpty {
             details.append("~/.bunfig.toml delays Bun package releases")
         }
@@ -107,15 +122,16 @@ class PackageManagerSupplyChainCheck: ParetoCheck {
 
     private func hasPackageManagerConfigOrBinary() -> Bool {
         let configFiles = [
-            ".npmrc",
-            ".bunfig.toml",
-            ".config/uv/uv.toml",
-            ".pypirc",
+            homeDirectory.appendingPathComponent(".npmrc"),
+            pnpmConfigPath(),
+            homeDirectory.appendingPathComponent(".bunfig.toml"),
+            homeDirectory.appendingPathComponent(".config/uv/uv.toml"),
+            homeDirectory.appendingPathComponent(".pypirc"),
         ]
-        if configFiles.contains(where: { FileManager.default.fileExists(atPath: homeDirectory.appendingPathComponent($0).path) }) {
+        if configFiles.contains(where: { FileManager.default.fileExists(atPath: $0.path) }) {
             return true
         }
-        return ["yarn", "npm", "bun", "uv"].contains(where: isBinaryInstalled)
+        return ["yarn", "npm", "pnpm", "bun", "uv"].contains(where: isBinaryInstalled)
     }
 
     private func isBinaryInstalled(_ name: String) -> Bool {
@@ -129,6 +145,30 @@ class PackageManagerSupplyChainCheck: ParetoCheck {
     private func readFile(_ url: URL) -> String? {
         guard FileManager.default.fileExists(atPath: url.path) else { return nil }
         return try? String(contentsOf: url, encoding: .utf8)
+    }
+
+    private func pnpmConfigPath() -> URL {
+        if let xdgConfigHome = xdgConfigHome() {
+            return URL(fileURLWithPath: xdgConfigHome).appendingPathComponent("pnpm/config.yaml")
+        }
+        return homeDirectory.appendingPathComponent("Library/Preferences/pnpm/config.yaml")
+    }
+
+    private func pnpmConfigDisplayPath() -> String {
+        if xdgConfigHome() != nil {
+            return "$XDG_CONFIG_HOME/pnpm/config.yaml"
+        }
+        return "~/Library/Preferences/pnpm/config.yaml"
+    }
+
+    private func xdgConfigHome() -> String? {
+        guard let xdgConfigHome = environment["XDG_CONFIG_HOME"], !xdgConfigHome.isEmpty else {
+            return nil
+        }
+        guard (xdgConfigHome as NSString).isAbsolutePath else {
+            return nil
+        }
+        return (xdgConfigHome as NSString).standardizingPath
     }
 
     static func validateNpmrc(_ contents: String) -> [String] {
@@ -146,6 +186,16 @@ class PackageManagerSupplyChainCheck: ParetoCheck {
         }
 
         return failures
+    }
+
+    static func validatePnpmConfig(_ contents: String, displayPath: String) -> [String] {
+        let values = keyValuePairs(contents)
+        let minimumReleaseAge = integerValue(values["minimumreleaseage"]) ?? integerValue(values["minimum-release-age"]) ?? 0
+
+        if minimumReleaseAge < 10080 {
+            return ["\(displayPath) minimumReleaseAge is below 10080 minutes"]
+        }
+        return []
     }
 
     static func validateBunfig(_ contents: String) -> [String] {

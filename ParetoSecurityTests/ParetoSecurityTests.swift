@@ -60,9 +60,24 @@ class ParetoSecurityTests: XCTestCase {
         XCTAssertEqual(check.details, "- ~/.npmrc is missing")
     }
 
+    func testPackageManagerSupplyChainRunsWithDetectedPnpmBinary() throws {
+        let temporaryDirectory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        try FileManager.default.createDirectory(at: temporaryDirectory, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: temporaryDirectory) }
+
+        let check = PackageManagerSupplyChainCheck(homeDirectory: temporaryDirectory, installedBinaries: ["pnpm"])
+        check.configure()
+
+        XCTAssertTrue(check.isRunnable)
+        XCTAssertFalse(check.checkPasses())
+        XCTAssertEqual(check.details, "- ~/Library/Preferences/pnpm/config.yaml is missing")
+    }
+
     func testPackageManagerSupplyChainPassesWithProtectedConfigs() throws {
         let temporaryDirectory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        let pnpmDirectory = temporaryDirectory.appendingPathComponent("Library/Preferences/pnpm")
         let uvDirectory = temporaryDirectory.appendingPathComponent(".config/uv")
+        try FileManager.default.createDirectory(at: pnpmDirectory, withIntermediateDirectories: true)
         try FileManager.default.createDirectory(at: uvDirectory, withIntermediateDirectories: true)
         defer { try? FileManager.default.removeItem(at: temporaryDirectory) }
 
@@ -71,6 +86,9 @@ class ParetoSecurityTests: XCTestCase {
         minimum-release-age=10080
         save-exact=true
         """.write(to: temporaryDirectory.appendingPathComponent(".npmrc"), atomically: true, encoding: .utf8)
+        try """
+        minimumReleaseAge: 10080
+        """.write(to: pnpmDirectory.appendingPathComponent("config.yaml"), atomically: true, encoding: .utf8)
         try """
         [install]
         minimumReleaseAge = 604800
@@ -85,6 +103,7 @@ class ParetoSecurityTests: XCTestCase {
         XCTAssertTrue(check.checkPasses())
         XCTAssertEqual(check.details, """
         - ~/.npmrc delays npm-compatible package releases and pins exact versions
+        - ~/Library/Preferences/pnpm/config.yaml delays pnpm package releases
         - ~/.bunfig.toml delays Bun package releases
         - ~/.config/uv/uv.toml excludes Python packages newer than 7 days
         """)
@@ -92,7 +111,9 @@ class ParetoSecurityTests: XCTestCase {
 
     func testPackageManagerSupplyChainFailsWithUnprotectedConfigs() throws {
         let temporaryDirectory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        let pnpmDirectory = temporaryDirectory.appendingPathComponent("Library/Preferences/pnpm")
         let uvDirectory = temporaryDirectory.appendingPathComponent(".config/uv")
+        try FileManager.default.createDirectory(at: pnpmDirectory, withIntermediateDirectories: true)
         try FileManager.default.createDirectory(at: uvDirectory, withIntermediateDirectories: true)
         defer { try? FileManager.default.removeItem(at: temporaryDirectory) }
 
@@ -101,6 +122,9 @@ class ParetoSecurityTests: XCTestCase {
         minimum-release-age=10079
         save-exact=false
         """.write(to: temporaryDirectory.appendingPathComponent(".npmrc"), atomically: true, encoding: .utf8)
+        try """
+        minimumReleaseAge: 10079
+        """.write(to: pnpmDirectory.appendingPathComponent("config.yaml"), atomically: true, encoding: .utf8)
         try """
         [install]
         minimumReleaseAge = 604799
@@ -112,8 +136,52 @@ class ParetoSecurityTests: XCTestCase {
 
         let check = PackageManagerSupplyChainCheck(homeDirectory: temporaryDirectory, installedBinaries: [])
 
+        let failures = check.validationFailures()
+
         XCTAssertFalse(check.checkPasses())
-        XCTAssertEqual(check.validationFailures().count, 5)
+        XCTAssertEqual(failures.count, 6)
+        XCTAssertTrue(failures.contains("~/Library/Preferences/pnpm/config.yaml minimumReleaseAge is below 10080 minutes"))
+    }
+
+    func testPackageManagerSupplyChainUsesPnpmXDGConfigHome() throws {
+        let temporaryDirectory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        let xdgDirectory = temporaryDirectory.appendingPathComponent("xdg")
+        let pnpmDirectory = xdgDirectory.appendingPathComponent("pnpm")
+        try FileManager.default.createDirectory(at: pnpmDirectory, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: temporaryDirectory) }
+
+        try """
+        minimum-release-age: 10080
+        """.write(to: pnpmDirectory.appendingPathComponent("config.yaml"), atomically: true, encoding: .utf8)
+
+        let check = PackageManagerSupplyChainCheck(
+            homeDirectory: temporaryDirectory,
+            installedBinaries: ["pnpm"],
+            environment: ["XDG_CONFIG_HOME": xdgDirectory.path]
+        )
+
+        XCTAssertTrue(check.checkPasses())
+        XCTAssertEqual(check.details, "- $XDG_CONFIG_HOME/pnpm/config.yaml delays pnpm package releases")
+    }
+
+    func testPackageManagerSupplyChainIgnoresRelativePnpmXDGConfigHome() throws {
+        let temporaryDirectory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        let defaultPnpmDirectory = temporaryDirectory.appendingPathComponent("Library/Preferences/pnpm")
+        try FileManager.default.createDirectory(at: defaultPnpmDirectory, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: temporaryDirectory) }
+
+        try """
+        minimumReleaseAge: 10080
+        """.write(to: defaultPnpmDirectory.appendingPathComponent("config.yaml"), atomically: true, encoding: .utf8)
+
+        let check = PackageManagerSupplyChainCheck(
+            homeDirectory: temporaryDirectory,
+            installedBinaries: ["pnpm"],
+            environment: ["XDG_CONFIG_HOME": "relative/path"]
+        )
+
+        XCTAssertTrue(check.checkPasses())
+        XCTAssertEqual(check.details, "- ~/Library/Preferences/pnpm/config.yaml delays pnpm package releases")
     }
 
     func testPackageManagerSupplyChainFailsWithPypircCredentials() throws {
