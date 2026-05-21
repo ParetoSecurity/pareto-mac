@@ -164,6 +164,22 @@ class ParetoSecurityTests: XCTestCase {
         XCTAssertEqual(check.details, "- $XDG_CONFIG_HOME/pnpm/config.yaml delays pnpm package releases")
     }
 
+    func testPackageManagerSupplyChainAcceptsTopLevelUvExcludeNewer() throws {
+        let temporaryDirectory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        let uvDirectory = temporaryDirectory.appendingPathComponent(".config/uv")
+        try FileManager.default.createDirectory(at: uvDirectory, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: temporaryDirectory) }
+
+        try """
+        exclude-newer = "7d"
+        """.write(to: uvDirectory.appendingPathComponent("uv.toml"), atomically: true, encoding: .utf8)
+
+        let check = PackageManagerSupplyChainCheck(homeDirectory: temporaryDirectory, installedBinaries: ["uv"])
+
+        XCTAssertTrue(check.checkPasses())
+        XCTAssertEqual(check.details, "- ~/.config/uv/uv.toml excludes Python packages newer than 7 days")
+    }
+
     func testPackageManagerSupplyChainIgnoresRelativePnpmXDGConfigHome() throws {
         let temporaryDirectory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
         let defaultPnpmDirectory = temporaryDirectory.appendingPathComponent("Library/Preferences/pnpm")
