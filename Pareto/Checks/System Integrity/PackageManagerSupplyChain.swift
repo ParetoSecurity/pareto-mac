@@ -210,7 +210,7 @@ class PackageManagerSupplyChainCheck: ParetoCheck {
 
     static func validateUv(_ contents: String) -> [String] {
         let values = tomlKeyValuePairs(contents)
-        let seconds = durationSeconds(values["pip.exclude-newer"]) ?? 0
+        let seconds = durationSeconds(values["exclude-newer"]) ?? durationSeconds(values["pip.exclude-newer"]) ?? 0
 
         if seconds < 604800 {
             return ["~/.config/uv/uv.toml exclude-newer is below 7 days"]
