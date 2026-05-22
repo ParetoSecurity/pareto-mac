@@ -279,19 +279,19 @@ class PackageManagerSupplyChainCheck: ParetoCheck {
             return seconds
         }
         let number = String(normalized.prefix { $0.isNumber })
-        let suffix = String(normalized.dropFirst(number.count))
+        let suffix = String(normalized.dropFirst(number.count)).trimmingCharacters(in: .whitespacesAndNewlines)
         guard let amount = Int(number) else { return nil }
 
         switch suffix {
-        case "s":
+        case "s", "second", "seconds":
             return amount
-        case "m":
+        case "m", "minute", "minutes":
             return amount * 60
-        case "h":
+        case "h", "hour", "hours":
             return amount * 3600
-        case "d":
+        case "d", "day", "days":
             return amount * 86400
-        case "w":
+        case "w", "week", "weeks":
             return amount * 604800
         default:
             return nil
