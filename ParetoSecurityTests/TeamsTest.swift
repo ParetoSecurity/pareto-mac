@@ -13,6 +13,7 @@ class TeamsTest: XCTestCase {
     override func setUp() {
         super.setUp()
         Defaults[.teamID] = ""
+        Defaults[.teamAuth] = ""
         Defaults[.teamAPI] = "https://cloud.paretosecurity.com/"
         Defaults[.lastDeviceRemovedAlert] = 0
 
@@ -91,6 +92,28 @@ class TeamsTest: XCTestCase {
         XCTAssertEqual(response.auth, "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0ZWFtX2lkIjoiMjQyOWM0OWUtMzdiYi00MWJiLTkwNzctNmJiNjIwMmUyNTViIn0.test")
     }
 
+    func testUpdateStoredDeviceAuth() throws {
+        let auth = testJWT(teamID: "2429c49e-37bb-41bb-9077-6bb6202e255b")
+        let data = """
+        {
+            "auth": "\(auth)"
+        }
+        """.data(using: .utf8)
+
+        XCTAssertTrue(Team.updateStoredDeviceAuth(from: data))
+        XCTAssertEqual(Defaults[.teamAuth], auth)
+        XCTAssertEqual(Defaults[.teamID], "2429c49e-37bb-41bb-9077-6bb6202e255b")
+    }
+
+    func testUpdateStoredDeviceAuthRejectsBadData() throws {
+        Defaults[.teamAuth] = "old-token"
+        Defaults[.teamID] = "old-team"
+
+        XCTAssertFalse(Team.updateStoredDeviceAuth(from: "{}".data(using: .utf8)))
+        XCTAssertEqual(Defaults[.teamAuth], "old-token")
+        XCTAssertEqual(Defaults[.teamID], "old-team")
+    }
+
     func testShouldShowDeviceRemovedAlertFirstTime() throws {
         // Reset the last alert timestamp
         Defaults[.lastDeviceRemovedAlert] = 0
@@ -131,5 +154,20 @@ class TeamsTest: XCTestCase {
         XCTAssertFalse(Team.isDeviceLinkInvalidStatusCode(400))
         XCTAssertFalse(Team.isDeviceLinkInvalidStatusCode(500))
         XCTAssertFalse(Team.isDeviceLinkInvalidStatusCode(nil))
+    }
+
+    private func testJWT(teamID: String) -> String {
+        let header = base64UrlEncoded(#"{"alg":"HS512","typ":"JWT"}"#)
+        let payload = base64UrlEncoded(#"{"team_id":"\#(teamID)"}"#)
+        return "\(header).\(payload).signature"
+    }
+
+    private func base64UrlEncoded(_ value: String) -> String {
+        return value
+            .data(using: .utf8)!
+            .base64EncodedString()
+            .replacingOccurrences(of: "+", with: "-")
+            .replacingOccurrences(of: "/", with: "_")
+            .replacingOccurrences(of: "=", with: "")
     }
 }
