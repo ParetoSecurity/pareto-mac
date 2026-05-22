@@ -242,6 +242,19 @@ enum Team {
         }
     }
 
+    static func updateStoredDeviceAuth(from data: Data?) -> Bool {
+        guard let data,
+              let response = try? JSONDecoder().decode(DeviceEnrollmentResponse.self, from: data),
+              let teamID = extractTeamIDFromToken(response.auth)
+        else {
+            return false
+        }
+
+        Defaults[.teamAuth] = response.auth
+        Defaults[.teamID] = teamID
+        return true
+    }
+
     static func update(withReport report: Report) -> DataRequest {
         let headers: HTTPHeaders = [
             "X-Device-Auth": Defaults[.teamAuth],
@@ -270,7 +283,13 @@ enum Team {
             headers: headers
         ) { $0.timeoutInterval = 15 }.cURLDescription { cmd in
             os_log("Update cURL command: %{public}@", log: Log.api, cmd)
-        }.validate().response(queue: queue) { response in
+        }.validate { _, response, data in
+            if (200 ... 299).contains(response.statusCode) {
+                return .success(())
+            }
+
+            return .failure(AFError.responseValidationFailed(reason: .unacceptableStatusCode(code: response.statusCode)))
+        }.response(queue: queue) { response in
             os_log("Update response status: %d", log: Log.api, response.response?.statusCode ?? -1)
             os_log("Update response headers: %{public}@", log: Log.api, response.response?.allHeaderFields.debugDescription ?? "None")
 
@@ -280,6 +299,8 @@ enum Team {
 
             if let error = response.error {
                 os_log("Update failed with error: %{public}@", log: Log.api, error.localizedDescription)
+            } else if updateStoredDeviceAuth(from: response.data) {
+                os_log("Device report update refreshed team auth", log: Log.api)
             } else {
                 os_log("Device report update successful", log: Log.api)
             }
