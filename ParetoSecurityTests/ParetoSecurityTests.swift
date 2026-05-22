@@ -95,7 +95,7 @@ class ParetoSecurityTests: XCTestCase {
         """.write(to: temporaryDirectory.appendingPathComponent(".bunfig.toml"), atomically: true, encoding: .utf8)
         try """
         [pip]
-        exclude-newer = "7d"
+        exclude-newer = "7 days"
         """.write(to: uvDirectory.appendingPathComponent("uv.toml"), atomically: true, encoding: .utf8)
 
         let check = PackageManagerSupplyChainCheck(homeDirectory: temporaryDirectory, installedBinaries: [])
@@ -171,7 +171,7 @@ class ParetoSecurityTests: XCTestCase {
         defer { try? FileManager.default.removeItem(at: temporaryDirectory) }
 
         try """
-        exclude-newer = "7d"
+        exclude-newer = "7 days"
         """.write(to: uvDirectory.appendingPathComponent("uv.toml"), atomically: true, encoding: .utf8)
 
         let check = PackageManagerSupplyChainCheck(homeDirectory: temporaryDirectory, installedBinaries: ["uv"])
