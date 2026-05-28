@@ -70,7 +70,7 @@ class ParetoSecurityTests: XCTestCase {
 
         XCTAssertTrue(check.isRunnable)
         XCTAssertFalse(check.checkPasses())
-        XCTAssertEqual(check.details, "- ~/Library/Preferences/pnpm/config.yaml is missing")
+        XCTAssertEqual(check.details, "- pnpm config is missing (checked ~/Library/Preferences/pnpm/rc, ~/Library/Preferences/pnpm/config.yaml, ~/.config/pnpm/rc, ~/.config/pnpm/config.yaml)")
     }
 
     func testPackageManagerSupplyChainPassesWithProtectedConfigs() throws {
@@ -82,9 +82,9 @@ class ParetoSecurityTests: XCTestCase {
         defer { try? FileManager.default.removeItem(at: temporaryDirectory) }
 
         try """
-        min-release-age=7
-        minimum-release-age=10080
-        save-exact=true
+        # npm accepts standard ini comments
+        min-release-age=7 # trailing comment
+        save-exact=true ; trailing comment
         """.write(to: temporaryDirectory.appendingPathComponent(".npmrc"), atomically: true, encoding: .utf8)
         try """
         minimumReleaseAge: 10080
@@ -139,8 +139,148 @@ class ParetoSecurityTests: XCTestCase {
         let failures = check.validationFailures()
 
         XCTAssertFalse(check.checkPasses())
-        XCTAssertEqual(failures.count, 6)
+        XCTAssertEqual(failures.count, 5)
         XCTAssertTrue(failures.contains("~/Library/Preferences/pnpm/config.yaml minimumReleaseAge is below 10080 minutes"))
+    }
+
+    func testPackageManagerSupplyChainPassesWithMinimumReleaseAgeOnly() throws {
+        let temporaryDirectory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        try FileManager.default.createDirectory(at: temporaryDirectory, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: temporaryDirectory) }
+
+        try """
+        minimum-release-age=10080
+        save-exact=true
+        """.write(to: temporaryDirectory.appendingPathComponent(".npmrc"), atomically: true, encoding: .utf8)
+
+        let check = PackageManagerSupplyChainCheck(homeDirectory: temporaryDirectory, installedBinaries: [])
+
+        XCTAssertTrue(check.checkPasses())
+        XCTAssertEqual(check.details, "- ~/.npmrc delays npm-compatible package releases and pins exact versions")
+    }
+
+    func testPackageManagerSupplyChainPassesWithMinimumReleaseAgeOnlyAndOldNpm() throws {
+        let temporaryDirectory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        try FileManager.default.createDirectory(at: temporaryDirectory, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: temporaryDirectory) }
+
+        try """
+        minimum-release-age=10080
+        save-exact=true
+        """.write(to: temporaryDirectory.appendingPathComponent(".npmrc"), atomically: true, encoding: .utf8)
+
+        let check = PackageManagerSupplyChainCheck(
+            homeDirectory: temporaryDirectory,
+            installedBinaries: ["npm"],
+            packageManagerVersions: ["npm": "11.13.0"]
+        )
+
+        XCTAssertTrue(check.checkPasses())
+        XCTAssertEqual(check.details, "- ~/.npmrc delays npm-compatible package releases and pins exact versions")
+    }
+
+    func testPackageManagerSupplyChainFailsWithUnsupportedNpmVersion() throws {
+        let temporaryDirectory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        try FileManager.default.createDirectory(at: temporaryDirectory, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: temporaryDirectory) }
+
+        try """
+        min-release-age=7
+        save-exact=true
+        """.write(to: temporaryDirectory.appendingPathComponent(".npmrc"), atomically: true, encoding: .utf8)
+
+        let check = PackageManagerSupplyChainCheck(
+            homeDirectory: temporaryDirectory,
+            installedBinaries: ["npm"],
+            packageManagerVersions: ["npm": "11.13.0"]
+        )
+
+        XCTAssertFalse(check.checkPasses())
+        XCTAssertEqual(check.details, "- npm is older than 11.14.0 and does not enforce ~/.npmrc min-release-age")
+    }
+
+    func testPackageManagerSupplyChainFailsWithPrereleaseNpmVersion() throws {
+        let temporaryDirectory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        try FileManager.default.createDirectory(at: temporaryDirectory, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: temporaryDirectory) }
+
+        try """
+        min-release-age=7
+        save-exact=true
+        """.write(to: temporaryDirectory.appendingPathComponent(".npmrc"), atomically: true, encoding: .utf8)
+
+        let check = PackageManagerSupplyChainCheck(
+            homeDirectory: temporaryDirectory,
+            installedBinaries: ["npm"],
+            packageManagerVersions: ["npm": "11.14.0-rc.1"]
+        )
+
+        XCTAssertFalse(check.checkPasses())
+        XCTAssertEqual(check.details, "- npm is older than 11.14.0 and does not enforce ~/.npmrc min-release-age")
+    }
+
+    func testPackageManagerSupplyChainPassesWithSupportedNpmVersion() throws {
+        let temporaryDirectory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        try FileManager.default.createDirectory(at: temporaryDirectory, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: temporaryDirectory) }
+
+        try """
+        min-release-age=7
+        save-exact=true
+        """.write(to: temporaryDirectory.appendingPathComponent(".npmrc"), atomically: true, encoding: .utf8)
+
+        let check = PackageManagerSupplyChainCheck(
+            homeDirectory: temporaryDirectory,
+            installedBinaries: ["npm"],
+            packageManagerVersions: ["npm": "11.14.0"]
+        )
+
+        XCTAssertTrue(check.checkPasses())
+        XCTAssertEqual(check.details, "- ~/.npmrc delays npm-compatible package releases and pins exact versions")
+    }
+
+    func testPackageManagerSupplyChainFailsWithUnknownNpmVersion() throws {
+        let temporaryDirectory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        try FileManager.default.createDirectory(at: temporaryDirectory, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: temporaryDirectory) }
+
+        try """
+        min-release-age=7
+        save-exact=true
+        """.write(to: temporaryDirectory.appendingPathComponent(".npmrc"), atomically: true, encoding: .utf8)
+
+        let check = PackageManagerSupplyChainCheck(
+            homeDirectory: temporaryDirectory,
+            installedBinaries: ["npm"],
+            packageManagerVersions: ["npm": ""]
+        )
+
+        XCTAssertFalse(check.checkPasses())
+        XCTAssertEqual(check.details, "- npm version could not be determined, so ~/.npmrc min-release-age could not be verified")
+    }
+
+    func testPackageManagerSupplyChainComparesNpmVersions() {
+        XCTAssertFalse(PackageManagerSupplyChainCheck.isVersion(nil, atLeast: "11.14.0"))
+        XCTAssertFalse(PackageManagerSupplyChainCheck.isVersion("", atLeast: "11.14.0"))
+        XCTAssertFalse(PackageManagerSupplyChainCheck.isVersion("11.13.0", atLeast: "11.14.0"))
+        XCTAssertFalse(PackageManagerSupplyChainCheck.isVersion("11.14.0-rc.1", atLeast: "11.14.0"))
+        XCTAssertTrue(PackageManagerSupplyChainCheck.isVersion("11.14.0", atLeast: "11.14.0"))
+        XCTAssertTrue(PackageManagerSupplyChainCheck.isVersion("v11.14.0", atLeast: "11.14.0"))
+        XCTAssertTrue(PackageManagerSupplyChainCheck.isVersion("12", atLeast: "11.14.0"))
+    }
+
+    func testPackageManagerSupplyChainValidatesWhichOutput() throws {
+        let temporaryDirectory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        let executable = temporaryDirectory.appendingPathComponent("npm")
+        try FileManager.default.createDirectory(at: temporaryDirectory, withIntermediateDirectories: true)
+        try "".write(to: executable, atomically: true, encoding: .utf8)
+        try FileManager.default.setAttributes([.posixPermissions: 0o700], ofItemAtPath: executable.path)
+        defer { try? FileManager.default.removeItem(at: temporaryDirectory) }
+
+        XCTAssertEqual(PackageManagerSupplyChainCheck.executablePath(fromWhichOutput: executable.path), executable.path)
+        XCTAssertNil(PackageManagerSupplyChainCheck.executablePath(fromWhichOutput: "npm not found"))
+        XCTAssertNil(PackageManagerSupplyChainCheck.executablePath(fromWhichOutput: "npm"))
+        XCTAssertNil(PackageManagerSupplyChainCheck.executablePath(fromWhichOutput: temporaryDirectory.appendingPathComponent("missing").path))
     }
 
     func testPackageManagerSupplyChainUsesPnpmXDGConfigHome() throws {
@@ -151,7 +291,7 @@ class ParetoSecurityTests: XCTestCase {
         defer { try? FileManager.default.removeItem(at: temporaryDirectory) }
 
         try """
-        minimum-release-age: 10080
+        minimumReleaseAge: 10080
         """.write(to: pnpmDirectory.appendingPathComponent("config.yaml"), atomically: true, encoding: .utf8)
 
         let check = PackageManagerSupplyChainCheck(
@@ -162,6 +302,84 @@ class ParetoSecurityTests: XCTestCase {
 
         XCTAssertTrue(check.checkPasses())
         XCTAssertEqual(check.details, "- $XDG_CONFIG_HOME/pnpm/config.yaml delays pnpm package releases")
+    }
+
+    func testPackageManagerSupplyChainUsesDarwinPnpmConfigHomeYamlFallback() throws {
+        let temporaryDirectory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        let pnpmDirectory = temporaryDirectory.appendingPathComponent(".config/pnpm")
+        try FileManager.default.createDirectory(at: pnpmDirectory, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: temporaryDirectory) }
+
+        try """
+        minimumReleaseAge: 10080
+        """.write(to: pnpmDirectory.appendingPathComponent("config.yaml"), atomically: true, encoding: .utf8)
+
+        let check = PackageManagerSupplyChainCheck(homeDirectory: temporaryDirectory, installedBinaries: ["pnpm"])
+
+        XCTAssertTrue(check.checkPasses())
+        XCTAssertEqual(check.details, "- ~/.config/pnpm/config.yaml delays pnpm package releases")
+    }
+
+    func testPackageManagerSupplyChainUsesPnpmXDGConfigHomeRc() throws {
+        let temporaryDirectory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        let xdgDirectory = temporaryDirectory.appendingPathComponent("xdg")
+        let pnpmDirectory = xdgDirectory.appendingPathComponent("pnpm")
+        try FileManager.default.createDirectory(at: pnpmDirectory, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: temporaryDirectory) }
+
+        try """
+        ; pnpm 10 writes rc-style config
+        minimum-release-age=10080 # trailing comment
+        """.write(to: pnpmDirectory.appendingPathComponent("rc"), atomically: true, encoding: .utf8)
+
+        let check = PackageManagerSupplyChainCheck(
+            homeDirectory: temporaryDirectory,
+            installedBinaries: ["pnpm"],
+            environment: ["XDG_CONFIG_HOME": xdgDirectory.path]
+        )
+
+        XCTAssertTrue(check.checkPasses())
+        XCTAssertEqual(check.details, "- $XDG_CONFIG_HOME/pnpm/rc delays pnpm package releases")
+    }
+
+    func testPackageManagerSupplyChainUsesActivePnpmConfig() throws {
+        let temporaryDirectory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        let xdgDirectory = temporaryDirectory.appendingPathComponent("xdg")
+        let pnpmDirectory = xdgDirectory.appendingPathComponent("pnpm")
+        try FileManager.default.createDirectory(at: pnpmDirectory, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: temporaryDirectory) }
+
+        try """
+        minimumReleaseAge: 10079
+        """.write(to: pnpmDirectory.appendingPathComponent("config.yaml"), atomically: true, encoding: .utf8)
+        try """
+        minimum-release-age=10080
+        """.write(to: pnpmDirectory.appendingPathComponent("rc"), atomically: true, encoding: .utf8)
+
+        let check = PackageManagerSupplyChainCheck(
+            homeDirectory: temporaryDirectory,
+            installedBinaries: ["pnpm"],
+            environment: ["XDG_CONFIG_HOME": xdgDirectory.path]
+        )
+
+        XCTAssertTrue(check.checkPasses())
+        XCTAssertEqual(check.details, "- $XDG_CONFIG_HOME/pnpm/rc delays pnpm package releases")
+    }
+
+    func testPackageManagerSupplyChainUsesDarwinPnpmConfigHomeRc() throws {
+        let temporaryDirectory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        let pnpmDirectory = temporaryDirectory.appendingPathComponent(".config/pnpm")
+        try FileManager.default.createDirectory(at: pnpmDirectory, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: temporaryDirectory) }
+
+        try """
+        minimum-release-age=10080
+        """.write(to: pnpmDirectory.appendingPathComponent("rc"), atomically: true, encoding: .utf8)
+
+        let check = PackageManagerSupplyChainCheck(homeDirectory: temporaryDirectory, installedBinaries: ["pnpm"])
+
+        XCTAssertTrue(check.checkPasses())
+        XCTAssertEqual(check.details, "- ~/.config/pnpm/rc delays pnpm package releases")
     }
 
     func testPackageManagerSupplyChainAcceptsTopLevelUvExcludeNewer() throws {

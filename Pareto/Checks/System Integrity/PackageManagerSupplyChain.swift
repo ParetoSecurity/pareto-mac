@@ -12,15 +12,18 @@ class PackageManagerSupplyChainCheck: ParetoCheck {
 
     let homeDirectory: URL
     let installedBinaries: Set<String>?
+    let packageManagerVersions: [String: String]
     let environment: [String: String]
 
     init(
         homeDirectory: URL = FileManager.default.homeDirectoryForCurrentUser,
         installedBinaries: Set<String>? = nil,
+        packageManagerVersions: [String: String] = [:],
         environment: [String: String] = ProcessInfo.processInfo.environment
     ) {
         self.homeDirectory = homeDirectory
         self.installedBinaries = installedBinaries
+        self.packageManagerVersions = packageManagerVersions
         self.environment = environment
     }
 
@@ -62,21 +65,20 @@ class PackageManagerSupplyChainCheck: ParetoCheck {
 
     func validationFailures() -> [String] {
         let npmrc = homeDirectory.appendingPathComponent(".npmrc")
-        let pnpm = pnpmConfigPath()
         let bunfig = homeDirectory.appendingPathComponent(".bunfig.toml")
         let uv = homeDirectory.appendingPathComponent(".config/uv/uv.toml")
         let pypirc = homeDirectory.appendingPathComponent(".pypirc")
         var failures: [String] = []
 
         if let contents = readFile(npmrc) {
-            failures.append(contentsOf: Self.validateNpmrc(contents))
+            failures.append(contentsOf: validateNpmConfig(contents))
         } else if isBinaryInstalled("npm") || isBinaryInstalled("yarn") {
             failures.append("~/.npmrc is missing")
         }
-        if let contents = readFile(pnpm) {
-            failures.append(contentsOf: Self.validatePnpmConfig(contents, displayPath: pnpmConfigDisplayPath()))
+        if let pnpmConfig = activePnpmConfig() {
+            failures.append(contentsOf: Self.validatePnpmConfig(pnpmConfig.contents, displayPath: pnpmConfig.displayPath))
         } else if isBinaryInstalled("pnpm") {
-            failures.append("\(pnpmConfigDisplayPath()) is missing")
+            failures.append(pnpmConfigMissingDetail())
         }
         if let contents = readFile(bunfig) {
             failures.append(contentsOf: Self.validateBunfig(contents))
@@ -98,11 +100,11 @@ class PackageManagerSupplyChainCheck: ParetoCheck {
     private func passingDetails() -> String {
         var details: [String] = []
 
-        if let contents = readFile(homeDirectory.appendingPathComponent(".npmrc")), Self.validateNpmrc(contents).isEmpty {
+        if let contents = readFile(homeDirectory.appendingPathComponent(".npmrc")), validateNpmConfig(contents).isEmpty {
             details.append("~/.npmrc delays npm-compatible package releases and pins exact versions")
         }
-        if let contents = readFile(pnpmConfigPath()), Self.validatePnpmConfig(contents, displayPath: pnpmConfigDisplayPath()).isEmpty {
-            details.append("\(pnpmConfigDisplayPath()) delays pnpm package releases")
+        if let pnpmConfig = activePnpmConfig(), Self.validatePnpmConfig(pnpmConfig.contents, displayPath: pnpmConfig.displayPath).isEmpty {
+            details.append("\(pnpmConfig.displayPath) delays pnpm package releases")
         }
         if let contents = readFile(homeDirectory.appendingPathComponent(".bunfig.toml")), Self.validateBunfig(contents).isEmpty {
             details.append("~/.bunfig.toml delays Bun package releases")
@@ -123,11 +125,10 @@ class PackageManagerSupplyChainCheck: ParetoCheck {
     private func hasPackageManagerConfigOrBinary() -> Bool {
         let configFiles = [
             homeDirectory.appendingPathComponent(".npmrc"),
-            pnpmConfigPath(),
             homeDirectory.appendingPathComponent(".bunfig.toml"),
             homeDirectory.appendingPathComponent(".config/uv/uv.toml"),
             homeDirectory.appendingPathComponent(".pypirc"),
-        ]
+        ] + pnpmConfigPaths().map(\.url)
         if configFiles.contains(where: { FileManager.default.fileExists(atPath: $0.path) }) {
             return true
         }
@@ -138,8 +139,37 @@ class PackageManagerSupplyChainCheck: ParetoCheck {
         if let installedBinaries {
             return installedBinaries.contains(name)
         }
-        let output = runCMD(app: "/usr/bin/which", args: [name]).trimmingCharacters(in: .whitespacesAndNewlines)
-        return !output.isEmpty
+        return executablePath(for: name) != nil
+    }
+
+    private func packageManagerVersion(_ name: String) -> String? {
+        if let version = packageManagerVersions[name] {
+            return version.isEmpty ? nil : version
+        }
+        guard let path = executablePath(for: name) else { return nil }
+        let output = runCMD(app: path, args: ["--version"]).trimmingCharacters(in: .whitespacesAndNewlines)
+        return output.isEmpty ? nil : output
+    }
+
+    private func executablePath(for name: String) -> String? {
+        let path = runCMD(app: "/usr/bin/which", args: [name]).trimmingCharacters(in: .whitespacesAndNewlines)
+        return Self.executablePath(fromWhichOutput: path)
+    }
+
+    static func executablePath(fromWhichOutput output: String) -> String? {
+        let path = output.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard (path as NSString).isAbsolutePath else { return nil }
+        guard FileManager.default.isExecutableFile(atPath: path) else { return nil }
+        return path
+    }
+
+    private func activePnpmConfig() -> (contents: String, displayPath: String)? {
+        for configPath in pnpmConfigPaths() {
+            if let contents = readFile(configPath.url) {
+                return (contents, configPath.displayPath)
+            }
+        }
+        return nil
     }
 
     private func readFile(_ url: URL) -> String? {
@@ -147,18 +177,25 @@ class PackageManagerSupplyChainCheck: ParetoCheck {
         return try? String(contentsOf: url, encoding: .utf8)
     }
 
-    private func pnpmConfigPath() -> URL {
+    private func pnpmConfigPaths() -> [(url: URL, displayPath: String)] {
         if let xdgConfigHome = xdgConfigHome() {
-            return URL(fileURLWithPath: xdgConfigHome).appendingPathComponent("pnpm/config.yaml")
+            let xdgDirectory = URL(fileURLWithPath: xdgConfigHome)
+            return [
+                (xdgDirectory.appendingPathComponent("pnpm/rc"), "$XDG_CONFIG_HOME/pnpm/rc"),
+                (xdgDirectory.appendingPathComponent("pnpm/config.yaml"), "$XDG_CONFIG_HOME/pnpm/config.yaml"),
+            ]
         }
-        return homeDirectory.appendingPathComponent("Library/Preferences/pnpm/config.yaml")
+        return [
+            (homeDirectory.appendingPathComponent("Library/Preferences/pnpm/rc"), "~/Library/Preferences/pnpm/rc"),
+            (homeDirectory.appendingPathComponent("Library/Preferences/pnpm/config.yaml"), "~/Library/Preferences/pnpm/config.yaml"),
+            (homeDirectory.appendingPathComponent(".config/pnpm/rc"), "~/.config/pnpm/rc"),
+            (homeDirectory.appendingPathComponent(".config/pnpm/config.yaml"), "~/.config/pnpm/config.yaml"),
+        ]
     }
 
-    private func pnpmConfigDisplayPath() -> String {
-        if xdgConfigHome() != nil {
-            return "$XDG_CONFIG_HOME/pnpm/config.yaml"
-        }
-        return "~/Library/Preferences/pnpm/config.yaml"
+    private func pnpmConfigMissingDetail() -> String {
+        let paths = pnpmConfigPaths().map(\.displayPath).joined(separator: ", ")
+        return "pnpm config is missing (checked \(paths))"
     }
 
     private func xdgConfigHome() -> String? {
@@ -171,21 +208,62 @@ class PackageManagerSupplyChainCheck: ParetoCheck {
         return (xdgConfigHome as NSString).standardizingPath
     }
 
+    private func validateNpmConfig(_ contents: String) -> [String] {
+        var failures = Self.validateNpmrc(contents)
+        guard failures.isEmpty, isBinaryInstalled("npm"), Self.npmConfigUsesMinReleaseAge(contents) else {
+            return failures
+        }
+        guard let version = packageManagerVersion("npm") else {
+            failures.append("npm version could not be determined, so ~/.npmrc min-release-age could not be verified")
+            return failures
+        }
+        if !Self.isVersion(version, atLeast: "11.14.0") {
+            failures.append("npm is older than 11.14.0 and does not enforce ~/.npmrc min-release-age")
+        }
+        return failures
+    }
+
+    private static func npmConfigUsesMinReleaseAge(_ contents: String) -> Bool {
+        return keyValuePairs(contents)["min-release-age"] != nil
+    }
+
     static func validateNpmrc(_ contents: String) -> [String] {
         let values = keyValuePairs(contents)
         var failures: [String] = []
 
-        if integerValue(values["min-release-age"]) ?? 0 < 7 {
-            failures.append("~/.npmrc min-release-age is below 7 days")
-        }
-        if integerValue(values["minimum-release-age"]) ?? 0 < 10080 {
-            failures.append("~/.npmrc minimum-release-age is below 10080 minutes")
+        let minReleaseAgeDays = integerValue(values["min-release-age"]) ?? 0
+        let minimumReleaseAgeMinutes = integerValue(values["minimum-release-age"]) ?? 0
+        if minReleaseAgeDays < 7, minimumReleaseAgeMinutes < 10080 {
+            failures.append("~/.npmrc release age is below 7 days; set either min-release-age >= 7 or minimum-release-age >= 10080")
         }
         if values["save-exact"]?.lowercased() != "true" {
             failures.append("~/.npmrc save-exact is not enabled")
         }
 
         return failures
+    }
+
+    static func isVersion(_ version: String?, atLeast minimumVersion: String) -> Bool {
+        guard let version else { return false }
+        if version.contains("-") {
+            return false
+        }
+        let current = versionComponents(version)
+        let minimum = versionComponents(minimumVersion)
+        for index in 0..<max(current.count, minimum.count) {
+            let currentPart = index < current.count ? current[index] : 0
+            let minimumPart = index < minimum.count ? minimum[index] : 0
+            if currentPart != minimumPart {
+                return currentPart > minimumPart
+            }
+        }
+        return true
+    }
+
+    private static func versionComponents(_ version: String) -> [Int] {
+        return version.trimmingCharacters(in: CharacterSet(charactersIn: "vV")).split(separator: ".").map { part in
+            Int(part.prefix { $0.isNumber }) ?? 0
+        }
     }
 
     static func validatePnpmConfig(_ contents: String, displayPath: String) -> [String] {
