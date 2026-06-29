@@ -55,6 +55,14 @@
 		3F1733582D6D6487007C02B0 /* iTerm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F1733352D6D6487007C02B0 /* iTerm.swift */; };
 		3F1733592D6D6487007C02B0 /* Slack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F1733382D6D6487007C02B0 /* Slack.swift */; };
 		3F17335A2D6D6487007C02B0 /* Dashlane.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F1733312D6D6487007C02B0 /* Dashlane.swift */; };
+		4F8610112F00000100000001 /* AnyDesk.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F8610012F00000100000001 /* AnyDesk.swift */; };
+		4F8610122F00000100000002 /* AnyDesk.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F8610012F00000100000001 /* AnyDesk.swift */; };
+		4F8610132F00000100000003 /* ProtonDrive.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F8610022F00000100000002 /* ProtonDrive.swift */; };
+		4F8610142F00000100000004 /* ProtonDrive.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F8610022F00000100000002 /* ProtonDrive.swift */; };
+		4F8610152F00000100000005 /* ProtonMail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F8610032F00000100000003 /* ProtonMail.swift */; };
+		4F8610162F00000100000006 /* ProtonMail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F8610032F00000100000003 /* ProtonMail.swift */; };
+		4F8610172F00000100000007 /* ProtonVPN.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F8610042F00000100000004 /* ProtonVPN.swift */; };
+		4F8610182F00000100000008 /* ProtonVPN.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F8610042F00000100000004 /* ProtonVPN.swift */; };
 		4F0371BC26CD00B700B35E43 /* Boot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F0371BB26CD00B700B35E43 /* Boot.swift */; };
 		4F080D1D26C50D2800686786 /* ParetoSecurityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FC81A4B26C41DC8006EABA8 /* ParetoSecurityTests.swift */; };
 		4F0BD11F284891670098316A /* ClipButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F0BD11E284891670098316A /* ClipButton.swift */; };
@@ -370,6 +378,10 @@
 		3F1733382D6D6487007C02B0 /* Slack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Slack.swift; sourceTree = "<group>"; };
 		3F1733392D6D6487007C02B0 /* Tailscale.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tailscale.swift; sourceTree = "<group>"; };
 		3F17333A2D6D6487007C02B0 /* WireGuard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WireGuard.swift; sourceTree = "<group>"; };
+		4F8610012F00000100000001 /* AnyDesk.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnyDesk.swift; sourceTree = "<group>"; };
+		4F8610022F00000100000002 /* ProtonDrive.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProtonDrive.swift; sourceTree = "<group>"; };
+		4F8610032F00000100000003 /* ProtonMail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProtonMail.swift; sourceTree = "<group>"; };
+		4F8610042F00000100000004 /* ProtonVPN.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProtonVPN.swift; sourceTree = "<group>"; };
 		4F0371BB26CD00B700B35E43 /* Boot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Boot.swift; sourceTree = "<group>"; };
 		4F0BD11E284891670098316A /* ClipButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipButton.swift; sourceTree = "<group>"; };
 		4F0CC3F92E6F014200A0BE70 /* FullDiskAccessVerifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullDiskAccessVerifier.swift; sourceTree = "<group>"; };
@@ -692,6 +704,10 @@
 				3F1733352D6D6487007C02B0 /* iTerm.swift */,
 				3F1733362D6D6487007C02B0 /* MicrosoftTeams.swift */,
 				3F1733372D6D6487007C02B0 /* NordLayer.swift */,
+				4F8610012F00000100000001 /* AnyDesk.swift */,
+				4F8610022F00000100000002 /* ProtonDrive.swift */,
+				4F8610032F00000100000003 /* ProtonMail.swift */,
+				4F8610042F00000100000004 /* ProtonVPN.swift */,
 				3F1733382D6D6487007C02B0 /* Slack.swift */,
 				3F1733392D6D6487007C02B0 /* Tailscale.swift */,
 				3F17333A2D6D6487007C02B0 /* WireGuard.swift */,
@@ -1223,6 +1239,10 @@
 				3F17334E2D6D6487007C02B0 /* Grammarly.swift in Sources */,
 				3F17334F2D6D6487007C02B0 /* Docker.swift in Sources */,
 				3F1733502D6D6487007C02B0 /* Enpass.swift in Sources */,
+				4F8610112F00000100000001 /* AnyDesk.swift in Sources */,
+				4F8610132F00000100000003 /* ProtonDrive.swift in Sources */,
+				4F8610152F00000100000005 /* ProtonMail.swift in Sources */,
+				4F8610172F00000100000007 /* ProtonVPN.swift in Sources */,
 				3F1733512D6D6487007C02B0 /* 1Password8.swift in Sources */,
 				3F1733522D6D6487007C02B0 /* Tailscale.swift in Sources */,
 				3F1733532D6D6487007C02B0 /* WireGuard.swift in Sources */,
@@ -1374,6 +1394,10 @@
 				3F17333E2D6D6487007C02B0 /* Grammarly.swift in Sources */,
 				3F17333F2D6D6487007C02B0 /* Docker.swift in Sources */,
 				3F1733402D6D6487007C02B0 /* Enpass.swift in Sources */,
+				4F8610122F00000100000002 /* AnyDesk.swift in Sources */,
+				4F8610142F00000100000004 /* ProtonDrive.swift in Sources */,
+				4F8610162F00000100000006 /* ProtonMail.swift in Sources */,
+				4F8610182F00000100000008 /* ProtonVPN.swift in Sources */,
 				3F1733412D6D6487007C02B0 /* 1Password8.swift in Sources */,
 				3F1733422D6D6487007C02B0 /* Tailscale.swift in Sources */,
 				3F1733432D6D6487007C02B0 /* WireGuard.swift in Sources */,
