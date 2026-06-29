@@ -81,6 +81,9 @@ class Claims: ObservableObject {
         AppGoogleChromeCheck.sharedInstance,
         AppiTermCheck.sharedInstance,
         AppNordLayerCheck.sharedInstance,
+        AppProtonDriveCheck.sharedInstance,
+        AppProtonMailCheck.sharedInstance,
+        AppProtonVPNCheck.sharedInstance,
         AppSlackCheck.sharedInstance,
         AppTailscaleCheck.sharedInstance,
         AppZoomCheck.sharedInstance,
@@ -90,6 +93,7 @@ class Claims: ObservableObject {
         AppSublimeTextCheck.sharedInstance,
         AppVSCodeCheck.sharedInstance,
         AdobeReaderCheck.sharedInstance,
+        AppAnyDeskCheck.sharedInstance,
         AppLuLuCheck.sharedInstance,
         AppMicrosoftTeamsCheck.sharedInstance,
     ]

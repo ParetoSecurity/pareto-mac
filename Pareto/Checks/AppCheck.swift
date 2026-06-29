@@ -47,6 +47,8 @@ class AppCheck: ParetoCheck, AppCheckProtocol {
     var appMarketingName: String { "" }
     var appBundle: String { "" }
     var sparkleURL: String { "" }
+    var sparkleChannel: String? { nil }
+    var excludedSparkleChannel: String? { nil }
 
     override var TitleON: String {
         "\(appMarketingName) is up-to-date"
@@ -217,22 +219,15 @@ class AppCheck: ParetoCheck, AppCheckProtocol {
             return
         } else {
             os_log("Requesting %{public}s", sparkleURL)
-            let versionRegex = Regex("sparkle:shortVersionString=\"([\\.\\d]+)\"")
-            let versionFallbackRegex = Regex("sparkle:version=\"([\\.\\d]+)\"")
             Network.session.request(sparkleURL).responseString(queue: AppCheck.queue, completionHandler: { response in
                 if response.error == nil {
-                    let versionNew = versionRegex.allMatches(in: response.value ?? "")
-                    let versionOld = versionFallbackRegex.allMatches(in: response.value ?? "")
-
-                    if !versionNew.isEmpty {
-                        let versisons = versionNew.map { $0.groups.first?.value ?? "0.0.0" }
-                        let version = versisons.sorted().first ?? "0.0.0"
-                        os_log("%{public}s sparkle:shortVersionString=%{public}s", self.appBundle, version)
-                        completion(version)
-                    } else if !versionOld.isEmpty {
-                        let versisons = versionOld.map { $0.groups.first?.value ?? "0.0.0" }
-                        let version = versisons.sorted().first ?? "0.0.0"
-                        os_log("%{public}s sparkle:version=%{public}s", self.appBundle, version)
+                    let version = Self.latestSparkleVersion(
+                        from: response.value ?? "",
+                        channel: self.sparkleChannel,
+                        excludedChannel: self.excludedSparkleChannel
+                    )
+                    if version != "0.0.0" {
+                        os_log("%{public}s Sparkle=%{public}s", self.appBundle, version)
                         completion(version)
                     } else {
                         os_log("%{public}s failed:Sparkle=0.0.0", self.appBundle)
@@ -246,6 +241,31 @@ class AppCheck: ParetoCheck, AppCheckProtocol {
 
             })
         }
+    }
+
+    static func latestSparkleVersion(from response: String, channel: String? = nil, excludedChannel: String? = nil) -> String {
+        let versionAttributeRegex = Regex("sparkle:shortVersionString=\"([\\.\\d]+)\"")
+        let versionElementRegex = Regex("<sparkle:shortVersionString>([\\.\\d]+)</sparkle:shortVersionString>")
+        let versionFallbackRegex = Regex("sparkle:version=\"([\\.\\d]+)\"")
+        let items = response.components(separatedBy: "<item>").dropFirst().map { "<item>" + $0 }
+        let candidates = items.isEmpty ? [response] : items
+        let item = candidates.first {
+            if let channel {
+                return $0.contains("<sparkle:channel>\(channel)</sparkle:channel>")
+            }
+            if let excludedChannel {
+                return !$0.contains("<sparkle:channel>\(excludedChannel)</sparkle:channel>")
+            }
+            return true
+        } ?? response
+
+        if let version = versionAttributeRegex.firstMatch(in: item)?.groups.first?.value {
+            return version
+        }
+        if let version = versionElementRegex.firstMatch(in: item)?.groups.first?.value {
+            return version
+        }
+        return versionFallbackRegex.firstMatch(in: item)?.groups.first?.value ?? "0.0.0"
     }
 
     override func checkPasses() -> Bool {
