@@ -66,7 +66,7 @@ class ApplicationUpdatesTest: XCTestCase {
         XCTAssertEqual(AppMicrosoftTeamsCheck.normalizedVersion("26093.415.4620.1935"), "26093.415.4620")
     }
 
-    func testMicrosoftTeamsReadsCanaryMacOSOnlineVersion() throws {
+    func testMicrosoftTeamsReadsStableMacOSOnlineVersion() throws {
         let json = """
         {
           "BuildSettings": {
@@ -86,7 +86,7 @@ class ApplicationUpdatesTest: XCTestCase {
 
         let response = try JSONDecoder().decode(TeamsResponse.self, from: Data(json.utf8))
 
-        XCTAssertEqual(AppMicrosoftTeamsCheck.latestMacOSVersion(from: response), "26093.311.4599.3126")
+        XCTAssertEqual(AppMicrosoftTeamsCheck.latestMacOSVersion(from: response), "25290.302.4044.3989")
     }
 
     func testLibreOfficeParserReadsMaintainedEndOfLifeVersions() throws {
@@ -193,6 +193,19 @@ class ApplicationUpdatesTest: XCTestCase {
         XCTAssertEqual(AppAnyDeskCheck.latestMacOSVersion(from: response), "9.7.1")
     }
 
+    func testZoomParserReadsMacOSSlowTrackRelease() {
+        let response = """
+        <table>
+            <tbody>
+                <tr class="table-row"><td><a href="windows">Windows</a></td><td>7.1.0</td><td>7.0.5</td><td>7.0.5</td><td>5.17.5</td></tr>
+                <tr class="table-row"><td><a href="macos">macOS</a></td><td>7.1.0</td><td>7.0.5</td><td>7.0.5</td><td>6.0.2</td></tr>
+            </tbody>
+        </table>
+        """
+
+        XCTAssertEqual(AppZoomCheck.latestMacOSSlowTrackVersion(from: response), "7.0.5")
+    }
+
     func testAnyDeskParserReadsRemoteChangelog() async throws {
         let response = try await remoteString(from: "https://download.anydesk.com/changelog.txt")
 
@@ -216,6 +229,12 @@ class ApplicationUpdatesTest: XCTestCase {
         let response = try await remoteString(from: "https://protonvpn.com/download/macos/updates/v5/sparkle.xml")
 
         XCTAssertNotEqual(AppCheck.latestSparkleVersion(from: response, excludedChannel: "beta"), "0.0.0")
+    }
+
+    func testZoomParserReadsRemoteSupportPage() async throws {
+        let response = try await remoteString(from: "https://support.zoom.com/hc/en/article?id=zm_kb&sysparm_article=KB0061900")
+
+        XCTAssertNotEqual(AppZoomCheck.latestMacOSSlowTrackVersion(from: response), "0.0.0")
     }
 
     func testRequestedAppsAreRegisteredForApplicationUpdates() {
