@@ -49,8 +49,7 @@ struct StatusBarMenuView: View {
                     Button {
                         appHandlers.runChecks()
                     } label: {
-                        Label("Run Checks", systemImage: "play.circle.fill")
-                            .symbolRenderingMode(.multicolor)
+                        Text("Run Checks")
                     }
                     .keyboardShortcut("r")
                     .padding(.horizontal)
@@ -67,8 +66,7 @@ struct StatusBarMenuView: View {
                             appHandlers.snoozeOneWeek()
                         }
                     } label: {
-                        Label("Snooze", systemImage: "zzz")
-                            .symbolRenderingMode(.multicolor)
+                        Text("Snooze")
                     }
                     .padding(.horizontal)
                     .padding(.vertical, 2)
@@ -76,8 +74,7 @@ struct StatusBarMenuView: View {
                     Button {
                         appHandlers.unsnooze()
                     } label: {
-                        Label("Resume checks", systemImage: "play.circle")
-                            .symbolRenderingMode(.multicolor)
+                        Text("Resume checks")
                     }
                     .keyboardShortcut("u")
                     .padding(.horizontal)
@@ -87,8 +84,7 @@ struct StatusBarMenuView: View {
 
             if #available(macOS 14.0, *) {
                 SettingsLink {
-                    Label("Preferences", systemImage: "gearshape.fill")
-                        .symbolRenderingMode(.multicolor)
+                    Text("Preferences")
                 } preAction: {
                     NSApp.activate(ignoringOtherApps: true)
                 } postAction: {
@@ -102,8 +98,7 @@ struct StatusBarMenuView: View {
                     NSApp.sendAction(Selector(("showPreferencesWindow:")), to: nil, from: nil)
                     NSApp.activate(ignoringOtherApps: true)
                 } label: {
-                    Label("Preferences", systemImage: "gearshape.fill")
-                        .symbolRenderingMode(.multicolor)
+                    Text("Preferences")
                 }
                 .keyboardShortcut(",")
                 .padding(.horizontal)
@@ -113,8 +108,7 @@ struct StatusBarMenuView: View {
             Button {
                 appHandlers.docs()
             } label: {
-                Label("Documentation", systemImage: "book.pages.fill")
-                    .symbolRenderingMode(.multicolor)
+                Text("Documentation")
             }
             .keyboardShortcut("d")
             .padding(.horizontal)
@@ -123,8 +117,7 @@ struct StatusBarMenuView: View {
             Button {
                 appHandlers.reportBug()
             } label: {
-                Label("Contact Support", systemImage: "questionmark.circle.fill")
-                    .symbolRenderingMode(.multicolor)
+                Text("Contact Support")
             }
             .keyboardShortcut("b")
             .padding(.horizontal)
@@ -135,8 +128,7 @@ struct StatusBarMenuView: View {
             Button {
                 appHandlers.quitApp()
             } label: {
-                Label("Quit Pareto", systemImage: "power")
-                    .symbolRenderingMode(.multicolor)
+                Text("Quit Pareto")
             }
             .keyboardShortcut("q")
             .padding(.horizontal)
@@ -199,30 +191,29 @@ struct StatusBarMenuView: View {
 struct ClaimMenuView: View {
     let claim: Claim
 
+    @Default(.alternativeColor) private var alternativeColor
+
+    private var statusSymbol: String {
+        claim.checksPassed ? "✓" : "✕"
+    }
+
+    private var statusColor: Color {
+        _ = alternativeColor
+        return Color(nsColor: claim.checksPassed ? Defaults.OKColor() : Defaults.FailColor())
+    }
+
+    private var title: Text {
+        Text(statusSymbol)
+            .foregroundColor(statusColor) + Text(" \(claim.title)")
+    }
+
     var body: some View {
         Menu {
             ForEach(claim.checksSorted.filter { $0.showInMenu }, id: \.id) { check in
                 CheckMenuItemView(check: check)
             }
         } label: {
-            HStack {
-                Group {
-                    if claim.checksPassed {
-                        Image(systemName: "checkmark")
-                            .symbolRenderingMode(.palette)
-                            .font(.system(size: 15))
-                            .foregroundStyle(Color(nsColor: Defaults.OKColor()))
-                    } else {
-                        Image(systemName: "xmark")
-                            .symbolRenderingMode(.palette)
-                            .font(.system(size: 15))
-                            .foregroundStyle(Color(nsColor: Defaults.FailColor()))
-                    }
-                }
-                Text(claim.title)
-                Spacer()
-            }
-            .contentShape(Rectangle())
+            title
         }
         .padding(.horizontal)
         .padding(.vertical, 2)
@@ -233,35 +224,35 @@ struct CheckMenuItemView: View {
     // Observe individual check for live updates
     @ObservedObject var check: ParetoCheck
 
+    @Default(.alternativeColor) private var alternativeColor
+
+    private var statusSymbol: String {
+        if check.isRunnable {
+            check.checkPassed ? "✓" : "✕"
+        } else {
+            "–"
+        }
+    }
+
+    private var statusColor: Color {
+        _ = alternativeColor
+        if check.isRunnable {
+            return Color(nsColor: check.checkPassed ? Defaults.OKColor() : Defaults.FailColor())
+        }
+        return Color.secondary
+    }
+
+    private var title: Text {
+        Text(statusSymbol)
+            .foregroundColor(statusColor) + Text(" \(check.Title)")
+    }
+
     var body: some View {
         Button(action: {
             // Open info URL
             NSWorkspace.shared.open(check.infoURL)
         }) {
-            HStack {
-                Group {
-                    if check.isRunnable {
-                        if check.checkPassed {
-                            Image(systemName: "checkmark")
-                                .symbolRenderingMode(.palette)
-                                .font(.system(size: 15))
-                                .foregroundStyle(Color(nsColor: Defaults.OKColor()))
-                        } else {
-                            Image(systemName: "xmark")
-                                .symbolRenderingMode(.palette)
-                                .font(.system(size: 15))
-                                .foregroundStyle(Color(nsColor: Defaults.FailColor()))
-                        }
-                    } else {
-                        Image(systemName: "questionmark")
-                            .symbolRenderingMode(.palette)
-                            .font(.system(size: 15))
-                            .foregroundStyle(.orange)
-                    }
-                }
-                Text(check.Title)
-                Spacer()
-            }
+            title
         }
         .buttonStyle(PlainButtonStyle())
     }

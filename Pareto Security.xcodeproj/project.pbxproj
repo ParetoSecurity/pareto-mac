@@ -55,14 +55,6 @@
 		3F1733582D6D6487007C02B0 /* iTerm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F1733352D6D6487007C02B0 /* iTerm.swift */; };
 		3F1733592D6D6487007C02B0 /* Slack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F1733382D6D6487007C02B0 /* Slack.swift */; };
 		3F17335A2D6D6487007C02B0 /* Dashlane.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F1733312D6D6487007C02B0 /* Dashlane.swift */; };
-		4F8610112F00000100000001 /* AnyDesk.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F8610012F00000100000001 /* AnyDesk.swift */; };
-		4F8610122F00000100000002 /* AnyDesk.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F8610012F00000100000001 /* AnyDesk.swift */; };
-		4F8610132F00000100000003 /* ProtonDrive.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F8610022F00000100000002 /* ProtonDrive.swift */; };
-		4F8610142F00000100000004 /* ProtonDrive.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F8610022F00000100000002 /* ProtonDrive.swift */; };
-		4F8610152F00000100000005 /* ProtonMail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F8610032F00000100000003 /* ProtonMail.swift */; };
-		4F8610162F00000100000006 /* ProtonMail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F8610032F00000100000003 /* ProtonMail.swift */; };
-		4F8610172F00000100000007 /* ProtonVPN.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F8610042F00000100000004 /* ProtonVPN.swift */; };
-		4F8610182F00000100000008 /* ProtonVPN.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F8610042F00000100000004 /* ProtonVPN.swift */; };
 		4F0371BC26CD00B700B35E43 /* Boot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F0371BB26CD00B700B35E43 /* Boot.swift */; };
 		4F080D1D26C50D2800686786 /* ParetoSecurityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FC81A4B26C41DC8006EABA8 /* ParetoSecurityTests.swift */; };
 		4F0BD11F284891670098316A /* ClipButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F0BD11E284891670098316A /* ClipButton.swift */; };
@@ -198,11 +190,6 @@
 		4F6A92F226C555C6006C2F2D /* ParetoSecurityUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F6A92F126C555C6006C2F2D /* ParetoSecurityUITests.swift */; };
 		4F6E417C2F17402400EFD3E2 /* TeamReportSent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F6E417B2F17402400EFD3E2 /* TeamReportSent.swift */; };
 		4F6E417D2F17402400EFD3E2 /* TeamReportSent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F6E417B2F17402400EFD3E2 /* TeamReportSent.swift */; };
-		4FABC0022F1B000100000001 /* PackageManagerSupplyChain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FABC0012F1B000100000001 /* PackageManagerSupplyChain.swift */; };
-		4FABC0032F1B000100000001 /* PackageManagerSupplyChain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FABC0012F1B000100000001 /* PackageManagerSupplyChain.swift */; };
-		4F8450012F2B000100000001 /* Uptime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F8450002F2B000100000001 /* Uptime.swift */; };
-		4F8450022F2B000100000001 /* Uptime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F8450002F2B000100000001 /* Uptime.swift */; };
-		4F8450042F2B000100000001 /* UptimeCheckTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F8450032F2B000100000001 /* UptimeCheckTests.swift */; };
 		4F6EF892275FEE6C00752559 /* Regex in Frameworks */ = {isa = PBXBuildFile; productRef = 4F6EF891275FEE6C00752559 /* Regex */; };
 		4F79F78D273BF6300082A5EB /* ChecksView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F79F78C273BF6300082A5EB /* ChecksView.swift */; };
 		4F79F78E273BF6300082A5EB /* ChecksView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F79F78C273BF6300082A5EB /* ChecksView.swift */; };
@@ -212,12 +199,23 @@
 		4F7ACFC42DE080AB003400E8 /* HelperTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F7ACFC22DE080AB003400E8 /* HelperTool.swift */; };
 		4F7AD01B2DE09C50003400E8 /* ParetoSecurityHelper in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4F7ACFDD2DE0998F003400E8 /* ParetoSecurityHelper */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		4F81C10826EB5D270065F548 /* URL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F81C10726EB5D270065F548 /* URL.swift */; };
+		4F8450012F2B000100000001 /* Uptime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F8450002F2B000100000001 /* Uptime.swift */; };
+		4F8450022F2B000100000001 /* Uptime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F8450002F2B000100000001 /* Uptime.swift */; };
+		4F8450042F2B000100000001 /* UptimeCheckTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F8450032F2B000100000001 /* UptimeCheckTests.swift */; };
 		4F84531026D634E5007C3B04 /* NSWorkspace.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F84530F26D634E5007C3B04 /* NSWorkspace.swift */; };
 		4F84531226D638C0007C3B04 /* NSBackgroundActivityScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F84531126D638C0007C3B04 /* NSBackgroundActivityScheduler.swift */; };
 		4F84A94426CBBA6900A1579D /* SettingsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F84A94326CBBA6900A1579D /* SettingsTests.swift */; };
 		4F84A94926CBE21300A1579D /* PasswordtoUnlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F84A94826CBE21300A1579D /* PasswordtoUnlock.swift */; };
 		4F84EC9229DC3A030047C79C /* PermissionsSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F84EC9129DC3A030047C79C /* PermissionsSettingsView.swift */; };
 		4F84EC9329DC3A030047C79C /* PermissionsSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F84EC9129DC3A030047C79C /* PermissionsSettingsView.swift */; };
+		4F8610112F00000100000001 /* AnyDesk.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F8610012F00000100000001 /* AnyDesk.swift */; };
+		4F8610122F00000100000002 /* AnyDesk.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F8610012F00000100000001 /* AnyDesk.swift */; };
+		4F8610132F00000100000003 /* ProtonDrive.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F8610022F00000100000002 /* ProtonDrive.swift */; };
+		4F8610142F00000100000004 /* ProtonDrive.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F8610022F00000100000002 /* ProtonDrive.swift */; };
+		4F8610152F00000100000005 /* ProtonMail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F8610032F00000100000003 /* ProtonMail.swift */; };
+		4F8610162F00000100000006 /* ProtonMail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F8610032F00000100000003 /* ProtonMail.swift */; };
+		4F8610172F00000100000007 /* ProtonVPN.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F8610042F00000100000004 /* ProtonVPN.swift */; };
+		4F8610182F00000100000008 /* ProtonVPN.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F8610042F00000100000004 /* ProtonVPN.swift */; };
 		4F868DCF26A591E6005B876E /* Firewall.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F868DCE26A591E6005B876E /* Firewall.swift */; };
 		4F868DD126A5C51C005B876E /* Autologin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F868DD026A5C51C005B876E /* Autologin.swift */; };
 		4F868DD326A5C751005B876E /* Screensaver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F868DD226A5C751005B876E /* Screensaver.swift */; };
@@ -240,6 +238,8 @@
 		4FA975702E4B31E4006C0D5A /* UpdateService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FA9756F2E4B31E4006C0D5A /* UpdateService.swift */; };
 		4FA975712E4B31E4006C0D5A /* UpdateService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FA9756F2E4B31E4006C0D5A /* UpdateService.swift */; };
 		4FA975732E4B3307006C0D5A /* UpdateServiceTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FA975722E4B3307006C0D5A /* UpdateServiceTest.swift */; };
+		4FABC0022F1B000100000001 /* PackageManagerSupplyChain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FABC0012F1B000100000001 /* PackageManagerSupplyChain.swift */; };
+		4FABC0032F1B000100000001 /* PackageManagerSupplyChain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FABC0012F1B000100000001 /* PackageManagerSupplyChain.swift */; };
 		4FAF5BBF2895573F004E9615 /* setappPublicKey.pem in Resources */ = {isa = PBXBuildFile; fileRef = 4FAF5BBE2895573F004E9615 /* setappPublicKey.pem */; };
 		4FAF5BC22895583A004E9615 /* Setapp in Frameworks */ = {isa = PBXBuildFile; productRef = 4FAF5BC12895583A004E9615 /* Setapp */; };
 		4FB0416126F71CC0003657BE /* ButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB0416026F71CC0003657BE /* ButtonStyle.swift */; };
@@ -378,10 +378,6 @@
 		3F1733382D6D6487007C02B0 /* Slack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Slack.swift; sourceTree = "<group>"; };
 		3F1733392D6D6487007C02B0 /* Tailscale.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tailscale.swift; sourceTree = "<group>"; };
 		3F17333A2D6D6487007C02B0 /* WireGuard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WireGuard.swift; sourceTree = "<group>"; };
-		4F8610012F00000100000001 /* AnyDesk.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnyDesk.swift; sourceTree = "<group>"; };
-		4F8610022F00000100000002 /* ProtonDrive.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProtonDrive.swift; sourceTree = "<group>"; };
-		4F8610032F00000100000003 /* ProtonMail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProtonMail.swift; sourceTree = "<group>"; };
-		4F8610042F00000100000004 /* ProtonVPN.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProtonVPN.swift; sourceTree = "<group>"; };
 		4F0371BB26CD00B700B35E43 /* Boot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Boot.swift; sourceTree = "<group>"; };
 		4F0BD11E284891670098316A /* ClipButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipButton.swift; sourceTree = "<group>"; };
 		4F0CC3F92E6F014200A0BE70 /* FullDiskAccessVerifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullDiskAccessVerifier.swift; sourceTree = "<group>"; };
@@ -437,18 +433,22 @@
 		4F6A92EF26C555C6006C2F2D /* ParetoSecurityUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ParetoSecurityUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4F6A92F126C555C6006C2F2D /* ParetoSecurityUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParetoSecurityUITests.swift; sourceTree = "<group>"; };
 		4F6E417B2F17402400EFD3E2 /* TeamReportSent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeamReportSent.swift; sourceTree = "<group>"; };
-		4F8450002F2B000100000001 /* Uptime.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Uptime.swift; sourceTree = "<group>"; };
-		4F8450032F2B000100000001 /* UptimeCheckTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UptimeCheckTests.swift; sourceTree = "<group>"; };
 		4F79F78C273BF6300082A5EB /* ChecksView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChecksView.swift; sourceTree = "<group>"; };
 		4F7ACFAF2DE074FF003400E8 /* HelperProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelperProtocol.swift; sourceTree = "<group>"; };
 		4F7ACFC22DE080AB003400E8 /* HelperTool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelperTool.swift; sourceTree = "<group>"; };
 		4F7ACFDD2DE0998F003400E8 /* ParetoSecurityHelper */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = ParetoSecurityHelper; sourceTree = BUILT_PRODUCTS_DIR; };
 		4F81C10726EB5D270065F548 /* URL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URL.swift; sourceTree = "<group>"; };
+		4F8450002F2B000100000001 /* Uptime.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Uptime.swift; sourceTree = "<group>"; };
+		4F8450032F2B000100000001 /* UptimeCheckTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UptimeCheckTests.swift; sourceTree = "<group>"; };
 		4F84530F26D634E5007C3B04 /* NSWorkspace.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSWorkspace.swift; sourceTree = "<group>"; };
 		4F84531126D638C0007C3B04 /* NSBackgroundActivityScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSBackgroundActivityScheduler.swift; sourceTree = "<group>"; };
 		4F84A94326CBBA6900A1579D /* SettingsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTests.swift; sourceTree = "<group>"; };
 		4F84A94826CBE21300A1579D /* PasswordtoUnlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordtoUnlock.swift; sourceTree = "<group>"; };
 		4F84EC9129DC3A030047C79C /* PermissionsSettingsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PermissionsSettingsView.swift; sourceTree = "<group>"; };
+		4F8610012F00000100000001 /* AnyDesk.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnyDesk.swift; sourceTree = "<group>"; };
+		4F8610022F00000100000002 /* ProtonDrive.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProtonDrive.swift; sourceTree = "<group>"; };
+		4F8610032F00000100000003 /* ProtonMail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProtonMail.swift; sourceTree = "<group>"; };
+		4F8610042F00000100000004 /* ProtonVPN.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProtonVPN.swift; sourceTree = "<group>"; };
 		4F868DCE26A591E6005B876E /* Firewall.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Firewall.swift; sourceTree = "<group>"; };
 		4F868DD026A5C51C005B876E /* Autologin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Autologin.swift; sourceTree = "<group>"; };
 		4F868DD226A5C751005B876E /* Screensaver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Screensaver.swift; sourceTree = "<group>"; };
@@ -462,6 +462,7 @@
 		4FA8E5EB2B44428400B7EA9C /* NoUnusedUsers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NoUnusedUsers.swift; sourceTree = "<group>"; };
 		4FA9756F2E4B31E4006C0D5A /* UpdateService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateService.swift; sourceTree = "<group>"; };
 		4FA975722E4B3307006C0D5A /* UpdateServiceTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateServiceTest.swift; sourceTree = "<group>"; };
+		4FABC0012F1B000100000001 /* PackageManagerSupplyChain.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PackageManagerSupplyChain.swift; sourceTree = "<group>"; };
 		4FAF5BBE2895573F004E9615 /* setappPublicKey.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = setappPublicKey.pem; sourceTree = "<group>"; };
 		4FB0416026F71CC0003657BE /* ButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonStyle.swift; sourceTree = "<group>"; };
 		4FB51A5627A94457003F528E /* SecurityUpdateCheck.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SecurityUpdateCheck.swift; sourceTree = "<group>"; };
@@ -474,7 +475,6 @@
 		4FC45C902D6DD9F300915471 /* Pareto Security.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = "Pareto Security.xctestplan"; sourceTree = "<group>"; };
 		4FC81A4926C41DC8006EABA8 /* ParetoSecurityTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ParetoSecurityTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4FC81A4B26C41DC8006EABA8 /* ParetoSecurityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParetoSecurityTests.swift; sourceTree = "<group>"; };
-		4FABC0012F1B000100000001 /* PackageManagerSupplyChain.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PackageManagerSupplyChain.swift; sourceTree = "<group>"; };
 		4FCAA78A2B4AD7C300A62B4E /* NoAdminUser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NoAdminUser.swift; sourceTree = "<group>"; };
 		4FD0A24026A024440070BED4 /* Gatekeeper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Gatekeeper.swift; sourceTree = "<group>"; };
 		4FDA93A22771D9FC00F9D8B4 /* Checks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Checks.swift; sourceTree = "<group>"; };
@@ -1016,7 +1016,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
 				LastSwiftUpdateCheck = 1630;
-				LastUpgradeCheck = 1620;
+				LastUpgradeCheck = 2700;
 				TargetAttributes = {
 					4F6A92EE26C555C6006C2F2D = {
 						CreatedOnToolsVersion = 13.0;
@@ -1501,7 +1501,6 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Pareto/Preview Content\"";
-				DEVELOPMENT_TEAM = PM784W7B8X;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -1543,7 +1542,6 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Pareto/Preview Content\"";
-				DEVELOPMENT_TEAM = PM784W7B8X;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = "SETAPP_ENABLED=1";
@@ -1577,7 +1575,6 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_TEAM = PM784W7B8X;
 				GENERATE_INFOPLIST_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1605,7 +1602,6 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_TEAM = PM784W7B8X;
 				GENERATE_INFOPLIST_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1629,7 +1625,6 @@
 			buildSettings = {
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = PM784W7B8X;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
@@ -1639,7 +1634,6 @@
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
 				PRODUCT_BUNDLE_IDENTIFIER = co.niteo.ParetoSecurityHelper;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				STRIP_INSTALLED_PRODUCT = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_VERSION = 5.0;
 			};
@@ -1650,7 +1644,6 @@
 			buildSettings = {
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = PM784W7B8X;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
@@ -1660,7 +1653,6 @@
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
 				PRODUCT_BUNDLE_IDENTIFIER = co.niteo.ParetoSecurityHelper;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				STRIP_INSTALLED_PRODUCT = YES;
 				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
@@ -1675,7 +1667,6 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_TEAM = PM784W7B8X;
 				GENERATE_INFOPLIST_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1704,7 +1695,6 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_TEAM = PM784W7B8X;
 				GENERATE_INFOPLIST_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1760,6 +1750,7 @@
 				COPY_PHASE_STRIP = NO;
 				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = PM784W7B8X;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = "compiler-default";
@@ -1782,6 +1773,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_SWIFT_FLAGS = "";
 				SDKROOT = macosx;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 6.0;
@@ -1825,6 +1817,7 @@
 				COPY_PHASE_STRIP = NO;
 				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = PM784W7B8X;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = "compiler-default";
@@ -1840,6 +1833,7 @@
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "";
 				SDKROOT = macosx;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 6.0;
@@ -1860,7 +1854,6 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Pareto/Preview Content\"";
-				DEVELOPMENT_TEAM = PM784W7B8X;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = "SETAPP_ENABLED=0";
@@ -1893,7 +1886,6 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Pareto/Preview Content\"";
-				DEVELOPMENT_TEAM = PM784W7B8X;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = "SETAPP_ENABLED=0";
