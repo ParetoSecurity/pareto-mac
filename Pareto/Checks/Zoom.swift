@@ -33,19 +33,18 @@ class AppZoomCheck: AppCheck {
         return Version(v[0]) ?? Version(0, 0, 0)
     }
 
+    static func latestMacOSSlowTrackVersion(from response: String) -> String {
+        let versionRegex = Regex("<tr[^>]*>\\s*<td>.*?>macOS</a></td><td>([\\d\\.]+)</td><td>([\\d\\.]+)</td>")
+        return versionRegex.firstMatch(in: response)?.groups.dropFirst().first?.value ?? "0.0.0"
+    }
+
     override func getLatestVersion(completion: @escaping (String) -> Void) {
-        #if arch(arm64)
-            let url = "https://zoom.us/client/latest/Zoom.pkg?archType=arm64"
-        #else
-            let url = "https://zoom.us/client/latest/Zoom.pkg"
-        #endif
-        let versionRegex = Regex("prod\\/(\\d+\\.\\d+\\.\\d+).\\d+\\/")
+        let url = "https://support.zoom.com/hc/en/article?id=zm_kb&sysparm_article=KB0061900"
         os_log("Requesting %{public}s", url)
 
-        Network.session.request(url, method: .head).redirect(using: Redirector(behavior: .doNotFollow)).response(queue: AppCheck.queue, completionHandler: { response in
+        Network.session.request(url).responseString(queue: AppCheck.queue, completionHandler: { response in
             if response.error == nil {
-                let location = response.response?.allHeaderFields["Location"] as? String ?? "https://cdn.zoom.us/prod/1.8.6.2879/ZoomInstallerIT.pkg"
-                let version = versionRegex.firstMatch(in: location)?.groups.first?.value ?? "1.8.6.2879"
+                let version = Self.latestMacOSSlowTrackVersion(from: response.value ?? "")
                 os_log("%{public}s version=%{public}s", self.appBundle, version)
                 completion(version)
             } else {
