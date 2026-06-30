@@ -61,7 +61,7 @@ class AppMicrosoftTeamsCheck: AppCheck {
     }
 
     static func latestMacOSVersion(from response: TeamsResponse) -> String? {
-        response.buildSettings?.webView2Canary?.macOS?.latestVersion ?? response.buildSettings?.webView2?.macOS?.latestVersion
+        response.buildSettings?.webView2?.macOS?.latestVersion ?? response.buildSettings?.webView2Canary?.macOS?.latestVersion
     }
 
     override var currentVersion: Version {
