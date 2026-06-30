@@ -92,8 +92,8 @@ public extension Defaults {
 
     static func OKColor() -> NSColor {
         if Defaults[.alternativeColor] {
-            let light = NSColor(red: 255, green: 179, blue: 64, alpha: 1)
-            let dark = NSColor(red: 255, green: 179, blue: 64, alpha: 1)
+            let light = NSColor(red: 1, green: 179.0 / 255.0, blue: 64.0 / 255.0, alpha: 1)
+            let dark = NSColor(red: 1, green: 179.0 / 255.0, blue: 64.0 / 255.0, alpha: 1)
             let isDark = UserDefaults.standard.string(forKey: "AppleInterfaceStyle") == "Dark"
             return isDark ? dark : light
         }
@@ -102,8 +102,8 @@ public extension Defaults {
 
     static func FailColor() -> NSColor {
         if Defaults[.alternativeColor] {
-            let light = NSColor(red: 64, green: 156, blue: 255, alpha: 1)
-            let dark = NSColor(red: 64, green: 156, blue: 255, alpha: 1)
+            let light = NSColor(red: 64.0 / 255.0, green: 156.0 / 255.0, blue: 1, alpha: 1)
+            let dark = NSColor(red: 64.0 / 255.0, green: 156.0 / 255.0, blue: 1, alpha: 1)
             let isDark = UserDefaults.standard.string(forKey: "AppleInterfaceStyle") == "Dark"
             return isDark ? dark : light
         }

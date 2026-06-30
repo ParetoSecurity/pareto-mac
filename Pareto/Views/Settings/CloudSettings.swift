@@ -183,12 +183,11 @@ struct TeamSettingsView: View {
                         }
                     }
                 }
-                .padding(20)
             }
         }
         .alert(item: $alertData) { data in
             Alert(title: Text(data.title), message: data.message.map(Text.init), dismissButton: .default(Text("OK")))
         }
-        .frame(minHeight: 450)
+        .frame(minHeight: teamID.isEmpty ? 180 : 450)
     }
 }
