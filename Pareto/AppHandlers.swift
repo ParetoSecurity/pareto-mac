@@ -809,11 +809,12 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
                 let inviteID = url.queryParams()["invite_id"] ?? ""
                 let host = url.queryParams()["host"] ?? ""
 
-                // Set teamAPI based on host parameter
-                if host.isEmpty {
-                    Defaults[.teamAPI] = "https://cloud.paretosecurity.com"
-                } else {
+                // host is untrusted input from an external URL; only honor it in pre-release builds.
+                // https://github.com/teamniteo/pareto/issues/863
+                if !host.isEmpty, Defaults.betaChannelComputed {
                     Defaults[.teamAPI] = host
+                } else {
+                    Defaults[.teamAPI] = "https://cloud.paretosecurity.com"
                 }
 
                 if inviteID.isEmpty {
