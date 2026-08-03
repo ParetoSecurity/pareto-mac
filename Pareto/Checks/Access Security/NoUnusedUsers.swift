@@ -74,6 +74,18 @@ class NoUnusedUsers: ParetoCheck {
         // Check passes if there are no failing accounts
         return unusedAccounts.isEmpty
     }
+
+    // Keeps only accounts that exist in the local directory node. On directory-bound
+    // Macs getpwent() also returns users opendirectoryd cached from unrelated lookups,
+    // which were never provisioned on the device.
+    // https://github.com/ParetoSecurity/pareto-mac/issues/297
+    static func provisionedUsers(_ users: [String], provisioned: Set<String>) -> [String] {
+        // An empty local node means the lookup failed; keep the unfiltered list so
+        // the check does not silently pass.
+        guard !provisioned.isEmpty else { return users }
+
+        return users.filter { provisioned.contains($0) }
+    }
 }
 
 // MARK: - Helpers (no admin privileges required)
@@ -140,7 +152,19 @@ private extension NoUnusedUsers {
             }
         }
 
-        return result
+        return provisionedUsers(result, provisioned: localNodeUserShortNames())
+    }
+
+    // Short names of accounts recorded in the local directory node (includes mobile accounts)
+    static func localNodeUserShortNames() -> Set<String> {
+        let output = runCMD(app: "/usr/bin/dscl", args: [".", "-list", "/Users"])
+
+        return Set(
+            output
+                .components(separatedBy: CharacterSet.newlines)
+                .map { $0.trimmingCharacters(in: .whitespaces) }
+                .filter { !$0.isEmpty }
+        )
     }
 
     // Returns set of admin user short names (supplemental members + primary group = admin)
