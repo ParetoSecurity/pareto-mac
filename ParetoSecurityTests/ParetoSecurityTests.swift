@@ -36,6 +36,21 @@ class ParetoSecurityTests: XCTestCase {
         XCTAssertTrue(check.checkPasses())
     }
 
+    func testNoUnusedUsersSkipsAccountsMissingFromLocalNode() throws {
+        let users = NoUnusedUsers.provisionedUsers(
+            ["local", "cachedDomainUser"],
+            provisioned: ["local", "mobileAccount"]
+        )
+
+        XCTAssertEqual(users, ["local"])
+    }
+
+    func testNoUnusedUsersKeepsAllAccountsWhenLocalNodeLookupFails() throws {
+        let users = NoUnusedUsers.provisionedUsers(["local", "other"], provisioned: [])
+
+        XCTAssertEqual(users, ["local", "other"])
+    }
+
     func testPackageManagerSupplyChainDoesNotRunWithoutConfigsOrBinaries() throws {
         let temporaryDirectory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
         try FileManager.default.createDirectory(at: temporaryDirectory, withIntermediateDirectories: true)
