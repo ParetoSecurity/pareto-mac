@@ -33,6 +33,8 @@ class PasswordManager: ParetoCheck {
             "Keeper",
             "LastPass",
             "NordPass",
+            "Proton Pass",
+            "Proton Pass for Safari",
             "RoboForm",
             "Strongbox",
         ]
@@ -46,6 +48,8 @@ class PasswordManager: ParetoCheck {
             "KeePassium.app",
             "KeePassX.app",
             "KeePassXC.app",
+            "Proton Pass.app",
+            "Proton Pass for Safari.app",
             "Strongbox.app",
         ]
 
