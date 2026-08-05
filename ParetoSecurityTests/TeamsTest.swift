@@ -79,6 +79,37 @@ class TeamsTest: XCTestCase {
         XCTAssertNotNil(json["device"])
     }
 
+    func testDeviceEnrollmentRequestOmitsUnknownHardware() throws {
+        let testDevice = ReportingDevice(
+            machineUUID: "test-uuid",
+            machineName: "Test Machine",
+            macOSVersion: "14.0",
+            modelName: nil,
+            modelSerial: nil
+        )
+        let data = try JSONEncoder().encode(testDevice)
+        let json = try JSONSerialization.jsonObject(with: data) as! [String: Any]
+
+        XCTAssertNil(json["modelName"])
+        XCTAssertNil(json["modelSerial"])
+    }
+
+    func testSerialFallsBackToIOKit() throws {
+        XCTAssertNotNil(AppInfo.hwSerial)
+    }
+
+    func testHardwareInfoResolvesAfterWarm() async throws {
+        AppInfo.warmHWInfo()
+
+        for _ in 0 ..< 60 where AppInfo.HWInfo == nil {
+            try await Task.sleep(nanoseconds: 500_000_000)
+            AppInfo.warmHWInfo()
+        }
+
+        XCTAssertNotNil(AppInfo.HWInfo)
+        XCTAssertNotNil(AppInfo.hwModelName)
+    }
+
     func testDeviceEnrollmentResponse() throws {
         let json = """
         {

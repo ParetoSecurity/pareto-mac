@@ -120,11 +120,15 @@ func runCMD(app: String, args: [String]) -> String {
     task.standardError = pipe
     task.arguments = args
     task.launchPath = app
-    task.launch()
+    do {
+        try task.run()
+    } catch {
+        os_log("Failed to launch %{public}@: %{public}@", log: Log.app, app, error.localizedDescription)
+        return ""
+    }
     let data = pipe.fileHandleForReading.readDataToEndOfFile()
     task.waitUntilExit()
-    let output = String(data: data, encoding: .utf8)!
-    return output
+    return String(data: data, encoding: .utf8) ?? ""
 }
 
 func runShell(args: [String]) -> String {
@@ -139,8 +143,7 @@ func runShell(args: [String]) -> String {
         try task.run()
         let data = pipe.fileHandleForReading.readDataToEndOfFile()
         task.waitUntilExit()
-        let output = String(data: data, encoding: .utf8)!
-        return output
+        return String(data: data, encoding: .utf8) ?? ""
     } catch {
         return error.localizedDescription
     }
