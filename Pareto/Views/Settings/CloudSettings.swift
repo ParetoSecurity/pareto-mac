@@ -18,6 +18,7 @@ struct TeamSettingsView: View {
     @Default(.lastTeamReportSuccess) var lastTeamReportSuccess
 
     @State private var debugLinkURL: String = ""
+    @State private var inventory: InventoryPreview?
 
     // SwiftUI-native alert handling
     @State private var alertData: InlineAlert?
@@ -28,6 +29,27 @@ struct TeamSettingsView: View {
         let id = UUID()
         let title: String
         let message: String?
+    }
+
+    private struct InventoryPreview {
+        let modelName: String
+        let modelSerial: String
+        let appCount: Int
+    }
+
+    private var sendsInventory: Bool {
+        sendHWInfo || teamSettings.forceSerialPush
+    }
+
+    private func loadInventory() async {
+        _ = await AppInfo.hwInfoAsync()
+        let appCount = await Task.detached(priority: .utility) { PublicApp.all.count }.value
+
+        inventory = InventoryPreview(
+            modelName: AppInfo.hwModelName ?? "Unavailable",
+            modelSerial: AppInfo.hwSerial ?? "Unavailable",
+            appCount: appCount
+        )
     }
 
     private func copyIDsToPasteboard() {
@@ -111,10 +133,35 @@ struct TeamSettingsView: View {
                                 .font(.footnote)
                                 .foregroundStyle(.secondary)
                         }
+                        if sendsInventory {
+                            if let inventory {
+                                LabeledContent("Model") {
+                                    Text(inventory.modelName)
+                                        .textSelection(.enabled)
+                                }
+                                LabeledContent("Serial Number") {
+                                    Text(inventory.modelSerial)
+                                        .font(.system(.body, design: .monospaced))
+                                        .textSelection(.enabled)
+                                }
+                                LabeledContent("Applications") {
+                                    Text("\(inventory.appCount)")
+                                        .foregroundStyle(.secondary)
+                                }
+                            } else {
+                                HStack(spacing: 6) {
+                                    ProgressView().controlSize(.small)
+                                    Text("Reading inventory data")
+                                        .foregroundStyle(.secondary)
+                                }
+                            }
+                        }
                     } header: {
                         Text("Inventory")
                     } footer: {
-                        Text("When enabled, model name and serial number are included in reports.")
+                        Text(sendsInventory
+                            ? "Reports include the data above, along with the name, bundle and version of each installed application."
+                            : "When enabled, model name and serial number are included in reports.")
                     }
 
                     if showBeta {
@@ -148,6 +195,10 @@ struct TeamSettingsView: View {
                 .task {
                     // Refresh team settings when the view appears
                     teamSettings.update {}
+                }
+                .task(id: sendsInventory) {
+                    guard sendsInventory else { return }
+                    await loadInventory()
                 }
             } else {
                 Form {
