@@ -142,6 +142,18 @@ static var hwSerial: String? {
         }
     }
 
+    // Awaits the lookup instead of returning nil while it is still in flight.
+    static func hwInfoAsync() async -> SPHardware? {
+        if let cached = hwInfoLock.withLock({ $0 }) {
+            return cached
+        }
+        let info = await SPHardware.gatherAsync()
+        if let info {
+            hwInfoLock.withLock { $0 = info }
+        }
+        return info
+    }
+
     static let teamsURL = { () -> URL in
         let baseURL = "https://cloud.paretosecurity.com/?utm_source=\(AppInfo.utmSource)&utm_medium=team-link"
         return URL(string: baseURL)!
