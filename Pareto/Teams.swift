@@ -61,9 +61,12 @@ struct ReportingDevice: Encodable {
     let machineUUID: String
     let machineName: String
     let macOSVersion: String
-    let modelName: String
-    let modelSerial: String
+    let modelName: String?
+    let modelSerial: String?
 
+    // Fields are omitted when the hardware lookup failed, so Cloud never stores
+    // a placeholder as if it were real inventory data.
+    // https://github.com/teamniteo/pareto/issues/866
     static func current() -> ReportingDevice {
         let reason = "Disabled"
 
