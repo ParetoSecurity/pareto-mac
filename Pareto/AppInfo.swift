@@ -116,9 +116,9 @@ enum AppInfo {
         return "\(name) (\(model))"
     }
 
-    static var hwSerial: String? {
-        HWInfo?.serialNumber ?? ioPlatformString(kIOPlatformSerialNumberKey)
-    }
+static var hwSerial: String? {
+    HWInfo?.serialNumber ?? ioPlatformString(kIOPlatformSerialNumberKey as String)
+}
 
     // A failed lookup is never cached, so the next report retries instead of
     // reporting placeholders for the rest of the process lifetime.
