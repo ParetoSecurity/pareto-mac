@@ -9,20 +9,23 @@ import Foundation
 import os.log
 import OSAKit
 
-func runCMD(app: String, args: [String]) -> String {
+/// Run a command and return its output.
+///
+/// `mergeStderr` defaults to true because most callers here parse tools that
+/// report on stderr. Pass false when the output has to parse cleanly, e.g. JSON.
+func runCMD(app: String, args: [String], mergeStderr: Bool = true) -> String {
     let task = Process()
     let pipe = Pipe()
 
     task.standardOutput = pipe
-    task.standardError = pipe
+    task.standardError = mergeStderr ? pipe : FileHandle.nullDevice
     task.arguments = args
     task.launchPath = app
     task.launch()
     task.waitUntilExit()
 
     let data = pipe.fileHandleForReading.readDataToEndOfFile()
-    let output = String(data: data, encoding: .utf8)!
-    return output
+    return String(data: data, encoding: .utf8) ?? ""
 }
 
 func runShell(args: [String]) -> String {

@@ -61,8 +61,10 @@ struct ReportingDevice: Encodable {
     let machineUUID: String
     let machineName: String
     let macOSVersion: String
-    let modelName: String
-    let modelSerial: String
+    // Optional so a failed hardware lookup omits the keys entirely rather than
+    // reporting "Unknown" as if it were a real model name.
+    let modelName: String?
+    let modelSerial: String?
 
     static func current() -> ReportingDevice {
         let reason = "Disabled"

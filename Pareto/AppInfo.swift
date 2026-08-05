@@ -38,8 +38,14 @@ struct SPHardware: Codable {
     }
 
     static func gather() -> SPHardware? {
-        guard let jsonData = runCMD(app: "/usr/sbin/system_profiler", args: ["SPHardwareDataType", "-json"]).data(using: .utf8) else { return nil }
-        let info: SPHardwareWrapper = try! JSONDecoder().decode(SPHardwareWrapper.self, from: jsonData)
+        // stderr is kept off the pipe, otherwise a warning from system_profiler
+        // ends up mixed into stdout and the JSON no longer parses.
+        let output = runCMD(app: "/usr/sbin/system_profiler", args: ["SPHardwareDataType", "-json"], mergeStderr: false)
+        guard let jsonData = output.data(using: .utf8) else { return nil }
+        guard let info = try? JSONDecoder().decode(SPHardwareWrapper.self, from: jsonData) else {
+            os_log("Failed to decode SPHardwareDataType output", log: Log.app, type: .error)
+            return nil
+        }
         return info.spHardwareDataType.first
     }
 }
@@ -56,8 +62,28 @@ enum AppInfo {
 
     static var secExp = false
     static let Flags = FlagsUpdater()
-    static let HWInfo = SPHardware.gather()
     static let TeamSettings = TeamSettingsUpdater()
+
+    private static let hwInfoLock = NSLock()
+    private static var hwInfoCache: SPHardware?
+
+    /// Hardware info from system_profiler, memoized on success only.
+    ///
+    /// A failed lookup is deliberately not cached: system_profiler can come back
+    /// empty under load (notably right after login, when every launch item starts
+    /// at once). Caching that would pin the app to "Unknown" for the rest of the
+    /// process lifetime, which for a menu bar app means days or weeks.
+    static var HWInfo: SPHardware? {
+        hwInfoLock.lock()
+        defer { hwInfoLock.unlock() }
+
+        if let cached = hwInfoCache {
+            return cached
+        }
+        hwInfoCache = SPHardware.gather()
+        return hwInfoCache
+    }
+
     static var utmSource: String {
         var source = "app"
 
@@ -93,15 +119,18 @@ enum AppInfo {
         transformer: TransformerFactory.forCodable(ofType: Version.self) // Storage<String, Version>
     )
 
-    static var hwModelName: String {
-        if let modelNumber = HWInfo?.modelNumber {
-            return "\(HWInfo?.machineName ?? "Unknown") (\(modelNumber))"
-        }
-        return "\(HWInfo?.machineName ?? "Unknown") (\(HWInfo?.machineModel ?? "Unknown"))"
+    /// Model as "<machine name> (<model number>)", or nil when the lookup failed.
+    static var hwModelName: String? {
+        guard let info = HWInfo else { return nil }
+
+        let number = info.modelNumber ?? info.machineModel
+        guard let name = info.machineName else { return number }
+        guard let number else { return name }
+        return "\(name) (\(number))"
     }
 
-    static var hwSerial: String {
-        HWInfo?.serialNumber ?? "Unknown"
+    static var hwSerial: String? {
+        HWInfo?.serialNumber
     }
 
     static let teamsURL = { () -> URL in
@@ -158,7 +187,7 @@ enum AppInfo {
     }
 
     static let getVersions = { () -> String in
-        "HW: \(AppInfo.hwModelName) macOS: \(AppInfo.macOSVersionString) App: Pareto Auditor App Version: \(AppInfo.appVersion) Build: \(AppInfo.buildVersion)"
+        "HW: \(AppInfo.hwModelName ?? "Unknown") macOS: \(AppInfo.macOSVersionString) App: Pareto Auditor App Version: \(AppInfo.appVersion) Build: \(AppInfo.buildVersion)"
     }
 
     static func getSystemUUID() -> String? {
