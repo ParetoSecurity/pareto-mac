@@ -5,6 +5,9 @@
 //  Created by Janez Troha on 17/08/2021.
 //
 
+import Foundation
+import Security
+
 class RequirePasswordToUnlock: ParetoCheck {
     static let sharedInstance = RequirePasswordToUnlock()
     override var UUID: String {
@@ -23,16 +26,50 @@ class RequirePasswordToUnlock: ParetoCheck {
         return true
     }
 
+    private let legacyScript = "tell application \"System Events\" to tell security preferences to get require password to unlock"
+
+    // Reads the `system.preferences` authorization right directly. This is the
+    // rule the "Require an administrator password to access systemwide settings"
+    // toggle writes to, and it works without Apple Events. The System Events
+    // `security preferences` suite fails with -10000 on macOS 27.
+    private func requiresPasswordFromAuthorizationDB() -> Bool? {
+        var rightDefinition: CFDictionary?
+        let status = AuthorizationRightGet("system.preferences", &rightDefinition)
+        guard status == errAuthorizationSuccess,
+              let rule = rightDefinition as? [String: Any]
+        else {
+            return nil
+        }
+
+        // `shared` true means an existing credential is reused, so no password
+        // is requested; false means every access has to authenticate.
+        if let shared = rule["shared"] as? NSNumber {
+            return !shared.boolValue
+        }
+
+        // Some systems store a rule reference instead of an inline definition.
+        if let ruleNames = rule["rule"] as? [String] {
+            return ruleNames.contains { $0.hasPrefix("authenticate") }
+        }
+
+        return nil
+    }
+
     override func checkPasses() -> Bool {
-        // possible:{require password to wake:false, class:security preferences object, secure virtual memory:false, require password to unlock:false, automatic login:false, log out when inactive:false, log out when inactive interval:60}
-        let script = "tell application \"System Events\" to tell security preferences to get require password to unlock"
-        let out = runOSA(appleScript: script) ?? "false"
+        if let required = requiresPasswordFromAuthorizationDB() {
+            return required
+        }
+        // Fallback for systems where the authorization right cannot be read.
+        let out = runOSA(appleScript: legacyScript) ?? "false"
         return out.contains("true")
     }
 
     override var details: String {
-        let script = "tell application \"System Events\" to tell security preferences to get require password to unlock"
-        let rawOut = runOSA(appleScript: script)
+        if let required = requiresPasswordFromAuthorizationDB() {
+            return "system.preferences authorization right: \(required ? "enabled" : "disabled")"
+        }
+
+        let rawOut = runOSA(appleScript: legacyScript)
         let interpreted: String
         if let out = rawOut {
             if out.contains("true") {
@@ -47,6 +84,6 @@ class RequirePasswordToUnlock: ParetoCheck {
         }
 
         // Keep it debug-focused: show raw OSA output and our interpretation.
-        return "OSA output: \(rawOut ?? "nil"); interpreted: \(interpreted)"
+        return "authorization right unreadable; OSA output: \(rawOut ?? "nil"); interpreted: \(interpreted)"
     }
 }
