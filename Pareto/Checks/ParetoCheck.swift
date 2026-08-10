@@ -349,9 +349,31 @@ extension ParetoCheck {
         return output.contains("does not exist") ? nil : output
     }
 
+    // Reads a preference through CFPreferences instead of shelling out to
+    // `defaults read`. CFPreferences resolves the whole search list, including
+    // MDM profiles in /Library/Managed Preferences, which `defaults read <path>`
+    // never sees. Since macOS 27 several com.apple.SoftwareUpdate keys are only
+    // delivered through a profile, so the old shell call reported them missing.
     func readDefaultsNative(path: String, key: String) -> String? {
-        let output = runCMD(app: "/usr/bin/defaults", args: ["read", path, key])
-        return output.contains("does not exist") ? nil : output.trim()
+        var domain = (path as NSString).lastPathComponent
+        if domain.hasSuffix(".plist") {
+            domain = String(domain.dropLast(".plist".count))
+        }
+
+        guard let value = CFPreferencesCopyAppValue(key as CFString, domain as CFString) else {
+            return nil
+        }
+
+        switch CFGetTypeID(value as CFTypeRef) {
+        case CFBooleanGetTypeID():
+            return (value as? NSNumber)?.boolValue == true ? "1" : "0"
+        case CFNumberGetTypeID():
+            return (value as? NSNumber)?.stringValue
+        case CFStringGetTypeID():
+            return value as? String
+        default:
+            return String(describing: value).trim()
+        }
     }
 
     func appVersion(path: String, key: String = "CFBundleShortVersionString") -> String? {
