@@ -147,14 +147,56 @@ class PackageManagerSupplyChainCheck: ParetoCheck {
             return version.isEmpty ? nil : version
         }
         guard let path = executablePath(for: name) else { return nil }
-        let output = runCMD(app: path, args: ["--version"]).trimmingCharacters(in: .whitespacesAndNewlines)
+        // Most of these binaries are `#!/usr/bin/env node` wrappers, so they
+        // need a PATH that also resolves their runtime.
+        var childEnvironment = environment
+        childEnvironment["PATH"] = searchDirectories().joined(separator: ":")
+        let output = runCMD(app: path, args: ["--version"], environment: childEnvironment)
+            .trimmingCharacters(in: .whitespacesAndNewlines)
         return output.isEmpty ? nil : output
     }
 
+    // Resolves a binary against a fixed list of well-known install prefixes. A
+    // LaunchServices-launched app inherits only the launchd default PATH
+    // (/usr/bin:/bin:/usr/sbin:/sbin), so relying on `which` alone made the
+    // check mark itself non-runnable for every Homebrew or ~/.bun install.
     private func executablePath(for name: String) -> String? {
-        let path = runCMD(app: "/usr/bin/which", args: [name]).trimmingCharacters(in: .whitespacesAndNewlines)
-        return Self.executablePath(fromWhichOutput: path)
+        for directory in searchDirectories() {
+            let candidate = (directory as NSString).appendingPathComponent(name)
+            if let path = Self.executablePath(fromWhichOutput: candidate) {
+                return path
+            }
+        }
+        return nil
     }
+
+    func searchDirectories() -> [String] {
+        Self.systemInstallPrefixes + Self.homeInstallPrefixes.map {
+            homeDirectory.appendingPathComponent($0).path
+        }
+    }
+
+    private static let systemInstallPrefixes = [
+        "/opt/homebrew/bin",
+        "/usr/local/bin",
+        "/opt/local/bin",
+        "/usr/bin",
+        "/bin",
+    ]
+
+    private static let homeInstallPrefixes = [
+        ".bun/bin",
+        ".local/bin",
+        ".local/share/mise/shims",
+        ".cargo/bin",
+        ".volta/bin",
+        ".yarn/bin",
+        ".npm-global/bin",
+        ".deno/bin",
+        ".asdf/shims",
+        "Library/pnpm",
+        "Library/Application Support/fnm/aliases/default/bin",
+    ]
 
     static func executablePath(fromWhichOutput output: String) -> String? {
         let path = output.trimmingCharacters(in: .whitespacesAndNewlines)

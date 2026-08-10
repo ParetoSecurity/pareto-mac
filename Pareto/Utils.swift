@@ -112,7 +112,7 @@ func runCMDAsync(app: String, args: [String], timeout: TimeInterval = 15.0) asyn
     }
 }
 
-func runCMD(app: String, args: [String]) -> String {
+func runCMD(app: String, args: [String], environment: [String: String]? = nil) -> String {
     let task = Process()
     let pipe = Pipe()
 
@@ -120,6 +120,9 @@ func runCMD(app: String, args: [String]) -> String {
     task.standardError = pipe
     task.arguments = args
     task.launchPath = app
+    if let environment {
+        task.environment = environment
+    }
     do {
         try task.run()
     } catch {
