@@ -48,8 +48,17 @@ class RequirePasswordToUnlock: ParetoCheck {
         }
 
         // Some systems store a rule reference instead of an inline definition.
-        if let ruleNames = rule["rule"] as? [String] {
-            return ruleNames.contains { $0.hasPrefix("authenticate") }
+        // The reference is either a list of rule names or a single name.
+        let ruleNames: [String]?
+        if let names = rule["rule"] as? [String] {
+            ruleNames = names
+        } else if let name = rule["rule"] as? String {
+            ruleNames = [name]
+        } else {
+            ruleNames = nil
+        }
+        if let ruleNames {
+            return ruleNames.contains { $0.contains("authenticate") }
         }
 
         return nil
