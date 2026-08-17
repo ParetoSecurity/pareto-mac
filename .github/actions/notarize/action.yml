@@ -9,12 +9,18 @@ inputs:
     description: "Path to staple the ticket onto (defaults to submit-path)"
     required: false
     default: ""
+  staple-only:
+    description: "Skip submission and only staple (for targets covered by an earlier submission)"
+    required: false
+    default: "false"
   apple-id:
     description: "Apple ID used for notarization"
-    required: true
+    required: false
+    default: ""
   password:
     description: "App-specific password for the Apple ID"
-    required: true
+    required: false
+    default: ""
   team-id:
     description: "Apple Developer team identifier"
     required: false
@@ -24,6 +30,7 @@ runs:
   using: "composite"
   steps:
     - name: Submit for notarization
+      if: inputs.staple-only != 'true'
       shell: bash
       env:
         SUBMIT_PATH: ${{ inputs.submit-path }}

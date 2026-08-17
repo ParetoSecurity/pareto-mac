@@ -52,19 +52,32 @@ jobs:
       - name: Archive for distribution
         run: make archive-release
 
-      - name: Build release assets
+      - name: Build DMG
         run: |
           npm install --global create-dmg
           make dmg
-          ditto -c -k --keepParent "Export/Pareto Security.app" ParetoSecurity.app.zip
-          "Export/Pareto Security.app/Contents/MacOS/Pareto Security" -export > checks.json
 
+      # Notarizing the DMG covers the nested app, so the bundle can be
+      # stapled afterwards too.
       - name: Notarize DMG
         uses: ./.github/actions/notarize
         with:
           submit-path: ParetoSecurity.dmg
           apple-id: ${{ secrets.NOTARIZATION_USERNAME }}
           password: ${{ secrets.NOTARIZATION_PASSWORD }}
+
+      - name: Staple app
+        uses: ./.github/actions/notarize
+        with:
+          submit-path: Export/Pareto Security.app
+          staple-only: "true"
+
+      # Zip the app only after stapling so the in-app updater ships a
+      # bundle that passes Gatekeeper offline.
+      - name: Build update assets
+        run: |
+          ditto -c -k --keepParent "Export/Pareto Security.app" ParetoSecurity.app.zip
+          "Export/Pareto Security.app/Contents/MacOS/Pareto Security" -export > checks.json
 
       - name: Publish build hashes
         uses: ./.github/actions/publish-hashes
