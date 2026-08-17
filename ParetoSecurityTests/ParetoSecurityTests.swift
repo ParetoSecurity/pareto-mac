@@ -117,7 +117,7 @@ class ParetoSecurityTests: XCTestCase {
 
         XCTAssertTrue(check.checkPasses())
         XCTAssertEqual(check.details, """
-        - ~/.npmrc delays npm-compatible package releases and pins exact versions
+        - ~/.npmrc delays npm-compatible package releases
         - ~/Library/Preferences/pnpm/config.yaml delays pnpm package releases
         - ~/.bunfig.toml delays Bun package releases
         - ~/.config/uv/uv.toml excludes Python packages newer than 7 days
@@ -154,8 +154,39 @@ class ParetoSecurityTests: XCTestCase {
         let failures = check.validationFailures()
 
         XCTAssertFalse(check.checkPasses())
-        XCTAssertEqual(failures.count, 5)
+        XCTAssertEqual(failures.count, 4)
         XCTAssertTrue(failures.contains("~/Library/Preferences/pnpm/config.yaml minimumReleaseAge is below 10080 minutes"))
+    }
+
+    func testPackageManagerSupplyChainPassesWithExplicitSaveExactFalse() throws {
+        let temporaryDirectory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        try FileManager.default.createDirectory(at: temporaryDirectory, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: temporaryDirectory) }
+
+        try """
+        min-release-age=7
+        save-exact=false
+        """.write(to: temporaryDirectory.appendingPathComponent(".npmrc"), atomically: true, encoding: .utf8)
+
+        let check = PackageManagerSupplyChainCheck(homeDirectory: temporaryDirectory, installedBinaries: [])
+
+        XCTAssertTrue(check.checkPasses())
+        XCTAssertEqual(check.details, "- ~/.npmrc delays npm-compatible package releases")
+    }
+
+    func testPackageManagerSupplyChainFailsWithoutSaveExact() throws {
+        let temporaryDirectory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        try FileManager.default.createDirectory(at: temporaryDirectory, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: temporaryDirectory) }
+
+        try """
+        min-release-age=7
+        """.write(to: temporaryDirectory.appendingPathComponent(".npmrc"), atomically: true, encoding: .utf8)
+
+        let check = PackageManagerSupplyChainCheck(homeDirectory: temporaryDirectory, installedBinaries: [])
+
+        XCTAssertFalse(check.checkPasses())
+        XCTAssertEqual(check.details, "- ~/.npmrc save-exact is not set; set it to true or false")
     }
 
     func testPackageManagerSupplyChainPassesWithMinimumReleaseAgeOnly() throws {
@@ -171,7 +202,7 @@ class ParetoSecurityTests: XCTestCase {
         let check = PackageManagerSupplyChainCheck(homeDirectory: temporaryDirectory, installedBinaries: [])
 
         XCTAssertTrue(check.checkPasses())
-        XCTAssertEqual(check.details, "- ~/.npmrc delays npm-compatible package releases and pins exact versions")
+        XCTAssertEqual(check.details, "- ~/.npmrc delays npm-compatible package releases")
     }
 
     func testPackageManagerSupplyChainPassesWithMinimumReleaseAgeOnlyAndOldNpm() throws {
@@ -191,7 +222,7 @@ class ParetoSecurityTests: XCTestCase {
         )
 
         XCTAssertTrue(check.checkPasses())
-        XCTAssertEqual(check.details, "- ~/.npmrc delays npm-compatible package releases and pins exact versions")
+        XCTAssertEqual(check.details, "- ~/.npmrc delays npm-compatible package releases")
     }
 
     func testPackageManagerSupplyChainFailsWithUnsupportedNpmVersion() throws {
@@ -251,7 +282,7 @@ class ParetoSecurityTests: XCTestCase {
         )
 
         XCTAssertTrue(check.checkPasses())
-        XCTAssertEqual(check.details, "- ~/.npmrc delays npm-compatible package releases and pins exact versions")
+        XCTAssertEqual(check.details, "- ~/.npmrc delays npm-compatible package releases")
     }
 
     func testPackageManagerSupplyChainFailsWithUnknownNpmVersion() throws {

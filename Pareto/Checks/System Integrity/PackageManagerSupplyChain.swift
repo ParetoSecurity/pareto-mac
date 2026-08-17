@@ -101,7 +101,7 @@ class PackageManagerSupplyChainCheck: ParetoCheck {
         var details: [String] = []
 
         if let contents = readFile(homeDirectory.appendingPathComponent(".npmrc")), validateNpmConfig(contents).isEmpty {
-            details.append("~/.npmrc delays npm-compatible package releases and pins exact versions")
+            details.append("~/.npmrc delays npm-compatible package releases")
         }
         if let pnpmConfig = activePnpmConfig(), Self.validatePnpmConfig(pnpmConfig.contents, displayPath: pnpmConfig.displayPath).isEmpty {
             details.append("\(pnpmConfig.displayPath) delays pnpm package releases")
@@ -278,8 +278,10 @@ class PackageManagerSupplyChainCheck: ParetoCheck {
         if minReleaseAgeDays < 7, minimumReleaseAgeMinutes < 10080 {
             failures.append("~/.npmrc release age is below 7 days; set either min-release-age >= 7 or minimum-release-age >= 10080")
         }
-        if values["save-exact"]?.lowercased() != "true" {
-            failures.append("~/.npmrc save-exact is not enabled")
+        // An explicit save-exact=false is an informed choice, so only an
+        // unset value fails. https://github.com/ParetoSecurity/pareto-mac/issues/303
+        if values["save-exact"] == nil {
+            failures.append("~/.npmrc save-exact is not set; set it to true or false")
         }
 
         return failures
