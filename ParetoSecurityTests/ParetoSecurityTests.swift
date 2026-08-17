@@ -298,6 +298,29 @@ class ParetoSecurityTests: XCTestCase {
         XCTAssertNil(PackageManagerSupplyChainCheck.executablePath(fromWhichOutput: temporaryDirectory.appendingPathComponent("missing").path))
     }
 
+    func testPackageManagerSupplyChainSearchesKnownInstallPrefixes() throws {
+        let temporaryDirectory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        try FileManager.default.createDirectory(at: temporaryDirectory, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: temporaryDirectory) }
+
+        // Only the well-known hardcoded prefixes are searched; the inherited
+        // PATH must not influence the list.
+        let check = PackageManagerSupplyChainCheck(
+            homeDirectory: temporaryDirectory,
+            installedBinaries: [],
+            environment: ["PATH": "/some/injected/path"]
+        )
+        let directories = check.searchDirectories()
+
+        XCTAssertTrue(directories.contains("/usr/bin"))
+        XCTAssertTrue(directories.contains("/opt/homebrew/bin"))
+        XCTAssertTrue(directories.contains("/usr/local/bin"))
+        XCTAssertTrue(directories.contains(temporaryDirectory.appendingPathComponent(".bun/bin").path))
+        XCTAssertTrue(directories.contains(temporaryDirectory.appendingPathComponent("Library/pnpm").path))
+        XCTAssertFalse(directories.contains("/some/injected/path"))
+        XCTAssertEqual(directories.count, Set(directories).count)
+    }
+
     func testPackageManagerSupplyChainUsesPnpmXDGConfigHome() throws {
         let temporaryDirectory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
         let xdgDirectory = temporaryDirectory.appendingPathComponent("xdg")

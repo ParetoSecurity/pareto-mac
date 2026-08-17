@@ -349,9 +349,51 @@ extension ParetoCheck {
         return output.contains("does not exist") ? nil : output
     }
 
+    // Reads a preference key, returning nil when it is absent so callers can
+    // apply their "missing means the default" fallback.
+    //
+    // On macOS 27+ several com.apple.SoftwareUpdate keys are only delivered
+    // through an MDM profile, which path-based `defaults read` never sees, so
+    // there we resolve through CFPreferences (full search list, managed
+    // preferences included). On earlier versions we keep the direct plist read:
+    // CFPreferences consults the per-user domain first, where stale values can
+    // shadow the effective system setting in /Library/Preferences.
     func readDefaultsNative(path: String, key: String) -> String? {
+        if ProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 27 {
+            return readDefaultsViaCFPreferences(path: path, key: key)
+        }
+
         let output = runCMD(app: "/usr/bin/defaults", args: ["read", path, key])
-        return output.contains("does not exist") ? nil : output.trim()
+        // `defaults` reports a missing key as "Could not find key 'X' in
+        // domain 'Y'." and a missing domain as "Domain 'X' not found.", and
+        // runCMD() folds stderr into stdout.
+        if output.contains("Could not find key") || output.contains("not found")
+            || output.contains("does not exist") {
+            return nil
+        }
+        return output.trim()
+    }
+
+    private func readDefaultsViaCFPreferences(path: String, key: String) -> String? {
+        var domain = (path as NSString).lastPathComponent
+        if domain.hasSuffix(".plist") {
+            domain = String(domain.dropLast(".plist".count))
+        }
+
+        guard let value = CFPreferencesCopyAppValue(key as CFString, domain as CFString) else {
+            return nil
+        }
+
+        switch CFGetTypeID(value as CFTypeRef) {
+        case CFBooleanGetTypeID():
+            return (value as? NSNumber)?.boolValue == true ? "1" : "0"
+        case CFNumberGetTypeID():
+            return (value as? NSNumber)?.stringValue
+        case CFStringGetTypeID():
+            return value as? String
+        default:
+            return String(describing: value).trim()
+        }
     }
 
     func appVersion(path: String, key: String = "CFBundleShortVersionString") -> String? {
