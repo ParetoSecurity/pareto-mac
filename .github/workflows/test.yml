@@ -33,6 +33,7 @@ jobs:
           xcode-version: ${{ env.XCODE_VERSION }}
 
       - name: Setup code signing
+        id: signing
         uses: ./.github/actions/setup-signing
         with:
           development-certificate: ${{ secrets.DEVELOPMENT_CERTIFICATE_DATA }}
@@ -42,7 +43,9 @@ jobs:
           keychain-password: ${{ secrets.KEYCHAIN_PASSWORD }}
 
       - name: Run tests
-        run: make test
+        run: make test XCODEBUILD_FLAGS="$XCODEBUILD_FLAGS"
+        env:
+          XCODEBUILD_FLAGS: ${{ steps.signing.outputs.signing-available == 'true' && '' || 'CODE_SIGNING_ALLOWED=NO' }}
 
       - name: Cleanup keychain
         if: always()
@@ -52,6 +55,8 @@ jobs:
     name: Build Native
     runs-on: macos-latest
     needs: test
+    # Archiving and exporting require certificates, which forks never get.
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
     timeout-minutes: 20
     permissions:
       contents: read
@@ -106,6 +111,8 @@ jobs:
     name: Build SetApp
     runs-on: macos-latest
     needs: test
+    # Archiving and exporting require certificates, which forks never get.
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
     timeout-minutes: 20
     permissions:
       contents: read

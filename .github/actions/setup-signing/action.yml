@@ -4,16 +4,20 @@ description: "Import Apple certificates and configure keychain for code signing"
 inputs:
   development-certificate:
     description: "Base64-encoded development certificate (.p12)"
-    required: true
+    required: false
+    default: ""
   development-passphrase:
     description: "Passphrase for development certificate"
-    required: true
+    required: false
+    default: ""
   application-certificate:
     description: "Base64-encoded Developer ID Application certificate (.p12)"
-    required: true
+    required: false
+    default: ""
   application-passphrase:
     description: "Passphrase for application certificate"
-    required: true
+    required: false
+    default: ""
   release-certificate:
     description: "Base64-encoded release certificate (.p12)"
     required: false
@@ -24,12 +28,35 @@ inputs:
     default: ""
   keychain-password:
     description: "Password for the temporary keychain"
-    required: true
+    required: false
+    default: ""
+
+outputs:
+  signing-available:
+    description: "true when certificates were imported, false when running unsigned"
+    value: ${{ steps.detect.outputs.available }}
 
 runs:
   using: "composite"
   steps:
+    # Pull requests from forks never receive repository secrets, so the
+    # certificate inputs arrive empty. Detect that once and skip the import
+    # steps rather than failing the job on an undecodable empty .p12.
+    - name: Detect available certificates
+      id: detect
+      shell: bash
+      env:
+        DEVELOPMENT_CERTIFICATE: ${{ inputs.development-certificate }}
+      run: |
+        if [ -n "$DEVELOPMENT_CERTIFICATE" ]; then
+          echo "available=true" >> "$GITHUB_OUTPUT"
+        else
+          echo "available=false" >> "$GITHUB_OUTPUT"
+          echo "::notice::No signing certificates available, continuing unsigned."
+        fi
+
     - name: Create keychain
+      if: steps.detect.outputs.available == 'true'
       shell: bash
       env:
         KEYCHAIN_PASSWORD: ${{ inputs.keychain-password }}
@@ -45,6 +72,7 @@ runs:
         echo "KEYCHAIN_PATH=$KEYCHAIN_PATH" >> "$GITHUB_ENV"
 
     - name: Import Development Certificate
+      if: steps.detect.outputs.available == 'true'
       shell: bash
       env:
         CERTIFICATE_DATA: ${{ inputs.development-certificate }}
@@ -56,6 +84,7 @@ runs:
         rm -f "$CERT_PATH"
 
     - name: Import Developer ID Application Certificate
+      if: steps.detect.outputs.available == 'true' && inputs.application-certificate != ''
       shell: bash
       env:
         CERTIFICATE_DATA: ${{ inputs.application-certificate }}
@@ -67,7 +96,7 @@ runs:
         rm -f "$CERT_PATH"
 
     - name: Import Release Certificate
-      if: inputs.release-certificate != ''
+      if: steps.detect.outputs.available == 'true' && inputs.release-certificate != ''
       shell: bash
       env:
         CERTIFICATE_DATA: ${{ inputs.release-certificate }}

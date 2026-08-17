@@ -5,9 +5,13 @@ SHELL := bash
 MAKEFLAGS += --warn-undefined-variables
 MAKEFLAGS += --no-builtin-rules
 
+# Extra xcodebuild settings, e.g. CODE_SIGNING_ALLOWED=NO when no certificates
+# are available (pull requests from forks do not receive repository secrets).
+XCODEBUILD_FLAGS ?=
+
 test:
 	@rm -rf test.xcresult
-	NSUnbufferedIO=YES xcodebuild -project "Pareto Security.xcodeproj" -clonedSourcePackagesDirPath SourcePackages -scheme "Pareto Security" -configuration Debug -resultBundlePath test.xcresult -destination platform=macOS test 2>&1 | mint run xcbeautify --report junit
+	NSUnbufferedIO=YES xcodebuild -project "Pareto Security.xcodeproj" -clonedSourcePackagesDirPath SourcePackages -scheme "Pareto Security" -configuration Debug -resultBundlePath test.xcresult -destination platform=macOS test $(XCODEBUILD_FLAGS) 2>&1 | mint run xcbeautify --report junit
 	mv build/reports/junit.xml .
 
 .PHONY: build
