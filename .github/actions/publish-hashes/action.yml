@@ -1,0 +1,28 @@
+name: "Publish Build Hashes"
+description: "Append MD5/SHA1/SHA256 digests of a built binary to the job summary"
+
+inputs:
+  title:
+    description: "Heading to use in the job summary"
+    required: true
+  binary:
+    description: "Path to the built executable"
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Publish build hashes
+      shell: bash
+      env:
+        TITLE: ${{ inputs.title }}
+        BINARY: ${{ inputs.binary }}
+      run: |
+        {
+          echo "## $TITLE"
+          echo '```'
+          openssl dgst -md5 "$BINARY"
+          openssl dgst -sha1 "$BINARY"
+          openssl dgst -sha256 "$BINARY"
+          echo '```'
+        } >> "$GITHUB_STEP_SUMMARY"

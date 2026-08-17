@@ -1,5 +1,5 @@
 name: "Setup Code Signing"
-description: "Import Apple certificates and configure keychain for code signing"
+description: "Import Apple certificates into a throwaway keychain and verify the signing identities"
 
 inputs:
   development-certificate:
@@ -26,83 +26,94 @@ inputs:
     description: "Passphrase for release certificate"
     required: false
     default: ""
-  keychain-password:
-    description: "Password for the temporary keychain"
-    required: false
-    default: ""
 
 outputs:
   signing-available:
     description: "true when certificates were imported, false when running unsigned"
-    value: ${{ steps.detect.outputs.available }}
+    value: ${{ steps.import.outputs.available }}
 
 runs:
   using: "composite"
   steps:
     # Pull requests from forks never receive repository secrets, so the
     # certificate inputs arrive empty. Detect that once and skip the import
-    # steps rather than failing the job on an undecodable empty .p12.
-    - name: Detect available certificates
-      id: detect
+    # rather than failing the job on an undecodable empty .p12.
+    #
+    # The keychain is created fresh per job and deleted at the end, so its
+    # password only has to be unguessable for the length of the run — there is
+    # nothing to gain from carrying it around as a repository secret.
+    - name: Import signing certificates
+      id: import
       shell: bash
       env:
         DEVELOPMENT_CERTIFICATE: ${{ inputs.development-certificate }}
+        DEVELOPMENT_PASSPHRASE: ${{ inputs.development-passphrase }}
+        APPLICATION_CERTIFICATE: ${{ inputs.application-certificate }}
+        APPLICATION_PASSPHRASE: ${{ inputs.application-passphrase }}
+        RELEASE_CERTIFICATE: ${{ inputs.release-certificate }}
+        RELEASE_PASSPHRASE: ${{ inputs.release-passphrase }}
       run: |
-        if [ -n "$DEVELOPMENT_CERTIFICATE" ]; then
-          echo "available=true" >> "$GITHUB_OUTPUT"
-        else
+        if [ -z "$DEVELOPMENT_CERTIFICATE$APPLICATION_CERTIFICATE$RELEASE_CERTIFICATE" ]; then
           echo "available=false" >> "$GITHUB_OUTPUT"
           echo "::notice::No signing certificates available, continuing unsigned."
+          exit 0
         fi
 
-    - name: Create keychain
-      if: steps.detect.outputs.available == 'true'
-      shell: bash
-      env:
-        KEYCHAIN_PASSWORD: ${{ inputs.keychain-password }}
-      run: |
         KEYCHAIN_PATH="$RUNNER_TEMP/app-signing.keychain-db"
+        KEYCHAIN_PASSWORD="$(uuidgen)"
 
-        # Create and configure keychain
-        security create-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH" 2>/dev/null || true
+        security create-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
         security set-keychain-settings -lut 21600 "$KEYCHAIN_PATH"
         security unlock-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
-        security list-keychain -d user -s "$KEYCHAIN_PATH"
+        # Keep the login keychain searchable so Apple's bundled intermediates
+        # stay visible to codesign.
+        security list-keychains -d user -s "$KEYCHAIN_PATH" login.keychain
+
+        import_cert() {
+          local name="$1" data="$2" passphrase="$3"
+          [ -n "$data" ] || return 0
+          local path="$RUNNER_TEMP/$name.p12"
+          if ! printf '%s' "$data" | base64 --decode > "$path"; then
+            echo "::error::$name certificate is not valid base64"
+            return 1
+          fi
+          # -T grants codesign access without a UI prompt; the partition list
+          # below is what actually silences the "user interaction is not
+          # allowed" failure on headless runners.
+          security import "$path" -P "$passphrase" -k "$KEYCHAIN_PATH" \
+            -f pkcs12 -A -T /usr/bin/codesign -T /usr/bin/productsign
+          rm -f "$path"
+        }
+
+        import_cert development "$DEVELOPMENT_CERTIFICATE" "$DEVELOPMENT_PASSPHRASE"
+        import_cert application "$APPLICATION_CERTIFICATE" "$APPLICATION_PASSPHRASE"
+        import_cert release "$RELEASE_CERTIFICATE" "$RELEASE_PASSPHRASE"
+
+        security set-key-partition-list -S apple-tool:,apple:,codesign: \
+          -s -k "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH" > /dev/null
 
         echo "KEYCHAIN_PATH=$KEYCHAIN_PATH" >> "$GITHUB_ENV"
+        echo "available=true" >> "$GITHUB_OUTPUT"
 
-    - name: Import Development Certificate
-      if: steps.detect.outputs.available == 'true'
+    # A .p12 exported without its issuing intermediate imports fine but is
+    # untrusted, so xcodebuild reports "No signing certificate ... found" only
+    # once it reaches -exportArchive, minutes into the job. Listing the usable
+    # identities here turns that into an immediate, readable failure.
+    - name: Verify signing identities
+      if: steps.import.outputs.available == 'true'
       shell: bash
-      env:
-        CERTIFICATE_DATA: ${{ inputs.development-certificate }}
-        CERTIFICATE_PASSPHRASE: ${{ inputs.development-passphrase }}
       run: |
-        CERT_PATH="$RUNNER_TEMP/development.p12"
-        echo -n "$CERTIFICATE_DATA" | base64 --decode > "$CERT_PATH"
-        security import "$CERT_PATH" -P "$CERTIFICATE_PASSPHRASE" -A -t cert -f pkcs12 -k "$KEYCHAIN_PATH"
-        rm -f "$CERT_PATH"
+        echo "Code signing identities in $KEYCHAIN_PATH:"
+        security find-identity -v -p codesigning "$KEYCHAIN_PATH"
 
-    - name: Import Developer ID Application Certificate
-      if: steps.detect.outputs.available == 'true' && inputs.application-certificate != ''
-      shell: bash
-      env:
-        CERTIFICATE_DATA: ${{ inputs.application-certificate }}
-        CERTIFICATE_PASSPHRASE: ${{ inputs.application-passphrase }}
-      run: |
-        CERT_PATH="$RUNNER_TEMP/application.p12"
-        echo -n "$CERTIFICATE_DATA" | base64 --decode > "$CERT_PATH"
-        security import "$CERT_PATH" -P "$CERTIFICATE_PASSPHRASE" -A -t cert -f pkcs12 -k "$KEYCHAIN_PATH"
-        rm -f "$CERT_PATH"
-
-    - name: Import Release Certificate
-      if: steps.detect.outputs.available == 'true' && inputs.release-certificate != ''
-      shell: bash
-      env:
-        CERTIFICATE_DATA: ${{ inputs.release-certificate }}
-        CERTIFICATE_PASSPHRASE: ${{ inputs.release-passphrase }}
-      run: |
-        CERT_PATH="$RUNNER_TEMP/release.p12"
-        echo -n "$CERTIFICATE_DATA" | base64 --decode > "$CERT_PATH"
-        security import "$CERT_PATH" -P "$CERTIFICATE_PASSPHRASE" -A -t cert -f pkcs12 -k "$KEYCHAIN_PATH"
-        rm -f "$CERT_PATH"
+        if ! security find-identity -v -p codesigning "$KEYCHAIN_PATH" | grep -q '^ *1)'; then
+          echo "::error::Certificates were imported but none form a valid code signing identity."
+          echo "::error::Usually the .p12 is expired, or was exported without its Apple intermediate certificate."
+          echo "Certificates present in the keychain:"
+          security find-certificate -a -p "$KEYCHAIN_PATH" | awk '
+            /BEGIN CERTIFICATE/ { pem = "" }
+            { pem = pem $0 "\n" }
+            /END CERTIFICATE/ { print pem | "openssl x509 -noout -subject -enddate"; close("openssl x509 -noout -subject -enddate") }
+          '
+          exit 1
+        fi

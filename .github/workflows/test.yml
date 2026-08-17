@@ -40,7 +40,6 @@ jobs:
           development-passphrase: ${{ secrets.DEVELOPMENT_CERTIFICATE_PASSPHRASE }}
           application-certificate: ${{ secrets.APPLICATION_CERTIFICATE_DATA }}
           application-passphrase: ${{ secrets.APPLICATION_CERTIFICATE_PASSPHRASE }}
-          keychain-password: ${{ secrets.KEYCHAIN_PASSWORD }}
 
       - name: Run tests
         run: make test XCODEBUILD_FLAGS="$XCODEBUILD_FLAGS"
@@ -77,7 +76,6 @@ jobs:
           development-passphrase: ${{ secrets.DEVELOPMENT_CERTIFICATE_PASSPHRASE }}
           application-certificate: ${{ secrets.APPLICATION_CERTIFICATE_DATA }}
           application-passphrase: ${{ secrets.APPLICATION_CERTIFICATE_PASSPHRASE }}
-          keychain-password: ${{ secrets.KEYCHAIN_PASSWORD }}
 
       - name: Build debug archive
         run: set -o pipefail && make archive-debug 2>&1 | mint run xcbeautify
@@ -93,15 +91,10 @@ jobs:
           retention-days: 14
 
       - name: Publish build hashes
-        run: |
-          {
-            echo "## Debug Build"
-            echo '```'
-            openssl dgst -md5 "Export/Pareto Security.app/Contents/MacOS/Pareto Security"
-            openssl dgst -sha1 "Export/Pareto Security.app/Contents/MacOS/Pareto Security"
-            openssl dgst -sha256 "Export/Pareto Security.app/Contents/MacOS/Pareto Security"
-            echo '```'
-          } >> "$GITHUB_STEP_SUMMARY"
+        uses: ./.github/actions/publish-hashes
+        with:
+          title: Debug Build
+          binary: Export/Pareto Security.app/Contents/MacOS/Pareto Security
 
       - name: Cleanup keychain
         if: always()
@@ -133,7 +126,6 @@ jobs:
           development-passphrase: ${{ secrets.DEVELOPMENT_CERTIFICATE_PASSPHRASE }}
           application-certificate: ${{ secrets.APPLICATION_CERTIFICATE_DATA }}
           application-passphrase: ${{ secrets.APPLICATION_CERTIFICATE_PASSPHRASE }}
-          keychain-password: ${{ secrets.KEYCHAIN_PASSWORD }}
 
       - name: Build debug archive
         run: set -o pipefail && make archive-debug-setapp 2>&1 | mint run xcbeautify
@@ -149,15 +141,10 @@ jobs:
           retention-days: 14
 
       - name: Publish build hashes
-        run: |
-          {
-            echo "## SetApp Build"
-            echo '```'
-            openssl dgst -md5 "SetAppExport/Pareto Security.app/Contents/MacOS/Pareto Security SetApp"
-            openssl dgst -sha1 "SetAppExport/Pareto Security.app/Contents/MacOS/Pareto Security SetApp"
-            openssl dgst -sha256 "SetAppExport/Pareto Security.app/Contents/MacOS/Pareto Security SetApp"
-            echo '```'
-          } >> "$GITHUB_STEP_SUMMARY"
+        uses: ./.github/actions/publish-hashes
+        with:
+          title: SetApp Build
+          binary: SetAppExport/Pareto Security.app/Contents/MacOS/Pareto Security SetApp
 
       - name: Cleanup keychain
         if: always()
