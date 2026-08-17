@@ -79,6 +79,20 @@ jobs:
           ditto -c -k --keepParent "Export/Pareto Security.app" ParetoSecurity.app.zip
           "Export/Pareto Security.app/Contents/MacOS/Pareto Security" -export > checks.json
 
+      - name: Upload app artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: ParetoSecurity.app
+          path: ParetoSecurity.app.zip
+          retention-days: 90
+
+      - name: Upload DMG artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: ParetoSecurity.dmg
+          path: ParetoSecurity.dmg
+          retention-days: 90
+
       - name: Publish build hashes
         uses: ./.github/actions/publish-hashes
         with:
