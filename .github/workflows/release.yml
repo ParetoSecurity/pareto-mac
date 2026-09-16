@@ -128,8 +128,11 @@ jobs:
     runs-on: macos-latest
     timeout-minutes: 45
     steps:
+      # Full history so release notes can be built from the previous tag.
       - name: Checkout repository
         uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
 
       - name: Setup build environment
         uses: ./.github/actions/setup-build-env
@@ -193,6 +196,36 @@ jobs:
         with:
           title: SetApp Release
           binary: SetAppExport/Pareto Security.app/Contents/MacOS/Pareto Security SetApp
+
+      # https://docs.setapp.com/docs/submitting-apps-for-review#automatic-build-upload
+      # Uploaded as a draft: submitting for review stays a manual step in the
+      # Setapp developer account. Tags with a pre-release suffix (e.g.
+      # 1.2.3-beta1) go to the beta channel.
+      - name: Upload build to Setapp
+        env:
+          SETAPP_AUTOMATION_TOKEN: ${{ secrets.SETAPP_AUTOMATION_TOKEN }}
+          VERSION: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+          [ -n "$SETAPP_AUTOMATION_TOKEN" ] || { echo "SETAPP_AUTOMATION_TOKEN secret is not set"; exit 1; }
+          case "$VERSION" in *-*) beta=true ;; *) beta=false ;; esac
+          previous=$(git describe --tags --abbrev=0 "${VERSION}^" 2>/dev/null || true)
+          notes=$(git log --no-merges --pretty=format:'- %s' "${previous:+${previous}..}${VERSION}")
+          notes=${notes:-"- Release ${VERSION}"}
+          response=$(curl -sS -X POST "https://developer-api.setapp.com/v1/ci/version" \
+            --write-out "HTTPSTATUS:%{http_code}" \
+            -H "Authorization: Bearer ${SETAPP_AUTOMATION_TOKEN}" \
+            -H "accept: application/json" \
+            -F "release_notes=${notes}" \
+            -F "status=draft" \
+            -F "release_on_approval=true" \
+            -F "beta=${beta}" \
+            -F "allow_overwrite=false" \
+            -F "archive=@ParetoSecuritySetApp.app.zip;type=application/zip")
+          code=${response##*HTTPSTATUS:}
+          body=${response%%HTTPSTATUS*}
+          echo "Setapp responded ${code}: ${body}"
+          [ "$code" -ge 200 ] && [ "$code" -lt 300 ]
 
       - name: Cleanup keychain
         if: always()
