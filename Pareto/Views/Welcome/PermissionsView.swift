@@ -17,7 +17,13 @@ class PermissionsChecker: ObservableObject {
     @Published var ran = false
 
     private func osaIsAuthorized() -> Bool {
-        let script = "tell application \"System Events\" to tell security preferences to get automatic login"
+        let script: String
+        if #available(macOS 27, *) {
+            // Check Automation access without depending on security preferences.
+            script = "tell application \"System Events\" to get name"
+        } else {
+            script = "tell application \"System Events\" to tell security preferences to get automatic login"
+        }
 
         var error: NSDictionary?
         if let scriptObject = NSAppleScript(source: script) {
