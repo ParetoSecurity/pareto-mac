@@ -44,7 +44,10 @@ jobs:
       - name: Run tests
         run: make test XCODEBUILD_FLAGS="$XCODEBUILD_FLAGS"
         env:
-          XCODEBUILD_FLAGS: ${{ steps.signing.outputs.signing-available == 'true' && '' || 'CODE_SIGNING_ALLOWED=NO' }}
+          # Manual style keeps xcodebuild from querying Apple's provisioning
+          # service for an account ("No Accounts" error on headless runners),
+          # which CODE_SIGNING_ALLOWED=NO alone does not suppress.
+          XCODEBUILD_FLAGS: ${{ steps.signing.outputs.signing-available == 'true' && '' || 'CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY=- CODE_SIGN_STYLE=Manual' }}
 
       - name: Cleanup keychain
         if: always()
@@ -68,7 +71,12 @@ jobs:
         with:
           xcode-version: ${{ env.XCODE_VERSION }}
 
+      # setup-signing reports whether certificates were imported. With certs the
+      # signed archive/export path runs; without them the app is built ad-hoc
+      # signed so forks still get an artifact — not for distribution, and the
+      # privileged helper will not install.
       - name: Setup code signing
+        id: signing
         uses: ./.github/actions/setup-signing
         with:
           development-certificate: ${{ secrets.DEVELOPMENT_CERTIFICATE_DATA }}
@@ -76,23 +84,35 @@ jobs:
           application-certificate: ${{ secrets.APPLICATION_CERTIFICATE_DATA }}
           application-passphrase: ${{ secrets.APPLICATION_CERTIFICATE_PASSPHRASE }}
 
+      - name: Determine artifact suffix
+        run: |
+          if [ "${{ steps.signing.outputs.signing-available }}" != "true" ]; then
+            echo "::notice::No signing certificates available; building an ad-hoc signed app (not for distribution)."
+            echo "ARTIFACT_SUFFIX=.adhoc" >> "$GITHUB_ENV"
+          fi
+
       - name: Build debug archive
+        if: steps.signing.outputs.signing-available == 'true'
         run: set -o pipefail && make archive-debug 2>&1 | mint run xcbeautify
 
+      - name: Build ad-hoc debug app
+        if: steps.signing.outputs.signing-available != 'true'
+        run: set -o pipefail && make build-adhoc 2>&1 | mint run xcbeautify
+
       - name: Compress app
-        run: ditto -c -k --keepParent "Export/Pareto Security.app" ParetoSecurity.app.zip
+        run: ditto -c -k --keepParent "Export/Pareto Security.app" "ParetoSecurity${{ env.ARTIFACT_SUFFIX }}.app.zip"
 
       - name: Upload artifact
         uses: actions/upload-artifact@v7
         with:
-          name: ParetoSecurity.app
-          path: ParetoSecurity.app.zip
+          name: ParetoSecurity${{ env.ARTIFACT_SUFFIX }}.app
+          path: ParetoSecurity${{ env.ARTIFACT_SUFFIX }}.app.zip
           retention-days: 14
 
       - name: Publish build hashes
         uses: ./.github/actions/publish-hashes
         with:
-          title: Debug Build
+          title: Debug Build${{ env.ARTIFACT_SUFFIX && ' (ad-hoc, not for distribution)' || '' }}
           binary: Export/Pareto Security.app/Contents/MacOS/Pareto Security
 
       - name: Cleanup keychain
@@ -117,7 +137,11 @@ jobs:
         with:
           xcode-version: ${{ env.XCODE_VERSION }}
 
+      # setup-signing reports whether certificates were imported; when they
+      # were not, the build steps below are skipped instead of failing with
+      # "No Accounts" inside xcodebuild.
       - name: Setup code signing
+        id: signing
         uses: ./.github/actions/setup-signing
         with:
           development-certificate: ${{ secrets.DEVELOPMENT_CERTIFICATE_DATA }}
@@ -125,13 +149,20 @@ jobs:
           application-certificate: ${{ secrets.APPLICATION_CERTIFICATE_DATA }}
           application-passphrase: ${{ secrets.APPLICATION_CERTIFICATE_PASSPHRASE }}
 
+      - name: Check signing availability
+        if: steps.signing.outputs.signing-available != 'true'
+        run: echo "::notice::No signing certificates available; skipping SetApp build. Tests still run unsigned."
+
       - name: Build debug archive
+        if: steps.signing.outputs.signing-available == 'true'
         run: set -o pipefail && make archive-debug-setapp 2>&1 | mint run xcbeautify
 
       - name: Compress app
+        if: steps.signing.outputs.signing-available == 'true'
         run: ditto -c -k --keepParent "SetAppExport/Pareto Security.app" ParetoSecuritySetApp.app.zip
 
       - name: Upload artifact
+        if: steps.signing.outputs.signing-available == 'true'
         uses: actions/upload-artifact@v7
         with:
           name: ParetoSecuritySetApp.app
@@ -139,6 +170,7 @@ jobs:
           retention-days: 14
 
       - name: Publish build hashes
+        if: steps.signing.outputs.signing-available == 'true'
         uses: ./.github/actions/publish-hashes
         with:
           title: SetApp Build
