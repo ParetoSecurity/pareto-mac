@@ -107,8 +107,8 @@ class CompromisedCACheckTests: XCTestCase {
         XCTAssertTrue(enabled.isRunnable)
         XCTAssertTrue(enabled.showInMenu)
         XCTAssertTrue(enabled.showDetailsWhenPassing)
-        XCTAssertEqual(enabled.TitleON, "CA bundles contain no compromised certificates")
-        XCTAssertEqual(enabled.TitleOFF, "CA bundles contain compromised certificates")
+        XCTAssertEqual(enabled.TitleON, "No compromised CAs are trusted")
+        XCTAssertEqual(enabled.TitleOFF, "Compromised CAs are trusted")
     }
 
     func testResolvedBundlePathsOnlyListsExistingFiles() {

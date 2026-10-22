@@ -58,11 +58,11 @@ class CompromisedCACheck: ParetoCheck {
     }
 
     override var TitleON: String {
-        "CA bundles contain no compromised certificates"
+        "No compromised CAs are trusted"
     }
 
     override var TitleOFF: String {
-        "CA bundles contain compromised certificates"
+        "Compromised CAs are trusted"
     }
 
     override var isInstalled: Bool {
