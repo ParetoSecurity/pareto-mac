@@ -10,7 +10,7 @@ import Defaults
 import os.log
 import SwiftUI
 
-// Utility to find and click the status bar button
+/// Utility to find and click the status bar button
 @MainActor
 enum StatusBarButtonHelper {
     static func findAndClickButton() {
@@ -52,7 +52,7 @@ enum StatusBarState: String {
 
 @MainActor
 class StatusBarModel: ObservableObject {
-    // Default to a known-good asset with vector variants
+    /// Default to a known-good asset with vector variants
     @Published var state = StatusBarState.idle {
         didSet {
             // Cancel any pending reset when state changes
@@ -74,10 +74,10 @@ class StatusBarModel: ObservableObject {
     }
 
     @Published var isRunning = false
-    // Bump to force menu refresh re-render when checks finish
+    /// Bump to force menu refresh re-render when checks finish
     @Published var refreshNonce: Int = 0
 
-    // Keep track of any pending reset task so we can cancel it if the state changes
+    /// Keep track of any pending reset task so we can cancel it if the state changes
     private var idleResetTask: Task<Void, Never>?
 }
 

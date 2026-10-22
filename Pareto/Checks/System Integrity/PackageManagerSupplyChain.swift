@@ -294,7 +294,7 @@ class PackageManagerSupplyChainCheck: ParetoCheck {
         }
         let current = versionComponents(version)
         let minimum = versionComponents(minimumVersion)
-        for index in 0..<max(current.count, minimum.count) {
+        for index in 0 ..< max(current.count, minimum.count) {
             let currentPart = index < current.count ? current[index] : 0
             let minimumPart = index < minimum.count ? minimum[index] : 0
             if currentPart != minimumPart {
@@ -324,7 +324,7 @@ class PackageManagerSupplyChainCheck: ParetoCheck {
         let values = tomlKeyValuePairs(contents)
         let minimumReleaseAge = integerValue(values["install.minimumReleaseAge"]) ?? 0
 
-        if minimumReleaseAge < 604800 {
+        if minimumReleaseAge < 604_800 {
             return ["~/.bunfig.toml minimumReleaseAge is below 604800 seconds"]
         }
         return []
@@ -334,7 +334,7 @@ class PackageManagerSupplyChainCheck: ParetoCheck {
         let values = tomlKeyValuePairs(contents)
         let seconds = durationSeconds(values["exclude-newer"]) ?? durationSeconds(values["pip.exclude-newer"]) ?? 0
 
-        if seconds < 604800 {
+        if seconds < 604_800 {
             return ["~/.config/uv/uv.toml exclude-newer is below 7 days"]
         }
         return []
@@ -414,7 +414,7 @@ class PackageManagerSupplyChainCheck: ParetoCheck {
         case "d", "day", "days":
             return amount * 86400
         case "w", "week", "weeks":
-            return amount * 604800
+            return amount * 604_800
         default:
             return nil
         }

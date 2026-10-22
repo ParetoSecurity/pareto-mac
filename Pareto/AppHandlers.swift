@@ -19,7 +19,7 @@ import ServiceManagement
 import SwiftUI
 
 class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
-    // Replaces StatusBarController model usage for MenuBarExtra/StatusBarIcon
+    /// Replaces StatusBarController model usage for MenuBarExtra/StatusBarIcon
     let statusBarModel = StatusBarModel()
 
     // Removed: var statusBar: StatusBarController?
@@ -29,28 +29,28 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
     private var idleSink: AnyCancellable?
     var finishedLaunch: Bool = false
 
-    // Track if checks have run at least once this session
+    /// Track if checks have run at least once this session
     private var checksHaveRun: Bool = false
 
-    // Track the current running work item to prevent race conditions
-    // Using OSAllocatedUnfairLock for better performance and cleaner syntax
+    /// Track the current running work item to prevent race conditions
+    /// Using OSAllocatedUnfairLock for better performance and cleaner syntax
     private let currentWorkItemID = OSAllocatedUnfairLock(initialState: 0)
 
-    // Track when checks started to detect stuck state
+    /// Track when checks started to detect stuck state
     private let checksStartTime = OSAllocatedUnfairLock<Date?>(initialState: nil)
 
     @Default(.hideWhenNoFailures) var hideWhenNoFailures
 
-    // Controls MenuBarExtra visibility based on check status and settings
+    /// Controls MenuBarExtra visibility based on check status and settings
     @Published var isMenuBarInserted: Bool = true
 
-    // Track if icon is temporarily shown due to user activation
+    /// Track if icon is temporarily shown due to user activation
     private var temporarilyVisible: Bool = false
 
-    // Timer to auto-hide after inactivity
+    /// Timer to auto-hide after inactivity
     private var autoHideTimer: Task<Void, Never>?
 
-    // Track if Settings window is open
+    /// Track if Settings window is open
     @Published var isSettingsWindowOpen: Bool = false
 
     @MainActor
@@ -65,7 +65,7 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
         }
     }
 
-    // Show icon temporarily (e.g., when user activates app)
+    /// Show icon temporarily (e.g., when user activates app)
     func showTemporarily() {
         os_log("showTemporarily called", log: Log.app)
 
@@ -78,14 +78,14 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
         scheduleAutoHide()
     }
 
-    // Cancel any pending auto-hide
+    /// Cancel any pending auto-hide
     func cancelAutoHide() {
         os_log("cancelAutoHide called", log: Log.app)
         autoHideTimer?.cancel()
         autoHideTimer = nil
     }
 
-    // Schedule auto-hide after inactivity
+    /// Schedule auto-hide after inactivity
     func scheduleAutoHide() {
         cancelAutoHide()
 
@@ -110,7 +110,7 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
         }
     }
 
-    // Updates menu bar visibility based on check status and settings
+    /// Updates menu bar visibility based on check status and settings
     func updateHiddenState() {
         os_log("updateHiddenState called - hideWhenNoFailures: %{public}@", log: Log.app, hideWhenNoFailures ? "true" : "false")
 
@@ -154,7 +154,7 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
         }
     }
 
-    // Ensure UI state changes occur on the main thread and immediately reflect in the menu
+    /// Ensure UI state changes occur on the main thread and immediately reflect in the menu
     private func setRunning(_ running: Bool) {
         let apply: () -> Void = {
             self.statusBarModel.isRunning = running
@@ -198,7 +198,7 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
         // Recompute state on next run
     }
 
-    // Ported run logic from StatusBarController.runChecks(isInteractive:)
+    /// Ported run logic from StatusBarController.runChecks(isInteractive:)
     func runChecks(isInteractive interactive: Bool = true) {
         if statusBarModel.isRunning {
             return

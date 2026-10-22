@@ -185,7 +185,9 @@ class ParetoUpdated: ParetoCheck {
 
     private func refreshUpdateStatusIfNeeded() {
         let shouldStart = updateCheckInFlight.withLock { inFlight in
-            if inFlight { return false }
+            if inFlight {
+                return false
+            }
             inFlight = true
             return true
         }

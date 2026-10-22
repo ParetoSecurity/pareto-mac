@@ -35,9 +35,17 @@ class AppLibreOfficeCheck: AppCheck {
     private let latestVersionsLock = OSAllocatedUnfairLock<[Version]>(initialState: [Version(0, 0, 0)])
     private let latestVersionsInFlight = OSAllocatedUnfairLock(initialState: false)
 
-    override var appName: String { "LibreOffice" }
-    override var appMarketingName: String { "LibreOffice" }
-    override var appBundle: String { "org.libreoffice.script" }
+    override var appName: String {
+        "LibreOffice"
+    }
+
+    override var appMarketingName: String {
+        "LibreOffice"
+    }
+
+    override var appBundle: String {
+        "org.libreoffice.script"
+    }
 
     override var UUID: String {
         "5726931a-264a-5758-b7dd-d09285ac4b7f"
@@ -87,7 +95,9 @@ class AppLibreOfficeCheck: AppCheck {
 
     private func refreshLatestVersionsIfNeeded() {
         let shouldStart = latestVersionsInFlight.withLock { inFlight in
-            if inFlight { return false }
+            if inFlight {
+                return false
+            }
             inFlight = true
             return true
         }

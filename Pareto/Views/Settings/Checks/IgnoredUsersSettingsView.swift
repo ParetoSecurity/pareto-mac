@@ -17,7 +17,9 @@ final class IgnoredUsersViewModel: ObservableObject {
     @Published var showRerunNotice = false
 
     func loadAvailableUsers() async {
-        if isLoadingUsers { return }
+        if isLoadingUsers {
+            return
+        }
         isLoadingUsers = true
 
         // Run command off the main actor

@@ -1,6 +1,6 @@
 import SwiftUI
 
-// Inline team badge component
+/// Inline team badge component
 private struct TeamRequiredBadge: View {
     var compact: Bool = false
 

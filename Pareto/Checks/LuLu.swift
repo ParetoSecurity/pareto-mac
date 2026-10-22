@@ -17,9 +17,17 @@ import Version
 class AppLuLuCheck: AppCheck {
     static let sharedInstance = AppLuLuCheck()
 
-    override var appName: String { "LuLu" }
-    override var appMarketingName: String { "LuLu" }
-    override var appBundle: String { "com.objective-see.lulu.app" }
+    override var appName: String {
+        "LuLu"
+    }
+
+    override var appMarketingName: String {
+        "LuLu"
+    }
+
+    override var appBundle: String {
+        "com.objective-see.lulu.app"
+    }
 
     override var UUID: String {
         "1b282abb-888b-4f82-bba4-db8ce46a8e2a"

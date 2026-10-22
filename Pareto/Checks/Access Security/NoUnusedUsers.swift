@@ -33,14 +33,14 @@ class NoUnusedUsers: ParetoCheck {
 
     // MARK: - Public computed properties
 
-    // Get all users with their statuses
+    /// Get all users with their statuses
     var allUserStatuses: [(user: String, status: UserStatus)] {
         Self.localUserShortNames()
             .sorted()
             .map { user in (user: user, status: getUserStatus(user)) }
     }
 
-    // All failing (unused) accounts
+    /// All failing (unused) accounts
     var unusedAccounts: [String] {
         allUserStatuses
             .compactMap { userStatus in
@@ -75,10 +75,10 @@ class NoUnusedUsers: ParetoCheck {
         return unusedAccounts.isEmpty
     }
 
-    // Keeps only accounts that exist in the local directory node. On directory-bound
-    // Macs getpwent() also returns users opendirectoryd cached from unrelated lookups,
-    // which were never provisioned on the device.
-    // https://github.com/ParetoSecurity/pareto-mac/issues/297
+    /// Keeps only accounts that exist in the local directory node. On directory-bound
+    /// Macs getpwent() also returns users opendirectoryd cached from unrelated lookups,
+    /// which were never provisioned on the device.
+    /// https://github.com/ParetoSecurity/pareto-mac/issues/297
     static func provisionedUsers(_ users: [String], provisioned: Set<String>) -> [String] {
         // An empty local node means the lookup failed; keep the unfiltered list so
         // the check does not silently pass.
@@ -91,7 +91,7 @@ class NoUnusedUsers: ParetoCheck {
 // MARK: - Helpers (no admin privileges required)
 
 private extension NoUnusedUsers {
-    // Get status for a specific user
+    /// Get status for a specific user
     func getUserStatus(_ user: String) -> UserStatus {
         let currentUser = NSUserName()
         let adminSet = Self.adminUserShortNames()
@@ -122,15 +122,15 @@ private extension NoUnusedUsers {
         return .fail(reason: "unused account")
     }
 
-    // Threshold for "recent" login
+    /// Threshold for "recent" login
     static let recentLoginDays: Int = 7
 
-    // Additional name-level filter to exclude system-style accounts by naming convention
+    /// Additional name-level filter to exclude system-style accounts by naming convention
     static func isValidUserName(_ u: String) -> Bool {
         return !u.hasPrefix("_") && u.count > 1 && u != "root" && u != "nobody" && u != "daemon"
     }
 
-    // Returns local user short names for “real” users (UID >= 501)
+    /// Returns local user short names for “real” users (UID >= 501)
     static func localUserShortNames() -> [String] {
         var result: [String] = []
         setpwent()
@@ -155,7 +155,7 @@ private extension NoUnusedUsers {
         return provisionedUsers(result, provisioned: localNodeUserShortNames())
     }
 
-    // Short names of accounts recorded in the local directory node (includes mobile accounts)
+    /// Short names of accounts recorded in the local directory node (includes mobile accounts)
     static func localNodeUserShortNames() -> Set<String> {
         let output = runCMD(app: "/usr/bin/dscl", args: [".", "-list", "/Users"])
 
@@ -167,7 +167,7 @@ private extension NoUnusedUsers {
         )
     }
 
-    // Returns set of admin user short names (supplemental members + primary group = admin)
+    /// Returns set of admin user short names (supplemental members + primary group = admin)
     static func adminUserShortNames() -> Set<String> {
         var admins = Set<String>()
 
@@ -209,7 +209,7 @@ private extension NoUnusedUsers {
 
     // MARK: - Recent login detection via `last`
 
-    // Returns the last login date for a user, if any, using /usr/bin/last -1 <user>
+    /// Returns the last login date for a user, if any, using /usr/bin/last -1 <user>
     static func lastLoginDate(for user: String) -> Date? {
         let output = runCMD(app: "/usr/bin/last", args: ["-1", user])
 
@@ -267,7 +267,7 @@ private extension NoUnusedUsers {
         return nil
     }
 
-    // Pull out "MMM d HH:mm" optionally followed by " yyyy"
+    /// Pull out "MMM d HH:mm" optionally followed by " yyyy"
     static func extractDateSubstring(from line: String) -> String? {
         // Regex for month names and time, with optional year
         // (Jan|Feb|...|Dec) <space> 1-2 digit day (allow extra space), space, HH:MM, optional space+YYYY

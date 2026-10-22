@@ -166,7 +166,7 @@ private struct StatusPill: View {
     let status: PermissionStatus
     let isVerifying: Bool
 
-    // Match the SF Symbol size for .small to keep height consistent
+    /// Match the SF Symbol size for .small to keep height consistent
     private let iconSquare: CGFloat = 12
 
     var body: some View {
@@ -195,7 +195,9 @@ private struct StatusPill: View {
     }
 
     private var label: String {
-        if isVerifying { return "Verifying" }
+        if isVerifying {
+            return "Verifying"
+        }
         switch status {
         case .authorized: return "Authorized"
         case .needsAuthorization: return "Authorize"
@@ -212,7 +214,9 @@ private struct StatusPill: View {
     }
 
     private var backgroundColor: Color {
-        if isVerifying { return .gray }
+        if isVerifying {
+            return .gray
+        }
         switch status {
         case .authorized: return .green
         case .needsAuthorization: return .orange
@@ -221,7 +225,9 @@ private struct StatusPill: View {
     }
 
     private var foregroundColor: Color {
-        if isVerifying { return .secondary }
+        if isVerifying {
+            return .secondary
+        }
         switch status {
         case .authorized: return .green
         case .needsAuthorization: return .orange

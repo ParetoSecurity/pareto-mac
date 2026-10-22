@@ -28,7 +28,7 @@ class TeamReportSentCheckTests: XCTestCase {
         super.tearDown()
     }
 
-    func testCheckNotRunnableWhenTeamIDEmpty() throws {
+    func testCheckNotRunnableWhenTeamIDEmpty() {
         Defaults[.teamID] = ""
         Defaults[.reportingRole] = .team
 
@@ -36,7 +36,7 @@ class TeamReportSentCheckTests: XCTestCase {
         XCTAssertFalse(check.isRunnable)
     }
 
-    func testCheckNotRunnableWhenReportingRoleOpenSource() throws {
+    func testCheckNotRunnableWhenReportingRoleOpenSource() {
         Defaults[.teamID] = "test-team-id"
         Defaults[.reportingRole] = .opensource
 
@@ -44,7 +44,7 @@ class TeamReportSentCheckTests: XCTestCase {
         XCTAssertFalse(check.isRunnable)
     }
 
-    func testCheckRunnableWhenTeamLinked() throws {
+    func testCheckRunnableWhenTeamLinked() {
         Defaults[.teamID] = "test-team-id"
         Defaults[.reportingRole] = .team
 
@@ -56,7 +56,7 @@ class TeamReportSentCheckTests: XCTestCase {
         XCTAssertEqual(Defaults[.reportingRole], .team)
     }
 
-    func testCheckFailsWhenNeverSent() throws {
+    func testCheckFailsWhenNeverSent() {
         Defaults[.teamID] = "test-team-id"
         Defaults[.reportingRole] = .team
         Defaults[.lastTeamReportSuccess] = 0
@@ -65,7 +65,7 @@ class TeamReportSentCheckTests: XCTestCase {
         XCTAssertFalse(check.checkPasses())
     }
 
-    func testCheckPassesWhenRecentSuccess() throws {
+    func testCheckPassesWhenRecentSuccess() {
         Defaults[.teamID] = "test-team-id"
         Defaults[.reportingRole] = .team
         // Set last success to 1 hour ago
@@ -75,7 +75,7 @@ class TeamReportSentCheckTests: XCTestCase {
         XCTAssertTrue(check.checkPasses())
     }
 
-    func testCheckFailsWhenOldSuccess() throws {
+    func testCheckFailsWhenOldSuccess() {
         Defaults[.teamID] = "test-team-id"
         Defaults[.reportingRole] = .team
         // Set last success to 30 hours ago (beyond 25 hour threshold)
@@ -85,7 +85,7 @@ class TeamReportSentCheckTests: XCTestCase {
         XCTAssertFalse(check.checkPasses())
     }
 
-    func testCheckPassesAtThreshold() throws {
+    func testCheckPassesAtThreshold() {
         Defaults[.teamID] = "test-team-id"
         Defaults[.reportingRole] = .team
         // Set last success to exactly 24 hours ago (within 25 hour threshold)
@@ -95,14 +95,14 @@ class TeamReportSentCheckTests: XCTestCase {
         XCTAssertTrue(check.checkPasses())
     }
 
-    func testDetailsWhenNeverSent() throws {
+    func testDetailsWhenNeverSent() {
         Defaults[.lastTeamReportSuccess] = 0
 
         let check = TeamReportSentCheck.sharedInstance
         XCTAssertEqual(check.details, "No successful report has been sent. Unlink this device and use a new invite link to link it again.")
     }
 
-    func testDetailsShowsRelativeTime() throws {
+    func testDetailsShowsRelativeTime() {
         // Set last success to 1 hour ago
         Defaults[.lastTeamReportSuccess] = Date().currentTimeMs() - Date.HourInMs
 
@@ -111,7 +111,7 @@ class TeamReportSentCheckTests: XCTestCase {
         XCTAssertFalse(check.details.contains("new invite link"))
     }
 
-    func testDetailsWarnsWhenLastReportIsOld() throws {
+    func testDetailsWarnsWhenLastReportIsOld() {
         Defaults[.lastTeamReportSuccess] = Date().currentTimeMs() - (Date.HourInMs * 30)
 
         let check = TeamReportSentCheck.sharedInstance
@@ -119,7 +119,7 @@ class TeamReportSentCheckTests: XCTestCase {
         XCTAssertTrue(check.details.contains("Unlink this device and use a new invite link to link it again."))
     }
 
-    func testDoneTeamReportSuccessUpdatesTimestamp() throws {
+    func testDoneTeamReportSuccessUpdatesTimestamp() {
         XCTAssertEqual(Defaults[.lastTeamReportSuccess], 0)
 
         Defaults.doneTeamReportSuccess()
@@ -130,12 +130,12 @@ class TeamReportSentCheckTests: XCTestCase {
         XCTAssertLessThan(diff, 1000) // Within 1 second
     }
 
-    func testReportIfDisabledIsFalse() throws {
+    func testReportIfDisabledIsFalse() {
         let check = TeamReportSentCheck.sharedInstance
         XCTAssertFalse(check.reportIfDisabled)
     }
 
-    func testShowInMenuFalseWhenNotLinked() throws {
+    func testShowInMenuFalseWhenNotLinked() {
         Defaults[.teamID] = ""
         Defaults[.reportingRole] = .opensource
 
@@ -143,7 +143,7 @@ class TeamReportSentCheckTests: XCTestCase {
         XCTAssertFalse(check.showInMenu)
     }
 
-    func testShowInMenuFalseWhenTeamIDEmpty() throws {
+    func testShowInMenuFalseWhenTeamIDEmpty() {
         Defaults[.teamID] = ""
         Defaults[.reportingRole] = .team
 
@@ -151,7 +151,7 @@ class TeamReportSentCheckTests: XCTestCase {
         XCTAssertFalse(check.showInMenu)
     }
 
-    func testShowInMenuFalseWhenOpenSource() throws {
+    func testShowInMenuFalseWhenOpenSource() {
         Defaults[.teamID] = "test-team-id"
         Defaults[.reportingRole] = .opensource
 

@@ -6,7 +6,6 @@
 //
 import AppKit
 import Defaults
-
 import SwiftUI
 
 struct SettingsView: View {

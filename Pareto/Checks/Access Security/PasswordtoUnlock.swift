@@ -28,10 +28,10 @@ class RequirePasswordToUnlock: ParetoCheck {
 
     private let legacyScript = "tell application \"System Events\" to tell security preferences to get require password to unlock"
 
-    // Reads the `system.preferences` authorization right directly. This is the
-    // rule the "Require an administrator password to access systemwide settings"
-    // toggle writes to, and it works without Apple Events. The System Events
-    // `security preferences` suite fails with -10000 on macOS 27.
+    /// Reads the `system.preferences` authorization right directly. This is the
+    /// rule the "Require an administrator password to access systemwide settings"
+    /// toggle writes to, and it works without Apple Events. The System Events
+    /// `security preferences` suite fails with -10000 on macOS 27.
     private func requiresPasswordFromAuthorizationDB() -> Bool? {
         var rightDefinition: CFDictionary?
         let status = AuthorizationRightGet("system.preferences", &rightDefinition)

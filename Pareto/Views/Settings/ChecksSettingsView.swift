@@ -8,7 +8,7 @@
 import Defaults
 import SwiftUI
 
-// Wrapper to avoid state modification during view updates
+/// Wrapper to avoid state modification during view updates
 struct CheckWrapper: Identifiable {
     let id = UUID()
     let check: ParetoCheck
@@ -19,30 +19,28 @@ struct ChecksSettingsView: View {
     @Default(.teamID) var teamID
 
     var body: some View {
-        Group {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 20) {
-                    if !teamID.isEmpty {
-                        TeamEnforcementHeader()
-                    }
-
-                    // Security Check Sections
-                    ForEach(Claims.global.all, id: \.self) { claim in
-                        CheckSectionView(
-                            claimTitle: claim.title,
-                            installedChecks: claim.checksSorted.filter { $0.isInstalled },
-                            onSelect: { check in
-                                selectedCheckWrapper = CheckWrapper(check: check)
-                            }
-                        )
-                    }
-
-                    Link("Learn more about security checks →", destination: URL(string: "https://paretosecurity.com/mac/checks?utm_source=\(AppInfo.utmSource)")!)
-                        .font(.footnote)
-                        .foregroundColor(.accentColor)
-                        .padding(.horizontal)
-                        .padding(.bottom)
+        ScrollView {
+            VStack(alignment: .leading, spacing: 20) {
+                if !teamID.isEmpty {
+                    TeamEnforcementHeader()
                 }
+
+                // Security Check Sections
+                ForEach(Claims.global.all, id: \.self) { claim in
+                    CheckSectionView(
+                        claimTitle: claim.title,
+                        installedChecks: claim.checksSorted.filter { $0.isInstalled },
+                        onSelect: { check in
+                            selectedCheckWrapper = CheckWrapper(check: check)
+                        }
+                    )
+                }
+
+                Link("Learn more about security checks →", destination: URL(string: "https://paretosecurity.com/mac/checks?utm_source=\(AppInfo.utmSource)")!)
+                    .font(.footnote)
+                    .foregroundColor(.accentColor)
+                    .padding(.horizontal)
+                    .padding(.bottom)
             }
         }
         .padding(10)

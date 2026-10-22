@@ -27,11 +27,25 @@ private class TestAppCheck: AppCheck {
         self.onlineVersion = onlineVersion
     }
 
-    override var appName: String { "TestApp" }
-    override var appMarketingName: String { "Test App" }
-    override var appBundle: String { "com.example.testapp" }
-    override var applicationSearchDirectories: [String] { directories }
-    override var latestVersion: Version { onlineVersion }
+    override var appName: String {
+        "TestApp"
+    }
+
+    override var appMarketingName: String {
+        "Test App"
+    }
+
+    override var appBundle: String {
+        "com.example.testapp"
+    }
+
+    override var applicationSearchDirectories: [String] {
+        directories
+    }
+
+    override var latestVersion: Version {
+        onlineVersion
+    }
 }
 
 class ApplicationUpdatesTest: XCTestCase {
@@ -264,7 +278,7 @@ class ApplicationUpdatesTest: XCTestCase {
         }
     }
 
-    func testAppVersionFetchers() throws {
+    func testAppVersionFetchers() {
         var redirects = [String]()
         var names = [String]()
         for app in Claims.updateChecks.sorted(by: { $0.appMarketingName.lowercased() < $1.appMarketingName.lowercased() }) {
