@@ -295,8 +295,11 @@ struct CheckDetailView: View {
                                     .font(.caption)
                                     .foregroundColor(.secondary)
 
-                                // Safely attempt to parse markdown; fall back to plain text if it fails
-                                let attributed = (try? AttributedString(markdown: statusDetails)) ?? AttributedString(statusDetails)
+                                // Parse inline markdown only, so the one-item-per-line details keep their line breaks
+                                let attributed = (try? AttributedString(
+                                    markdown: statusDetails,
+                                    options: .init(interpretedSyntax: .inlineOnlyPreservingWhitespace)
+                                )) ?? AttributedString(statusDetails)
                                 Text(attributed)
                                     .font(.system(.body, design: .monospaced))
                                     .textSelection(.enabled)
