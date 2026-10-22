@@ -18,6 +18,18 @@ test:
 build:
 	NSUnbufferedIO=YES xcodebuild -project "Pareto Security.xcodeproj" -clonedSourcePackagesDirPath SourcePackages -scheme "Pareto Security" -configuration Debug -destination platform=macOS build 2>&1 | mint run xcbeautify
 
+# Ad-hoc signed Debug build for environments without signing certificates
+# (forks, CI without secrets). Runs locally after stripping the quarantine
+# attribute, but is not for distribution: the privileged helper will not
+# install and Gatekeeper will refuse it without Developer ID + notarization.
+build-adhoc:
+	# COMPILER_INDEX_STORE_ENABLE=NO: index-store writes fail fatally on
+	# network volumes (rename unsupported) and runners do not need them.
+	NSUnbufferedIO=YES xcodebuild -project "Pareto Security.xcodeproj" -clonedSourcePackagesDirPath SourcePackages -scheme "Pareto Security" -configuration Debug -destination platform=macOS -derivedDataPath build COMPILER_INDEX_STORE_ENABLE=NO CODE_SIGN_IDENTITY=- CODE_SIGN_STYLE=Manual build 2>&1 | mint run xcbeautify
+	mkdir -p Export
+	rm -rf "Export/Pareto Security.app"
+	ditto "build/Build/Products/Debug/Pareto Security.app" "Export/Pareto Security.app"
+
 archive-debug:
 	NSUnbufferedIO=YES xcodebuild -project "Pareto Security.xcodeproj" -clonedSourcePackagesDirPath SourcePackages -scheme "Pareto Security" -destination platform=macOS archive -archivePath app.xcarchive -configuration Debug -allowProvisioningUpdates
 	NSUnbufferedIO=YES xcodebuild -exportArchive -archivePath app.xcarchive -exportPath Export -exportOptionsPlist exportOptionsDev.plist
