@@ -133,6 +133,21 @@ class CompromisedCACheckTests: XCTestCase {
         XCTAssertFalse(check.checkPasses())
     }
 
+    func testSymlinkedBundleIsScannedOnce() throws {
+        let dir = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        defer { try? FileManager.default.removeItem(at: dir) }
+        try FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
+        let bundle = dir.appendingPathComponent("cert.pem")
+        let link = dir.appendingPathComponent("openssl-cert.pem")
+        try testCertificatePEM.write(to: bundle, atomically: true, encoding: .utf8)
+        try FileManager.default.createSymbolicLink(at: link, withDestinationURL: bundle)
+
+        let check = CompromisedCACheck(bundlePaths: [bundle.path, link.path], blocklist: testBlocklist)
+        XCTAssertEqual(check.resolvedBundlePaths(), [bundle.path])
+        XCTAssertFalse(check.checkPasses())
+        XCTAssertEqual(check.details, "- Pareto Test Root CA is present in \(bundle.path)")
+    }
+
     func testScannedBundlesSortsPathsForStableDetails() {
         let check = CompromisedCACheck(
             bundlePaths: ["/b/cert.pem", "/a/cert.pem"],

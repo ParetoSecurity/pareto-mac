@@ -101,10 +101,20 @@ class CompromisedCACheck: ParetoCheck {
 
     func resolvedBundlePaths() -> [String] {
         if let bundlePaths {
-            return bundlePaths
+            return Self.uniqueBundlePaths(bundlePaths)
         }
         let fileManager = FileManager.default
-        return Self.systemBundlePaths.filter { fileManager.fileExists(atPath: $0) } + certifiBundlePaths()
+        let paths = Self.systemBundlePaths.filter { fileManager.fileExists(atPath: $0) } + certifiBundlePaths()
+        return Self.uniqueBundlePaths(paths)
+    }
+
+    /// Homebrew's openssl@3/cert.pem is a symlink to ca-certificates/cert.pem;
+    /// keep the first path for each underlying file so it is reported once.
+    static func uniqueBundlePaths(_ paths: [String]) -> [String] {
+        var seen = Set<String>()
+        return paths.filter { path in
+            seen.insert(URL(fileURLWithPath: path).resolvingSymlinksInPath().path).inserted
+        }
     }
 
     func scannedBundles() -> [(path: String, contents: String)] {
