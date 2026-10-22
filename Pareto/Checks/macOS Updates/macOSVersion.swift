@@ -20,6 +20,7 @@ class MacOSVersionCheck: ParetoCheck {
     var commandRunner: AsyncCommandRunner = { app, args, timeout in
         try await runCMDAsync(app: app, args: args, timeout: timeout)
     }
+
     var supportPageVersionProvider: (@Sendable (String) async -> Version?)?
     override var UUID: String {
         "284162c2-f911-4b5e-8c81-30b2cf1ba73f"
@@ -197,7 +198,9 @@ class MacOSVersionCheck: ParetoCheck {
 
     private func refreshLatestVersionIfNeeded(doc: String) {
         let shouldStart = latestVersionInFlight.withLock { inFlight in
-            if inFlight { return false }
+            if inFlight {
+                return false
+            }
             inFlight = true
             return true
         }

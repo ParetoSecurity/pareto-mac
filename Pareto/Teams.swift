@@ -49,8 +49,13 @@ struct TokenError: Swift.Error {
 }
 
 private extension Digest {
-    var bytes: [UInt8] { Array(makeIterator()) }
-    var data: Data { Data(bytes) }
+    var bytes: [UInt8] {
+        Array(makeIterator())
+    }
+
+    var data: Data {
+        Data(bytes)
+    }
 
     var hexStr: String {
         bytes.map { String(format: "%02X", $0) }.joined()
@@ -64,9 +69,9 @@ struct ReportingDevice: Encodable {
     let modelName: String?
     let modelSerial: String?
 
-    // Fields are omitted when the hardware lookup failed, so Cloud never stores
-    // a placeholder as if it were real inventory data.
-    // https://github.com/teamniteo/pareto/issues/866
+    /// Fields are omitted when the hardware lookup failed, so Cloud never stores
+    /// a placeholder as if it were real inventory data.
+    /// https://github.com/teamniteo/pareto/issues/866
     static func current() -> ReportingDevice {
         let reason = "Disabled"
 
@@ -286,7 +291,7 @@ enum Team {
             headers: headers
         ) { $0.timeoutInterval = 15 }.cURLDescription { cmd in
             os_log("Update cURL command: %{public}@", log: Log.api, cmd)
-        }.validate { _, response, data in
+        }.validate { _, response, _ in
             if (200 ... 299).contains(response.statusCode) {
                 return .success(())
             }

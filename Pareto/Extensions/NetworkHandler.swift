@@ -37,15 +37,15 @@ class NetworkHandler {
 
     init() {
         monitor.pathUpdateHandler = { [unowned self] path in
-            /// Initialise observers
+            // Initialise observers
             for (id, observations) in self.observers {
-                /// If any observer is nil, remove it from the list of observers
+                // If any observer is nil, remove it from the list of observers
                 guard let observer = observations.observer else {
                     self.observers.removeValue(forKey: id)
                     continue
                 }
 
-                /// Async execution of statusDidChange
+                // Async execution of statusDidChange
                 DispatchQueue.main.async {
                     observer.statusDidChange(status: path.status)
                 }

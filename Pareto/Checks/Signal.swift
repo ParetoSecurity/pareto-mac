@@ -17,9 +17,17 @@ import Version
 class AppSignalCheck: AppCheck {
     static let sharedInstance = AppSignalCheck()
 
-    override var appName: String { "Signal" }
-    override var appMarketingName: String { "Signal" }
-    override var appBundle: String { "org.whispersystems.signal-desktop" }
+    override var appName: String {
+        "Signal"
+    }
+
+    override var appMarketingName: String {
+        "Signal"
+    }
+
+    override var appBundle: String {
+        "org.whispersystems.signal-desktop"
+    }
 
     override var UUID: String {
         "b621849f-c1ed-5483-ba71-a90968b1fa7b"

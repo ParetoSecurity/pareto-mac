@@ -25,7 +25,7 @@ class ScreensaverCheck: ParetoCheck {
         return true
     }
 
-    // Reads the per-user, current-host screensaver delay (seconds) natively
+    /// Reads the per-user, current-host screensaver delay (seconds) natively
     func checkScreensaver() -> Bool {
         let domain = "com.apple.screensaver" as CFString
         let key = "idleTime" as CFString

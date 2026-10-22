@@ -76,7 +76,9 @@ class FirewallStealthCheck: ParetoCheck {
 
     private func refreshHelperResultIfNeeded() {
         let shouldStart = helperCheckInFlight.withLock { inFlight in
-            if inFlight { return false }
+            if inFlight {
+                return false
+            }
             inFlight = true
             return true
         }

@@ -12,9 +12,17 @@ import Regex
 class AppAnyDeskCheck: AppCheck {
     static let sharedInstance = AppAnyDeskCheck()
 
-    override var appName: String { "AnyDesk" }
-    override var appMarketingName: String { "AnyDesk" }
-    override var appBundle: String { "com.philandro.anydesk" }
+    override var appName: String {
+        "AnyDesk"
+    }
+
+    override var appMarketingName: String {
+        "AnyDesk"
+    }
+
+    override var appBundle: String {
+        "com.philandro.anydesk"
+    }
 
     override var UUID: String {
         "07316cac-018e-595f-bd89-eb894cca7446"

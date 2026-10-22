@@ -43,12 +43,29 @@ private struct AppStoreResult: Codable {
 
 class AppCheck: ParetoCheck, AppCheckProtocol {
     private let latestVersionRequestInFlight = OSAllocatedUnfairLock(initialState: false)
-    var appName: String { "" }
-    var appMarketingName: String { "" }
-    var appBundle: String { "" }
-    var sparkleURL: String { "" }
-    var sparkleChannel: String? { nil }
-    var excludedSparkleChannel: String? { nil }
+    var appName: String {
+        ""
+    }
+
+    var appMarketingName: String {
+        ""
+    }
+
+    var appBundle: String {
+        ""
+    }
+
+    var sparkleURL: String {
+        ""
+    }
+
+    var sparkleChannel: String? {
+        nil
+    }
+
+    var excludedSparkleChannel: String? {
+        nil
+    }
 
     override var TitleON: String {
         "\(appMarketingName) is up-to-date"
@@ -121,7 +138,9 @@ class AppCheck: ParetoCheck, AppCheckProtocol {
 
     private func refreshLatestVersionIfNeeded() {
         let shouldStart = latestVersionRequestInFlight.withLock { inFlight in
-            if inFlight { return false }
+            if inFlight {
+                return false
+            }
             inFlight = true
             return true
         }

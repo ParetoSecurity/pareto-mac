@@ -18,7 +18,9 @@ final class IgnoredSSHKeysViewModel: ObservableObject {
     @Published var showRerunNotice = false
 
     func loadAvailableKeys() async {
-        if isLoading { return }
+        if isLoading {
+            return
+        }
         isLoading = true
 
         // Do file system work off the main actor

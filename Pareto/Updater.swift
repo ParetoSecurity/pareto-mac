@@ -157,7 +157,7 @@ public class AppUpdater {
                 try FileManager.default.copyItem(at: localUrl, to: downloadPath)
 
                 os_log("Doing update from %{public}@", log: Log.app, localUrl.path)
-                try self.update(withApp: downloadPath, withAsset: asset)
+                try update(withApp: downloadPath, withAsset: asset)
                 return true
             } catch {
                 os_log("Error updating with asset %{public}@ : %{public}@", log: Log.app, asset.browser_download_url.absoluteString, error.localizedDescription)
@@ -248,8 +248,7 @@ public class AppUpdater {
         }
         do {
             let releases = try await UpdateService.shared.getUpdatesAsync()
-            let release = try releases.findViableUpdate(prerelease: Defaults.betaChannelComputed, currentVersion: Bundle.main.version)
-            return release
+            return try releases.findViableUpdate(prerelease: Defaults.betaChannelComputed, currentVersion: Bundle.main.version)
         } catch {
             if let apiError = error as? APIError {
                 switch apiError {

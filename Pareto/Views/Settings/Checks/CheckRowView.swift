@@ -1,6 +1,6 @@
 import SwiftUI
 
-// Inline team badge component
+/// Inline team badge component
 private struct TeamRequiredBadge: View {
     var compact: Bool = false
 
@@ -153,16 +153,36 @@ struct CheckRowView: View {
         case is NoUnusedUsers:
             return "person.2.slash"
         default:
-            if titleLower.contains("firewall") { return "flame" }
-            if titleLower.contains("password") { return "key" }
-            if titleLower.contains("update") { return "arrow.triangle.2.circlepath" }
-            if titleLower.contains("encryption") || titleLower.contains("filevault") { return "lock.shield" }
-            if titleLower.contains("screen") { return "rectangle.inset.filled" }
-            if titleLower.contains("ssh") { return "terminal" }
-            if titleLower.contains("sharing") { return "person.2" }
-            if titleLower.contains("gatekeeper") { return "checkmark.shield" }
-            if titleLower.contains("autologin") { return "person.badge.clock" }
-            if titleLower.contains("time machine") { return "clock.arrow.circlepath" }
+            if titleLower.contains("firewall") {
+                return "flame"
+            }
+            if titleLower.contains("password") {
+                return "key"
+            }
+            if titleLower.contains("update") {
+                return "arrow.triangle.2.circlepath"
+            }
+            if titleLower.contains("encryption") || titleLower.contains("filevault") {
+                return "lock.shield"
+            }
+            if titleLower.contains("screen") {
+                return "rectangle.inset.filled"
+            }
+            if titleLower.contains("ssh") {
+                return "terminal"
+            }
+            if titleLower.contains("sharing") {
+                return "person.2"
+            }
+            if titleLower.contains("gatekeeper") {
+                return "checkmark.shield"
+            }
+            if titleLower.contains("autologin") {
+                return "person.badge.clock"
+            }
+            if titleLower.contains("time machine") {
+                return "clock.arrow.circlepath"
+            }
             return "shield"
         }
     }
