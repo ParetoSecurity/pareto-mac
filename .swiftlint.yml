@@ -9,9 +9,20 @@ disabled_rules: # rule identifiers turned on by default to exclude from running
   - type_body_length
   - switch_case_alignment
   - cyclomatic_complexity
+  - file_length
+  - large_tuple
+  # Prefers failable String(bytes:encoding:), which changes behaviour
+  - optional_data_string_conversion
+  # Conflict with SwiftFormat
+  - trailing_comma
+  - opening_brace
 
 excluded:
   - SourcePackages
+  - build
   - Export
+  - SetAppExport
+  - DerivedData
+  - libSetapp
   - app.xcarchive
   - test.xcresult

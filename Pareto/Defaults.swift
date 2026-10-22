@@ -61,11 +61,11 @@ extension Defaults.Keys {
 
 public extension Defaults {
     static func firstLaunch() -> Bool {
-        return Defaults[.lastCheck] == 0
+        Defaults[.lastCheck] == 0
     }
 
     static var betaChannelComputed: Bool {
-        return Defaults[.showBeta]
+        Defaults[.showBeta]
     }
 
     static func customChecksPath() -> URL {
@@ -82,7 +82,7 @@ public extension Defaults {
     }
 
     static func shouldDoUpdateCheck() -> Bool {
-        return Defaults[.lastUpdateCheck] + Date.HourInMs < Date().currentTimeMs()
+        Defaults[.lastUpdateCheck] + Date.HourInMs < Date().currentTimeMs()
     }
 
     static func doneUpdateCheck() {
@@ -111,16 +111,16 @@ public extension Defaults {
     }
 
     static func shouldAskForHWAllow() -> Bool {
-        return Defaults[.lastHWAsk] + Date.HourInMs * 24 * 7 * 30 * 6 < Date().currentTimeMs()
+        Defaults[.lastHWAsk] + Date.HourInMs * 24 * 7 * 30 * 6 < Date().currentTimeMs()
     }
 
     static func shouldShowDeviceRemovedAlert() -> Bool {
         // Show once per week
-        return Defaults[.lastDeviceRemovedAlert] + Date.HourInMs * 24 * 7 < Date().currentTimeMs()
+        Defaults[.lastDeviceRemovedAlert] + Date.HourInMs * 24 * 7 < Date().currentTimeMs()
     }
 
     static func shouldDoTeamUpdate() -> Bool {
-        return Defaults[.lastTeamUpdate] + (AppInfo.Flags.slowerTeamUpdate ? Date.HourInMs * 8 : Date.HourInMs) < Date().currentTimeMs()
+        Defaults[.lastTeamUpdate] + (AppInfo.Flags.slowerTeamUpdate ? Date.HourInMs * 8 : Date.HourInMs) < Date().currentTimeMs()
     }
 
     static func doneTeamUpdate() {

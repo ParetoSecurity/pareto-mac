@@ -173,7 +173,7 @@ func runOSAAsync(appleScript: String, timeout: TimeInterval = 10.0) async -> Str
             }
             let result = script.executeAndReturnError(&error)
             timeoutWork.cancel()
-            if let error = error {
+            if let error {
                 os_log("NSAppleScript error: %{public}s", error.debugDescription)
                 resumeGate.run { continuation.resume(returning: nil) }
                 return
@@ -209,7 +209,7 @@ func runOSA(appleScript: String, timeout: TimeInterval = 10.0) -> String? {
             return
         }
         let result = script.executeAndReturnError(&error)
-        if let error = error {
+        if let error {
             os_log("NSAppleScript error: %{public}s", error.debugDescription)
             semaphore.signal()
             return

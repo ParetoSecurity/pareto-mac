@@ -7,6 +7,6 @@
 
 extension String {
     func trim() -> String {
-        return replacingOccurrences(of: "\n", with: "").replacingOccurrences(of: "\t", with: "")
+        replacingOccurrences(of: "\n", with: "").replacingOccurrences(of: "\t", with: "")
     }
 }

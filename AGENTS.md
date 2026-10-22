@@ -8,10 +8,10 @@
 - `.github/workflows/`: CI for lint, test, and release.
 
 ## Build, Test, and Development Commands
-- Install tooling once: `brew install mint && mint bootstrap` (installs SwiftFormat, xcbeautify).
+- Install tooling once: `brew install mint && mint bootstrap` (installs SwiftFormat, SwiftLint, xcbeautify).
 - Build: `make build` (Debug build via xcodebuild + xcbeautify).
 - Test: `make test` (runs XCTest, produces `junit.xml`).
-- Format: `make fmt` (SwiftFormat).
+- Format: `make fmt` (SwiftFormat + SwiftLint autocorrect). Lint: `make lint` (runs in CI).
 - Archive (local): `make archive-debug`; DMG (release tooling): `make dmg`.
 
 ## Coding Style & Naming Conventions

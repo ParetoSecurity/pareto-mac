@@ -18,7 +18,7 @@ struct DeviceSettings: Codable {
     let forceSerialPush: Bool
 
     var enforcedList: [String] {
-        requiredChecks.map { $0.id }
+        requiredChecks.map(\.id)
     }
 }
 
@@ -49,8 +49,13 @@ struct TokenError: Swift.Error {
 }
 
 private extension Digest {
-    var bytes: [UInt8] { Array(makeIterator()) }
-    var data: Data { Data(bytes) }
+    var bytes: [UInt8] {
+        Array(makeIterator())
+    }
+
+    var data: Data {
+        Data(bytes)
+    }
 
     var hexStr: String {
         bytes.map { String(format: "%02X", $0) }.joined()
@@ -64,9 +69,9 @@ struct ReportingDevice: Encodable {
     let modelName: String?
     let modelSerial: String?
 
-    // Fields are omitted when the hardware lookup failed, so Cloud never stores
-    // a placeholder as if it were real inventory data.
-    // https://github.com/teamniteo/pareto/issues/866
+    /// Fields are omitted when the hardware lookup failed, so Cloud never stores
+    /// a placeholder as if it were real inventory data.
+    /// https://github.com/teamniteo/pareto/issues/866
     static func current() -> ReportingDevice {
         let reason = "Disabled"
 
@@ -146,7 +151,7 @@ struct Report: Encodable {
             disabledCount: disabled,
             device: ReportingDevice.current(),
             version: AppInfo.appVersion,
-            significantChange: SHA256.hash(data: "\(disabledSeed).\(failedSeed)".data(using: .utf8)!).hexStr,
+            significantChange: SHA256.hash(data: Data("\(disabledSeed).\(failedSeed)".utf8)).hexStr,
             state: checkStates,
             sbom: sendSerial ? PublicApp.all : []
         )
@@ -157,7 +162,7 @@ enum Team {
     private static let queue = DispatchQueue(label: "co.pareto.api", qos: .userInteractive, attributes: .concurrent)
 
     static func isDeviceLinkInvalidStatusCode(_ statusCode: Int?) -> Bool {
-        return statusCode == 401 || statusCode == 404
+        statusCode == 401 || statusCode == 404
     }
 
     static func showDeviceLinkInvalidAlert() {
@@ -286,7 +291,7 @@ enum Team {
             headers: headers
         ) { $0.timeoutInterval = 15 }.cURLDescription { cmd in
             os_log("Update cURL command: %{public}@", log: Log.api, cmd)
-        }.validate { _, response, data in
+        }.validate { _, response, _ in
             if (200 ... 299).contains(response.statusCode) {
                 return .success(())
             }

@@ -44,6 +44,6 @@ class BootCheck: ParetoCheck {
 
     override func checkPasses() -> Bool {
         // only returns something if AMFI is disabled
-        return GetNVRAM("boot-args") == ""
+        GetNVRAM("boot-args") == ""
     }
 }

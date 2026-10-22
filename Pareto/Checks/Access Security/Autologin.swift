@@ -20,7 +20,7 @@ class AutologinCheck: ParetoCheck {
     }
 
     override var showSettingsWarnEvents: Bool {
-        return true
+        true
     }
 
     override func checkPasses() -> Bool {

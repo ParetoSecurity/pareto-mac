@@ -165,7 +165,7 @@ struct NoUnusedUsersDetailView: View {
                             }
                         }
 
-                        if !check.cachedDetails.isEmpty && check.cachedDetails != "None" {
+                        if !check.cachedDetails.isEmpty, check.cachedDetails != "None" {
                             VStack(alignment: .leading, spacing: 4) {
                                 Text("Details:")
                                     .font(.caption)

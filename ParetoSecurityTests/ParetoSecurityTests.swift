@@ -10,7 +10,7 @@ import Defaults
 import XCTest
 
 class ParetoSecurityTests: XCTestCase {
-    func testThatUUIDsAreUnique() throws {
+    func testThatUUIDsAreUnique() {
         var uuids: [String] = []
         for claim in Claims.global.all {
             for check in claim.checksSorted {
@@ -22,7 +22,7 @@ class ParetoSecurityTests: XCTestCase {
         }
     }
 
-    func testAppInfo() throws {
+    func testAppInfo() {
         XCTAssertTrue(AppInfo.bugReportURL().absoluteString.contains("paretosecurity.com"))
     }
 
@@ -36,7 +36,7 @@ class ParetoSecurityTests: XCTestCase {
         XCTAssertTrue(check.checkPasses())
     }
 
-    func testNoUnusedUsersSkipsAccountsMissingFromLocalNode() throws {
+    func testNoUnusedUsersSkipsAccountsMissingFromLocalNode() {
         let users = NoUnusedUsers.provisionedUsers(
             ["local", "cachedDomainUser"],
             provisioned: ["local", "mobileAccount"]
@@ -45,7 +45,7 @@ class ParetoSecurityTests: XCTestCase {
         XCTAssertEqual(users, ["local"])
     }
 
-    func testNoUnusedUsersKeepsAllAccountsWhenLocalNodeLookupFails() throws {
+    func testNoUnusedUsersKeepsAllAccountsWhenLocalNodeLookupFails() {
         let users = NoUnusedUsers.provisionedUsers(["local", "other"], provisioned: [])
 
         XCTAssertEqual(users, ["local", "other"])
@@ -509,7 +509,7 @@ class ParetoSecurityTests: XCTestCase {
     }
 
     @MainActor
-    func testSnooze() throws {
+    func testSnooze() {
         let handlers = AppHandlers()
 
         // Reset snooze before testing
@@ -529,9 +529,9 @@ class ParetoSecurityTests: XCTestCase {
         var expectedMin = beforeTime + oneHourMs - tolerance
         var expectedMax = beforeTime + oneHourMs + tolerance
         XCTAssertGreaterThanOrEqual(Defaults[.snoozeTime], expectedMin,
-            "snoozeOneHour should set time to approximately 1 hour in the future")
+                                    "snoozeOneHour should set time to approximately 1 hour in the future")
         XCTAssertLessThanOrEqual(Defaults[.snoozeTime], expectedMax,
-            "snoozeOneHour should set time to approximately 1 hour in the future")
+                                 "snoozeOneHour should set time to approximately 1 hour in the future")
 
         // Test snoozeOneDay
         beforeTime = Date().currentTimeMs()
@@ -539,9 +539,9 @@ class ParetoSecurityTests: XCTestCase {
         expectedMin = beforeTime + oneDayMs - tolerance
         expectedMax = beforeTime + oneDayMs + tolerance
         XCTAssertGreaterThanOrEqual(Defaults[.snoozeTime], expectedMin,
-            "snoozeOneDay should set time to approximately 24 hours in the future")
+                                    "snoozeOneDay should set time to approximately 24 hours in the future")
         XCTAssertLessThanOrEqual(Defaults[.snoozeTime], expectedMax,
-            "snoozeOneDay should set time to approximately 24 hours in the future")
+                                 "snoozeOneDay should set time to approximately 24 hours in the future")
 
         // Test snoozeOneWeek
         beforeTime = Date().currentTimeMs()
@@ -549,9 +549,9 @@ class ParetoSecurityTests: XCTestCase {
         expectedMin = beforeTime + oneWeekMs - tolerance
         expectedMax = beforeTime + oneWeekMs + tolerance
         XCTAssertGreaterThanOrEqual(Defaults[.snoozeTime], expectedMin,
-            "snoozeOneWeek should set time to approximately 7 days in the future")
+                                    "snoozeOneWeek should set time to approximately 7 days in the future")
         XCTAssertLessThanOrEqual(Defaults[.snoozeTime], expectedMax,
-            "snoozeOneWeek should set time to approximately 7 days in the future")
+                                 "snoozeOneWeek should set time to approximately 7 days in the future")
 
         // Test unsnooze
         handlers.unsnooze()

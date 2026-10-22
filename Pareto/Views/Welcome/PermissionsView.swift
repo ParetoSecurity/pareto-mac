@@ -17,17 +17,16 @@ class PermissionsChecker: ObservableObject {
     @Published var ran = false
 
     private func osaIsAuthorized() -> Bool {
-        let script: String
-        if #available(macOS 27, *) {
+        let script = if #available(macOS 27, *) {
             // Check Automation access without depending on security preferences.
-            script = "tell application \"System Events\" to get name"
+            "tell application \"System Events\" to get name"
         } else {
-            script = "tell application \"System Events\" to tell security preferences to get automatic login"
+            "tell application \"System Events\" to tell security preferences to get automatic login"
         }
 
         var error: NSDictionary?
         if let scriptObject = NSAppleScript(source: script) {
-            if let _ = scriptObject.executeAndReturnError(&error).stringValue {
+            if scriptObject.executeAndReturnError(&error).stringValue != nil {
                 return true
             } else if error != nil {
                 return false
@@ -91,8 +90,7 @@ struct PermissionsView: View {
         VStack {
             VStack {
                 Image("Logo")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
+                    .resizable().scaledToFit()
                     .frame(maxHeight: 60, alignment: .center)
                     .accessibility(hidden: true)
 

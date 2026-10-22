@@ -1,5 +1,5 @@
 //
-//  TeamReportSentCheck.swift
+//  TeamReportSent.swift
 //  Pareto Security
 //
 //  Created by Claude on 14/01/2026.
@@ -24,9 +24,9 @@ class TeamReportSentCheck: ParetoCheck {
         "Pareto Cloud is not receiving reports"
     }
 
-    // Only show in menu when device is linked to team
+    /// Only show in menu when device is linked to team
     override var showInMenu: Bool {
-        return !Defaults[.teamID].isEmpty &&
+        !Defaults[.teamID].isEmpty &&
             Defaults[.reportingRole] == .team &&
             AppInfo.Flags.teamAPI
     }
@@ -41,9 +41,9 @@ class TeamReportSentCheck: ParetoCheck {
             AppInfo.Flags.teamAPI
     }
 
-    // Don't report if disabled (only relevant when team is enabled)
+    /// Don't report if disabled (only relevant when team is enabled)
     override var reportIfDisabled: Bool {
-        return false
+        false
     }
 
     override func checkPasses() -> Bool {

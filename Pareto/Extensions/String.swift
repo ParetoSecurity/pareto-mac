@@ -9,7 +9,7 @@ import Foundation
 
 extension String {
     var isUUID: Bool {
-        return UUID(uuidString: self) != nil
+        UUID(uuidString: self) != nil
     }
 
     /// Escapes the string for safe shell usage.

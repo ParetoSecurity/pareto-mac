@@ -53,7 +53,10 @@ struct SPHardware: Codable {
 enum AppInfo {
     static let appVersion: String = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as! String
     static let buildVersion: String = Bundle.main.infoDictionary?["CFBundleVersion"] as! String
-    static var machineName: String { Host.current().localizedName ?? ProcessInfo.processInfo.hostName }
+    static var machineName: String {
+        Host.current().localizedName ?? ProcessInfo.processInfo.hostName
+    }
+
     static let macOSVersion = ProcessInfo.processInfo.operatingSystemVersion
     static let macOSVersionString = "\(macOSVersion.majorVersion).\(macOSVersion.minorVersion).\(macOSVersion.patchVersion)"
     static var isRunningTests: Bool {
@@ -72,6 +75,7 @@ enum AppInfo {
         warmHWInfo()
         return nil
     }
+
     static let TeamSettings = TeamSettingsUpdater()
     static var utmSource: String {
         var source = "app"
@@ -116,16 +120,18 @@ enum AppInfo {
         return "\(name) (\(model))"
     }
 
-static var hwSerial: String? {
-    HWInfo?.serialNumber ?? ioPlatformString(kIOPlatformSerialNumberKey as String)
-}
+    static var hwSerial: String? {
+        HWInfo?.serialNumber ?? ioPlatformString(kIOPlatformSerialNumberKey as String)
+    }
 
-    // A failed lookup is never cached, so the next report retries instead of
-    // reporting placeholders for the rest of the process lifetime.
-    // https://github.com/teamniteo/pareto/issues/866
+    /// A failed lookup is never cached, so the next report retries instead of
+    /// reporting placeholders for the rest of the process lifetime.
+    /// https://github.com/teamniteo/pareto/issues/866
     static func warmHWInfo() {
         let shouldStart = hwInfoLoading.withLock { loading in
-            if loading { return false }
+            if loading {
+                return false
+            }
             loading = true
             return true
         }
@@ -142,7 +148,7 @@ static var hwSerial: String? {
         }
     }
 
-    // Awaits the lookup instead of returning nil while it is still in flight.
+    /// Awaits the lookup instead of returning nil while it is still in flight.
     static func hwInfoAsync() async -> SPHardware? {
         if let cached = hwInfoLock.withLock({ $0 }) {
             return cached

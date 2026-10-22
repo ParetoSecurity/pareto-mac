@@ -20,7 +20,7 @@ struct TeamSettingsView: View {
     @State private var debugLinkURL: String = ""
     @State private var inventory: InventoryPreview?
 
-    // SwiftUI-native alert handling
+    /// SwiftUI-native alert handling
     @State private var alertData: InlineAlert?
 
     @Environment(\.openURL) private var openURL

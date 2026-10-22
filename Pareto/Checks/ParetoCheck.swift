@@ -26,10 +26,12 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
     private(set) var TitleON = "TitleON"
     private(set) var TitleOFF = "TitleOFF"
 
-    // Provide a concrete Identifiable id
-    var id: String { UUID }
+    /// Provide a concrete Identifiable id
+    var id: String {
+        UUID
+    }
 
-    // Indicate check has errored
+    /// Indicate check has errored
     var hasError = false
 
     var showInMenu: Bool {
@@ -56,10 +58,10 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
         "ParetoCheck-" + UUID + "-DisabledReason"
     }
 
-    // Computed property that generates prerequisite failure details on-demand
-    // Subclasses can override to provide specific implementation
+    /// Computed property that generates prerequisite failure details on-demand
+    /// Subclasses can override to provide specific implementation
     var prerequisiteFailureDetails: String? {
-        return nil
+        nil
     }
 
     func debugInfo() -> String {
@@ -87,41 +89,41 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
         set { UserDefaults.standard.set(newValue, forKey: EnabledKey) }
     }
 
-    // Underlying user preference regardless of team enforcement
+    /// Underlying user preference regardless of team enforcement
     var storedIsActive: Bool {
         UserDefaults.standard.bool(forKey: EnabledKey)
     }
 
     var isRunnable: Bool {
-        return isActive
+        isActive
     }
 
     var isInstalled: Bool {
-        return true
+        true
     }
 
     var showSettings: Bool {
-        return !teamEnforced
+        !teamEnforced
     }
 
     var reportIfDisabled: Bool {
-        return true
+        true
     }
 
     var showDetailsWhenPassing: Bool {
-        return false
+        false
     }
 
     var showSettingsWarnDiskAccess: Bool {
-        return false
+        false
     }
 
     var showSettingsWarnEvents: Bool {
-        return false
+        false
     }
 
     var requiresHelper: Bool {
-        return false
+        false
     }
 
     var checkTimestamp: Int {
@@ -207,7 +209,7 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
         set { UserDefaults.standard.set(newValue, forKey: DisabledReasonKey) }
     }
 
-    // Helper function for reading plist files returning a Swift dictionary
+    /// Helper function for reading plist files returning a Swift dictionary
     func readDefaultsFile(path: String) -> [String: Any]? {
         guard let data = try? Data(contentsOf: URL(fileURLWithPath: path)) else { return nil }
         let plist = try? PropertyListSerialization.propertyList(from: data, format: nil)
@@ -238,7 +240,7 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
             }
         } else {
             // Show question mark for checks requiring helper when active but helper authorization is not enabled
-            if requiresHelper && isActive {
+            if requiresHelper, isActive {
                 item.image = NSImage.SF(name: "questionmark.circle").tint(color: .systemOrange)
             } else {
                 item.image = NSImage.SF(name: "seal")
@@ -249,7 +251,7 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
     }
 
     var CIS: String {
-        return "0"
+        "0"
     }
 
     func configure() {
@@ -260,10 +262,12 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
         ])
     }
 
-    var details: String { "None" }
+    var details: String {
+        "None"
+    }
 
     var report: String {
-        return "\(UUID):\(checkPassed)"
+        "\(UUID):\(checkPassed)"
     }
 
     var help: String? {
@@ -271,7 +275,7 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
     }
 
     var reportJSON: String {
-        return """
+        """
         {
         "check": "\(Title)",
         "uuid": "\(UUID)",
@@ -308,7 +312,7 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
 
     var infoURL: URL {
         // For checks requiring helper that are not runnable, direct to helper authorization docs
-        if requiresHelper && !isRunnable && isActive {
+        if requiresHelper, !isRunnable, isActive {
             var components = URLComponents()
             components.scheme = "https"
             components.host = "paretosecurity.com"
@@ -349,15 +353,15 @@ extension ParetoCheck {
         return output.contains("does not exist") ? nil : output
     }
 
-    // Reads a preference key, returning nil when it is absent so callers can
-    // apply their "missing means the default" fallback.
-    //
-    // On macOS 27+ several com.apple.SoftwareUpdate keys are only delivered
-    // through an MDM profile, which path-based `defaults read` never sees, so
-    // there we resolve through CFPreferences (full search list, managed
-    // preferences included). On earlier versions we keep the direct plist read:
-    // CFPreferences consults the per-user domain first, where stale values can
-    // shadow the effective system setting in /Library/Preferences.
+    /// Reads a preference key, returning nil when it is absent so callers can
+    /// apply their "missing means the default" fallback.
+    ///
+    /// On macOS 27+ several com.apple.SoftwareUpdate keys are only delivered
+    /// through an MDM profile, which path-based `defaults read` never sees, so
+    /// there we resolve through CFPreferences (full search list, managed
+    /// preferences included). On earlier versions we keep the direct plist read:
+    /// CFPreferences consults the per-user domain first, where stale values can
+    /// shadow the effective system setting in /Library/Preferences.
     func readDefaultsNative(path: String, key: String) -> String? {
         if ProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 27 {
             return readDefaultsViaCFPreferences(path: path, key: key)
@@ -368,7 +372,8 @@ extension ParetoCheck {
         // domain 'Y'." and a missing domain as "Domain 'X' not found.", and
         // runCMD() folds stderr into stdout.
         if output.contains("Could not find key") || output.contains("not found")
-            || output.contains("does not exist") {
+            || output.contains("does not exist")
+        {
             return nil
         }
         return output.trim()
@@ -416,6 +421,6 @@ extension ParetoCheck {
     }
 
     func isNotListening(withCommand cmd: String, withPort port: Int) -> Bool {
-        return !lsof(withCommand: cmd, withPort: port)
+        !lsof(withCommand: cmd, withPort: port)
     }
 }

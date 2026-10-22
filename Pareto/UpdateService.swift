@@ -20,15 +20,15 @@ enum APIError: Swift.Error {
     var localizedDescription: String {
         switch self {
         case .invalidURL:
-            return "Invalid URL"
+            "Invalid URL"
         case .noData:
-            return "No data received"
+            "No data received"
         case .invalidResponse:
-            return "Invalid response"
+            "Invalid response"
         case let .networkError(message):
-            return "Network error: \(message)"
+            "Network error: \(message)"
         case let .decodingError(message):
-            return "Decoding error: \(message)"
+            "Decoding error: \(message)"
         }
     }
 }

@@ -9,7 +9,7 @@
 import XCTest
 
 class CheckIntegrationTest: XCTestCase {
-    func testInit() throws {
+    func testInit() {
         let check = IntegrationCheck()
         check.configure()
         XCTAssertEqual(check.UUID, "aaaaaaaa-bbbb-cccc-dddd-abcdef123456")
@@ -20,12 +20,12 @@ class CheckIntegrationTest: XCTestCase {
         XCTAssertEqual(check.TimestampKey, "ParetoCheck-aaaaaaaa-bbbb-cccc-dddd-abcdef123456-TS")
     }
 
-    func testCheckPasses() throws {
+    func testCheckPasses() {
         let check = IntegrationCheck()
         XCTAssertTrue(check.checkPasses())
     }
 
-    func testClaimLogic() throws {
+    func testClaimLogic() {
         let claim = Claim(withTitle: "Test", withChecks: [IntegrationCheck(), IntegrationCheckFails()])
         claim.configure()
         claim.run()

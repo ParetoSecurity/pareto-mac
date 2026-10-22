@@ -40,15 +40,15 @@ class PackageManagerSupplyChainCheck: ParetoCheck {
     }
 
     override var isRunnable: Bool {
-        return isActive && hasPackageManagerConfigOrBinary()
+        isActive && hasPackageManagerConfigOrBinary()
     }
 
     override var showInMenu: Bool {
-        return isActive && hasPackageManagerConfigOrBinary()
+        isActive && hasPackageManagerConfigOrBinary()
     }
 
     override var showDetailsWhenPassing: Bool {
-        return true
+        true
     }
 
     override var details: String {
@@ -60,7 +60,7 @@ class PackageManagerSupplyChainCheck: ParetoCheck {
     }
 
     override func checkPasses() -> Bool {
-        return validationFailures().isEmpty
+        validationFailures().isEmpty
     }
 
     func validationFailures() -> [String] {
@@ -200,8 +200,7 @@ class PackageManagerSupplyChainCheck: ParetoCheck {
 
     static func executablePath(fromWhichOutput output: String) -> String? {
         let path = output.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard (path as NSString).isAbsolutePath else { return nil }
-        guard FileManager.default.isExecutableFile(atPath: path) else { return nil }
+        guard (path as NSString).isAbsolutePath, FileManager.default.isExecutableFile(atPath: path) else { return nil }
         return path
     }
 
@@ -241,10 +240,7 @@ class PackageManagerSupplyChainCheck: ParetoCheck {
     }
 
     private func xdgConfigHome() -> String? {
-        guard let xdgConfigHome = environment["XDG_CONFIG_HOME"], !xdgConfigHome.isEmpty else {
-            return nil
-        }
-        guard (xdgConfigHome as NSString).isAbsolutePath else {
+        guard let xdgConfigHome = environment["XDG_CONFIG_HOME"], !xdgConfigHome.isEmpty, (xdgConfigHome as NSString).isAbsolutePath else {
             return nil
         }
         return (xdgConfigHome as NSString).standardizingPath
@@ -266,7 +262,7 @@ class PackageManagerSupplyChainCheck: ParetoCheck {
     }
 
     private static func npmConfigUsesMinReleaseAge(_ contents: String) -> Bool {
-        return keyValuePairs(contents)["min-release-age"] != nil
+        keyValuePairs(contents)["min-release-age"] != nil
     }
 
     static func validateNpmrc(_ contents: String) -> [String] {
@@ -294,7 +290,7 @@ class PackageManagerSupplyChainCheck: ParetoCheck {
         }
         let current = versionComponents(version)
         let minimum = versionComponents(minimumVersion)
-        for index in 0..<max(current.count, minimum.count) {
+        for index in 0 ..< max(current.count, minimum.count) {
             let currentPart = index < current.count ? current[index] : 0
             let minimumPart = index < minimum.count ? minimum[index] : 0
             if currentPart != minimumPart {
@@ -305,7 +301,7 @@ class PackageManagerSupplyChainCheck: ParetoCheck {
     }
 
     private static func versionComponents(_ version: String) -> [Int] {
-        return version.trimmingCharacters(in: CharacterSet(charactersIn: "vV")).split(separator: ".").map { part in
+        version.trimmingCharacters(in: CharacterSet(charactersIn: "vV")).split(separator: ".").map { part in
             Int(part.prefix { $0.isNumber }) ?? 0
         }
     }
@@ -324,7 +320,7 @@ class PackageManagerSupplyChainCheck: ParetoCheck {
         let values = tomlKeyValuePairs(contents)
         let minimumReleaseAge = integerValue(values["install.minimumReleaseAge"]) ?? 0
 
-        if minimumReleaseAge < 604800 {
+        if minimumReleaseAge < 604_800 {
             return ["~/.bunfig.toml minimumReleaseAge is below 604800 seconds"]
         }
         return []
@@ -334,7 +330,7 @@ class PackageManagerSupplyChainCheck: ParetoCheck {
         let values = tomlKeyValuePairs(contents)
         let seconds = durationSeconds(values["exclude-newer"]) ?? durationSeconds(values["pip.exclude-newer"]) ?? 0
 
-        if seconds < 604800 {
+        if seconds < 604_800 {
             return ["~/.config/uv/uv.toml exclude-newer is below 7 days"]
         }
         return []
@@ -414,7 +410,7 @@ class PackageManagerSupplyChainCheck: ParetoCheck {
         case "d", "day", "days":
             return amount * 86400
         case "w", "week", "weeks":
-            return amount * 604800
+            return amount * 604_800
         default:
             return nil
         }

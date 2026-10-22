@@ -1,0 +1,3 @@
+--swiftversion 6.0
+--languagemode 5
+--exclude SourcePackages,build,Export,SetAppExport,DerivedData,libSetapp,*.xcarchive,*.xcresult

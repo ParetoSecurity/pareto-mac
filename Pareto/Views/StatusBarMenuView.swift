@@ -145,7 +145,7 @@ struct StatusBarMenuView: View {
         }
     }
 
-    // Extracted status line
+    /// Extracted status line
     @ViewBuilder
     private func statusline() -> some View {
         if !statusBarModel.isRunning {
@@ -169,7 +169,7 @@ struct StatusBarMenuView: View {
         }
     }
 
-    // Ensure the status bar icon reflects the latest state when the menu opens
+    /// Ensure the status bar icon reflects the latest state when the menu opens
     private func updateStateForCurrentStatus() {
         // Don’t override the “running” state
         guard !statusBarModel.isRunning else {
@@ -209,7 +209,7 @@ struct ClaimMenuView: View {
 
     var body: some View {
         Menu {
-            ForEach(claim.checksSorted.filter { $0.showInMenu }, id: \.id) { check in
+            ForEach(claim.checksSorted.filter(\.showInMenu), id: \.id) { check in
                 CheckMenuItemView(check: check)
             }
         } label: {
@@ -221,7 +221,7 @@ struct ClaimMenuView: View {
 }
 
 struct CheckMenuItemView: View {
-    // Observe individual check for live updates
+    /// Observe individual check for live updates
     @ObservedObject var check: ParetoCheck
 
     @Default(.alternativeColor) private var alternativeColor
@@ -248,10 +248,10 @@ struct CheckMenuItemView: View {
     }
 
     var body: some View {
-        Button(action: {
+        Button {
             // Open info URL
             NSWorkspace.shared.open(check.infoURL)
-        }) {
+        } label: {
             title
         }
         .buttonStyle(PlainButtonStyle())

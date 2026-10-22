@@ -62,7 +62,7 @@ class TimeMachineCheck: ParetoCheck {
 
     override var showSettingsWarnDiskAccess: Bool {
         // If we cannot read the TM plist, likely missing Full Disk Access
-        return readDefaultsFile(path: "/Library/Preferences/com.apple.TimeMachine.plist") == nil
+        readDefaultsFile(path: "/Library/Preferences/com.apple.TimeMachine.plist") == nil
     }
 
     var isConfigured: Bool {

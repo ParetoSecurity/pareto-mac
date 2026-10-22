@@ -27,6 +27,6 @@ extension URL {
     }
 
     var fileSize: Int {
-        return attributes?[.size] as? Int ?? Int(0)
+        attributes?[.size] as? Int ?? Int(0)
     }
 }

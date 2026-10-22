@@ -36,7 +36,7 @@ struct KeyInfo: Equatable, ExpressibleByStringLiteral {
     // MARK: - Equatable Methods
 
     static func == (lhs: KeyInfo, rhs: KeyInfo) -> Bool {
-        return lhs.signature == rhs.signature
+        lhs.signature == rhs.signature
     }
 
     // MARK: - ExpressibleByStringLiteral Methods

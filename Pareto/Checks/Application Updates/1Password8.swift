@@ -11,9 +11,17 @@ import Regex
 class App1Password8Check: AppCheck {
     static let sharedInstance = App1Password8Check()
 
-    override var appName: String { "1Password" }
-    override var appMarketingName: String { "1Password" }
-    override var appBundle: String { "com.1password.1password" }
+    override var appName: String {
+        "1Password"
+    }
+
+    override var appMarketingName: String {
+        "1Password"
+    }
+
+    override var appBundle: String {
+        "com.1password.1password"
+    }
 
     override var UUID: String {
         "0a076668-f8c6-4d53-b275-6806afcddca8"

@@ -226,7 +226,7 @@ class AppDelegate: AppHandlers, NSApplicationDelegate {
     }
 }
 
-// A tiny helper view that triggers an action on appear, then closes its window.
+/// A tiny helper view that triggers an action on appear, then closes its window.
 private struct HiddenLauncherView: View {
     @Environment(\.openWindow) private var openWindow
     @Environment(\.dismiss) private var dismiss
@@ -254,7 +254,7 @@ private struct HiddenLauncherView: View {
     }
 }
 
-// Helper to configure NSWindow for a SwiftUI window.
+/// Helper to configure NSWindow for a SwiftUI window.
 private struct WindowConfigurator: NSViewRepresentable {
     let configure: (NSWindow) -> Void
 
@@ -271,7 +271,7 @@ private struct WindowConfigurator: NSViewRepresentable {
     func updateNSView(_: NSView, context _: Context) {}
 }
 
-// Wrapper to make MenuBarExtra reactive to AppHandlers changes
+/// Wrapper to make MenuBarExtra reactive to AppHandlers changes
 private struct ObservableMenuBarExtra: Scene {
     @ObservedObject var appHandlers: AppHandlers
     @State private var isInserted: Bool = true
