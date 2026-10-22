@@ -111,6 +111,28 @@ class CompromisedCACheckTests: XCTestCase {
         XCTAssertEqual(enabled.TitleOFF, "CA bundles contain compromised certificates")
     }
 
+    func testResolvedBundlePathsOnlyListsExistingFiles() {
+        let home = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        defer { try? FileManager.default.removeItem(at: home) }
+        let check = CompromisedCACheck(homeDirectory: home)
+        for path in check.resolvedBundlePaths() {
+            XCTAssertTrue(FileManager.default.fileExists(atPath: path), path)
+        }
+    }
+
+    func testFindsUserSiteCertifiBundle() throws {
+        let home = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        defer { try? FileManager.default.removeItem(at: home) }
+        let certifi = home.appendingPathComponent("Library/Python/3.12/lib/python/site-packages/certifi")
+        try FileManager.default.createDirectory(at: certifi, withIntermediateDirectories: true)
+        let bundle = certifi.appendingPathComponent("cacert.pem")
+        try testCertificatePEM.write(to: bundle, atomically: true, encoding: .utf8)
+
+        let check = CompromisedCACheck(homeDirectory: home, blocklist: testBlocklist)
+        XCTAssertTrue(check.resolvedBundlePaths().contains(bundle.path))
+        XCTAssertFalse(check.checkPasses())
+    }
+
     func testScannedBundlesSortsPathsForStableDetails() {
         let check = CompromisedCACheck(
             bundlePaths: ["/b/cert.pem", "/a/cert.pem"],

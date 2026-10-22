@@ -103,7 +103,8 @@ class CompromisedCACheck: ParetoCheck {
         if let bundlePaths {
             return bundlePaths
         }
-        return Self.systemBundlePaths + certifiBundlePaths()
+        let fileManager = FileManager.default
+        return Self.systemBundlePaths.filter { fileManager.fileExists(atPath: $0) } + certifiBundlePaths()
     }
 
     func scannedBundles() -> [(path: String, contents: String)] {
@@ -176,6 +177,7 @@ class CompromisedCACheck: ParetoCheck {
             homeDirectory.appendingPathComponent("anaconda3/lib").path,
             homeDirectory.appendingPathComponent("miniconda3/lib").path,
             homeDirectory.appendingPathComponent(".local/pipx/venvs").path,
+            "/Library/Frameworks/Python.framework/Versions",
             "/opt/anaconda3/lib",
             "/opt/miniconda3/lib",
         ]
@@ -190,6 +192,11 @@ class CompromisedCACheck: ParetoCheck {
                 let pythonPath = (libPath as NSString).appendingPathComponent($0)
                 return (pythonPath as NSString).appendingPathComponent("site-packages/certifi/cacert.pem")
             }
+        }
+        // python.org installer: Versions/3.12/lib/python3.12/site-packages
+        if root.hasSuffix("Python.framework/Versions") {
+            guard entry.hasPrefix("3.") else { return [] }
+            return [(entryPath as NSString).appendingPathComponent("lib/python\(entry)/site-packages/certifi/cacert.pem")]
         }
         if entry.hasPrefix("python3") {
             return [(entryPath as NSString).appendingPathComponent("site-packages/certifi/cacert.pem")]
