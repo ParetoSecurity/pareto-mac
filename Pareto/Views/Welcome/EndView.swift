@@ -17,8 +17,7 @@ struct EndView: View {
             if checksPassed {
                 Image(systemName: "checkmark.shield.fill")
                     .resizable()
-                    .foregroundColor(.green)
-                    .aspectRatio(contentMode: .fit)
+                    .foregroundColor(.green).scaledToFit()
                     .frame(maxHeight: 90, alignment: .center)
                     .accessibility(hidden: true)
                 Spacer(minLength: 20)
@@ -26,8 +25,7 @@ struct EndView: View {
             } else {
                 Image(systemName: "xmark.shield.fill")
                     .resizable()
-                    .foregroundColor(.orange)
-                    .aspectRatio(contentMode: .fit)
+                    .foregroundColor(.orange).scaledToFit()
                     .frame(maxHeight: 90, alignment: .center)
                     .accessibility(hidden: true)
                 Spacer(minLength: 20)

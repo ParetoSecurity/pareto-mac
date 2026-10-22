@@ -125,11 +125,11 @@ class TeamsTest: XCTestCase {
 
     func testUpdateStoredDeviceAuth() {
         let auth = testJWT(teamID: "2429c49e-37bb-41bb-9077-6bb6202e255b")
-        let data = """
+        let data = Data("""
         {
             "auth": "\(auth)"
         }
-        """.data(using: .utf8)
+        """.utf8)
 
         XCTAssertTrue(Team.updateStoredDeviceAuth(from: data))
         XCTAssertEqual(Defaults[.teamAuth], auth)
@@ -140,7 +140,7 @@ class TeamsTest: XCTestCase {
         Defaults[.teamAuth] = "old-token"
         Defaults[.teamID] = "old-team"
 
-        XCTAssertFalse(Team.updateStoredDeviceAuth(from: "{}".data(using: .utf8)))
+        XCTAssertFalse(Team.updateStoredDeviceAuth(from: Data("{}".utf8)))
         XCTAssertEqual(Defaults[.teamAuth], "old-token")
         XCTAssertEqual(Defaults[.teamID], "old-team")
     }
@@ -194,7 +194,7 @@ class TeamsTest: XCTestCase {
     }
 
     private func base64UrlEncoded(_ value: String) -> String {
-        return value
+        value
             .data(using: .utf8)!
             .base64EncodedString()
             .replacingOccurrences(of: "+", with: "-")

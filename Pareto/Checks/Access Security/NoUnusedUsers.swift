@@ -61,9 +61,9 @@ class NoUnusedUsers: ParetoCheck {
         return statuses.map { userStatus in
             switch userStatus.status {
             case let .pass(reason):
-                return "* [PASS] \(userStatus.user): \(reason)"
+                "* [PASS] \(userStatus.user): \(reason)"
             case let .fail(reason):
-                return "* [FAIL] \(userStatus.user): \(reason)"
+                "* [FAIL] \(userStatus.user): \(reason)"
             }
         }.joined(separator: "\n")
     }
@@ -72,7 +72,7 @@ class NoUnusedUsers: ParetoCheck {
 
     override func checkPasses() -> Bool {
         // Check passes if there are no failing accounts
-        return unusedAccounts.isEmpty
+        unusedAccounts.isEmpty
     }
 
     /// Keeps only accounts that exist in the local directory node. On directory-bound
@@ -127,7 +127,7 @@ private extension NoUnusedUsers {
 
     /// Additional name-level filter to exclude system-style accounts by naming convention
     static func isValidUserName(_ u: String) -> Bool {
-        return !u.hasPrefix("_") && u.count > 1 && u != "root" && u != "nobody" && u != "daemon"
+        !u.hasPrefix("_") && u.count > 1 && u != "root" && u != "nobody" && u != "daemon"
     }
 
     /// Returns local user short names for “real” users (UID >= 501)
@@ -255,10 +255,8 @@ private extension NoUnusedUsers {
             var comps = cal.dateComponents([.month, .day, .hour, .minute], from: partial)
             comps.year = cal.component(.year, from: Date())
             if let assumed = cal.date(from: comps) {
-                if assumed > Date() {
-                    if let adjusted = cal.date(byAdding: .year, value: -1, to: assumed) {
-                        return adjusted
-                    }
+                if assumed > Date(), let adjusted = cal.date(byAdding: .year, value: -1, to: assumed) {
+                    return adjusted
                 }
                 return assumed
             }
@@ -276,10 +274,8 @@ private extension NoUnusedUsers {
             return nil
         }
         let range = NSRange(line.startIndex ..< line.endIndex, in: line)
-        if let match = regex.firstMatch(in: line, options: [], range: range) {
-            if let r = Range(match.range, in: line) {
-                return String(line[r])
-            }
+        if let match = regex.firstMatch(in: line, options: [], range: range), let r = Range(match.range, in: line) {
+            return String(line[r])
         }
         return nil
     }

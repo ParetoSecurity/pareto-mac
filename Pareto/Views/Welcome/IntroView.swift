@@ -17,8 +17,7 @@ struct IntroView: View {
         VStack {
             VStack {
                 Image("Icon")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
+                    .resizable().scaledToFit()
                     .frame(minHeight: 180, alignment: .center)
                     .accessibility(hidden: true)
 

@@ -21,12 +21,12 @@ struct PermissionsSettingsView: View {
         var url: URL? {
             switch self {
             case .automation:
-                return URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Automation")
+                URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Automation")
             case .fullDisk:
                 if #available(macOS 13.0, *) {
-                    return URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_FullDisk")
+                    URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_FullDisk")
                 } else {
-                    return URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_AllFiles")
+                    URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_AllFiles")
                 }
             }
         }
@@ -34,9 +34,9 @@ struct PermissionsSettingsView: View {
         var learnMoreURL: URL {
             switch self {
             case .automation:
-                return URL(string: "https://paretosecurity.com/docs/mac/permissions")!
+                URL(string: "https://paretosecurity.com/docs/mac/permissions")!
             case .fullDisk:
-                return URL(string: "https://paretosecurity.com/docs/mac/permissions")!
+                URL(string: "https://paretosecurity.com/docs/mac/permissions")!
             }
         }
     }
@@ -207,9 +207,9 @@ private struct StatusPill: View {
 
     private var iconName: String {
         switch status {
-        case .authorized: return "checkmark.seal.fill"
-        case .needsAuthorization: return "exclamationmark.triangle.fill"
-        case .verifying: return "hourglass"
+        case .authorized: "checkmark.seal.fill"
+        case .needsAuthorization: "exclamationmark.triangle.fill"
+        case .verifying: "hourglass"
         }
     }
 
@@ -247,15 +247,15 @@ private struct PermissionCard: View {
 
     // Primary action
     var primaryActionTitle: String
-    var primaryActionRole: ButtonRole? = nil
+    var primaryActionRole: ButtonRole?
     var primaryActionEnabled: Bool = true
     var primaryAction: () -> Void
 
     // Optional secondary action (e.g., Remove)
-    var secondaryActionTitle: String? = nil
-    var secondaryActionRole: ButtonRole? = nil
+    var secondaryActionTitle: String?
+    var secondaryActionRole: ButtonRole?
     var secondaryActionEnabled: Bool = true
-    var secondaryAction: (() -> Void)? = nil
+    var secondaryAction: (() -> Void)?
 
     var body: some View {
         GroupBox {

@@ -8,10 +8,6 @@ import Version
 import XCTest
 
 class UpdateServiceTest: XCTestCase {
-    override func setUp() {
-        super.setUp()
-    }
-
     func testGetUpdatesAsync() async throws {
         let releases: [Release]
         do {

@@ -61,7 +61,7 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
     /// Computed property that generates prerequisite failure details on-demand
     /// Subclasses can override to provide specific implementation
     var prerequisiteFailureDetails: String? {
-        return nil
+        nil
     }
 
     func debugInfo() -> String {
@@ -95,35 +95,35 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
     }
 
     var isRunnable: Bool {
-        return isActive
+        isActive
     }
 
     var isInstalled: Bool {
-        return true
+        true
     }
 
     var showSettings: Bool {
-        return !teamEnforced
+        !teamEnforced
     }
 
     var reportIfDisabled: Bool {
-        return true
+        true
     }
 
     var showDetailsWhenPassing: Bool {
-        return false
+        false
     }
 
     var showSettingsWarnDiskAccess: Bool {
-        return false
+        false
     }
 
     var showSettingsWarnEvents: Bool {
-        return false
+        false
     }
 
     var requiresHelper: Bool {
-        return false
+        false
     }
 
     var checkTimestamp: Int {
@@ -240,7 +240,7 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
             }
         } else {
             // Show question mark for checks requiring helper when active but helper authorization is not enabled
-            if requiresHelper && isActive {
+            if requiresHelper, isActive {
                 item.image = NSImage.SF(name: "questionmark.circle").tint(color: .systemOrange)
             } else {
                 item.image = NSImage.SF(name: "seal")
@@ -251,7 +251,7 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
     }
 
     var CIS: String {
-        return "0"
+        "0"
     }
 
     func configure() {
@@ -267,7 +267,7 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
     }
 
     var report: String {
-        return "\(UUID):\(checkPassed)"
+        "\(UUID):\(checkPassed)"
     }
 
     var help: String? {
@@ -275,7 +275,7 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
     }
 
     var reportJSON: String {
-        return """
+        """
         {
         "check": "\(Title)",
         "uuid": "\(UUID)",
@@ -312,7 +312,7 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
 
     var infoURL: URL {
         // For checks requiring helper that are not runnable, direct to helper authorization docs
-        if requiresHelper && !isRunnable && isActive {
+        if requiresHelper, !isRunnable, isActive {
             var components = URLComponents()
             components.scheme = "https"
             components.host = "paretosecurity.com"
@@ -421,6 +421,6 @@ extension ParetoCheck {
     }
 
     func isNotListening(withCommand cmd: String, withPort port: Int) -> Bool {
-        return !lsof(withCommand: cmd, withPort: port)
+        !lsof(withCommand: cmd, withPort: port)
     }
 }

@@ -29,7 +29,7 @@ struct ChecksSettingsView: View {
                 ForEach(Claims.global.all, id: \.self) { claim in
                     CheckSectionView(
                         claimTitle: claim.title,
-                        installedChecks: claim.checksSorted.filter { $0.isInstalled },
+                        installedChecks: claim.checksSorted.filter(\.isInstalled),
                         onSelect: { check in
                             selectedCheckWrapper = CheckWrapper(check: check)
                         }

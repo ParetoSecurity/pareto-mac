@@ -18,7 +18,7 @@ struct DeviceSettings: Codable {
     let forceSerialPush: Bool
 
     var enforcedList: [String] {
-        requiredChecks.map { $0.id }
+        requiredChecks.map(\.id)
     }
 }
 
@@ -151,7 +151,7 @@ struct Report: Encodable {
             disabledCount: disabled,
             device: ReportingDevice.current(),
             version: AppInfo.appVersion,
-            significantChange: SHA256.hash(data: "\(disabledSeed).\(failedSeed)".data(using: .utf8)!).hexStr,
+            significantChange: SHA256.hash(data: Data("\(disabledSeed).\(failedSeed)".utf8)).hexStr,
             state: checkStates,
             sbom: sendSerial ? PublicApp.all : []
         )
@@ -162,7 +162,7 @@ enum Team {
     private static let queue = DispatchQueue(label: "co.pareto.api", qos: .userInteractive, attributes: .concurrent)
 
     static func isDeviceLinkInvalidStatusCode(_ statusCode: Int?) -> Bool {
-        return statusCode == 401 || statusCode == 404
+        statusCode == 401 || statusCode == 404
     }
 
     static func showDeviceLinkInvalidAlert() {

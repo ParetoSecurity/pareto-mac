@@ -40,15 +40,15 @@ class PackageManagerSupplyChainCheck: ParetoCheck {
     }
 
     override var isRunnable: Bool {
-        return isActive && hasPackageManagerConfigOrBinary()
+        isActive && hasPackageManagerConfigOrBinary()
     }
 
     override var showInMenu: Bool {
-        return isActive && hasPackageManagerConfigOrBinary()
+        isActive && hasPackageManagerConfigOrBinary()
     }
 
     override var showDetailsWhenPassing: Bool {
-        return true
+        true
     }
 
     override var details: String {
@@ -60,7 +60,7 @@ class PackageManagerSupplyChainCheck: ParetoCheck {
     }
 
     override func checkPasses() -> Bool {
-        return validationFailures().isEmpty
+        validationFailures().isEmpty
     }
 
     func validationFailures() -> [String] {
@@ -200,8 +200,7 @@ class PackageManagerSupplyChainCheck: ParetoCheck {
 
     static func executablePath(fromWhichOutput output: String) -> String? {
         let path = output.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard (path as NSString).isAbsolutePath else { return nil }
-        guard FileManager.default.isExecutableFile(atPath: path) else { return nil }
+        guard (path as NSString).isAbsolutePath, FileManager.default.isExecutableFile(atPath: path) else { return nil }
         return path
     }
 
@@ -241,10 +240,7 @@ class PackageManagerSupplyChainCheck: ParetoCheck {
     }
 
     private func xdgConfigHome() -> String? {
-        guard let xdgConfigHome = environment["XDG_CONFIG_HOME"], !xdgConfigHome.isEmpty else {
-            return nil
-        }
-        guard (xdgConfigHome as NSString).isAbsolutePath else {
+        guard let xdgConfigHome = environment["XDG_CONFIG_HOME"], !xdgConfigHome.isEmpty, (xdgConfigHome as NSString).isAbsolutePath else {
             return nil
         }
         return (xdgConfigHome as NSString).standardizingPath
@@ -266,7 +262,7 @@ class PackageManagerSupplyChainCheck: ParetoCheck {
     }
 
     private static func npmConfigUsesMinReleaseAge(_ contents: String) -> Bool {
-        return keyValuePairs(contents)["min-release-age"] != nil
+        keyValuePairs(contents)["min-release-age"] != nil
     }
 
     static func validateNpmrc(_ contents: String) -> [String] {
@@ -305,7 +301,7 @@ class PackageManagerSupplyChainCheck: ParetoCheck {
     }
 
     private static func versionComponents(_ version: String) -> [Int] {
-        return version.trimmingCharacters(in: CharacterSet(charactersIn: "vV")).split(separator: ".").map { part in
+        version.trimmingCharacters(in: CharacterSet(charactersIn: "vV")).split(separator: ".").map { part in
             Int(part.prefix { $0.isNumber }) ?? 0
         }
     }

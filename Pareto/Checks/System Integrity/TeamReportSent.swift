@@ -26,7 +26,7 @@ class TeamReportSentCheck: ParetoCheck {
 
     /// Only show in menu when device is linked to team
     override var showInMenu: Bool {
-        return !Defaults[.teamID].isEmpty &&
+        !Defaults[.teamID].isEmpty &&
             Defaults[.reportingRole] == .team &&
             AppInfo.Flags.teamAPI
     }
@@ -43,7 +43,7 @@ class TeamReportSentCheck: ParetoCheck {
 
     /// Don't report if disabled (only relevant when team is enabled)
     override var reportIfDisabled: Bool {
-        return false
+        false
     }
 
     override func checkPasses() -> Bool {

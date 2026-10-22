@@ -29,6 +29,6 @@ class AppiTermCheck: AppCheck {
     }
 
     override var supportsRecentlyUsed: Bool {
-        return false
+        false
     }
 }

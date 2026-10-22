@@ -22,7 +22,7 @@ class ScreensaverCheck: ParetoCheck {
     }
 
     override var showSettingsWarnEvents: Bool {
-        return true
+        true
     }
 
     /// Reads the per-user, current-host screensaver delay (seconds) natively
@@ -37,15 +37,13 @@ class ScreensaverCheck: ParetoCheck {
             kCFPreferencesCurrentHost
         )
 
-        let seconds: Int = {
-            if let num = value as? NSNumber {
-                return num.intValue
-            } else if let str = value as? String, let intVal = Int(str) {
-                return intVal
-            } else {
-                return 0
-            }
-        }()
+        let seconds: Int = if let num = value as? NSNumber {
+            num.intValue
+        } else if let str = value as? String, let intVal = Int(str) {
+            intVal
+        } else {
+            0
+        }
 
         return seconds > 0 && seconds <= 60 * 20
     }
@@ -64,20 +62,18 @@ class ScreensaverCheck: ParetoCheck {
             kCFPreferencesCurrentHost
         )
 
-        let seconds: Int = {
-            if let num = value as? NSNumber {
-                return num.intValue
-            } else if let str = value as? String, let intVal = Int(str) {
-                return intVal
-            } else {
-                return 0
-            }
-        }()
+        let seconds: Int = if let num = value as? NSNumber {
+            num.intValue
+        } else if let str = value as? String, let intVal = Int(str) {
+            intVal
+        } else {
+            0
+        }
 
         return seconds >= 0 && seconds <= 60 * 20
     }
 
     override func checkPasses() -> Bool {
-        return checkScreensaver() || checkLock()
+        checkScreensaver() || checkLock()
     }
 }

@@ -63,11 +63,11 @@ class TimeMachineHasBackupCheck: ParetoCheck {
     }
 
     override var showSettings: Bool {
-        return readDefaultsFile(path: "/Library/Preferences/com.apple.TimeMachine.plist") != nil
+        readDefaultsFile(path: "/Library/Preferences/com.apple.TimeMachine.plist") != nil
     }
 
     override var showSettingsWarnDiskAccess: Bool {
-        return true && readDefaultsFile(path: "/Library/Preferences/com.apple.TimeMachine.plist") == nil
+        true && readDefaultsFile(path: "/Library/Preferences/com.apple.TimeMachine.plist") == nil
     }
 
     override var details: String {
@@ -106,7 +106,7 @@ class TimeMachineHasBackupCheck: ParetoCheck {
             return "Last backup was within the past 7 days"
         } else {
             // Find the most recent backup
-            let mostRecent = tmConf.Destinations.map { $0.ReferenceLocalSnapshotDate }.max() ?? Date.distantPast
+            let mostRecent = tmConf.Destinations.map(\.ReferenceLocalSnapshotDate).max() ?? Date.distantPast
             let formatter = DateFormatter()
             formatter.dateStyle = .medium
             formatter.timeStyle = .short

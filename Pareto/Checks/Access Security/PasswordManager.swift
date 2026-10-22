@@ -216,10 +216,8 @@ class PasswordManager: ParetoCheck {
         let runningApps = NSWorkspace.shared.runningApplications
 
         for app in runningApps {
-            if let appName = app.localizedName {
-                if PasswordManagerData.runningAppNames.contains(appName) {
-                    found.append(appName)
-                }
+            if let appName = app.localizedName, PasswordManagerData.runningAppNames.contains(appName) {
+                found.append(appName)
             }
         }
 
@@ -263,14 +261,14 @@ class PasswordManager: ParetoCheck {
 
     /// Legacy methods for backward compatibility
     func isPasswordManagerRunning() -> Bool {
-        return !getRunningPasswordManagers().isEmpty
+        !getRunningPasswordManagers().isEmpty
     }
 
     private func checkInstalledApplications() -> Bool {
-        return !getInstalledPasswordManagers().isEmpty
+        !getInstalledPasswordManagers().isEmpty
     }
 
     private func checkForBrowserExtensions() -> Bool {
-        return !getBrowserExtensions().isEmpty
+        !getBrowserExtensions().isEmpty
     }
 }

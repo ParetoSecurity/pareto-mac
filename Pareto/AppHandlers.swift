@@ -13,7 +13,6 @@ import Foundation
 import LaunchAtLogin
 import Network
 import os
-import os.log
 import OSLog
 import ServiceManagement
 import SwiftUI
@@ -98,8 +97,8 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
 
             await MainActor.run {
                 // Only hide if still temporarily visible, checks pass, and settings not open
-                if self.temporarilyVisible && !self.isSettingsWindowOpen {
-                    let claimsPassed = Claims.global.all.allSatisfy { $0.checksPassed }
+                if self.temporarilyVisible, !self.isSettingsWindowOpen {
+                    let claimsPassed = Claims.global.all.allSatisfy(\.checksPassed)
                     if claimsPassed {
                         os_log("Auto-hide timer expired - hiding icon", log: Log.app)
                         self.temporarilyVisible = false
@@ -122,7 +121,7 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
                 os_log("updateHiddenState - temporarilyVisible=true, keeping icon visible", log: Log.app)
             } else {
                 // Hide the menu bar icon only when all checks are passing
-                let claimsPassed = Claims.global.all.allSatisfy { $0.checksPassed }
+                let claimsPassed = Claims.global.all.allSatisfy(\.checksPassed)
                 newValue = !claimsPassed
                 os_log("updateHiddenState - claimsPassed: %{public}@, calculated newValue: %{public}@",
                        log: Log.app, claimsPassed ? "true" : "false", newValue ? "true" : "false")
@@ -262,7 +261,7 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
             guard let self else { return }
 
             // Only update state if this is still the current work item
-            let (isCurrentWorkItem, currentID) = self.currentWorkItemID.withLock { value in
+            let (isCurrentWorkItem, currentID) = currentWorkItemID.withLock { value in
                 (workItemID == value, value)
             }
 
@@ -272,75 +271,73 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
             }
 
             os_log("Completing check run workItemID=%{public}d", log: Log.app, workItemID)
-            self.setRunning(false)
-            self.checksHaveRun = true
+            setRunning(false)
+            checksHaveRun = true
             NotificationCenter.default.post(name: .runChecksFinished, object: nil)
 
             // Determine overall state
-            let claimsPassed = Claims.global.all.allSatisfy { $0.checksPassed }
+            let claimsPassed = Claims.global.all.allSatisfy(\.checksPassed)
             Defaults[.checksPassed] = claimsPassed
 
             if Defaults[.snoozeTime] > 0 {
-                self.statusBarModel.state = .idle
+                statusBarModel.state = .idle
             } else {
-                self.statusBarModel.state = claimsPassed ? .allOk : .warning
+                statusBarModel.state = claimsPassed ? .allOk : .warning
             }
 
             // Team reporting if enabled
-            if Defaults[.reportingRole] == .team, AppInfo.Flags.teamAPI {
-                if Defaults.shouldDoTeamUpdate() || interactive {
-                    let report = Report.now()
-                    if !Defaults[.sendHWInfo], AppInfo.TeamSettings.forceSerialPush, Defaults.shouldAskForHWAllow() {
-                        DispatchQueue.main.async {
-                            let alert = NSAlert()
-                            alert.messageText = "Send device model and serial"
-                            alert.informativeText = "Your team policy enables collection of serial number and hardware model name from this device. Do you allow it?"
-                            alert.alertStyle = NSAlert.Style.warning
-                            alert.addButton(withTitle: "OK")
-                            alert.addButton(withTitle: "Don't Allow")
-                            self.presentAlertNonBlocking(alert) { response in
-                                if response == .alertFirstButtonReturn {
-                                    Defaults[.sendHWInfo] = true
-                                } else {
-                                    Defaults[.sendHWInfo] = false
-                                }
-                                Defaults[.lastHWAsk] = Date().currentTimeMs()
+            if Defaults[.reportingRole] == .team, AppInfo.Flags.teamAPI, Defaults.shouldDoTeamUpdate() || interactive {
+                let report = Report.now()
+                if !Defaults[.sendHWInfo], AppInfo.TeamSettings.forceSerialPush, Defaults.shouldAskForHWAllow() {
+                    DispatchQueue.main.async {
+                        let alert = NSAlert()
+                        alert.messageText = "Send device model and serial"
+                        alert.informativeText = "Your team policy enables collection of serial number and hardware model name from this device. Do you allow it?"
+                        alert.alertStyle = NSAlert.Style.warning
+                        alert.addButton(withTitle: "OK")
+                        alert.addButton(withTitle: "Don't Allow")
+                        self.presentAlertNonBlocking(alert) { response in
+                            if response == .alertFirstButtonReturn {
+                                Defaults[.sendHWInfo] = true
+                            } else {
+                                Defaults[.sendHWInfo] = false
                             }
+                            Defaults[.lastHWAsk] = Date().currentTimeMs()
                         }
                     }
-
-                    DispatchQueue.global(qos: .userInteractive).async {
-                        Team.update(withReport: report).response { response in
-                            switch response.result {
-                            case .success:
-                                os_log("Team status was updated", log: Log.app)
-                                Defaults.doneTeamReportSuccess()
-                                TeamReportSentCheck.sharedInstance.checkPassed = true
-                            case let .failure(err):
-                                os_log("Team status update failed: %{public}@", log: Log.app, err.localizedDescription)
-                                TeamReportSentCheck.sharedInstance.checkPassed = false
-
-                                if Team.isDeviceLinkInvalidStatusCode(response.response?.statusCode) {
-                                    Team.showDeviceLinkInvalidAlert()
-                                    os_log("Device disconnected from Cloud. Got team update response with invalid link error", log: Log.app)
-                                }
-                            }
-                        }
-                    }
-                    Defaults.doneTeamUpdate()
                 }
+
+                DispatchQueue.global(qos: .userInteractive).async {
+                    Team.update(withReport: report).response { response in
+                        switch response.result {
+                        case .success:
+                            os_log("Team status was updated", log: Log.app)
+                            Defaults.doneTeamReportSuccess()
+                            TeamReportSentCheck.sharedInstance.checkPassed = true
+                        case let .failure(err):
+                            os_log("Team status update failed: %{public}@", log: Log.app, err.localizedDescription)
+                            TeamReportSentCheck.sharedInstance.checkPassed = false
+
+                            if Team.isDeviceLinkInvalidStatusCode(response.response?.statusCode) {
+                                Team.showDeviceLinkInvalidAlert()
+                                os_log("Device disconnected from Cloud. Got team update response with invalid link error", log: Log.app)
+                            }
+                        }
+                    }
+                }
+                Defaults.doneTeamUpdate()
             }
 
             // Notify views observing Claims to refresh menu content and force a re-render
             Claims.global.objectWillChange.send()
-            self.statusBarModel.refreshNonce &+= 1
+            statusBarModel.refreshNonce &+= 1
 
             // Update menu bar visibility based on check results
-            if self.hideWhenNoFailures {
+            if hideWhenNoFailures {
                 os_log("hideWhenNoFailures enabled - claimsPassed: %{public}@", log: Log.app, claimsPassed ? "true" : "false")
                 if claimsPassed {
                     // Clear temporary visibility flag
-                    self.temporarilyVisible = false
+                    temporarilyVisible = false
 
                     // Schedule hiding after the green->gray transition (10 seconds)
                     os_log("Scheduling menu bar hide in 10 seconds", log: Log.app)
@@ -351,9 +348,9 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
                 } else {
                     // Show immediately when checks fail and cancel any auto-hide
                     os_log("Checks failed - calling updateHiddenState immediately", log: Log.app)
-                    self.temporarilyVisible = false
-                    self.cancelAutoHide()
-                    self.updateHiddenState()
+                    temporarilyVisible = false
+                    cancelAutoHide()
+                    updateHiddenState()
                 }
             } else {
                 os_log("hideWhenNoFailures disabled - skipping menu bar visibility update", log: Log.app)
@@ -388,7 +385,7 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
         // Apply last saved state (if any) to the status icon immediately
         // so the app reflects the previous run before the next scheduled run.
         if Defaults[.lastCheck] > 0 {
-            let claimsPassed = Claims.global.all.allSatisfy { $0.checksPassed }
+            let claimsPassed = Claims.global.all.allSatisfy(\.checksPassed)
             Defaults[.checksPassed] = claimsPassed
             if Defaults[.snoozeTime] > 0 {
                 statusBarModel.state = .idle
@@ -406,7 +403,7 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
             guard let self else { return }
             os_log("statusBarModel.state changed to: %{public}@", log: Log.app, state.rawValue)
             if state == .idle {
-                if self.checksHaveRun {
+                if checksHaveRun {
                     os_log("State is idle and checks have run - calling updateHiddenState from idleSink", log: Log.app)
                     updateHiddenState()
                 } else {
@@ -476,7 +473,7 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
             Task { @MainActor in
                 if self.statusBarModel.isRunning {
                     let startTime = self.checksStartTime.withLock { $0 }
-                    if let startTime = startTime {
+                    if let startTime {
                         let runningDuration = Date().timeIntervalSince(startTime)
                         os_log("System going to sleep while checks are running (running for %.0f seconds) - resetting state", log: Log.app, runningDuration)
                     } else {
@@ -522,7 +519,7 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
             Task { @MainActor in
                 if self.statusBarModel.isRunning {
                     let startTime = self.checksStartTime.withLock { $0 }
-                    if let startTime = startTime {
+                    if let startTime {
                         let runningDuration = Date().timeIntervalSince(startTime)
                         // If checks have been running for more than 5 minutes, they're stuck
                         if runningDuration > 300 { // 5 minutes = 300 seconds
@@ -649,25 +646,23 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
 
     func doUpdateCheck() {
         let currentVersion = Bundle.main.version
-        let updater = self.updater
+        let updater = updater
         Task.detached(priority: .userInitiated) { [updater] in
             guard let updater else { return }
-            if let release = try? await updater.getLatestRelease() {
-                if currentVersion < release.version {
-                    if !SystemUser.current.isAdmin {
-                        Defaults[.updateNag] = true
-                        return
-                    }
-                    #if !SETAPP_ENABLED
-                        if let zipURL = release.assets.filter({ $0.browser_download_url.path.hasSuffix(".zip") }).first {
-                            let done = await updater.downloadAndUpdate(withAsset: zipURL)
-                            // Failed to update
-                            if !done, !SystemUser.current.isAdmin {
-                                Defaults[.updateNag] = true
-                            }
-                        }
-                    #endif
+            if let release = try? await updater.getLatestRelease(), currentVersion < release.version {
+                if !SystemUser.current.isAdmin {
+                    Defaults[.updateNag] = true
+                    return
                 }
+                #if !SETAPP_ENABLED
+                    if let zipURL = release.assets.filter({ $0.browser_download_url.path.hasSuffix(".zip") }).first {
+                        let done = await updater.downloadAndUpdate(withAsset: zipURL)
+                        // Failed to update
+                        if !done, !SystemUser.current.isAdmin {
+                            Defaults[.updateNag] = true
+                        }
+                    }
+                #endif
             }
         }
     }
@@ -759,19 +754,17 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
             }
         }
 
-        if let data = try? AppInfo.logEntries().joined(separator: "\n") {
-            if !data.isEmpty {
-                NSPasteboard.general.clearContents()
-                NSPasteboard.general.setString(data, forType: .string)
-                let alert = NSAlert()
-                alert.messageText = "Logs have been copied to the clipboard."
-                alert.alertStyle = NSAlert.Style.informational
-                alert.addButton(withTitle: "OK")
-                DispatchQueue.main.async {
-                    self.presentAlertNonBlocking(alert)
-                }
-                return
+        if let data = try? AppInfo.logEntries().joined(separator: "\n"), !data.isEmpty {
+            NSPasteboard.general.clearContents()
+            NSPasteboard.general.setString(data, forType: .string)
+            let alert = NSAlert()
+            alert.messageText = "Logs have been copied to the clipboard."
+            alert.alertStyle = NSAlert.Style.informational
+            alert.addButton(withTitle: "OK")
+            DispatchQueue.main.async {
+                self.presentAlertNonBlocking(alert)
             }
+            return
         }
 
         let alert = NSAlert()

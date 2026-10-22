@@ -209,7 +209,7 @@ struct ClaimMenuView: View {
 
     var body: some View {
         Menu {
-            ForEach(claim.checksSorted.filter { $0.showInMenu }, id: \.id) { check in
+            ForEach(claim.checksSorted.filter(\.showInMenu), id: \.id) { check in
                 CheckMenuItemView(check: check)
             }
         } label: {
@@ -248,10 +248,10 @@ struct CheckMenuItemView: View {
     }
 
     var body: some View {
-        Button(action: {
+        Button {
             // Open info URL
             NSWorkspace.shared.open(check.infoURL)
-        }) {
+        } label: {
             title
         }
         .buttonStyle(PlainButtonStyle())

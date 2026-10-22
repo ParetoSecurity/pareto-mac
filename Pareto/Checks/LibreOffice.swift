@@ -118,10 +118,8 @@ class AppLibreOfficeCheck: AppCheck {
             return checkPassed
         }
 
-        for version in latestVersions {
-            if currentVersion >= version {
-                return true
-            }
+        for version in latestVersions where currentVersion >= version {
+            return true
         }
 
         return false

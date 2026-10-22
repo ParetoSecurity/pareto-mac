@@ -40,11 +40,11 @@ class TimeMachineIsEncryptedCheck: ParetoCheck {
     }
 
     override var showSettings: Bool {
-        return readDefaultsFile(path: "/Library/Preferences/com.apple.TimeMachine.plist") != nil
+        readDefaultsFile(path: "/Library/Preferences/com.apple.TimeMachine.plist") != nil
     }
 
     override var showSettingsWarnDiskAccess: Bool {
-        return true && readDefaultsFile(path: "/Library/Preferences/com.apple.TimeMachine.plist") == nil
+        true && readDefaultsFile(path: "/Library/Preferences/com.apple.TimeMachine.plist") == nil
     }
 
     override var details: String {

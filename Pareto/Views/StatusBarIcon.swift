@@ -26,7 +26,7 @@ enum StatusBarButtonHelper {
     }
 
     private static func findStatusBarButton(in view: NSView?) -> NSStatusBarButton? {
-        guard let view = view else { return nil }
+        guard let view else { return nil }
 
         if let button = view as? NSStatusBarButton {
             return button
@@ -65,8 +65,8 @@ class StatusBarModel: ObservableObject {
                     try? await Task.sleep(nanoseconds: 10 * 1_000_000_000)
 
                     // If still allOk after the delay, transition to idle
-                    if let self, !Task.isCancelled, self.state == .allOk {
-                        self.state = .idle
+                    if let self, !Task.isCancelled, state == .allOk {
+                        state = .idle
                     }
                 }
             }

@@ -86,9 +86,9 @@ class FirewallStealthCheck: ParetoCheck {
 
         Task.detached(priority: .utility) { [weak self] in
             guard let self else { return }
-            let enabled = await self.fetchStealthEnabledViaHelper()
-            self.helperResultLock.withLock { $0 = enabled }
-            self.helperCheckInFlight.withLock { $0 = false }
+            let enabled = await fetchStealthEnabledViaHelper()
+            helperResultLock.withLock { $0 = enabled }
+            helperCheckInFlight.withLock { $0 = false }
         }
     }
 

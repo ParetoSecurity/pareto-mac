@@ -46,7 +46,7 @@ class HelperToolUtilities {
 
     /// Static method to check if helper needs updating
     static func helperNeedsUpdate(currentVersion: String, expectedVersion: String) -> Bool {
-        return compareVersions(currentVersion, expectedVersion) == .orderedAscending
+        compareVersions(currentVersion, expectedVersion) == .orderedAscending
     }
 
     /// Manual version counter - increment this when helper needs updating
@@ -54,7 +54,7 @@ class HelperToolUtilities {
 
     /// Static method to get expected helper version (manual counter)
     static func getExpectedHelperVersion() -> String {
-        return expectedHelperVersion
+        expectedHelperVersion
     }
 }
 
@@ -65,7 +65,7 @@ class HelperToolManager: ObservableObject {
     @Published var isHelperToolInstalled: Bool = false
     @Published var message: String = "Checking..."
     var status: String {
-        return isHelperToolInstalled ? "Registered" : "Not Registered"
+        isHelperToolInstalled ? "Registered" : "Not Registered"
     }
 
     init() {

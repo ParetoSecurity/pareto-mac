@@ -20,10 +20,10 @@ class NoAdminUser: ParetoCheck {
     }
 
     var isAdmin: Bool {
-        return runCMD(app: "/usr/bin/id", args: ["-Gn"]).components(separatedBy: " ").contains("admin")
+        runCMD(app: "/usr/bin/id", args: ["-Gn"]).components(separatedBy: " ").contains("admin")
     }
 
     override func checkPasses() -> Bool {
-        return !isAdmin
+        !isAdmin
     }
 }

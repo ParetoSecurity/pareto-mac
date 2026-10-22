@@ -80,11 +80,11 @@ class AppCheck: ParetoCheck, AppCheckProtocol {
     }
 
     override var reportIfDisabled: Bool {
-        return false
+        false
     }
 
     var supportsRecentlyUsed: Bool {
-        return true
+        true
     }
 
     var fromAppStore: Bool {
@@ -201,7 +201,7 @@ class AppCheck: ParetoCheck, AppCheckProtocol {
 
     override var isRunnable: Bool {
         // show if application is present
-        return isActive && isInstalled && usedRecently
+        isActive && isInstalled && usedRecently
     }
 
     override var showSettings: Bool {

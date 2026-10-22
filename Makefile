@@ -57,7 +57,12 @@ pkg:
 	productsign --sign "Developer ID Installer: Niteo GmbH" ParetoSecurityPlain.pkg ParetoSecurity.pkg
 
 fmt:
-	mint run swiftformat --swiftversion 5 .
+	mint run swiftformat .
+	mint run swiftlint --fix --quiet
+
+lint:
+	mint run swiftformat --lint .
+	mint run swiftlint --strict --quiet
 
 notarize:
 	xcrun notarytool submit ParetoSecurity.dmg --team-id PM784W7B8X --progress --wait

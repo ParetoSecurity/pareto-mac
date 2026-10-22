@@ -32,6 +32,9 @@ jobs:
         with:
           xcode-version: ${{ env.XCODE_VERSION }}
 
+      - name: Check formatting and lint
+        run: make lint
+
       - name: Setup code signing
         id: signing
         uses: ./.github/actions/setup-signing

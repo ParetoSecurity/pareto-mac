@@ -62,7 +62,7 @@ class Claim: Hashable {
         if Defaults[.snoozeTime] > 0 {
             item.image = NSImage.SF(name: "shield.fill").tint(color: .systemGray)
         } else {
-            if checksPassed && checksNoError {
+            if checksPassed, checksNoError {
                 item.image = NSImage.SF(name: "checkmark.circle.fill").tint(color: Defaults.OKColor())
             } else {
                 item.image = NSImage.SF(name: "xmark.diamond.fill").tint(color: Defaults.FailColor())

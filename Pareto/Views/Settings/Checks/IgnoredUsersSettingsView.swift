@@ -126,7 +126,7 @@ struct IgnoredUsersSettingsView: View {
                     .disabled(model.selectedUser == nil)
                 }
 
-                if availableUsersNotIgnored.isEmpty && !model.isLoadingUsers {
+                if availableUsersNotIgnored.isEmpty, !model.isLoadingUsers {
                     Text("No additional users available to ignore")
                         .font(.footnote)
                         .foregroundColor(.secondary)

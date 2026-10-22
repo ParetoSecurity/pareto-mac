@@ -120,12 +120,12 @@ class MacOSVersionCheck: ParetoCheck {
                 return
             }
 
-            if let supportPageVersion = await self.getLatestVersionFromSupportPage(doc: doc) {
+            if let supportPageVersion = await getLatestVersionFromSupportPage(doc: doc) {
                 completion(supportPageVersion, "apple-support")
                 return
             }
 
-            if let softwareUpdateVersion = await self.getLatestVersionFromSoftwareUpdate() {
+            if let softwareUpdateVersion = await getLatestVersionFromSoftwareUpdate() {
                 completion(softwareUpdateVersion, "softwareupdate")
                 return
             }
@@ -216,6 +216,6 @@ class MacOSVersionCheck: ParetoCheck {
     }
 
     override func checkPasses() -> Bool {
-        return Self.isCurrentVersionUpToDate(current: currentVersion, latest: latestXX)
+        Self.isCurrentVersionUpToDate(current: currentVersion, latest: latestXX)
     }
 }

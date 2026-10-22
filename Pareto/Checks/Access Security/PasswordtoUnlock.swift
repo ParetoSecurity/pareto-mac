@@ -23,7 +23,7 @@ class RequirePasswordToUnlock: ParetoCheck {
     }
 
     override var showSettingsWarnEvents: Bool {
-        return true
+        true
     }
 
     private let legacyScript = "tell application \"System Events\" to tell security preferences to get require password to unlock"
@@ -49,13 +49,12 @@ class RequirePasswordToUnlock: ParetoCheck {
 
         // Some systems store a rule reference instead of an inline definition.
         // The reference is either a list of rule names or a single name.
-        let ruleNames: [String]?
-        if let names = rule["rule"] as? [String] {
-            ruleNames = names
+        let ruleNames: [String]? = if let names = rule["rule"] as? [String] {
+            names
         } else if let name = rule["rule"] as? String {
-            ruleNames = [name]
+            [name]
         } else {
-            ruleNames = nil
+            nil
         }
         if let ruleNames {
             return ruleNames.contains { $0.contains("authenticate") }
@@ -79,17 +78,16 @@ class RequirePasswordToUnlock: ParetoCheck {
         }
 
         let rawOut = runOSA(appleScript: legacyScript)
-        let interpreted: String
-        if let out = rawOut {
+        let interpreted = if let out = rawOut {
             if out.contains("true") {
-                interpreted = "enabled"
+                "enabled"
             } else if out.contains("false") {
-                interpreted = "disabled"
+                "disabled"
             } else {
-                interpreted = "unknown"
+                "unknown"
             }
         } else {
-            interpreted = "error (nil output)"
+            "error (nil output)"
         }
 
         // Keep it debug-focused: show raw OSA output and our interpretation.

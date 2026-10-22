@@ -28,20 +28,20 @@ class NetworkHandler {
 
     /// Current NWPathMonitor Status
     var currentStatus: NWPath.Status {
-        return monitor.currentPath.status
+        monitor.currentPath.status
     }
 
     class func sharedInstance() -> NetworkHandler {
-        return _sharedInstance
+        _sharedInstance
     }
 
     init() {
         monitor.pathUpdateHandler = { [unowned self] path in
             // Initialise observers
-            for (id, observations) in self.observers {
+            for (id, observations) in observers {
                 // If any observer is nil, remove it from the list of observers
                 guard let observer = observations.observer else {
-                    self.observers.removeValue(forKey: id)
+                    observers.removeValue(forKey: id)
                     continue
                 }
 

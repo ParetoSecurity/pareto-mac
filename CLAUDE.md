@@ -8,7 +8,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - Build: `make build`
 - Run tests: `make test`
 - Run single test: `NSUnbufferedIO=YES xcodebuild -project "Pareto Security.xcodeproj" -scheme "Pareto Security" -test-timeouts-enabled NO -only-testing:ParetoSecurityTests/TestClassName/testMethodName -destination platform=macOS test`
-- Format: `make fmt` or `mint run swiftformat --swiftversion 5 .`
+- Format: `make fmt` (SwiftFormat + SwiftLint autocorrect, config in `.swiftformat` / `.swiftlint.yml`)
+- Lint: `make lint` (runs in CI)
 - Archive builds: `make archive-debug`, `make archive-release`, `make archive-debug-setapp`, `make archive-release-setapp`
 - Create DMG: `make dmg`
 - Create PKG: `make pkg`

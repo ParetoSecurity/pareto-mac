@@ -54,9 +54,9 @@ struct Release: Decodable {
 
     var version: Version {
         if let ver = Version(tag_name.replacingOccurrences(of: "v", with: "")) {
-            return ver
+            ver
         } else {
-            return Version(0, 0, 0)
+            Version(0, 0, 0)
         }
     }
 
@@ -87,7 +87,7 @@ struct Release: Decodable {
     let assets: [Asset]
 }
 
-extension Array where Element == Release {
+extension [Release] {
     func findViableUpdate(prerelease: Bool, currentVersion: Version) throws -> Release? {
         let suitableReleases = prerelease ? self : filter { !$0.prerelease }
         return suitableReleases
@@ -101,7 +101,7 @@ public class AppUpdater {
     let repo: String
 
     var slug: String {
-        return "\(owner)/\(repo)"
+        "\(owner)/\(repo)"
     }
 
     public init(owner: String, repo: String) {
@@ -265,11 +265,11 @@ public class AppUpdater {
 
 extension Release: Comparable {
     static func < (lhs: Release, rhs: Release) -> Bool {
-        return lhs.version < rhs.version
+        lhs.version < rhs.version
     }
 
     static func == (lhs: Release, rhs: Release) -> Bool {
-        return lhs.version == rhs.version
+        lhs.version == rhs.version
     }
 }
 
@@ -300,8 +300,7 @@ private func unzip(_ url: URL, contentType: Release.Asset.ContentType) -> URL {
     func findApp() throws -> URL? {
         let files = try FileManager.default.contentsOfDirectory(at: extractDir, includingPropertiesForKeys: [.isDirectoryKey], options: .skipsSubdirectoryDescendants)
         for url in files {
-            guard url.pathExtension == "app" else { continue }
-            guard let foo = try url.resourceValues(forKeys: [.isDirectoryKey]).isDirectory, foo else { continue }
+            guard url.pathExtension == "app", let foo = try url.resourceValues(forKeys: [.isDirectoryKey]).isDirectory, foo else { continue }
             return url
         }
         return nil

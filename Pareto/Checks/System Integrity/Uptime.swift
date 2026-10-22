@@ -33,7 +33,7 @@ class UptimeCheck: ParetoCheck {
     }
 
     override func checkPasses() -> Bool {
-        return uptimeDays < 14
+        uptimeDays < 14
     }
 
     private var uptimeDays: Int {
