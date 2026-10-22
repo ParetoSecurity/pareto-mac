@@ -16,12 +16,25 @@ permissions:
   contents: read
 
 env:
+  # Pinned Xcode for the build jobs; the test job matrix selects its own
+  # runner/Xcode pairs.
   XCODE_VERSION: "26"
 
 jobs:
   test:
-    name: Test
-    runs-on: macos-latest
+    name: Test (${{ matrix.runner }}, Xcode ${{ matrix.xcode }})
+    # The xcode-27 label is an arm64-only image running macOS 27 with Xcode
+    # 27. GitHub installs exactly one Xcode major per image (macos-26 carries
+    # only 26.x), so runner and Xcode are always paired here, never crossed.
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: macos-26
+            xcode: "26"
+          - runner: xcode-27
+            xcode: "27"
+    runs-on: ${{ matrix.runner }}
     timeout-minutes: 20
     steps:
       - name: Checkout repository
@@ -30,7 +43,7 @@ jobs:
       - name: Setup build environment
         uses: ./.github/actions/setup-build-env
         with:
-          xcode-version: ${{ env.XCODE_VERSION }}
+          xcode-version: ${{ matrix.xcode }}
 
       - name: Setup code signing
         id: signing
