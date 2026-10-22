@@ -181,6 +181,6 @@ class CompromisedCACheckTests: XCTestCase {
                 "/a/cert.pem": "",
             ]
         )
-        XCTAssertEqual(check.scannedBundles().map { $0.path }, ["/a/cert.pem", "/b/cert.pem"])
+        XCTAssertEqual(check.scannedBundles().map(\.path), ["/a/cert.pem", "/b/cert.pem"])
     }
 }

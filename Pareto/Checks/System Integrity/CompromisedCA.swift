@@ -66,19 +66,19 @@ class CompromisedCACheck: ParetoCheck {
     }
 
     override var isInstalled: Bool {
-        return !resolvedBundlePaths().isEmpty
+        !resolvedBundlePaths().isEmpty
     }
 
     override var isRunnable: Bool {
-        return isActive && !resolvedBundlePaths().isEmpty
+        isActive && !resolvedBundlePaths().isEmpty
     }
 
     override var showInMenu: Bool {
-        return isActive && !resolvedBundlePaths().isEmpty
+        isActive && !resolvedBundlePaths().isEmpty
     }
 
     override var showDetailsWhenPassing: Bool {
-        return true
+        true
     }
 
     override var details: String {
@@ -103,7 +103,7 @@ class CompromisedCACheck: ParetoCheck {
     }
 
     override func checkPasses() -> Bool {
-        return scannedBundles().allSatisfy { bundle in
+        scannedBundles().allSatisfy { bundle in
             Self.compromisedCAs(in: bundle.contents, blocklist: blocklist).isEmpty
         }
     }
@@ -189,7 +189,7 @@ class CompromisedCACheck: ParetoCheck {
     }
 
     private static func certifiLibraryRoots(homeDirectory: URL) -> [String] {
-        return [
+        [
             "/opt/homebrew/lib",
             "/usr/local/lib",
             homeDirectory.appendingPathComponent("Library/Python").path,
