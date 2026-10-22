@@ -60,6 +60,7 @@ class Claims: ObservableObject {
                 SecureTerminalCheck.sharedInstance,
                 SecureiTermCheck.sharedInstance,
                 PackageManagerSupplyChainCheck.sharedInstance,
+                CompromisedCACheck.sharedInstance,
                 TimeMachineHasBackupCheck.sharedInstance,
                 TimeMachineIsEncryptedCheck.sharedInstance,
                 TeamReportSentCheck.sharedInstance,
