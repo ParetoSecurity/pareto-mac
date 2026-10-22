@@ -65,7 +65,7 @@ class CompromisedCACheckTests: XCTestCase {
             blocklist: testBlocklist
         )
         XCTAssertFalse(check.checkPasses())
-        XCTAssertTrue(check.details.contains("- Pareto Test Root CA is present in /opt/homebrew/etc/ca-certificates/cert.pem"))
+        XCTAssertTrue(check.details == "- /opt/homebrew/etc/ca-certificates/cert.pem: Pareto Test Root CA")
     }
 
     func testCheckPassesWithCleanBundles() {
@@ -91,7 +91,7 @@ class CompromisedCACheckTests: XCTestCase {
             blocklist: testBlocklist
         )
         XCTAssertFalse(check.checkPasses())
-        XCTAssertTrue(check.details.contains("- Pareto Test Root CA is present in /a/cert.pem"))
+        XCTAssertTrue(check.details == "- /a/cert.pem: Pareto Test Root CA")
         XCTAssertFalse(check.details.contains("/b/cert.pem"))
     }
 
@@ -133,6 +133,15 @@ class CompromisedCACheckTests: XCTestCase {
         XCTAssertFalse(check.checkPasses())
     }
 
+    func testScansCurrentNixBundlesOnly() {
+        let nixPaths = CompromisedCACheck.systemBundlePaths.filter { $0.contains("nix") || $0.hasPrefix("/etc/ssl/certs") }
+        XCTAssertEqual(nixPaths, [
+            "/etc/ssl/certs/ca-certificates.crt",
+            "/nix/var/nix/profiles/default/etc/ssl/certs/ca-bundle.crt",
+        ])
+        XCTAssertFalse(CompromisedCACheck.systemBundlePaths.contains { $0.hasPrefix("/nix/store") })
+    }
+
     func testSymlinkedBundleIsScannedOnce() throws {
         let dir = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
         defer { try? FileManager.default.removeItem(at: dir) }
@@ -145,7 +154,23 @@ class CompromisedCACheckTests: XCTestCase {
         let check = CompromisedCACheck(bundlePaths: [bundle.path, link.path], blocklist: testBlocklist)
         XCTAssertEqual(check.resolvedBundlePaths(), [bundle.path])
         XCTAssertFalse(check.checkPasses())
-        XCTAssertEqual(check.details, "- Pareto Test Root CA is present in \(bundle.path)")
+        XCTAssertEqual(check.details, "- \(bundle.path): Pareto Test Root CA")
+    }
+
+    func testDetailsGroupRootsPerBundleAndShortenHome() {
+        let home = URL(fileURLWithPath: "/Users/test")
+        let bundle = "/Users/test/.local/pipx/venvs/tool/lib/python3.11/site-packages/certifi/cacert.pem"
+        let check = CompromisedCACheck(
+            homeDirectory: home,
+            bundlePaths: [bundle],
+            bundleContents: [bundle: testCertificatePEM + "\n" + testCertificatePEM],
+            blocklist: testBlocklist
+        )
+        XCTAssertEqual(
+            check.details,
+            "- ~/.local/pipx/venvs/tool/lib/python3.11/site-packages/certifi/cacert.pem: Pareto Test Root CA"
+        )
+        XCTAssertEqual(check.displayPath("/Users/tester/cert.pem"), "/Users/tester/cert.pem")
     }
 
     func testScannedBundlesSortsPathsForStableDetails() {

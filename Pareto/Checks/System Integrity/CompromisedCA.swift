@@ -28,6 +28,9 @@ class CompromisedCACheck: ParetoCheck {
         "/usr/local/etc/ca-certificates/cert.pem",
         "/opt/homebrew/etc/openssl@3/cert.pem",
         "/usr/local/etc/openssl@3/cert.pem",
+        // Nix: the current nix-darwin system and the default profile, not every store path
+        "/etc/ssl/certs/ca-certificates.crt",
+        "/nix/var/nix/profiles/default/etc/ssl/certs/ca-bundle.crt",
     ]
 
     let homeDirectory: URL
@@ -79,18 +82,24 @@ class CompromisedCACheck: ParetoCheck {
     }
 
     override var details: String {
+        let bundles = scannedBundles()
         var failures: [String] = []
-        var scannedPaths: [String] = []
-        for bundle in scannedBundles() {
-            scannedPaths.append(bundle.path)
-            for ca in Self.compromisedCAs(in: bundle.contents, blocklist: blocklist) {
-                failures.append("- \(ca) is present in \(bundle.path)")
+        for bundle in bundles {
+            let found = Set(Self.compromisedCAs(in: bundle.contents, blocklist: blocklist)).sorted()
+            if !found.isEmpty {
+                failures.append("- \(displayPath(bundle.path)): \(found.joined(separator: ", "))")
             }
         }
         if failures.isEmpty {
-            return "- Scanned \(scannedPaths.count) CA bundle(s)"
+            return "- Scanned \(bundles.count) CA bundle(s)"
         }
         return failures.joined(separator: "\n")
+    }
+
+    func displayPath(_ path: String) -> String {
+        let home = homeDirectory.path
+        guard path == home || path.hasPrefix(home + "/") else { return path }
+        return "~" + path.dropFirst(home.count)
     }
 
     override func checkPasses() -> Bool {
