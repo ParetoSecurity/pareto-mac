@@ -434,7 +434,8 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
         }
 
         if Defaults.firstLaunch() {
-            #if !DEBUG
+            // SetApp requires launch at login to be opt-in, user enables it in welcome or settings
+            #if !DEBUG && !SETAPP_ENABLED
                 LaunchAtLogin.isEnabled = true
             #endif
         } else {
