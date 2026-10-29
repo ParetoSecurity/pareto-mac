@@ -16,12 +16,12 @@ permissions:
   contents: read
 
 env:
-  XCODE_VERSION: "26"
+  XCODE_VERSION: "27"
 
 jobs:
   test:
     name: Test
-    runs-on: macos-latest
+    runs-on: xcode-27
     timeout-minutes: 20
     steps:
       - name: Checkout repository
@@ -58,7 +58,7 @@ jobs:
 
   build:
     name: Build Native
-    runs-on: macos-latest
+    runs-on: xcode-27
     # Archiving and exporting require certificates, which forks never get.
     if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
     timeout-minutes: 20
@@ -124,7 +124,7 @@ jobs:
 
   build-setapp:
     name: Build SetApp
-    runs-on: macos-latest
+    runs-on: xcode-27
     # Archiving and exporting require certificates, which forks never get.
     if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
     timeout-minutes: 20
