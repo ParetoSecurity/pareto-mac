@@ -15,12 +15,12 @@ permissions:
   contents: read
 
 env:
-  XCODE_VERSION: "26"
+  XCODE_VERSION: "27"
 
 jobs:
   release:
     name: Release Native
-    runs-on: macos-latest
+    runs-on: xcode-27
     timeout-minutes: 45
     permissions:
       contents: write
@@ -125,7 +125,7 @@ jobs:
 
   release-setapp:
     name: Release SetApp
-    runs-on: macos-latest
+    runs-on: xcode-27
     timeout-minutes: 45
     steps:
       # Full history so release notes can be built from the previous tag.
