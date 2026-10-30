@@ -15,6 +15,36 @@ class PackageManagerSupplyChainCheck: ParetoCheck {
     let packageManagerVersions: [String: String]
     let environment: [String: String]
 
+    /// A release younger than this is considered "too new to trust". Every
+    /// per-manager threshold and message derives from this one policy value.
+    private static let minimumCooldownSeconds = 604_800
+    private static let minimumCooldownDays = minimumCooldownSeconds / 86400
+    private static let minimumCooldownMinutes = minimumCooldownSeconds / 60
+
+    /// One entry per package manager: where its user-level cooldown config
+    /// lives, which binaries imply it should exist, how to validate it, and
+    /// (optionally) the minimum tool version that enforces the setting.
+    /// All per-manager behavior flows from this table; the checks below just
+    /// iterate it.
+    private struct ManagerConfig {
+        /// Candidate config files, first match wins.
+        let candidates: [(displayPath: String, url: URL)]
+        /// Binaries whose presence means the config must exist.
+        let binaries: [String]
+        /// Validates the file contents; the second argument is the display
+        /// path for tools whose message mentions where the config was found.
+        let validate: (String, String) -> [String]
+        /// Detail used when no candidate config exists, given the first
+        /// candidate's display path.
+        let missingDetail: (String) -> String
+        /// Detail used when the config passes, given the matched display path.
+        let passingDetail: (String) -> String
+        /// Set when only newer tool versions actually enforce the setting.
+        var versionGate: (minimumVersion: String, configDescription: String)?
+        /// The gate only makes sense once the cooldown key is present.
+        var usesSetting: ((String) -> Bool)?
+    }
+
     init(
         homeDirectory: URL = FileManager.default.homeDirectoryForCurrentUser,
         installedBinaries: Set<String>? = nil,
@@ -64,34 +94,29 @@ class PackageManagerSupplyChainCheck: ParetoCheck {
     }
 
     func validationFailures() -> [String] {
-        let npmrc = homeDirectory.appendingPathComponent(".npmrc")
-        let bunfig = homeDirectory.appendingPathComponent(".bunfig.toml")
-        let uv = homeDirectory.appendingPathComponent(".config/uv/uv.toml")
-        let pypirc = homeDirectory.appendingPathComponent(".pypirc")
         var failures: [String] = []
 
-        if let contents = readFile(npmrc) {
-            failures.append(contentsOf: validateNpmConfig(contents))
-        } else if isBinaryInstalled("npm") || isBinaryInstalled("yarn") {
-            failures.append("~/.npmrc is missing")
-        }
-        if let pnpmConfig = activePnpmConfig() {
-            failures.append(contentsOf: Self.validatePnpmConfig(pnpmConfig.contents, displayPath: pnpmConfig.displayPath))
-        } else if isBinaryInstalled("pnpm") {
-            failures.append(pnpmConfigMissingDetail())
-        }
-        if let contents = readFile(bunfig) {
-            failures.append(contentsOf: Self.validateBunfig(contents))
-        } else if isBinaryInstalled("bun") {
-            failures.append("~/.bunfig.toml is missing")
-        }
-        if let contents = readFile(uv) {
-            failures.append(contentsOf: Self.validateUv(contents))
-        } else if isBinaryInstalled("uv") {
-            failures.append("~/.config/uv/uv.toml is missing")
-        }
-        if let contents = readFile(pypirc) {
-            failures.append(contentsOf: Self.validatePypirc(contents))
+        for manager in managers {
+            guard let active = activeConfig(in: manager) else {
+                if manager.binaries.contains(where: isBinaryInstalled) {
+                    failures.append(manager.missingDetail(manager.candidates[0].displayPath))
+                }
+                continue
+            }
+
+            var managerFailures = manager.validate(active.contents, active.displayPath)
+            if let gate = manager.versionGate, managerFailures.isEmpty,
+               manager.usesSetting?(active.contents) == true,
+               let binary = manager.binaries.first(where: isBinaryInstalled)
+            {
+                managerFailures = addingVersionGate(
+                    managerFailures,
+                    binary: binary,
+                    minimumVersion: gate.minimumVersion,
+                    configDescription: gate.configDescription
+                )
+            }
+            failures.append(contentsOf: managerFailures)
         }
 
         return failures
@@ -100,20 +125,10 @@ class PackageManagerSupplyChainCheck: ParetoCheck {
     private func passingDetails() -> String {
         var details: [String] = []
 
-        if let contents = readFile(homeDirectory.appendingPathComponent(".npmrc")), validateNpmConfig(contents).isEmpty {
-            details.append("~/.npmrc delays npm-compatible package releases")
-        }
-        if let pnpmConfig = activePnpmConfig(), Self.validatePnpmConfig(pnpmConfig.contents, displayPath: pnpmConfig.displayPath).isEmpty {
-            details.append("\(pnpmConfig.displayPath) delays pnpm package releases")
-        }
-        if let contents = readFile(homeDirectory.appendingPathComponent(".bunfig.toml")), Self.validateBunfig(contents).isEmpty {
-            details.append("~/.bunfig.toml delays Bun package releases")
-        }
-        if let contents = readFile(homeDirectory.appendingPathComponent(".config/uv/uv.toml")), Self.validateUv(contents).isEmpty {
-            details.append("~/.config/uv/uv.toml excludes Python packages newer than 7 days")
-        }
-        if let contents = readFile(homeDirectory.appendingPathComponent(".pypirc")), Self.validatePypirc(contents).isEmpty {
-            details.append("~/.pypirc has no plaintext credentials")
+        for manager in managers {
+            if let active = activeConfig(in: manager), manager.validate(active.contents, active.displayPath).isEmpty {
+                details.append(manager.passingDetail(active.displayPath))
+            }
         }
 
         if details.isEmpty {
@@ -123,16 +138,11 @@ class PackageManagerSupplyChainCheck: ParetoCheck {
     }
 
     private func hasPackageManagerConfigOrBinary() -> Bool {
-        let configFiles = [
-            homeDirectory.appendingPathComponent(".npmrc"),
-            homeDirectory.appendingPathComponent(".bunfig.toml"),
-            homeDirectory.appendingPathComponent(".config/uv/uv.toml"),
-            homeDirectory.appendingPathComponent(".pypirc"),
-        ] + pnpmConfigPaths().map(\.url)
-        if configFiles.contains(where: { FileManager.default.fileExists(atPath: $0.path) }) {
+        let configPaths = managers.flatMap { $0.candidates.map(\.url) }
+        if configPaths.contains(where: { FileManager.default.fileExists(atPath: $0.path) }) {
             return true
         }
-        return ["yarn", "npm", "pnpm", "bun", "uv"].contains(where: isBinaryInstalled)
+        return managers.flatMap(\.binaries).contains(where: isBinaryInstalled)
     }
 
     private func isBinaryInstalled(_ name: String) -> Bool {
@@ -204,10 +214,61 @@ class PackageManagerSupplyChainCheck: ParetoCheck {
         return path
     }
 
-    private func activePnpmConfig() -> (contents: String, displayPath: String)? {
-        for configPath in pnpmConfigPaths() {
-            if let contents = readFile(configPath.url) {
-                return (contents, configPath.displayPath)
+    // MARK: - Per-manager configuration
+
+    /// The single source of truth for every manager this check understands.
+    private var managers: [ManagerConfig] {
+        func homeCandidate(_ relativePath: String) -> (displayPath: String, url: URL) {
+            ("~/" + relativePath, homeDirectory.appendingPathComponent(relativePath))
+        }
+
+        return [
+            ManagerConfig(
+                candidates: [homeCandidate(".npmrc")],
+                binaries: ["npm"],
+                validate: { contents, _ in Self.validateNpmrc(contents) },
+                missingDetail: { display in "\(display) is missing" },
+                passingDetail: { _ in "~/.npmrc delays npm-compatible package releases" },
+                versionGate: (minimumVersion: "11.14.0", configDescription: "~/.npmrc min-release-age"),
+                usesSetting: { Self.npmConfigUsesMinReleaseAge($0) }
+            ),
+            ManagerConfig(
+                // pnpm 10 keeps settings in the global rc file, pnpm 11 in
+                // config.yaml; .npmrc-style files are reserved for auth.
+                candidates: pnpmConfigPaths().map { candidate in (displayPath: candidate.displayPath, url: candidate.url) },
+                binaries: ["pnpm"],
+                validate: Self.validatePnpmConfig,
+                missingDetail: { _ in self.pnpmConfigMissingDetail() },
+                passingDetail: { display in "\(display) delays pnpm package releases" }
+            ),
+            ManagerConfig(
+                candidates: [homeCandidate(".bunfig.toml")],
+                binaries: ["bun"],
+                validate: { contents, _ in Self.validateBunfig(contents) },
+                missingDetail: { display in "\(display) is missing" },
+                passingDetail: { _ in "~/.bunfig.toml delays Bun package releases" }
+            ),
+            ManagerConfig(
+                candidates: [homeCandidate(".config/uv/uv.toml")],
+                binaries: ["uv"],
+                validate: { contents, _ in Self.validateUv(contents) },
+                missingDetail: { display in "\(display) is missing" },
+                passingDetail: { _ in "~/.config/uv/uv.toml excludes Python packages newer than 7 days" }
+            ),
+            ManagerConfig(
+                candidates: [homeCandidate(".pypirc")],
+                binaries: [],
+                validate: { contents, _ in Self.validatePypirc(contents) },
+                missingDetail: { display in "\(display) is missing" },
+                passingDetail: { _ in "~/.pypirc has no plaintext credentials" }
+            ),
+        ]
+    }
+
+    private func activeConfig(in manager: ManagerConfig) -> (displayPath: String, contents: String)? {
+        for candidate in manager.candidates {
+            if let contents = readFile(candidate.url) {
+                return (candidate.displayPath, contents)
             }
         }
         return nil
@@ -246,24 +307,29 @@ class PackageManagerSupplyChainCheck: ParetoCheck {
         return (xdgConfigHome as NSString).standardizingPath
     }
 
-    private func validateNpmConfig(_ contents: String) -> [String] {
-        var failures = Self.validateNpmrc(contents)
-        guard failures.isEmpty, isBinaryInstalled("npm"), Self.npmConfigUsesMinReleaseAge(contents) else {
+    // MARK: - Version gates
+
+    private func addingVersionGate(
+        _ failures: [String],
+        binary: String,
+        minimumVersion: String,
+        configDescription: String
+    ) -> [String] {
+        var failures = failures
+        guard failures.isEmpty, isBinaryInstalled(binary) else {
             return failures
         }
-        guard let version = packageManagerVersion("npm") else {
-            failures.append("npm version could not be determined, so ~/.npmrc min-release-age could not be verified")
+        guard let version = packageManagerVersion(binary) else {
+            failures.append("\(binary) version could not be determined, so \(configDescription) could not be verified")
             return failures
         }
-        if !Self.isVersion(version, atLeast: "11.14.0") {
-            failures.append("npm is older than 11.14.0 and does not enforce ~/.npmrc min-release-age")
+        if !Self.isVersion(version, atLeast: minimumVersion) {
+            failures.append("\(binary) is older than \(minimumVersion) and does not enforce \(configDescription)")
         }
         return failures
     }
 
-    private static func npmConfigUsesMinReleaseAge(_ contents: String) -> Bool {
-        keyValuePairs(contents)["min-release-age"] != nil
-    }
+    // MARK: - Static validators
 
     static func validateNpmrc(_ contents: String) -> [String] {
         let values = keyValuePairs(contents)
@@ -271,8 +337,8 @@ class PackageManagerSupplyChainCheck: ParetoCheck {
 
         let minReleaseAgeDays = integerValue(values["min-release-age"]) ?? 0
         let minimumReleaseAgeMinutes = integerValue(values["minimum-release-age"]) ?? 0
-        if minReleaseAgeDays < 7, minimumReleaseAgeMinutes < 10080 {
-            failures.append("~/.npmrc release age is below 7 days; set either min-release-age >= 7 or minimum-release-age >= 10080")
+        if minReleaseAgeDays < minimumCooldownDays, minimumReleaseAgeMinutes < minimumCooldownMinutes {
+            failures.append("~/.npmrc release age is below \(minimumCooldownDays) days; set either min-release-age >= \(minimumCooldownDays) or minimum-release-age >= \(minimumCooldownMinutes)")
         }
         // An explicit save-exact=false is an informed choice, so only an
         // unset value fails. https://github.com/ParetoSecurity/pareto-mac/issues/303
@@ -282,6 +348,52 @@ class PackageManagerSupplyChainCheck: ParetoCheck {
 
         return failures
     }
+
+    static func validatePnpmConfig(_ contents: String, displayPath: String) -> [String] {
+        let values = keyValuePairs(contents)
+        let minimumReleaseAge = integerValue(values["minimumreleaseage"]) ?? integerValue(values["minimum-release-age"]) ?? 0
+
+        if minimumReleaseAge < minimumCooldownMinutes {
+            return ["\(displayPath) minimumReleaseAge is below \(minimumCooldownMinutes) minutes"]
+        }
+        return []
+    }
+
+    static func validateBunfig(_ contents: String) -> [String] {
+        let values = tomlKeyValuePairs(contents)
+        let minimumReleaseAge = integerValue(values["install.minimumReleaseAge"]) ?? 0
+
+        if minimumReleaseAge < minimumCooldownSeconds {
+            return ["~/.bunfig.toml minimumReleaseAge is below \(minimumCooldownSeconds) seconds"]
+        }
+        return []
+    }
+
+    static func validateUv(_ contents: String) -> [String] {
+        let values = tomlKeyValuePairs(contents)
+        let seconds = durationSeconds(values["exclude-newer"]) ?? durationSeconds(values["pip.exclude-newer"]) ?? 0
+
+        if seconds < minimumCooldownSeconds {
+            return ["~/.config/uv/uv.toml exclude-newer is below \(minimumCooldownDays) days"]
+        }
+        return []
+    }
+
+    static func validatePypirc(_ contents: String) -> [String] {
+        let values = keyValuePairs(contents)
+        let credentialKeys = ["password", "token", "api-token"]
+
+        for key in credentialKeys where values[key]?.isEmpty == false {
+            return ["~/.pypirc contains plaintext credentials"]
+        }
+        return []
+    }
+
+    private static func npmConfigUsesMinReleaseAge(_ contents: String) -> Bool {
+        keyValuePairs(contents)["min-release-age"] != nil
+    }
+
+    // MARK: - Parsing helpers
 
     static func isVersion(_ version: String?, atLeast minimumVersion: String) -> Bool {
         guard let version else { return false }
@@ -304,46 +416,6 @@ class PackageManagerSupplyChainCheck: ParetoCheck {
         version.trimmingCharacters(in: CharacterSet(charactersIn: "vV")).split(separator: ".").map { part in
             Int(part.prefix { $0.isNumber }) ?? 0
         }
-    }
-
-    static func validatePnpmConfig(_ contents: String, displayPath: String) -> [String] {
-        let values = keyValuePairs(contents)
-        let minimumReleaseAge = integerValue(values["minimumreleaseage"]) ?? integerValue(values["minimum-release-age"]) ?? 0
-
-        if minimumReleaseAge < 10080 {
-            return ["\(displayPath) minimumReleaseAge is below 10080 minutes"]
-        }
-        return []
-    }
-
-    static func validateBunfig(_ contents: String) -> [String] {
-        let values = tomlKeyValuePairs(contents)
-        let minimumReleaseAge = integerValue(values["install.minimumReleaseAge"]) ?? 0
-
-        if minimumReleaseAge < 604_800 {
-            return ["~/.bunfig.toml minimumReleaseAge is below 604800 seconds"]
-        }
-        return []
-    }
-
-    static func validateUv(_ contents: String) -> [String] {
-        let values = tomlKeyValuePairs(contents)
-        let seconds = durationSeconds(values["exclude-newer"]) ?? durationSeconds(values["pip.exclude-newer"]) ?? 0
-
-        if seconds < 604_800 {
-            return ["~/.config/uv/uv.toml exclude-newer is below 7 days"]
-        }
-        return []
-    }
-
-    static func validatePypirc(_ contents: String) -> [String] {
-        let values = keyValuePairs(contents)
-        let credentialKeys = ["password", "token", "api-token"]
-
-        for key in credentialKeys where values[key]?.isEmpty == false {
-            return ["~/.pypirc contains plaintext credentials"]
-        }
-        return []
     }
 
     private static func keyValuePairs(_ contents: String) -> [String: String] {
