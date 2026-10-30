@@ -15,6 +15,7 @@ import SwiftUI
 
 public enum AppWindowID {
     static let welcome = "welcome"
+    static let checkDetails = "check-details"
 }
 
 class AppDelegate: AppHandlers, NSApplicationDelegate {
@@ -324,6 +325,15 @@ struct Pareto: App {
         .defaultPosition(.center)
         .defaultSize(width: 380, height: 520)
         .windowStyle(.hiddenTitleBar)
+        .windowResizability(.contentSize)
+
+        WindowGroup("Check Details", id: AppWindowID.checkDetails, for: String.self) { $checkID in
+            if let check = Claims.global.all.flatMap(\.checks).first(where: { $0.UUID == checkID }) {
+                CheckDetailsContent(check: check)
+                    .frame(width: 550)
+            }
+        }
+        .defaultPosition(.center)
         .windowResizability(.contentSize)
 
         // Settings window

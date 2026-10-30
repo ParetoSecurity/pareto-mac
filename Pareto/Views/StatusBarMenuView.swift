@@ -221,6 +221,7 @@ struct ClaimMenuView: View {
 }
 
 struct CheckMenuItemView: View {
+    @Environment(\.openWindow) private var openWindow
     /// Observe individual check for live updates
     @ObservedObject var check: ParetoCheck
 
@@ -249,8 +250,8 @@ struct CheckMenuItemView: View {
 
     var body: some View {
         Button {
-            // Open info URL
-            NSWorkspace.shared.open(check.infoURL)
+            openWindow(id: AppWindowID.checkDetails, value: check.UUID)
+            NSApp.activate(ignoringOtherApps: true)
         } label: {
             title
         }

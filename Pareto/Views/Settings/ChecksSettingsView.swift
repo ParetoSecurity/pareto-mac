@@ -46,11 +46,7 @@ struct ChecksSettingsView: View {
         .padding(10)
         .frame(minHeight: 450)
         .sheet(item: $selectedCheckWrapper) { wrapper in
-            if wrapper.check.UUID == NoUnusedUsers.sharedInstance.UUID {
-                NoUnusedUsersDetailView(check: wrapper.check)
-            } else {
-                CheckDetailView(check: wrapper.check)
-            }
+            CheckDetailsContent(check: wrapper.check)
         }
     }
 }
@@ -58,5 +54,18 @@ struct ChecksSettingsView: View {
 struct CheckSettingsView_Previews: PreviewProvider {
     static var previews: some View {
         ChecksSettingsView()
+    }
+}
+
+/// Shared by the Preferences sheet and the menu bar's check details window.
+struct CheckDetailsContent: View {
+    let check: ParetoCheck
+
+    var body: some View {
+        if check.UUID == NoUnusedUsers.sharedInstance.UUID {
+            NoUnusedUsersDetailView(check: check)
+        } else {
+            CheckDetailView(check: check)
+        }
     }
 }
