@@ -238,7 +238,7 @@ class ParetoSecurityTests: XCTestCase {
         let check = PackageManagerSupplyChainCheck(
             homeDirectory: temporaryDirectory,
             installedBinaries: ["npm"],
-            packageManagerVersions: ["npm": "11.13.0"]
+            packageManagerVersions: ["npm": "11.9.0"]
         )
 
         XCTAssertFalse(check.checkPasses())
@@ -258,7 +258,7 @@ class ParetoSecurityTests: XCTestCase {
         let check = PackageManagerSupplyChainCheck(
             homeDirectory: temporaryDirectory,
             installedBinaries: ["npm"],
-            packageManagerVersions: ["npm": "11.14.0-rc.1"]
+            packageManagerVersions: ["npm": "11.10.0-rc.1"]
         )
 
         XCTAssertFalse(check.checkPasses())
@@ -308,7 +308,7 @@ class ParetoSecurityTests: XCTestCase {
     func testPackageManagerSupplyChainComparesNpmVersions() {
         XCTAssertFalse(PackageManagerSupplyChainCheck.isVersion(nil, atLeast: "11.14.0"))
         XCTAssertFalse(PackageManagerSupplyChainCheck.isVersion("", atLeast: "11.14.0"))
-        XCTAssertFalse(PackageManagerSupplyChainCheck.isVersion("11.13.0", atLeast: "11.14.0"))
+        XCTAssertFalse(PackageManagerSupplyChainCheck.isVersion("11.10.0", atLeast: "11.14.0"))
         XCTAssertFalse(PackageManagerSupplyChainCheck.isVersion("11.14.0-rc.1", atLeast: "11.14.0"))
         XCTAssertTrue(PackageManagerSupplyChainCheck.isVersion("11.14.0", atLeast: "11.14.0"))
         XCTAssertTrue(PackageManagerSupplyChainCheck.isVersion("v11.14.0", atLeast: "11.14.0"))
@@ -506,6 +506,466 @@ class ParetoSecurityTests: XCTestCase {
 
         XCTAssertFalse(check.checkPasses())
         XCTAssertEqual(check.details, "- ~/.pypirc contains plaintext credentials")
+    }
+
+    func testPackageManagerSupplyChainRequiresYarnrcForYarn() throws {
+        let temporaryDirectory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        try FileManager.default.createDirectory(at: temporaryDirectory, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: temporaryDirectory) }
+
+        let check = PackageManagerSupplyChainCheck(homeDirectory: temporaryDirectory, installedBinaries: ["yarn"])
+
+        XCTAssertFalse(check.checkPasses())
+        XCTAssertEqual(check.details, "- ~/.yarnrc.yml is missing")
+    }
+
+    func testPackageManagerSupplyChainPassesWithYarnAgeGate() throws {
+        let temporaryDirectory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        try FileManager.default.createDirectory(at: temporaryDirectory, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: temporaryDirectory) }
+
+        try """
+        npmMinimalAgeGate: "7d"
+        """.write(to: temporaryDirectory.appendingPathComponent(".yarnrc.yml"), atomically: true, encoding: .utf8)
+
+        let check = PackageManagerSupplyChainCheck(
+            homeDirectory: temporaryDirectory,
+            installedBinaries: ["yarn"],
+            packageManagerVersions: ["yarn": "4.11.0"]
+        )
+
+        XCTAssertTrue(check.checkPasses())
+        XCTAssertEqual(check.details, "- ~/.yarnrc.yml delays Yarn package releases")
+    }
+
+    func testPackageManagerSupplyChainPassesWithYarnAgeGateInMinutes() throws {
+        let temporaryDirectory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        try FileManager.default.createDirectory(at: temporaryDirectory, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: temporaryDirectory) }
+
+        try """
+        npmMinimalAgeGate: 10080
+        """.write(to: temporaryDirectory.appendingPathComponent(".yarnrc.yml"), atomically: true, encoding: .utf8)
+
+        let check = PackageManagerSupplyChainCheck(
+            homeDirectory: temporaryDirectory,
+            installedBinaries: ["yarn"],
+            packageManagerVersions: ["yarn": "4.11.0"]
+        )
+
+        XCTAssertTrue(check.checkPasses())
+    }
+
+    func testPackageManagerSupplyChainFailsWithLowYarnAgeGate() throws {
+        let temporaryDirectory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        try FileManager.default.createDirectory(at: temporaryDirectory, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: temporaryDirectory) }
+
+        try """
+        npmMinimalAgeGate: "6d"
+        """.write(to: temporaryDirectory.appendingPathComponent(".yarnrc.yml"), atomically: true, encoding: .utf8)
+
+        let check = PackageManagerSupplyChainCheck(homeDirectory: temporaryDirectory, installedBinaries: [])
+
+        XCTAssertFalse(check.checkPasses())
+        XCTAssertEqual(check.details, "- ~/.yarnrc.yml npmMinimalAgeGate is below 7 days; set it to at least 7d or 10080")
+    }
+
+    func testPackageManagerSupplyChainFailsWithLegacyYarn() throws {
+        let temporaryDirectory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        try FileManager.default.createDirectory(at: temporaryDirectory, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: temporaryDirectory) }
+
+        try """
+        npmMinimalAgeGate: "7d"
+        """.write(to: temporaryDirectory.appendingPathComponent(".yarnrc.yml"), atomically: true, encoding: .utf8)
+
+        let check = PackageManagerSupplyChainCheck(
+            homeDirectory: temporaryDirectory,
+            installedBinaries: ["yarn"],
+            packageManagerVersions: ["yarn": "1.22.22"]
+        )
+
+        XCTAssertFalse(check.checkPasses())
+        XCTAssertEqual(check.details, "- yarn is older than 4.11.0 and does not enforce ~/.yarnrc.yml npmMinimalAgeGate")
+    }
+
+    func testPackageManagerSupplyChainRequiresPipConfForPip() throws {
+        let temporaryDirectory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        try FileManager.default.createDirectory(at: temporaryDirectory, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: temporaryDirectory) }
+
+        let check = PackageManagerSupplyChainCheck(homeDirectory: temporaryDirectory, installedBinaries: ["pip"])
+
+        XCTAssertFalse(check.checkPasses())
+        XCTAssertEqual(check.details, "- ~/.config/pip/pip.conf is missing")
+    }
+
+    func testPackageManagerSupplyChainPassesWithPipCooldown() throws {
+        let temporaryDirectory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        let pipDirectory = temporaryDirectory.appendingPathComponent(".config/pip")
+        try FileManager.default.createDirectory(at: pipDirectory, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: temporaryDirectory) }
+
+        try """
+        [install]
+        uploaded-prior-to = P7D
+        """.write(to: pipDirectory.appendingPathComponent("pip.conf"), atomically: true, encoding: .utf8)
+
+        let check = PackageManagerSupplyChainCheck(
+            homeDirectory: temporaryDirectory,
+            installedBinaries: ["pip"],
+            packageManagerVersions: ["pip": "pip 26.1.0 from /usr/lib/pip (python 3.13)"]
+        )
+
+        XCTAssertTrue(check.checkPasses())
+        XCTAssertEqual(check.details, "- ~/.config/pip/pip.conf delays pip package releases")
+    }
+
+    func testPackageManagerSupplyChainFailsWithLowPipCooldown() throws {
+        let temporaryDirectory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        let pipDirectory = temporaryDirectory.appendingPathComponent(".config/pip")
+        try FileManager.default.createDirectory(at: pipDirectory, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: temporaryDirectory) }
+
+        try """
+        [install]
+        uploaded-prior-to = P6D
+        """.write(to: pipDirectory.appendingPathComponent("pip.conf"), atomically: true, encoding: .utf8)
+
+        let check = PackageManagerSupplyChainCheck(homeDirectory: temporaryDirectory, installedBinaries: [])
+
+        XCTAssertFalse(check.checkPasses())
+        XCTAssertEqual(check.details, "- ~/.config/pip/pip.conf uploaded-prior-to is below 7 days; set it to at least P7D")
+    }
+
+    func testPackageManagerSupplyChainFailsWithStalePipTimestamp() throws {
+        let temporaryDirectory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        let pipDirectory = temporaryDirectory.appendingPathComponent(".config/pip")
+        try FileManager.default.createDirectory(at: pipDirectory, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: temporaryDirectory) }
+
+        try """
+        [install]
+        uploaded-prior-to = 2026-03-27
+        """.write(to: pipDirectory.appendingPathComponent("pip.conf"), atomically: true, encoding: .utf8)
+
+        let check = PackageManagerSupplyChainCheck(homeDirectory: temporaryDirectory, installedBinaries: [])
+
+        XCTAssertFalse(check.checkPasses())
+        XCTAssertEqual(check.details, "- ~/.config/pip/pip.conf uploaded-prior-to is an absolute timestamp that goes stale; set it to a duration like P7D")
+    }
+
+    func testPackageManagerSupplyChainFailsWithOldPip() throws {
+        let temporaryDirectory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        let pipDirectory = temporaryDirectory.appendingPathComponent(".config/pip")
+        try FileManager.default.createDirectory(at: pipDirectory, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: temporaryDirectory) }
+
+        try """
+        [install]
+        uploaded-prior-to = P7D
+        """.write(to: pipDirectory.appendingPathComponent("pip.conf"), atomically: true, encoding: .utf8)
+
+        let check = PackageManagerSupplyChainCheck(
+            homeDirectory: temporaryDirectory,
+            installedBinaries: ["pip"],
+            packageManagerVersions: ["pip": "pip 26.0.0 from /usr/lib/pip (python 3.13)"]
+        )
+
+        XCTAssertFalse(check.checkPasses())
+        XCTAssertEqual(check.details, "- pip is older than 26.1.0 and does not enforce ~/.config/pip/pip.conf uploaded-prior-to")
+    }
+
+    func testPackageManagerSupplyChainPassesWithPoetryCooldown() throws {
+        let temporaryDirectory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        let poetryDirectory = temporaryDirectory.appendingPathComponent(".config/pypoetry")
+        try FileManager.default.createDirectory(at: poetryDirectory, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: temporaryDirectory) }
+
+        try """
+        [solver]
+        min-release-age = 7
+        """.write(to: poetryDirectory.appendingPathComponent("config.toml"), atomically: true, encoding: .utf8)
+
+        let check = PackageManagerSupplyChainCheck(
+            homeDirectory: temporaryDirectory,
+            installedBinaries: ["poetry"],
+            packageManagerVersions: ["poetry": "Poetry 2.4.0"]
+        )
+
+        XCTAssertTrue(check.checkPasses())
+        XCTAssertEqual(check.details, "- ~/.config/pypoetry/config.toml delays Poetry package releases")
+    }
+
+    func testPackageManagerSupplyChainFailsWithLowPoetryCooldown() throws {
+        let temporaryDirectory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        let poetryDirectory = temporaryDirectory.appendingPathComponent(".config/pypoetry")
+        try FileManager.default.createDirectory(at: poetryDirectory, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: temporaryDirectory) }
+
+        try """
+        [solver]
+        min-release-age = 6
+        """.write(to: poetryDirectory.appendingPathComponent("config.toml"), atomically: true, encoding: .utf8)
+
+        let check = PackageManagerSupplyChainCheck(homeDirectory: temporaryDirectory, installedBinaries: [])
+
+        XCTAssertFalse(check.checkPasses())
+        XCTAssertEqual(check.details, "- ~/.config/pypoetry/config.toml solver.min-release-age is below 7 days; set it to at least 7")
+    }
+
+    func testPackageManagerSupplyChainPassesWithPdmCooldown() throws {
+        let temporaryDirectory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        let pdmDirectory = temporaryDirectory.appendingPathComponent(".config/pdm")
+        try FileManager.default.createDirectory(at: pdmDirectory, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: temporaryDirectory) }
+
+        try """
+        [strategy]
+        exclude-newer = "7d"
+        """.write(to: pdmDirectory.appendingPathComponent("config.toml"), atomically: true, encoding: .utf8)
+
+        let check = PackageManagerSupplyChainCheck(
+            homeDirectory: temporaryDirectory,
+            installedBinaries: ["pdm"],
+            packageManagerVersions: ["pdm": "PDM 2.27.0"]
+        )
+
+        XCTAssertTrue(check.checkPasses())
+        XCTAssertEqual(check.details, "- ~/.config/pdm/config.toml delays PDM package releases")
+    }
+
+    func testPackageManagerSupplyChainFailsWithLowPdmCooldown() throws {
+        let temporaryDirectory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        let pdmDirectory = temporaryDirectory.appendingPathComponent(".config/pdm")
+        try FileManager.default.createDirectory(at: pdmDirectory, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: temporaryDirectory) }
+
+        try """
+        [strategy]
+        exclude-newer = "6d"
+        """.write(to: pdmDirectory.appendingPathComponent("config.toml"), atomically: true, encoding: .utf8)
+
+        let check = PackageManagerSupplyChainCheck(homeDirectory: temporaryDirectory, installedBinaries: [])
+
+        XCTAssertFalse(check.checkPasses())
+        XCTAssertEqual(check.details, "- ~/.config/pdm/config.toml strategy.exclude-newer is below 7 days; set it to at least 7d")
+    }
+
+    func testPackageManagerSupplyChainPassesWithCondaCooldown() throws {
+        let temporaryDirectory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        try FileManager.default.createDirectory(at: temporaryDirectory, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: temporaryDirectory) }
+
+        try """
+        solver: classic
+        exclude_newer: 7d
+        """.write(to: temporaryDirectory.appendingPathComponent(".condarc"), atomically: true, encoding: .utf8)
+
+        let check = PackageManagerSupplyChainCheck(
+            homeDirectory: temporaryDirectory,
+            installedBinaries: ["conda"],
+            packageManagerVersions: ["conda": "conda 26.9.0"]
+        )
+
+        XCTAssertTrue(check.checkPasses())
+        XCTAssertEqual(check.details, "- ~/.condarc delays conda package releases")
+    }
+
+    func testPackageManagerSupplyChainFailsWithLowCondaCooldown() throws {
+        let temporaryDirectory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        try FileManager.default.createDirectory(at: temporaryDirectory, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: temporaryDirectory) }
+
+        try """
+        solver: classic
+        exclude_newer: 6d
+        """.write(to: temporaryDirectory.appendingPathComponent(".condarc"), atomically: true, encoding: .utf8)
+
+        let check = PackageManagerSupplyChainCheck(homeDirectory: temporaryDirectory, installedBinaries: [])
+
+        XCTAssertFalse(check.checkPasses())
+        XCTAssertEqual(check.details, "- ~/.condarc exclude_newer is below 7 days; set it to at least 7d")
+    }
+
+    func testPackageManagerSupplyChainFailsWithCondaDefaultSolver() throws {
+        let temporaryDirectory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        try FileManager.default.createDirectory(at: temporaryDirectory, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: temporaryDirectory) }
+
+        try """
+        exclude_newer: 7d
+        """.write(to: temporaryDirectory.appendingPathComponent(".condarc"), atomically: true, encoding: .utf8)
+
+        let check = PackageManagerSupplyChainCheck(
+            homeDirectory: temporaryDirectory,
+            installedBinaries: ["conda"],
+            packageManagerVersions: ["conda": "conda 26.9.0"]
+        )
+
+        XCTAssertFalse(check.checkPasses())
+        XCTAssertEqual(check.details, "- ~/.condarc solver must be classic; the default solver does not support exclude_newer")
+    }
+
+    func testPackageManagerSupplyChainPassesWithBundlerCooldown() throws {
+        let temporaryDirectory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        let bundleDirectory = temporaryDirectory.appendingPathComponent(".bundle")
+        try FileManager.default.createDirectory(at: bundleDirectory, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: temporaryDirectory) }
+
+        try """
+        ---
+        BUNDLE_COOLDOWN: 7
+        """.write(to: bundleDirectory.appendingPathComponent("config"), atomically: true, encoding: .utf8)
+
+        let check = PackageManagerSupplyChainCheck(
+            homeDirectory: temporaryDirectory,
+            installedBinaries: ["bundle"],
+            packageManagerVersions: ["bundle": "Bundler version 4.0.13"]
+        )
+
+        XCTAssertTrue(check.checkPasses())
+        XCTAssertEqual(check.details, "- ~/.bundle/config delays Bundler package releases")
+    }
+
+    func testPackageManagerSupplyChainFailsWithLowBundlerCooldown() throws {
+        let temporaryDirectory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        let bundleDirectory = temporaryDirectory.appendingPathComponent(".bundle")
+        try FileManager.default.createDirectory(at: bundleDirectory, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: temporaryDirectory) }
+
+        try """
+        ---
+        BUNDLE_COOLDOWN: 6
+        """.write(to: bundleDirectory.appendingPathComponent("config"), atomically: true, encoding: .utf8)
+
+        let check = PackageManagerSupplyChainCheck(homeDirectory: temporaryDirectory, installedBinaries: [])
+
+        XCTAssertFalse(check.checkPasses())
+        XCTAssertEqual(check.details, "- ~/.bundle/config BUNDLE_COOLDOWN is below 7 days; set it to at least 7 with bundle config set --global cooldown 7")
+    }
+
+    func testPackageManagerSupplyChainPassesWithHexCooldown() throws {
+        let temporaryDirectory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        let hexDirectory = temporaryDirectory.appendingPathComponent(".hex")
+        try FileManager.default.createDirectory(at: hexDirectory, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: temporaryDirectory) }
+
+        try """
+        {cooldown,<<"7d">>}.
+        """.write(to: hexDirectory.appendingPathComponent("hex.config"), atomically: true, encoding: .utf8)
+
+        let check = PackageManagerSupplyChainCheck(homeDirectory: temporaryDirectory, installedBinaries: ["mix"])
+
+        XCTAssertTrue(check.checkPasses())
+        XCTAssertEqual(check.details, "- ~/.hex/hex.config delays Hex package releases")
+    }
+
+    func testPackageManagerSupplyChainFailsWithLowHexCooldown() throws {
+        let temporaryDirectory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        let hexDirectory = temporaryDirectory.appendingPathComponent(".hex")
+        try FileManager.default.createDirectory(at: hexDirectory, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: temporaryDirectory) }
+
+        try """
+        {cooldown,<<"3d">>}.
+        """.write(to: hexDirectory.appendingPathComponent("hex.config"), atomically: true, encoding: .utf8)
+
+        let check = PackageManagerSupplyChainCheck(homeDirectory: temporaryDirectory, installedBinaries: [])
+
+        XCTAssertFalse(check.checkPasses())
+        XCTAssertEqual(check.details, "- ~/.hex/hex.config cooldown is below 7 days; set it to at least 7d with mix hex.config cooldown 7d")
+    }
+
+    func testPackageManagerSupplyChainPassesWithMiseCooldown() throws {
+        let temporaryDirectory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        let miseDirectory = temporaryDirectory.appendingPathComponent(".config/mise")
+        try FileManager.default.createDirectory(at: miseDirectory, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: temporaryDirectory) }
+
+        try """
+        [settings]
+        minimum_release_age = "7d"
+        """.write(to: miseDirectory.appendingPathComponent("config.toml"), atomically: true, encoding: .utf8)
+
+        let check = PackageManagerSupplyChainCheck(homeDirectory: temporaryDirectory, installedBinaries: ["mise"])
+
+        XCTAssertTrue(check.checkPasses())
+        XCTAssertEqual(check.details, "- ~/.config/mise/config.toml delays mise package releases")
+    }
+
+    func testPackageManagerSupplyChainFailsWithLowMiseCooldown() throws {
+        let temporaryDirectory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        let miseDirectory = temporaryDirectory.appendingPathComponent(".config/mise")
+        try FileManager.default.createDirectory(at: miseDirectory, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: temporaryDirectory) }
+
+        try """
+        [settings]
+        minimum_release_age = "6d"
+        """.write(to: miseDirectory.appendingPathComponent("config.toml"), atomically: true, encoding: .utf8)
+
+        let check = PackageManagerSupplyChainCheck(homeDirectory: temporaryDirectory, installedBinaries: [])
+
+        XCTAssertFalse(check.checkPasses())
+        XCTAssertEqual(check.details, "- ~/.config/mise/config.toml settings.minimum_release_age is below 7 days; set it to at least 7d")
+    }
+
+    func testPackageManagerSupplyChainAcceptsUvIsoDuration() throws {
+        let temporaryDirectory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        let uvDirectory = temporaryDirectory.appendingPathComponent(".config/uv")
+        try FileManager.default.createDirectory(at: uvDirectory, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: temporaryDirectory) }
+
+        try """
+        exclude-newer = "P7D"
+        """.write(to: uvDirectory.appendingPathComponent("uv.toml"), atomically: true, encoding: .utf8)
+
+        let check = PackageManagerSupplyChainCheck(homeDirectory: temporaryDirectory, installedBinaries: ["uv"])
+
+        XCTAssertTrue(check.checkPasses())
+    }
+
+    func testPackageManagerSupplyChainFailsWithStaleUvTimestamp() throws {
+        let temporaryDirectory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        let uvDirectory = temporaryDirectory.appendingPathComponent(".config/uv")
+        try FileManager.default.createDirectory(at: uvDirectory, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: temporaryDirectory) }
+
+        try """
+        exclude-newer = "2026-03-27T00:00:00Z"
+        """.write(to: uvDirectory.appendingPathComponent("uv.toml"), atomically: true, encoding: .utf8)
+
+        let check = PackageManagerSupplyChainCheck(homeDirectory: temporaryDirectory, installedBinaries: ["uv"])
+
+        XCTAssertFalse(check.checkPasses())
+        XCTAssertEqual(check.details, "- ~/.config/uv/uv.toml exclude-newer is an absolute timestamp that goes stale; set it to a relative duration like 7 days")
+    }
+
+    func testPackageManagerSupplyChainAcceptsBunfigDurations() throws {
+        let temporaryDirectory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        try FileManager.default.createDirectory(at: temporaryDirectory, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: temporaryDirectory) }
+
+        try """
+        [install]
+        minimumReleaseAge = "7d"
+        """.write(to: temporaryDirectory.appendingPathComponent(".bunfig.toml"), atomically: true, encoding: .utf8)
+
+        let check = PackageManagerSupplyChainCheck(homeDirectory: temporaryDirectory, installedBinaries: ["bun"])
+
+        XCTAssertTrue(check.checkPasses())
+        XCTAssertEqual(check.details, "- ~/.bunfig.toml delays Bun package releases")
+    }
+
+    func testPackageManagerSupplyChainExtractsVersionTokens() {
+        XCTAssertEqual(PackageManagerSupplyChainCheck.versionToken(from: "11.10.0"), "11.10.0")
+        XCTAssertEqual(PackageManagerSupplyChainCheck.versionToken(from: "pip 26.1.0 from /usr/lib/pip (python 3.13)"), "26.1.0")
+        XCTAssertEqual(PackageManagerSupplyChainCheck.versionToken(from: "Bundler version 2.6.7"), "2.6.7")
+        XCTAssertEqual(PackageManagerSupplyChainCheck.versionToken(from: "conda 26.9.0"), "26.9.0")
+        XCTAssertEqual(PackageManagerSupplyChainCheck.versionToken(from: "Poetry 2.4.0"), "2.4.0")
+        XCTAssertNil(PackageManagerSupplyChainCheck.versionToken(from: "  \n"))
     }
 
     @MainActor
