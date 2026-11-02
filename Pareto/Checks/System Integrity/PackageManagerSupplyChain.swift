@@ -27,7 +27,8 @@ class PackageManagerSupplyChainCheck: ParetoCheck {
     /// All per-manager behavior flows from this table; the checks below just
     /// iterate it.
     private struct ManagerConfig {
-        /// Candidate config files, first match wins.
+        /// Candidate config files, first match wins. Relative paths are
+        /// resolved against the home directory.
         let candidates: [(displayPath: String, url: URL)]
         /// Binaries whose presence means the config must exist.
         let binaries: [String]
@@ -154,7 +155,7 @@ class PackageManagerSupplyChainCheck: ParetoCheck {
 
     private func packageManagerVersion(_ name: String) -> String? {
         if let version = packageManagerVersions[name] {
-            return version.isEmpty ? nil : version
+            return Self.versionToken(from: version)
         }
         guard let path = executablePath(for: name) else { return nil }
         // Most of these binaries are `#!/usr/bin/env node` wrappers, so they
@@ -162,8 +163,7 @@ class PackageManagerSupplyChainCheck: ParetoCheck {
         var childEnvironment = environment
         childEnvironment["PATH"] = searchDirectories().joined(separator: ":")
         let output = runCMD(app: path, args: ["--version"], environment: childEnvironment)
-            .trimmingCharacters(in: .whitespacesAndNewlines)
-        return output.isEmpty ? nil : output
+        return Self.versionToken(from: output)
     }
 
     // Resolves a binary against a fixed list of well-known install prefixes. A
@@ -223,6 +223,7 @@ class PackageManagerSupplyChainCheck: ParetoCheck {
         }
 
         return [
+            // JavaScript / Node.js
             ManagerConfig(
                 candidates: [homeCandidate(".npmrc")],
                 binaries: ["npm"],
@@ -249,6 +250,17 @@ class PackageManagerSupplyChainCheck: ParetoCheck {
                 passingDetail: { _ in "~/.bunfig.toml delays Bun package releases" }
             ),
             ManagerConfig(
+                candidates: [homeCandidate(".yarnrc.yml")],
+                binaries: ["yarn"],
+                validate: { contents, _ in Self.validateYarnrc(contents) },
+                missingDetail: { display in "\(display) is missing" },
+                passingDetail: { _ in "~/.yarnrc.yml delays Yarn package releases" },
+                versionGate: (minimumVersion: "4.11.0", configDescription: "~/.yarnrc.yml npmMinimalAgeGate"),
+                usesSetting: { Self.yarnrcUsesAgeGate($0) }
+            ),
+
+            // Python
+            ManagerConfig(
                 candidates: [homeCandidate(".config/uv/uv.toml")],
                 binaries: ["uv"],
                 validate: { contents, _ in Self.validateUv(contents) },
@@ -261,6 +273,77 @@ class PackageManagerSupplyChainCheck: ParetoCheck {
                 validate: { contents, _ in Self.validatePypirc(contents) },
                 missingDetail: { display in "\(display) is missing" },
                 passingDetail: { _ in "~/.pypirc has no plaintext credentials" }
+            ),
+            ManagerConfig(
+                candidates: [homeCandidate(".config/pip/pip.conf")],
+                binaries: ["pip", "pip3"],
+                validate: { contents, _ in Self.validatePipConf(contents) },
+                missingDetail: { display in "\(display) is missing" },
+                passingDetail: { _ in "~/.config/pip/pip.conf delays pip package releases" },
+                versionGate: (minimumVersion: "26.1.0", configDescription: "~/.config/pip/pip.conf uploaded-prior-to"),
+                usesSetting: { Self.pipConfUsesUploadedPriorTo($0) }
+            ),
+            ManagerConfig(
+                candidates: [homeCandidate(".config/pypoetry/config.toml")],
+                binaries: ["poetry"],
+                validate: { contents, _ in Self.validatePoetryToml(contents) },
+                missingDetail: { display in "\(display) is missing" },
+                passingDetail: { _ in "~/.config/pypoetry/config.toml delays Poetry package releases" },
+                versionGate: (minimumVersion: "2.4.0", configDescription: "~/.config/pypoetry/config.toml solver.min-release-age"),
+                usesSetting: { Self.tomlKeyValuePairs($0)["solver.min-release-age"] != nil }
+            ),
+            ManagerConfig(
+                candidates: [homeCandidate(".config/pdm/config.toml")],
+                binaries: ["pdm"],
+                validate: { contents, _ in Self.validatePdmToml(contents) },
+                missingDetail: { display in "\(display) is missing" },
+                passingDetail: { _ in "~/.config/pdm/config.toml delays PDM package releases" },
+                versionGate: (minimumVersion: "2.27.0", configDescription: "~/.config/pdm/config.toml strategy.exclude-newer"),
+                usesSetting: { values in
+                    let values = Self.tomlKeyValuePairs(values)
+                    return values["strategy.exclude-newer"] != nil || values["strategy.exclude_newer"] != nil
+                }
+            ),
+            ManagerConfig(
+                candidates: [homeCandidate(".condarc")],
+                binaries: ["conda"],
+                validate: { contents, _ in Self.validateCondarc(contents) },
+                missingDetail: { display in "\(display) is missing" },
+                passingDetail: { _ in "~/.condarc delays conda package releases" },
+                versionGate: (minimumVersion: "26.9.0", configDescription: "~/.condarc exclude_newer"),
+                usesSetting: { contents in
+                    let values = Self.keyValuePairs(contents)
+                    return values["exclude_newer"] != nil || values["exclude-newer"] != nil
+                }
+            ),
+
+            // Ruby
+            ManagerConfig(
+                candidates: [homeCandidate(".bundle/config")],
+                binaries: ["bundle", "bundler"],
+                validate: { contents, _ in Self.validateBundleConfig(contents) },
+                missingDetail: { display in "\(display) is missing" },
+                passingDetail: { _ in "~/.bundle/config delays Bundler package releases" },
+                versionGate: (minimumVersion: "4.0.13", configDescription: "~/.bundle/config BUNDLE_COOLDOWN"),
+                usesSetting: { Self.keyValuePairs($0)["bundle_cooldown"] != nil }
+            ),
+
+            // Elixir
+            ManagerConfig(
+                candidates: [homeCandidate(".hex/hex.config")],
+                binaries: ["mix"],
+                validate: { contents, _ in Self.validateHexConfig(contents) },
+                missingDetail: { display in "\(display) is missing" },
+                passingDetail: { _ in "~/.hex/hex.config delays Hex package releases" }
+            ),
+
+            // Tool version managers
+            ManagerConfig(
+                candidates: [homeCandidate(".config/mise/config.toml")],
+                binaries: ["mise"],
+                validate: { contents, _ in Self.validateMiseConfig(contents) },
+                missingDetail: { display in "\(display) is missing" },
+                passingDetail: { _ in "~/.config/mise/config.toml delays mise package releases" }
             ),
         ]
     }
@@ -349,6 +432,16 @@ class PackageManagerSupplyChainCheck: ParetoCheck {
         return failures
     }
 
+    static func validateYarnrc(_ contents: String) -> [String] {
+        let values = keyValuePairs(contents)
+        let seconds = yarnAgeGateSeconds(values["npmminimalagegate"]) ?? 0
+
+        if seconds < minimumCooldownSeconds {
+            return ["~/.yarnrc.yml npmMinimalAgeGate is below \(minimumCooldownDays) days; set it to at least \(minimumCooldownDays)d or \(minimumCooldownMinutes)"]
+        }
+        return []
+    }
+
     static func validatePnpmConfig(_ contents: String, displayPath: String) -> [String] {
         let values = keyValuePairs(contents)
         let minimumReleaseAge = integerValue(values["minimumreleaseage"]) ?? integerValue(values["minimum-release-age"]) ?? 0
@@ -361,7 +454,7 @@ class PackageManagerSupplyChainCheck: ParetoCheck {
 
     static func validateBunfig(_ contents: String) -> [String] {
         let values = tomlKeyValuePairs(contents)
-        let minimumReleaseAge = integerValue(values["install.minimumReleaseAge"]) ?? 0
+        let minimumReleaseAge = cooldownSeconds(values["install.minimumReleaseAge"]) ?? 0
 
         if minimumReleaseAge < minimumCooldownSeconds {
             return ["~/.bunfig.toml minimumReleaseAge is below \(minimumCooldownSeconds) seconds"]
@@ -371,12 +464,76 @@ class PackageManagerSupplyChainCheck: ParetoCheck {
 
     static func validateUv(_ contents: String) -> [String] {
         let values = tomlKeyValuePairs(contents)
-        let seconds = durationSeconds(values["exclude-newer"]) ?? durationSeconds(values["pip.exclude-newer"]) ?? 0
+        let raw = values["exclude-newer"] ?? values["pip.exclude-newer"]
 
-        if seconds < minimumCooldownSeconds {
-            return ["~/.config/uv/uv.toml exclude-newer is below \(minimumCooldownDays) days"]
+        return durationCooldownFailure(raw, displayKey: "~/.config/uv/uv.toml exclude-newer", hint: "\(minimumCooldownDays) days")
+    }
+
+    static func validatePipConf(_ contents: String) -> [String] {
+        let values = keyValuePairs(contents)
+        guard let uploadedPriorTo = values["uploaded-prior-to"], !uploadedPriorTo.isEmpty else {
+            return ["~/.config/pip/pip.conf uploaded-prior-to is not set; set it to a duration like P\(minimumCooldownDays)D"]
+        }
+        if isAbsoluteTimestamp(uploadedPriorTo) {
+            return ["~/.config/pip/pip.conf uploaded-prior-to is an absolute timestamp that goes stale; set it to a duration like P\(minimumCooldownDays)D"]
+        }
+        if iso8601DurationSeconds(uploadedPriorTo) ?? 0 < minimumCooldownSeconds {
+            return ["~/.config/pip/pip.conf uploaded-prior-to is below \(minimumCooldownDays) days; set it to at least P\(minimumCooldownDays)D"]
         }
         return []
+    }
+
+    static func validatePoetryToml(_ contents: String) -> [String] {
+        let values = tomlKeyValuePairs(contents)
+        let days = integerValue(values["solver.min-release-age"]) ?? 0
+
+        if days < minimumCooldownDays {
+            return ["~/.config/pypoetry/config.toml solver.min-release-age is below \(minimumCooldownDays) days; set it to at least \(minimumCooldownDays)"]
+        }
+        return []
+    }
+
+    static func validatePdmToml(_ contents: String) -> [String] {
+        let values = tomlKeyValuePairs(contents)
+        let raw = values["strategy.exclude-newer"] ?? values["strategy.exclude_newer"]
+
+        return durationCooldownFailure(raw, displayKey: "~/.config/pdm/config.toml strategy.exclude-newer", hint: "\(minimumCooldownDays)d")
+    }
+
+    static func validateCondarc(_ contents: String) -> [String] {
+        let values = keyValuePairs(contents)
+        guard let excludeNewer = values["exclude_newer"] ?? values["exclude-newer"] else {
+            return ["~/.condarc exclude_newer is not set; set it to at least \(minimumCooldownDays)d"]
+        }
+        var failures = durationCooldownFailure(excludeNewer, displayKey: "~/.condarc exclude_newer", hint: "\(minimumCooldownDays)d")
+        if failures.isEmpty, values["solver"]?.lowercased() != "classic" {
+            failures.append("~/.condarc solver must be classic; the default solver does not support exclude_newer")
+        }
+        return failures
+    }
+
+    static func validateBundleConfig(_ contents: String) -> [String] {
+        let values = keyValuePairs(contents)
+        // Bundler rejects anything that is not a whole number of days.
+        guard let days = integerValue(values["bundle_cooldown"]), days >= minimumCooldownDays else {
+            return ["~/.bundle/config BUNDLE_COOLDOWN is below \(minimumCooldownDays) days; set it to at least \(minimumCooldownDays) with bundle config set --global cooldown \(minimumCooldownDays)"]
+        }
+        return []
+    }
+
+    static func validateHexConfig(_ contents: String) -> [String] {
+        let seconds = hexCooldownSeconds(contents) ?? 0
+
+        if seconds < minimumCooldownSeconds {
+            return ["~/.hex/hex.config cooldown is below \(minimumCooldownDays) days; set it to at least \(minimumCooldownDays)d with mix hex.config cooldown \(minimumCooldownDays)d"]
+        }
+        return []
+    }
+
+    static func validateMiseConfig(_ contents: String) -> [String] {
+        let values = tomlKeyValuePairs(contents)
+
+        return durationCooldownFailure(values["settings.minimum_release_age"], displayKey: "~/.config/mise/config.toml settings.minimum_release_age", hint: "\(minimumCooldownDays)d")
     }
 
     static func validatePypirc(_ contents: String) -> [String] {
@@ -389,8 +546,32 @@ class PackageManagerSupplyChainCheck: ParetoCheck {
         return []
     }
 
+    /// Validates values such as uv's exclude-newer that accept relative
+    /// durations or absolute timestamps, where only durations keep working
+    /// as time passes.
+    private static func durationCooldownFailure(_ raw: String?, displayKey: String, hint: String) -> [String] {
+        guard let raw, !raw.isEmpty else {
+            return ["\(displayKey) is not set; set it to at least \(hint)"]
+        }
+        if isAbsoluteTimestamp(raw) {
+            return ["\(displayKey) is an absolute timestamp that goes stale; set it to a relative duration like \(hint)"]
+        }
+        if cooldownSeconds(raw) ?? 0 < minimumCooldownSeconds {
+            return ["\(displayKey) is below \(minimumCooldownDays) days; set it to at least \(hint)"]
+        }
+        return []
+    }
+
     private static func npmConfigUsesMinReleaseAge(_ contents: String) -> Bool {
         keyValuePairs(contents)["min-release-age"] != nil
+    }
+
+    private static func yarnrcUsesAgeGate(_ contents: String) -> Bool {
+        keyValuePairs(contents)["npmminimalagegate"] != nil
+    }
+
+    private static func pipConfUsesUploadedPriorTo(_ contents: String) -> Bool {
+        keyValuePairs(contents)["uploaded-prior-to"] != nil
     }
 
     // MARK: - Parsing helpers
@@ -416,6 +597,14 @@ class PackageManagerSupplyChainCheck: ParetoCheck {
         version.trimmingCharacters(in: CharacterSet(charactersIn: "vV")).split(separator: ".").map { part in
             Int(part.prefix { $0.isNumber }) ?? 0
         }
+    }
+
+    /// Extracts the version number from the various `--version` output
+    /// formats ("11.14.0", "pip 26.1.0 from ...", "Bundler version 2.6.7").
+    static func versionToken(from output: String) -> String? {
+        let trimmed = output.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return nil }
+        return trimmed.components(separatedBy: .whitespacesAndNewlines).first { $0.first?.isNumber == true } ?? trimmed
     }
 
     private static func keyValuePairs(_ contents: String) -> [String: String] {
@@ -462,30 +651,108 @@ class PackageManagerSupplyChainCheck: ParetoCheck {
         return Int(unquote(value))
     }
 
+    /// Yarn parses a bare `npmMinimalAgeGate` number as minutes; only values
+    /// with a unit suffix are durations.
+    private static func yarnAgeGateSeconds(_ value: String?) -> Int? {
+        guard let value else { return nil }
+        let normalized = unquote(value).trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+        if let minutes = Int(normalized) {
+            return minutes * 60
+        }
+        return cooldownSeconds(normalized)
+    }
+
+    private static func cooldownSeconds(_ value: String?) -> Int? {
+        guard let value else { return nil }
+        return iso8601DurationSeconds(value) ?? durationSeconds(value)
+    }
+
     private static func durationSeconds(_ value: String?) -> Int? {
         guard let value else { return nil }
         let normalized = unquote(value).trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
         if let seconds = Int(normalized) {
             return seconds
         }
-        let number = String(normalized.prefix { $0.isNumber })
-        let suffix = String(normalized.dropFirst(number.count)).trimmingCharacters(in: .whitespacesAndNewlines)
-        guard let amount = Int(number) else { return nil }
+        guard !normalized.isEmpty else { return nil }
 
-        switch suffix {
-        case "s", "second", "seconds":
-            return amount
-        case "m", "minute", "minutes":
-            return amount * 60
-        case "h", "hour", "hours":
-            return amount * 3600
-        case "d", "day", "days":
-            return amount * 86400
-        case "w", "week", "weeks":
-            return amount * 604_800
-        default:
-            return nil
+        // Compound relative durations such as "7 days", "3d12h", or "1h30m".
+        var total = 0
+        var index = normalized.startIndex
+        while index < normalized.endIndex {
+            let digits = normalized[index...].prefix { $0.isNumber }
+            guard let amount = Int(digits), !digits.isEmpty else { return nil }
+            index = normalized.index(index, offsetBy: digits.count)
+            while index < normalized.endIndex, normalized[index].isWhitespace {
+                index = normalized.index(after: index)
+            }
+            let unit = normalized[index...].prefix { $0.isLetter }
+            guard let seconds = unitSeconds(String(unit)), !unit.isEmpty else { return nil }
+            index = normalized.index(index, offsetBy: unit.count)
+            total += amount * seconds
         }
+        return total
+    }
+
+    private static func unitSeconds(_ unit: String) -> Int? {
+        switch unit {
+        case "ms", "millisecond", "milliseconds":
+            0
+        case "s", "second", "seconds":
+            1
+        case "m", "minute", "minutes":
+            60
+        case "h", "hour", "hours":
+            3600
+        case "d", "day", "days":
+            86400
+        case "w", "week", "weeks":
+            604_800
+        case "mo", "month", "months":
+            2_592_000
+        default:
+            nil
+        }
+    }
+
+    private static func iso8601DurationSeconds(_ value: String) -> Int? {
+        let normalized = unquote(value).trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+        guard normalized.hasPrefix("p"), normalized.count > 1, let regex = try? NSRegularExpression(pattern: #"^p(?:(\d+)w)?(?:(\d+)d)?(?:t(?:(\d+)h)?(?:(\d+)m)?(?:(\d+)s)?)?$"#) else { return nil }
+        let range = NSRange(normalized.startIndex..., in: normalized)
+        guard let match = regex.firstMatch(in: normalized, range: range) else { return nil }
+
+        let unitSeconds = [604_800, 86400, 3600, 60, 1]
+        var total = 0
+        for (group, seconds) in zip(1..., unitSeconds) where match.range(at: group).location != NSNotFound {
+            guard let groupRange = Range(match.range(at: group), in: normalized), let amount = Int(normalized[groupRange]) else { return nil }
+            total += amount * seconds
+        }
+        return total
+    }
+
+    private static func isAbsoluteTimestamp(_ value: String) -> Bool {
+        let normalized = unquote(value).trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+        guard normalized.first?.isNumber == true else { return false }
+        return normalized.contains("-")
+    }
+
+    /// Reads the cooldown value from hex.config, which stores Erlang terms
+    /// such as `{cooldown,<<"7d">>}.` or `{cooldown,7}.` (days).
+    private static func hexCooldownSeconds(_ contents: String) -> Int? {
+        if let quoted = firstRegexCapture(#"cooldown\s*,\s*<<"([^"]+)""#, in: contents) {
+            return durationSeconds(quoted)
+        }
+        if let bare = firstRegexCapture(#"cooldown\s*,\s*(\d+)"#, in: contents) {
+            return (Int(bare) ?? 0) * 86400
+        }
+        return nil
+    }
+
+    private static func firstRegexCapture(_ pattern: String, in contents: String) -> String? {
+        guard let regex = try? NSRegularExpression(pattern: pattern) else { return nil }
+        let range = NSRange(contents.startIndex..., in: contents)
+        guard let match = regex.firstMatch(in: contents, range: range), match.numberOfRanges > 1,
+              let captured = Range(match.range(at: 1), in: contents) else { return nil }
+        return String(contents[captured])
     }
 
     private static func stripComment(_ line: String) -> String {
