@@ -715,6 +715,76 @@ class ParetoSecurityTests: XCTestCase {
         XCTAssertEqual(check.details, "- ~/.config/pypoetry/config.toml solver.min-release-age is below 7 days; set it to at least 7")
     }
 
+    func testPackageManagerSupplyChainPassesWithPoetryApplicationSupportConfig() throws {
+        let temporaryDirectory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        let poetryDirectory = temporaryDirectory.appendingPathComponent("Library/Application Support/pypoetry")
+        try FileManager.default.createDirectory(at: poetryDirectory, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: temporaryDirectory) }
+
+        try """
+        [solver]
+        min-release-age = 7
+        """.write(to: poetryDirectory.appendingPathComponent("config.toml"), atomically: true, encoding: .utf8)
+
+        let check = PackageManagerSupplyChainCheck(
+            homeDirectory: temporaryDirectory,
+            installedBinaries: ["poetry"],
+            packageManagerVersions: ["poetry": "Poetry 2.4.0"]
+        )
+
+        XCTAssertTrue(check.checkPasses())
+        XCTAssertEqual(check.details, "- ~/Library/Application Support/pypoetry/config.toml delays Poetry package releases")
+    }
+
+    func testPackageManagerSupplyChainFailsWithOldPoetryApplicationSupportConfig() throws {
+        let temporaryDirectory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        let poetryDirectory = temporaryDirectory.appendingPathComponent("Library/Application Support/pypoetry")
+        try FileManager.default.createDirectory(at: poetryDirectory, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: temporaryDirectory) }
+
+        try """
+        [solver]
+        min-release-age = 7
+        """.write(to: poetryDirectory.appendingPathComponent("config.toml"), atomically: true, encoding: .utf8)
+
+        let check = PackageManagerSupplyChainCheck(
+            homeDirectory: temporaryDirectory,
+            installedBinaries: ["poetry"],
+            packageManagerVersions: ["poetry": "Poetry 2.3.0"]
+        )
+
+        XCTAssertFalse(check.checkPasses())
+        XCTAssertEqual(check.details, "- poetry is older than 2.4.0 and does not enforce ~/Library/Application Support/pypoetry/config.toml solver.min-release-age")
+    }
+
+    func testPackageManagerSupplyChainRequiresApplicationSupportConfigForPoetryAndPdm() {
+        let temporaryDirectory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        let check = PackageManagerSupplyChainCheck(homeDirectory: temporaryDirectory, installedBinaries: ["poetry", "pdm"])
+
+        XCTAssertFalse(check.checkPasses())
+        XCTAssertEqual(check.details, """
+        - ~/Library/Application Support/pypoetry/config.toml is missing
+        - ~/Library/Application Support/pdm/config.toml is missing
+        """)
+    }
+
+    func testPackageManagerSupplyChainFailsWithLowPdmApplicationSupportConfig() throws {
+        let temporaryDirectory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        let pdmDirectory = temporaryDirectory.appendingPathComponent("Library/Application Support/pdm")
+        try FileManager.default.createDirectory(at: pdmDirectory, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: temporaryDirectory) }
+
+        try """
+        [strategy]
+        exclude-newer = "6d"
+        """.write(to: pdmDirectory.appendingPathComponent("config.toml"), atomically: true, encoding: .utf8)
+
+        let check = PackageManagerSupplyChainCheck(homeDirectory: temporaryDirectory, installedBinaries: [])
+
+        XCTAssertFalse(check.checkPasses())
+        XCTAssertEqual(check.details, "- ~/Library/Application Support/pdm/config.toml strategy.exclude-newer is below 7 days; set it to at least 7d")
+    }
+
     func testPackageManagerSupplyChainPassesWithPdmCooldown() throws {
         let temporaryDirectory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
         let pdmDirectory = temporaryDirectory.appendingPathComponent(".config/pdm")
