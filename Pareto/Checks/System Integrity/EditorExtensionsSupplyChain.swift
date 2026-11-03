@@ -81,7 +81,7 @@ class EditorExtensionsSupplyChainCheck: ParetoCheck {
     }
 
     override var UUID: String {
-        "093d6f55-ccd9-42f3-aed1-99ea28e458ca"
+        "d53a7b3b-2484-4d2f-966e-0ef1e9b64e48"
     }
 
     override var TitleON: String {
