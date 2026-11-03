@@ -286,6 +286,9 @@
 		4FFDC5A2282153B50092B7BF /* TimeMachineBackup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FFDC5A0282153B50092B7BF /* TimeMachineBackup.swift */; };
 		4FFDC5A428215A8F0092B7BF /* TimeMachineIsEncrypted.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FFDC5A328215A8F0092B7BF /* TimeMachineIsEncrypted.swift */; };
 		4FFDC5A528215A8F0092B7BF /* TimeMachineIsEncrypted.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FFDC5A328215A8F0092B7BF /* TimeMachineIsEncrypted.swift */; };
+		A4290E79309A32AA009AD0F3 /* SystemIntegrityProtection.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4290E78309A32AA009AD0F3 /* SystemIntegrityProtection.swift */; };
+		A4290E7A309A32AA009AD0F3 /* SystemIntegrityProtection.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4290E78309A32AA009AD0F3 /* SystemIntegrityProtection.swift */; };
+		A4290E7C309A3494009AD0F3 /* SystemIntegrityProtectionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4290E7B309A3494009AD0F3 /* SystemIntegrityProtectionTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -504,6 +507,8 @@
 		4FFDC59C282148530092B7BF /* TimeMachineHasBackup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimeMachineHasBackup.swift; sourceTree = "<group>"; };
 		4FFDC5A0282153B50092B7BF /* TimeMachineBackup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeMachineBackup.swift; sourceTree = "<group>"; };
 		4FFDC5A328215A8F0092B7BF /* TimeMachineIsEncrypted.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimeMachineIsEncrypted.swift; sourceTree = "<group>"; };
+		A4290E78309A32AA009AD0F3 /* SystemIntegrityProtection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SystemIntegrityProtection.swift; sourceTree = "<group>"; };
+		A4290E7B309A3494009AD0F3 /* SystemIntegrityProtectionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SystemIntegrityProtectionTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
@@ -677,6 +682,7 @@
 				4FABC0012F1B000100000001 /* PackageManagerSupplyChain.swift */,
 				4FABC0112F6E000100000001 /* EditorExtensionsSupplyChain.swift */,
 				4FCA00102F6D000100000001 /* CompromisedCA.swift */,
+				A4290E78309A32AA009AD0F3 /* SystemIntegrityProtection.swift */,
 			);
 			path = "System Integrity";
 			sourceTree = "<group>";
@@ -811,6 +817,7 @@
 				4FCA00132F6D000100000001 /* CompromisedCATests.swift */,
 				4FABC0212F6E000100000001 /* EditorExtensionsSupplyChainTests.swift */,
 				4FABC0232F6E000100000001 /* PackageManagerSupplyChainTests.swift */,
+				A4290E7B309A3494009AD0F3 /* SystemIntegrityProtectionTests.swift */,
 			);
 			path = ParetoSecurityTests;
 			sourceTree = "<group>";
@@ -1322,6 +1329,7 @@
 				4FB51A5827A94457003F528E /* SecurityUpdateCheck.swift in Sources */,
 				4F37E7352718122E00A2B254 /* AppInfo.swift in Sources */,
 				4F84EC9329DC3A030047C79C /* PermissionsSettingsView.swift in Sources */,
+				A4290E7A309A32AA009AD0F3 /* SystemIntegrityProtection.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1359,6 +1367,7 @@
 				4F080D1D26C50D2800686786 /* ParetoSecurityTests.swift in Sources */,
 				4FA975732E4B3307006C0D5A /* UpdateServiceTest.swift in Sources */,
 				4F6A92E626C521BE006C2F2D /* CheckIntegrationTest.swift in Sources */,
+				A4290E7C309A3494009AD0F3 /* SystemIntegrityProtectionTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1482,6 +1491,7 @@
 				4FB51A5727A94457003F528E /* SecurityUpdateCheck.swift in Sources */,
 				4F6A92EA26C54AB7006C2F2D /* AppInfo.swift in Sources */,
 				4F84EC9229DC3A030047C79C /* PermissionsSettingsView.swift in Sources */,
+				A4290E79309A32AA009AD0F3 /* SystemIntegrityProtection.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

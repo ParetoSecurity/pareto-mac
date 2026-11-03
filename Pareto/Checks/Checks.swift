@@ -52,6 +52,7 @@ class Claims: ObservableObject {
             ]),
             Claim(withTitle: "System Integrity", withChecks: [
                 GatekeeperCheck.sharedInstance,
+                SystemIntegrityProtectionCheck.sharedInstance,
                 FileVaultCheck.sharedInstance,
                 BootCheck.sharedInstance,
                 UptimeCheck.sharedInstance,
