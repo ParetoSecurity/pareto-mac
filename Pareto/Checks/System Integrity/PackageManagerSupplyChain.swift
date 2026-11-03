@@ -40,8 +40,9 @@ class PackageManagerSupplyChainCheck: ParetoCheck {
         let missingDetail: (String) -> String
         /// Detail used when the config passes, given the matched display path.
         let passingDetail: (String) -> String
-        /// Set when only newer tool versions actually enforce the setting.
-        var versionGate: (minimumVersion: String, configDescription: String)?
+        /// Set when only newer tool versions actually enforce the setting;
+        /// `setting` is reported after the matched display path.
+        var versionGate: (minimumVersion: String, setting: String)?
         /// The gate only makes sense once the cooldown key is present.
         var usesSetting: ((String) -> Bool)?
     }
@@ -114,7 +115,7 @@ class PackageManagerSupplyChainCheck: ParetoCheck {
                     managerFailures,
                     binary: binary,
                     minimumVersion: gate.minimumVersion,
-                    configDescription: gate.configDescription
+                    configDescription: "\(active.displayPath) \(gate.setting)"
                 )
             }
             failures.append(contentsOf: managerFailures)
@@ -230,7 +231,7 @@ class PackageManagerSupplyChainCheck: ParetoCheck {
                 validate: { contents, _ in Self.validateNpmrc(contents) },
                 missingDetail: { display in "\(display) is missing" },
                 passingDetail: { _ in "~/.npmrc delays npm-compatible package releases" },
-                versionGate: (minimumVersion: "11.14.0", configDescription: "~/.npmrc min-release-age"),
+                versionGate: (minimumVersion: "11.14.0", setting: "min-release-age"),
                 usesSetting: { Self.npmConfigUsesMinReleaseAge($0) }
             ),
             ManagerConfig(
@@ -255,7 +256,7 @@ class PackageManagerSupplyChainCheck: ParetoCheck {
                 validate: { contents, _ in Self.validateYarnrc(contents) },
                 missingDetail: { display in "\(display) is missing" },
                 passingDetail: { _ in "~/.yarnrc.yml delays Yarn package releases" },
-                versionGate: (minimumVersion: "4.11.0", configDescription: "~/.yarnrc.yml npmMinimalAgeGate"),
+                versionGate: (minimumVersion: "4.11.0", setting: "npmMinimalAgeGate"),
                 usesSetting: { Self.yarnrcUsesAgeGate($0) }
             ),
 
@@ -280,25 +281,35 @@ class PackageManagerSupplyChainCheck: ParetoCheck {
                 validate: { contents, _ in Self.validatePipConf(contents) },
                 missingDetail: { display in "\(display) is missing" },
                 passingDetail: { _ in "~/.config/pip/pip.conf delays pip package releases" },
-                versionGate: (minimumVersion: "26.1.0", configDescription: "~/.config/pip/pip.conf uploaded-prior-to"),
+                versionGate: (minimumVersion: "26.1.0", setting: "uploaded-prior-to"),
                 usesSetting: { Self.pipConfUsesUploadedPriorTo($0) }
             ),
             ManagerConfig(
-                candidates: [homeCandidate(".config/pypoetry/config.toml")],
+                // Poetry and PDM read platformdirs' macOS config directory;
+                // ~/.config is kept for users who already configured it there.
+                // https://python-poetry.org/docs/configuration/
+                // https://pdm-project.org/latest/usage/config/
+                candidates: [
+                    homeCandidate("Library/Application Support/pypoetry/config.toml"),
+                    homeCandidate(".config/pypoetry/config.toml"),
+                ],
                 binaries: ["poetry"],
-                validate: { contents, _ in Self.validatePoetryToml(contents) },
+                validate: Self.validatePoetryToml,
                 missingDetail: { display in "\(display) is missing" },
-                passingDetail: { _ in "~/.config/pypoetry/config.toml delays Poetry package releases" },
-                versionGate: (minimumVersion: "2.4.0", configDescription: "~/.config/pypoetry/config.toml solver.min-release-age"),
+                passingDetail: { display in "\(display) delays Poetry package releases" },
+                versionGate: (minimumVersion: "2.4.0", setting: "solver.min-release-age"),
                 usesSetting: { Self.tomlKeyValuePairs($0)["solver.min-release-age"] != nil }
             ),
             ManagerConfig(
-                candidates: [homeCandidate(".config/pdm/config.toml")],
+                candidates: [
+                    homeCandidate("Library/Application Support/pdm/config.toml"),
+                    homeCandidate(".config/pdm/config.toml"),
+                ],
                 binaries: ["pdm"],
-                validate: { contents, _ in Self.validatePdmToml(contents) },
+                validate: Self.validatePdmToml,
                 missingDetail: { display in "\(display) is missing" },
-                passingDetail: { _ in "~/.config/pdm/config.toml delays PDM package releases" },
-                versionGate: (minimumVersion: "2.27.0", configDescription: "~/.config/pdm/config.toml strategy.exclude-newer"),
+                passingDetail: { display in "\(display) delays PDM package releases" },
+                versionGate: (minimumVersion: "2.27.0", setting: "strategy.exclude-newer"),
                 usesSetting: { values in
                     let values = Self.tomlKeyValuePairs(values)
                     return values["strategy.exclude-newer"] != nil || values["strategy.exclude_newer"] != nil
@@ -310,7 +321,7 @@ class PackageManagerSupplyChainCheck: ParetoCheck {
                 validate: { contents, _ in Self.validateCondarc(contents) },
                 missingDetail: { display in "\(display) is missing" },
                 passingDetail: { _ in "~/.condarc delays conda package releases" },
-                versionGate: (minimumVersion: "26.9.0", configDescription: "~/.condarc exclude_newer"),
+                versionGate: (minimumVersion: "26.9.0", setting: "exclude_newer"),
                 usesSetting: { contents in
                     let values = Self.keyValuePairs(contents)
                     return values["exclude_newer"] != nil || values["exclude-newer"] != nil
@@ -324,7 +335,7 @@ class PackageManagerSupplyChainCheck: ParetoCheck {
                 validate: { contents, _ in Self.validateBundleConfig(contents) },
                 missingDetail: { display in "\(display) is missing" },
                 passingDetail: { _ in "~/.bundle/config delays Bundler package releases" },
-                versionGate: (minimumVersion: "4.0.13", configDescription: "~/.bundle/config BUNDLE_COOLDOWN"),
+                versionGate: (minimumVersion: "4.0.13", setting: "BUNDLE_COOLDOWN"),
                 usesSetting: { Self.keyValuePairs($0)["bundle_cooldown"] != nil }
             ),
 
@@ -483,21 +494,21 @@ class PackageManagerSupplyChainCheck: ParetoCheck {
         return []
     }
 
-    static func validatePoetryToml(_ contents: String) -> [String] {
+    static func validatePoetryToml(_ contents: String, displayPath: String) -> [String] {
         let values = tomlKeyValuePairs(contents)
         let days = integerValue(values["solver.min-release-age"]) ?? 0
 
         if days < minimumCooldownDays {
-            return ["~/.config/pypoetry/config.toml solver.min-release-age is below \(minimumCooldownDays) days; set it to at least \(minimumCooldownDays)"]
+            return ["\(displayPath) solver.min-release-age is below \(minimumCooldownDays) days; set it to at least \(minimumCooldownDays)"]
         }
         return []
     }
 
-    static func validatePdmToml(_ contents: String) -> [String] {
+    static func validatePdmToml(_ contents: String, displayPath: String) -> [String] {
         let values = tomlKeyValuePairs(contents)
         let raw = values["strategy.exclude-newer"] ?? values["strategy.exclude_newer"]
 
-        return durationCooldownFailure(raw, displayKey: "~/.config/pdm/config.toml strategy.exclude-newer", hint: "\(minimumCooldownDays)d")
+        return durationCooldownFailure(raw, displayKey: "\(displayPath) strategy.exclude-newer", hint: "\(minimumCooldownDays)d")
     }
 
     static func validateCondarc(_ contents: String) -> [String] {
