@@ -33,7 +33,14 @@ class SSHKeysCheck: SSHCheck {
 
     func isPasswordEnabled(withKey path: String) -> Bool {
         let output = runCMD(app: getSSHKeygenPath(), args: ["-P", "''", "-y", "-f", path])
-        return output.contains("incorrect passphrase supplied")
+        return Self.isProtected(keygenOutput: output)
+    }
+
+    static let securityKeyTypes = ["sk-ssh-ed25519@openssh.com", "sk-ecdsa-sha2-nistp256@openssh.com"]
+
+    static func isProtected(keygenOutput output: String) -> Bool {
+        // A security key file only holds a key handle, the private key never leaves the authenticator
+        output.contains("incorrect passphrase supplied") || securityKeyTypes.contains { output.hasPrefix($0 + " ") }
     }
 
     func keysWithNoPassword() -> [String] {
