@@ -37,6 +37,7 @@ class Claims: ObservableObject {
                 PasswordAfterSleepCheck.sharedInstance,
                 NoUnusedUsers.sharedInstance,
                 NoAdminUser.sharedInstance,
+                SudoRequiresPasswordCheck.sharedInstance,
             ]),
             Claim(withTitle: "Firewall & Sharing", withChecks: [
                 FirewallCheck.sharedInstance,
