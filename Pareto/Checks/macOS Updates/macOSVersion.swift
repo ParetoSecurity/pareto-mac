@@ -6,8 +6,8 @@
 //
 import Alamofire
 import Foundation
+import IOKit
 import os.log
-import Regex
 import Version
 
 typealias AsyncCommandRunner = @Sendable (_ app: String, _ args: [String], _ timeout: TimeInterval) async throws -> String
@@ -21,7 +21,11 @@ class MacOSVersionCheck: ParetoCheck {
         try await runCMDAsync(app: app, args: args, timeout: timeout)
     }
 
-    var supportPageVersionProvider: (@Sendable (String) async -> Version?)?
+    var gdmfVersionProvider: (@Sendable () async -> Version?)?
+
+    /// Apple's public catalog of macOS releases, one entry per supported major version.
+    /// This is the feed MDM servers use for software update enforcement.
+    static let gdmfURL = "https://gdmf.apple.com/v2/pmv"
     override var UUID: String {
         "284162c2-f911-4b5e-8c81-30b2cf1ba73f"
     }
@@ -67,18 +71,91 @@ class MacOSVersionCheck: ParetoCheck {
         return Version(version)
     }
 
-    static func parseLatestVersion(fromSupportPageHTML html: String) -> Version? {
-        let versionRegex = Regex("<h2.*>macOS.+ ([\\.\\d]+)<\\/h2>")
-        guard var version = versionRegex.firstMatch(in: html)?.groups.first?.value else {
+    // MARK: - GDMF
+
+    private struct GDMFResponse: Decodable {
+        let publicAssetSets: GDMFAssetSets?
+        let assetSets: GDMFAssetSets?
+
+        enum CodingKeys: String, CodingKey {
+            case publicAssetSets = "PublicAssetSets"
+            case assetSets = "AssetSets"
+        }
+    }
+
+    private struct GDMFAssetSets: Decodable {
+        let macOS: [GDMFAsset]?
+    }
+
+    private struct GDMFAsset: Decodable {
+        let productVersion: String
+        let supportedDevices: [String]?
+
+        enum CodingKeys: String, CodingKey {
+            case productVersion = "ProductVersion"
+            case supportedDevices = "SupportedDevices"
+        }
+    }
+
+    /// Picks the latest public release for `currentMajor` from a GDMF response.
+    ///
+    /// When `deviceID` is known, releases that ship to this device win, so a release built
+    /// for specific models only (e.g. 26.3.2 for MacBook Neo) is not required of other Macs.
+    static func parseLatestVersion(fromGDMF data: Data, currentMajor: Int, deviceID: String?) -> Version? {
+        guard let response = try? JSONDecoder().decode(GDMFResponse.self, from: data) else {
             return nil
         }
 
-        if version.components(separatedBy: ".").count == 2 {
-            version += ".0"
+        func candidates(_ assets: [GDMFAsset]?) -> [(version: Version, devices: [String])] {
+            (assets ?? []).compactMap { asset in
+                guard let version = normalizeVersion(asset.productVersion), version.major == currentMajor else {
+                    return nil
+                }
+                return (version, asset.supportedDevices ?? [])
+            }
         }
 
-        return normalizeVersion(version)
+        let published = candidates(response.publicAssetSets?.macOS)
+        guard !published.isEmpty else { return nil }
+
+        if let deviceID {
+            if let latest = published.filter({ $0.devices.contains(deviceID) }).map(\.version).max() {
+                return latest
+            }
+            // The public release for this major skips this device; use the newest one that ships to it.
+            if let latest = candidates(response.assetSets?.macOS).filter({ $0.devices.contains(deviceID) }).map(\.version).max() {
+                return latest
+            }
+        }
+
+        return published.map(\.version).max()
     }
+
+    /// Identifier GDMF uses in `SupportedDevices`: `target-sub-type` on Apple silicon and VMs
+    /// (e.g. `J314sAP`), `board-id` on Intel (e.g. `Mac-1E7E29AD0135F9BC`).
+    static func deviceIdentifier() -> String? {
+        let platformExpert = IOServiceGetMatchingService(kIOMainPortDefault, IOServiceMatching("IOPlatformExpertDevice"))
+        guard platformExpert != 0 else { return nil }
+        defer { IOObjectRelease(platformExpert) }
+
+        for key in ["target-sub-type", "board-id"] {
+            guard let property = IORegistryEntryCreateCFProperty(platformExpert, key as CFString, kCFAllocatorDefault, 0)?
+                .takeRetainedValue()
+            else { continue }
+
+            let value: String? = if let data = property as? Data {
+                String(decoding: data, as: UTF8.self).trimmingCharacters(in: CharacterSet(charactersIn: "\u{0}"))
+            } else {
+                property as? String
+            }
+            if let value, !value.isEmpty {
+                return value
+            }
+        }
+        return nil
+    }
+
+    // MARK: - softwareupdate
 
     static func parseLatestVersion(fromSoftwareUpdateOutput output: String, currentMajor: Int) -> Version? {
         let nsOutput = output as NSString
@@ -113,15 +190,15 @@ class MacOSVersionCheck: ParetoCheck {
         return current >= latest
     }
 
-    func getLatestVersion(doc: String, completion: @escaping (Version, String) -> Void) {
+    func getLatestVersion(completion: @escaping (Version, String) -> Void) {
         Task.detached(priority: .utility) { [weak self] in
             guard let self else {
                 completion(Version(0, 0, 0), "unresolved")
                 return
             }
 
-            if let supportPageVersion = await getLatestVersionFromSupportPage(doc: doc) {
-                completion(supportPageVersion, "apple-support")
+            if let gdmfVersion = await getLatestVersionFromGDMF() {
+                completion(gdmfVersion, "gdmf")
                 return
             }
 
@@ -134,26 +211,27 @@ class MacOSVersionCheck: ParetoCheck {
         }
     }
 
-    private func getLatestVersionFromSupportPage(doc: String) async -> Version? {
-        if let supportPageVersionProvider {
-            return await supportPageVersionProvider(doc)
+    private func getLatestVersionFromGDMF() async -> Version? {
+        if let gdmfVersionProvider {
+            return await gdmfVersionProvider()
         }
 
-        let url = "https://support.apple.com/en-us/\(doc)"
-        os_log("Determining latest macOS version via Apple support page: %{public}s", log: Log.check, url)
+        let currentMajor = currentVersion.major
+        let deviceID = Self.deviceIdentifier()
+        os_log("Determining latest macOS %d.x via GDMF for device %{public}@", log: Log.check, currentMajor, deviceID ?? "unknown")
 
         return await withCheckedContinuation { continuation in
-            Network.session.request(url).responseString(queue: AppCheck.queue, completionHandler: { response in
-                if let error = response.error {
-                    os_log("Apple support page lookup failed: %{public}@", log: Log.check, error.localizedDescription)
+            Network.session.request(Self.gdmfURL).validate().responseData(queue: AppCheck.queue) { response in
+                switch response.result {
+                case let .success(data):
+                    let parsedVersion = Self.parseLatestVersion(fromGDMF: data, currentMajor: currentMajor, deviceID: deviceID)
+                    os_log("GDMF resolved latest macOS version to %{public}@", log: Log.check, parsedVersion?.description ?? "unknown")
+                    continuation.resume(returning: parsedVersion)
+                case let .failure(error):
+                    os_log("GDMF lookup failed: %{public}@", log: Log.check, error.localizedDescription)
                     continuation.resume(returning: nil)
-                    return
                 }
-
-                let parsedVersion = Self.parseLatestVersion(fromSupportPageHTML: response.value ?? "")
-                os_log("Apple support page resolved latest macOS version to %{public}@", log: Log.check, parsedVersion?.description ?? "unknown")
-                continuation.resume(returning: parsedVersion)
-            })
+            }
         }
     }
 
@@ -176,27 +254,11 @@ class MacOSVersionCheck: ParetoCheck {
     }
 
     var latestXX: Version {
-        var doc = "HT211896"
-        if #available(macOS 12, *) {
-            doc = "HT212585"
-        }
-        if #available(macOS 13, *) {
-            doc = "HT213268"
-        }
-        if #available(macOS 14, *) {
-            doc = "HT213895"
-        }
-        if #available(macOS 15, *) {
-            doc = "120283"
-        }
-        if #available(macOS 26, *) {
-            doc = "122868"
-        }
-        refreshLatestVersionIfNeeded(doc: doc)
+        refreshLatestVersionIfNeeded()
         return latestVersionLock.withLock { $0 }
     }
 
-    private func refreshLatestVersionIfNeeded(doc: String) {
+    private func refreshLatestVersionIfNeeded() {
         let shouldStart = latestVersionInFlight.withLock { inFlight in
             if inFlight {
                 return false
@@ -206,7 +268,7 @@ class MacOSVersionCheck: ParetoCheck {
         }
         guard shouldStart else { return }
 
-        getLatestVersion(doc: doc) { version, source in
+        getLatestVersion { version, source in
             self.storeResolvedLatestVersion(version, source: source)
             self.latestVersionInFlight.withLock { $0 = false }
             DispatchQueue.main.async {
