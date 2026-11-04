@@ -206,18 +206,74 @@ class UpdateServiceTest: XCTestCase {
         XCTAssertFalse(paretoUpdated.hasError)
     }
 
-    func testMacOSVersionParserReadsSupportPageHTML() {
-        let html = """
-        <html>
-        <body>
-        <h2>macOS Sequoia 15.7</h2>
-        </body>
-        </html>
+    /// Trimmed copy of https://gdmf.apple.com/v2/pmv as published on 2026-10-26.
+    static let gdmfFixture = """
+    {
+      "PublicAssetSets": {
+        "macOS": [
+          {"ProductVersion": "15.8.2", "Build": "24H210", "SupportedDevices": ["J314sAP", "Mac-1E7E29AD0135F9BC"]},
+          {"ProductVersion": "27.2", "Build": "26B123", "SupportedDevices": ["J314sAP", "J700AP", "VMA2MACOSAP"]},
+          {"ProductVersion": "26.7.2", "Build": "25H120", "SupportedDevices": ["J314sAP", "VMA2MACOSAP", "VMM-x86_64"]},
+          {"ProductVersion": "26.3.2", "Build": "25D2140", "SupportedDevices": ["J800AP"]}
+        ],
+        "iOS": [
+          {"ProductVersion": "27.9", "Build": "27Z1", "SupportedDevices": ["iPhone99,1"]}
+        ]
+      },
+      "AssetSets": {
+        "macOS": [
+          {"ProductVersion": "26.3.1", "Build": "25D2128", "SupportedDevices": ["J314sAP", "J800AP"]},
+          {"ProductVersion": "27.0.1", "Build": "26A190", "SupportedDevices": ["J314sAP"]}
+        ]
+      }
+    }
+    """
+
+    func testMacOSVersionParserReadsGDMFLatestForCurrentMajor() {
+        let data = Data(Self.gdmfFixture.utf8)
+
+        XCTAssertEqual(MacOSVersionCheck.parseLatestVersion(fromGDMF: data, currentMajor: 27, deviceID: nil)?.description, "27.2.0")
+        XCTAssertEqual(MacOSVersionCheck.parseLatestVersion(fromGDMF: data, currentMajor: 15, deviceID: nil)?.description, "15.8.2")
+    }
+
+    func testMacOSVersionParserGDMFReturnsNilForUnknownMajor() {
+        let data = Data(Self.gdmfFixture.utf8)
+
+        XCTAssertNil(MacOSVersionCheck.parseLatestVersion(fromGDMF: data, currentMajor: 28, deviceID: nil))
+        XCTAssertNil(MacOSVersionCheck.parseLatestVersion(fromGDMF: Data("not json".utf8), currentMajor: 27, deviceID: nil))
+    }
+
+    func testMacOSVersionParserGDMFPrefersReleaseForThisDevice() {
+        let data = Data(Self.gdmfFixture.utf8)
+
+        // Without a device ID, the newest 26.x wins regardless of which Macs it ships to.
+        XCTAssertEqual(MacOSVersionCheck.parseLatestVersion(fromGDMF: data, currentMajor: 26, deviceID: nil)?.description, "26.7.2")
+        // A device-specific release only counts for the devices it ships to.
+        XCTAssertEqual(MacOSVersionCheck.parseLatestVersion(fromGDMF: data, currentMajor: 26, deviceID: "J800AP")?.description, "26.3.2")
+        XCTAssertEqual(MacOSVersionCheck.parseLatestVersion(fromGDMF: data, currentMajor: 26, deviceID: "J314sAP")?.description, "26.7.2")
+        XCTAssertEqual(MacOSVersionCheck.parseLatestVersion(fromGDMF: data, currentMajor: 15, deviceID: "Mac-1E7E29AD0135F9BC")?.description, "15.8.2")
+    }
+
+    func testMacOSVersionParserGDMFFallsBackToAllDevicesForUnknownDevice() {
+        let data = Data(Self.gdmfFixture.utf8)
+
+        XCTAssertEqual(MacOSVersionCheck.parseLatestVersion(fromGDMF: data, currentMajor: 27, deviceID: "J999AP")?.description, "27.2.0")
+    }
+
+    func testMacOSVersionParserGDMFUsesAssetSetsWhenPublicReleaseSkipsDevice() {
+        let json = """
+        {
+          "PublicAssetSets": {"macOS": [{"ProductVersion": "26.3.2", "SupportedDevices": ["J800AP"]}]},
+          "AssetSets": {"macOS": [
+            {"ProductVersion": "26.3.1", "SupportedDevices": ["J314sAP", "J800AP"]},
+            {"ProductVersion": "26.3", "SupportedDevices": ["J314sAP"]}
+          ]}
+        }
         """
 
-        let version = MacOSVersionCheck.parseLatestVersion(fromSupportPageHTML: html)
+        let version = MacOSVersionCheck.parseLatestVersion(fromGDMF: Data(json.utf8), currentMajor: 26, deviceID: "J314sAP")
 
-        XCTAssertEqual(version?.description, "15.7.0")
+        XCTAssertEqual(version?.description, "26.3.1")
     }
 
     func testMacOSVersionParserReadsSoftwareUpdateTitleOutput() {
@@ -265,9 +321,27 @@ class UpdateServiceTest: XCTestCase {
         XCTAssertEqual(version?.description, "26.5.0")
     }
 
-    func testMacOSVersionFallsBackToSoftwareUpdateWhenSupportPageFails() async {
+    func testMacOSVersionUsesGDMFWhenAvailable() async {
         let check = MacOSVersionCheck()
-        check.supportPageVersionProvider = { _ in nil }
+        check.gdmfVersionProvider = { Version(27, 2, 0) }
+        check.commandRunner = { _, _, _ in
+            XCTFail("softwareupdate should not run when GDMF resolves")
+            return ""
+        }
+
+        let version = await withCheckedContinuation { continuation in
+            check.getLatestVersion { version, source in
+                continuation.resume(returning: (version, source))
+            }
+        }
+
+        XCTAssertEqual(version.0.description, "27.2.0")
+        XCTAssertEqual(version.1, "gdmf")
+    }
+
+    func testMacOSVersionFallsBackToSoftwareUpdateWhenGDMFFails() async {
+        let check = MacOSVersionCheck()
+        check.gdmfVersionProvider = { nil }
         check.commandRunner = { _, _, _ in
             """
             Software Update found the following new or updated software:
@@ -276,7 +350,7 @@ class UpdateServiceTest: XCTestCase {
         }
 
         let version = await withCheckedContinuation { continuation in
-            check.getLatestVersion(doc: "ignored") { version, source in
+            check.getLatestVersion { version, source in
                 continuation.resume(returning: (version, source))
             }
         }
@@ -285,13 +359,36 @@ class UpdateServiceTest: XCTestCase {
         XCTAssertEqual(version.1, "softwareupdate")
     }
 
+    func testMacOSVersionUnresolvedWhenAllSourcesFail() async {
+        let check = MacOSVersionCheck()
+        check.gdmfVersionProvider = { nil }
+        check.commandRunner = { _, _, _ in "No new software available." }
+
+        let version = await withCheckedContinuation { continuation in
+            check.getLatestVersion { version, source in
+                continuation.resume(returning: (version, source))
+            }
+        }
+
+        XCTAssertEqual(version.0, Version(0, 0, 0))
+        XCTAssertEqual(version.1, "unresolved")
+    }
+
+    func testMacOSVersionDeviceIdentifierIsReadable() {
+        // Every Mac (Apple silicon, Intel or VM) exposes target-sub-type or board-id.
+        let deviceID = MacOSVersionCheck.deviceIdentifier()
+
+        XCTAssertNotNil(deviceID)
+        XCTAssertFalse(deviceID?.contains("\u{0}") ?? true)
+    }
+
     func testMacOSVersionDetailsIncludeCurrentAndResolvedVersion() {
         let check = MacOSVersionCheck()
-        check.storeResolvedLatestVersion(Version(26, 3, 1), source: "apple-support")
+        check.storeResolvedLatestVersion(Version(26, 3, 1), source: "gdmf")
 
         XCTAssertTrue(check.details.contains("current=\(check.currentVersion)"))
         XCTAssertTrue(check.details.contains("latest=26.3.1"))
-        XCTAssertTrue(check.details.contains("source=apple-support"))
+        XCTAssertTrue(check.details.contains("source=gdmf"))
     }
 
     func testMacOSVersionTreatsMacBookNeoPatchLagAsUpToDate() {
