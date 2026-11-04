@@ -80,7 +80,10 @@ class SSHKeysStrengthCheck: SSHCheck {
     }
 
     func isKeyStrong(withKey path: String) -> Bool {
-        let output = runCMD(app: getSSHKeygenPath(), args: ["-l", "-f", path])
+        guard let output = runKeygen(args: ["-l", "-f", path], keyPath: path) else {
+            hasError = true
+            return false
+        }
         let info = KeyInfo(stringLiteral: output.strip())
         os_log("%{public}s has %d", log: Log.check, path, info.strength)
         return Self.isKeyStrong(info)

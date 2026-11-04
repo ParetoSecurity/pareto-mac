@@ -9,6 +9,16 @@
 import XCTest
 
 class SSHKeysTests: XCTestCase {
+    private class CheckWithHomebrewInstalled: SSHCheck {
+        override func itExists(_: String) -> Bool {
+            true
+        }
+    }
+
+    func testPreservesHomebrewKeygenSupport() {
+        XCTAssertEqual(CheckWithHomebrewInstalled().getSSHKeygenPath(), "/opt/homebrew/bin/ssh-keygen")
+    }
+
     let ed25519SK = "sk-ssh-ed25519@openssh.com AAAAGnNrLXNzaC1lZDI1NTE5QG9wZW5zc2guY29tAAAAIN1Ey4B7zdikMDSAAPkrqYVIEa2m+M2oVMauz+JfgiQMAAAABHNzaDo= sk-test"
     let ecdsaSK = "sk-ecdsa-sha2-nistp256@openssh.com AAAAInNrLWVjZHNhLXNoYTItbmlzdHAyNTZAb3BlbnNzaC5jb20AAAAIbmlzdHAyNTYAAABBBD7Vr1sY/X/gIOvhFOBohEzoRFr7c/L+1zkPznG4exRdTpMPyxgO+Jj9pgH1R1wLFKBd7ChXhMH80NF5z5AUrmQAAAAEc3NoOg== sk-test"
     let ed25519 = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIN1Ey4B7zdikMDSAAPkrqYVIEa2m+M2oVMauz+JfgiQM test"
