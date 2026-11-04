@@ -60,12 +60,13 @@ struct CheckSettingsView_Previews: PreviewProvider {
 /// Shared by the Preferences sheet and the menu bar's check details window.
 struct CheckDetailsContent: View {
     let check: ParetoCheck
+    var showsHeader: Bool = true
 
     var body: some View {
         if check.UUID == NoUnusedUsers.sharedInstance.UUID {
-            NoUnusedUsersDetailView(check: check)
+            NoUnusedUsersDetailView(check: check, showsHeader: showsHeader)
         } else {
-            CheckDetailView(check: check)
+            CheckDetailView(check: check, showsHeader: showsHeader)
         }
     }
 }
