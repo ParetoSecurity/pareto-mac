@@ -329,8 +329,9 @@ struct Pareto: App {
 
         WindowGroup("Check Details", id: AppWindowID.checkDetails, for: String.self) { $checkID in
             if let check = Claims.global.all.flatMap(\.checks).first(where: { $0.UUID == checkID }) {
-                CheckDetailsContent(check: check)
+                CheckDetailsContent(check: check, showsHeader: false)
                     .frame(width: 550)
+                    .navigationTitle(check.TitleON)
             }
         }
         .defaultPosition(.center)
