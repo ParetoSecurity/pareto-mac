@@ -18,6 +18,8 @@ struct StatusBarMenuView: View {
 
     @Default(.snoozeTime) var snoozeTime
     @Default(.lastCheck) var lastCheck
+    /// Bumped each time the menu opens so relative times ("Last check", "Resumes") are recomputed
+    @State private var menuOpenTick = 0
 
     private var claimsPassed: Bool {
         Claims.global.all.allSatisfy { claim in
@@ -40,7 +42,8 @@ struct StatusBarMenuView: View {
                 .id(statusBarModel.refreshNonce)
             }
 
-            statusline().id(statusBarModel.refreshNonce ^ (statusBarModel.isRunning ? 1 : 0))
+            statusline()
+                .id("\(statusBarModel.refreshNonce)-\(statusBarModel.isRunning)-\(menuOpenTick)")
 
             Divider()
             // Action buttons
@@ -138,6 +141,12 @@ struct StatusBarMenuView: View {
         .onAppear {
             // Cancel auto-hide while menu is open
             appHandlers.cancelAutoHide()
+        }
+        .onReceive(NotificationCenter.default.publisher(for: NSMenu.didBeginTrackingNotification)) { note in
+            // .menu style MenuBarExtra does not re-run onAppear on open, so recompute relative
+            // timestamps ("Last check", "Resumes") when the top-level menu starts tracking
+            guard let menu = note.object as? NSMenu, menu.supermenu == nil else { return }
+            menuOpenTick &+= 1
         }
         .onDisappear {
             // Resume auto-hide timer when menu closes
