@@ -12,6 +12,7 @@ import OSAKit
 enum CommandRunnerError: Swift.Error {
     case launchFailed(String)
     case timedOut
+    case unsuccessfulExit(Int32)
 }
 
 private final class ProcessBox {
@@ -52,7 +53,10 @@ private final class ResumeGate: @unchecked Sendable {
     }
 }
 
-func runCMDAsync(app: String, args: [String], timeout: TimeInterval = 15.0) async throws -> String {
+func runCMDAsync(app: String, args: [String], timeout: TimeInterval = 15.0,
+                 includeStandardError: Bool = true, requireSuccessfulExit: Bool = false,
+                 environment: [String: String]? = nil, directory: URL? = nil) async throws -> String
+{
     let processBox = ProcessBox()
     let outputBuffer = OutputBuffer()
     let resumeGate = ResumeGate()
@@ -69,9 +73,16 @@ func runCMDAsync(app: String, args: [String], timeout: TimeInterval = 15.0) asyn
             }
 
             task.standardOutput = pipe
-            task.standardError = pipe
+            if includeStandardError {
+                task.standardError = pipe
+            } else {
+                task.standardError = FileHandle.nullDevice
+            }
             task.arguments = args
             task.launchPath = app
+            task.environment = environment
+            task.currentDirectoryURL = directory
+            task.standardInput = FileHandle.nullDevice
             processBox.process = task
 
             pipe.fileHandleForReading.readabilityHandler = { handle in
@@ -80,14 +91,17 @@ func runCMDAsync(app: String, args: [String], timeout: TimeInterval = 15.0) asyn
                 outputBuffer.append(data)
             }
 
-            task.terminationHandler = { _ in
+            task.terminationHandler = { process in
                 pipe.fileHandleForReading.readabilityHandler = nil
                 let remaining = pipe.fileHandleForReading.readDataToEndOfFile()
                 if !remaining.isEmpty {
                     outputBuffer.append(remaining)
                 }
-                let output = outputBuffer.output()
-                resumeOnce(.success(output))
+                if requireSuccessfulExit, process.terminationReason != .exit || process.terminationStatus != 0 {
+                    resumeOnce(.failure(CommandRunnerError.unsuccessfulExit(process.terminationStatus)))
+                } else {
+                    resumeOnce(.success(outputBuffer.output()))
+                }
             }
 
             do {
@@ -100,8 +114,8 @@ func runCMDAsync(app: String, args: [String], timeout: TimeInterval = 15.0) asyn
 
             DispatchQueue.global(qos: .utility).asyncAfter(deadline: .now() + timeout) {
                 if task.isRunning {
-                    task.terminate()
                     resumeOnce(.failure(CommandRunnerError.timedOut))
+                    task.terminate()
                 }
             }
         }
@@ -109,6 +123,74 @@ func runCMDAsync(app: String, args: [String], timeout: TimeInterval = 15.0) asyn
         if let process = processBox.process, process.isRunning {
             process.terminate()
         }
+    }
+}
+
+enum CheckCommand {
+    private static func canonicalPath(_ path: String) -> String {
+        guard let resolved = realpath(path, nil) else { return path }
+        defer { free(resolved) }
+        return String(cString: resolved)
+    }
+
+    static func run(app: String, args: [String], homeDirectory: URL = FileManager.default.homeDirectoryForCurrentUser,
+                    path: [String] = [], readFiles: [String] = [], readDirectories: [String] = [],
+                    timeout: TimeInterval = 5, includeStandardError: Bool = false,
+                    requireSuccessfulExit: Bool = true) -> String?
+    {
+        let home = URL(fileURLWithPath: canonicalPath(homeDirectory.path))
+        let systemDirectories = ["/Library/Apple", "/Library/Developer", "/Library/Frameworks", "/Library/Python", "/Library/Ruby", "/System", "/bin", "/nix/store", "/opt/homebrew", "/opt/local", "/sbin", "/usr"]
+        let toolDirectories = [".asdf", ".bun", ".cargo", ".config/conda", ".config/mise", ".config/pdm", ".config/pip", ".config/pypoetry", ".deno", ".local/bin", ".local/lib", ".local/pipx", ".local/share/mise", ".local/share/pipx", ".local/share/uv", ".npm-global", ".nvm", ".pyenv", ".rbenv", ".rvm", ".volta", ".yarn", "Library/Application Support/fnm", "Library/Application Support/pdm", "Library/Application Support/pypoetry", "Library/Python", "Library/pnpm", "anaconda3", "miniconda3", "miniforge3"]
+        let configFiles = [".bundle/config", ".condarc", ".npmrc", ".python-version", ".ruby-version", ".tool-versions", ".yarnrc.yml"]
+        let directories = systemDirectories + toolDirectories.map { home.appendingPathComponent($0).path } + readDirectories
+        let systemFiles = ["/etc/bashrc", "/etc/passwd", "/etc/paths", "/etc/profile", "/etc/zprofile", "/etc/zshenv", "/etc/zshrc"].map(canonicalPath)
+        var files = ["/", "/dev/null", "/dev/random", "/dev/urandom", "/dev/zero", app, canonicalPath(app)]
+            + systemFiles + configFiles.map { home.appendingPathComponent($0).path }
+            + readFiles.map(canonicalPath)
+        // Runtimes need to traverse installation paths, without reading sibling files.
+        var parents = Set<String>()
+        for path in directories + files {
+            let components = (path as NSString).pathComponents
+            for count in 1 ..< components.count {
+                parents.insert(NSString.path(withComponents: Array(components.prefix(count))))
+            }
+        }
+        files += parents.sorted()
+        var profile = """
+        (version 1)
+        (deny default)
+        (allow process-exec process-fork sysctl-read file-read-metadata)
+        (allow file-write-data (literal "/dev/null"))
+        (allow mach-lookup (global-name "com.apple.system.opendirectoryd.libinfo"))
+        """
+        var parameters: [String] = []
+        for (index, directory) in directories.enumerated() {
+            profile += "\n(allow file-read* file-map-executable (subpath (param \"DIR\(index)\")))"
+            parameters += ["-D", "DIR\(index)=\(directory)"]
+        }
+        for (index, file) in files.enumerated() {
+            profile += "\n(allow file-read* file-map-executable (literal (param \"FILE\(index)\")))"
+            parameters += ["-D", "FILE\(index)=\(file)"]
+        }
+
+        let environment = ["HOME": home.path, "LANG": "C", "LOGNAME": NSUserName(), "PATH": (path + ["/usr/bin", "/bin", "/usr/sbin", "/sbin"]).joined(separator: ":"), "USER": NSUserName()]
+        let output = OSAllocatedUnfairLock<String?>(initialState: nil)
+        let done = DispatchSemaphore(value: 0)
+        let sandboxArgs = parameters + ["-p", profile, app] + args
+        let task = Task.detached {
+            defer { done.signal() }
+            let result = try? await runCMDAsync(
+                app: "/usr/bin/sandbox-exec", args: sandboxArgs,
+                timeout: timeout, includeStandardError: includeStandardError,
+                requireSuccessfulExit: requireSuccessfulExit, environment: environment, directory: home
+            )
+            output.withLock { $0 = result }
+        }
+        guard done.wait(timeout: .now() + timeout + 1) == .success else {
+            task.cancel()
+            return nil
+        }
+        return output.withLock { $0 }
     }
 }
 

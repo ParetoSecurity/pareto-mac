@@ -82,6 +82,16 @@ Our versioning strategy follows a specific pattern for stable and pre-release ve
 
 ### Troubleshooting
 
+### SSH configuration checks
+
+The SSH agent forwarding and host key verification checks inspect the configuration for a randomly generated hostname. They run Apple's SSH client inside a sandbox that prevents child processes, network access, and file writes. If evaluating the configuration requires a `Match exec` command, the checks report an error without running that command. Invalid configurations and failures to start the sandbox also report an error. These checks depend on macOS's deprecated `sandbox-exec` utility and never fall back to unsandboxed execution.
+
+SSH key checks retain the Homebrew preference needed for hardware-backed keys on older macOS versions. Both Apple and Homebrew `ssh-keygen` run in a restricted subprocess that can read supported tool installations, selected configuration files, and the key being inspected with its public-key file. Other user-file contents, file writes, and network access are blocked.
+
+### Package manager checks
+
+Package manager version commands and login-shell PATH discovery run inside a sandbox that allows reading supported tool installations and selected configuration files, without inheriting the app's environment. Network access, file writes, and reads of other user-file contents are blocked. Versions are accepted only from stdout after a successful exit. A failed, timed-out, or blocked command reports an error instead of a passing result. Custom installation layouts may require additional read permissions before their versions can be checked.
+
 ### Helper commands (1.2.0+)
 
 Copy/paste them into your browser address bar.
