@@ -26,6 +26,18 @@ class ParetoSecurityTests: XCTestCase {
         XCTAssertTrue(AppInfo.bugReportURL().absoluteString.contains("paretosecurity.com"))
     }
 
+    func testSSHKeyWithPassphraseIsProtected() {
+        let output = "Load key \"/tmp/id_ed25519\": incorrect passphrase supplied to decrypt private key\n"
+        XCTAssertTrue(SSHKeysCheck.isProtected(keygenOutput: output))
+    }
+
+    func testSSHKeyCommentCannotFakeProtection() {
+        let key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIN1Ey4B7zdikMDSAAPkrqYVIEa2m+M2oVMauz+JfgiQM"
+        XCTAssertFalse(SSHKeysCheck.isProtected(keygenOutput: key + " test\n"))
+        XCTAssertFalse(SSHKeysCheck.isProtected(keygenOutput: key + " incorrect passphrase supplied\n"))
+        XCTAssertFalse(SSHKeysCheck.isProtected(keygenOutput: key + " Load key incorrect passphrase supplied\n"))
+    }
+
     func testNoUnusedUsersSkipsAccountsMissingFromLocalNode() {
         let users = NoUnusedUsers.provisionedUsers(
             ["local", "cachedDomainUser"],
