@@ -33,7 +33,12 @@ class SSHKeysCheck: SSHCheck {
 
     func isPasswordEnabled(withKey path: String) -> Bool {
         let output = runCMD(app: getSSHKeygenPath(), args: ["-P", "''", "-y", "-f", path])
-        return output.contains("incorrect passphrase supplied")
+        return Self.isProtected(keygenOutput: output)
+    }
+
+    static func isProtected(keygenOutput output: String) -> Bool {
+        // ssh-keygen also prints a key's comment, so the error only counts at the start of the output
+        output.hasPrefix("Load key") && output.contains("incorrect passphrase supplied")
     }
 
     func keysWithNoPassword() -> [String] {
