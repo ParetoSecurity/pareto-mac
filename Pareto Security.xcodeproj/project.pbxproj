@@ -247,6 +247,7 @@
 		4FCA00142F6D000100000001 /* CompromisedCATests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FCA00132F6D000100000001 /* CompromisedCATests.swift */; };
 		4FABC0222F6E000100000001 /* EditorExtensionsSupplyChainTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FABC0212F6E000100000001 /* EditorExtensionsSupplyChainTests.swift */; };
 		4FABC0242F6E000100000001 /* PackageManagerSupplyChainTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FABC0232F6E000100000001 /* PackageManagerSupplyChainTests.swift */; };
+		4FABC0262F6E000100000001 /* SSHKeysTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FABC0252F6E000100000001 /* SSHKeysTests.swift */; };
 		4FAF5BBF2895573F004E9615 /* setappPublicKey.pem in Resources */ = {isa = PBXBuildFile; fileRef = 4FAF5BBE2895573F004E9615 /* setappPublicKey.pem */; };
 		4FAF5BC22895583A004E9615 /* Setapp in Frameworks */ = {isa = PBXBuildFile; productRef = 4FAF5BC12895583A004E9615 /* Setapp */; };
 		4FB0416126F71CC0003657BE /* ButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB0416026F71CC0003657BE /* ButtonStyle.swift */; };
@@ -476,6 +477,7 @@
 		4FCA00132F6D000100000001 /* CompromisedCATests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CompromisedCATests.swift; sourceTree = "<group>"; };
 		4FABC0212F6E000100000001 /* EditorExtensionsSupplyChainTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditorExtensionsSupplyChainTests.swift; sourceTree = "<group>"; };
 		4FABC0232F6E000100000001 /* PackageManagerSupplyChainTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PackageManagerSupplyChainTests.swift; sourceTree = "<group>"; };
+		4FABC0252F6E000100000001 /* SSHKeysTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSHKeysTests.swift; sourceTree = "<group>"; };
 		4FAF5BBE2895573F004E9615 /* setappPublicKey.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = setappPublicKey.pem; sourceTree = "<group>"; };
 		4FB0416026F71CC0003657BE /* ButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonStyle.swift; sourceTree = "<group>"; };
 		4FB51A5627A94457003F528E /* SecurityUpdateCheck.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SecurityUpdateCheck.swift; sourceTree = "<group>"; };
@@ -814,6 +816,7 @@
 				4FABC0212F6E000100000001 /* EditorExtensionsSupplyChainTests.swift */,
 				4FABC0232F6E000100000001 /* PackageManagerSupplyChainTests.swift */,
 				A4290E7B309A3494009AD0F3 /* BootCheckTests.swift */,
+				4FABC0252F6E000100000001 /* SSHKeysTests.swift */,
 			);
 			path = ParetoSecurityTests;
 			sourceTree = "<group>";
@@ -1357,6 +1360,7 @@
 				4FCA00142F6D000100000001 /* CompromisedCATests.swift in Sources */,
 				4FABC0222F6E000100000001 /* EditorExtensionsSupplyChainTests.swift in Sources */,
 				4FABC0242F6E000100000001 /* PackageManagerSupplyChainTests.swift in Sources */,
+				4FABC0262F6E000100000001 /* SSHKeysTests.swift in Sources */,
 				4FF13D9D26DE235700E4084E /* UpdaterTest.swift in Sources */,
 				4F6A00BB2D6E5791001BDE61 /* ApplicationUpdatesTest.swift in Sources */,
 				4F080D1D26C50D2800686786 /* ParetoSecurityTests.swift in Sources */,
