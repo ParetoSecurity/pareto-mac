@@ -69,12 +69,38 @@ class ScreensaverCheck: ParetoCheck {
         }
     }
 
+    /// Reads the power profiles through `pmset -g custom`, which needs no privileges and only uses public tools.
     static func copyPowerPreferences() -> [String: Any]? {
-        let handle = dlopen("/System/Library/Frameworks/IOKit.framework/IOKit", RTLD_LAZY)
-        guard let symbol = dlsym(handle, "IOPMCopyPMPreferences") else { return nil }
-        typealias CopyFunction = @convention(c) () -> Unmanaged<CFDictionary>?
-        let IOPMCopyPMPreferences = unsafeBitCast(symbol, to: CopyFunction.self)
-        return IOPMCopyPMPreferences()?.takeRetainedValue() as? [String: Any]
+        parsePmsetCustom(runCMD(app: "/usr/bin/pmset", args: ["-g", "custom"]))
+    }
+
+    /// Turns `pmset -g custom` output into `["AC Power": ["Display Sleep Timer": 10], ...]`.
+    /// Profile headers end with a colon ("AC Power:"), settings are indented "key value" lines.
+    static func parsePmsetCustom(_ output: String) -> [String: Any]? {
+        var prefs: [String: Any] = [:]
+        var profile: String?
+
+        for line in output.components(separatedBy: .newlines) {
+            let trimmed = line.trimmingCharacters(in: .whitespaces)
+            if trimmed.isEmpty {
+                continue
+            }
+            if trimmed.hasSuffix(":"), !line.hasPrefix(" ") {
+                let name = String(trimmed.dropLast())
+                profile = name
+                prefs[name] = [String: Any]()
+                continue
+            }
+            let parts = trimmed.split(separator: " ", omittingEmptySubsequences: true)
+            guard let profile, parts.count >= 2, parts[0] == "displaysleep", let minutes = Int(parts[1]) else {
+                continue
+            }
+            var settings = prefs[profile] as? [String: Any] ?? [:]
+            settings["Display Sleep Timer"] = NSNumber(value: minutes)
+            prefs[profile] = settings
+        }
+
+        return prefs.isEmpty ? nil : prefs
     }
 
     override func checkPasses() -> Bool {
@@ -82,7 +108,7 @@ class ScreensaverCheck: ParetoCheck {
             return true
         }
         guard let prefs = powerPreferencesProvider() else {
-            os_log("IOPMCopyPMPreferences returned no power settings", log: Log.check)
+            os_log("pmset returned no power settings", log: Log.check)
             hasError = true
             return false
         }

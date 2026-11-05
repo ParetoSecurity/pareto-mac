@@ -92,4 +92,44 @@ class ScreensaverCheckTests: XCTestCase {
 
         XCTAssertFalse(check.checkPasses())
     }
+
+    private let laptopPmset = """
+    Battery Power:
+     Sleep On Power Button 1
+     lowpowermode         0
+     displaysleep         2
+     sleep                1
+    AC Power:
+     Sleep On Power Button 1
+     displaysleep         10
+     womp                 1
+    """
+
+    func testParsesPmsetCustomOnLaptop() {
+        let prefs = ScreensaverCheck.parsePmsetCustom(laptopPmset)
+
+        XCTAssertEqual((prefs?["Battery Power"] as? [String: Any])?["Display Sleep Timer"] as? NSNumber, 2)
+        XCTAssertEqual((prefs?["AC Power"] as? [String: Any])?["Display Sleep Timer"] as? NSNumber, 10)
+        XCTAssertTrue(ScreensaverCheck.displaySleepPasses(prefs))
+    }
+
+    func testParsesPmsetCustomOnDesktopWithDisplaySleepOff() {
+        let prefs = ScreensaverCheck.parsePmsetCustom("AC Power:\n displaysleep         0\n sleep 0\n")
+
+        XCTAssertEqual((prefs?["AC Power"] as? [String: Any])?["Display Sleep Timer"] as? NSNumber, 0)
+        XCTAssertNil(prefs?["Battery Power"])
+        XCTAssertFalse(ScreensaverCheck.displaySleepPasses(prefs))
+    }
+
+    func testParsePmsetCustomWithoutOutput() {
+        XCTAssertNil(ScreensaverCheck.parsePmsetCustom(""))
+        XCTAssertNil(ScreensaverCheck.parsePmsetCustom("pmset: command not found"))
+    }
+
+    func testParsePmsetCustomMissingDisplaySleepFails() {
+        let prefs = ScreensaverCheck.parsePmsetCustom("AC Power:\n sleep 10\n")
+
+        XCTAssertNotNil(prefs)
+        XCTAssertFalse(ScreensaverCheck.displaySleepPasses(prefs))
+    }
 }
