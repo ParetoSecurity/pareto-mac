@@ -634,7 +634,12 @@ class PackageManagerSupplyChainCheck: ParetoCheck {
     static func versionToken(from output: String) -> String? {
         let trimmed = output.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty else { return nil }
-        return trimmed.components(separatedBy: .whitespacesAndNewlines).first { $0.first?.isNumber == true } ?? trimmed
+        // Only a dotted number counts, so an error such as
+        // "pip: line 8: pyenv: No such file or directory" from a stale shim
+        // reads as "unknown" rather than as version 8.
+        return trimmed.components(separatedBy: .whitespacesAndNewlines).first {
+            $0.range(of: #"^v?\d+\.\d+"#, options: .regularExpression) != nil
+        }
     }
 
     private static func keyValuePairs(_ contents: String) -> [String: String] {

@@ -1076,5 +1076,9 @@ class PackageManagerSupplyChainTests: XCTestCase {
         XCTAssertEqual(PackageManagerSupplyChainCheck.versionToken(from: "conda 26.9.0"), "26.9.0")
         XCTAssertEqual(PackageManagerSupplyChainCheck.versionToken(from: "Poetry 2.4.0"), "2.4.0")
         XCTAssertNil(PackageManagerSupplyChainCheck.versionToken(from: "  \n"))
+        XCTAssertEqual(PackageManagerSupplyChainCheck.versionToken(from: "11.10.0-rc.1"), "11.10.0-rc.1")
+        XCTAssertNil(PackageManagerSupplyChainCheck.versionToken(
+            from: "/Users/me/.pyenv/shims/pip: line 8: /opt/homebrew/opt/pyenv/bin/pyenv: No such file or directory"
+        ))
     }
 }
