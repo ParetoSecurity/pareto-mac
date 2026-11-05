@@ -177,6 +177,11 @@
 		4F57135D26F8C921004B4359 /* TeamsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F57135C26F8C921004B4359 /* TeamsTest.swift */; };
 		4F5B20C127030BEB0015642A /* OpenWiFi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F5B20C027030BEB0015642A /* OpenWiFi.swift */; };
 		4F5B20C3270316DB0015642A /* NetworkHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F5B20C2270316DB0015642A /* NetworkHandler.swift */; };
+		4F5C55022F70000100000001 /* ScreenSharing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F5C55012F70000100000001 /* ScreenSharing.swift */; };
+		4F5C55032F70000100000001 /* ScreenSharing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F5C55012F70000100000001 /* ScreenSharing.swift */; };
+		4F5C55122F70000100000001 /* RemoteApplicationScripting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F5C55112F70000100000001 /* RemoteApplicationScripting.swift */; };
+		4F5C55132F70000100000001 /* RemoteApplicationScripting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F5C55112F70000100000001 /* RemoteApplicationScripting.swift */; };
+		4F5C55222F70000100000001 /* SharingPortChecksTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F5C55212F70000100000001 /* SharingPortChecksTests.swift */; };
 		4F5E888026A053A9005271FB /* ParetoCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F5E887F26A053A9005271FB /* ParetoCheck.swift */; };
 		4F6A00BB2D6E5791001BDE61 /* ApplicationUpdatesTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F6A00BA2D6E5791001BDE61 /* ApplicationUpdatesTest.swift */; };
 		4F6A0E0E26CE484A003B00A3 /* PrinterSharingCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F6A0E0D26CE484A003B00A3 /* PrinterSharingCheck.swift */; };
@@ -432,6 +437,9 @@
 		4F57135C26F8C921004B4359 /* TeamsTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeamsTest.swift; sourceTree = "<group>"; };
 		4F5B20C027030BEB0015642A /* OpenWiFi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenWiFi.swift; sourceTree = "<group>"; };
 		4F5B20C2270316DB0015642A /* NetworkHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkHandler.swift; sourceTree = "<group>"; };
+		4F5C55012F70000100000001 /* ScreenSharing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScreenSharing.swift; sourceTree = "<group>"; };
+		4F5C55112F70000100000001 /* RemoteApplicationScripting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RemoteApplicationScripting.swift; sourceTree = "<group>"; };
+		4F5C55212F70000100000001 /* SharingPortChecksTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SharingPortChecksTests.swift; sourceTree = "<group>"; };
 		4F5E887F26A053A9005271FB /* ParetoCheck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParetoCheck.swift; sourceTree = "<group>"; };
 		4F6A00BA2D6E5791001BDE61 /* ApplicationUpdatesTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationUpdatesTest.swift; sourceTree = "<group>"; };
 		4F6A0E0D26CE484A003B00A3 /* PrinterSharingCheck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrinterSharingCheck.swift; sourceTree = "<group>"; };
@@ -654,6 +662,8 @@
 			children = (
 				4F35395426E8AD4B008F5DD3 /* RemoteManagment.swift */,
 				4F35395626E8AE02008F5DD3 /* RemoteLogin.swift */,
+				4F5C55012F70000100000001 /* ScreenSharing.swift */,
+				4F5C55112F70000100000001 /* RemoteApplicationScripting.swift */,
 				4F6A0E0F26CE4868003B00A3 /* FileSharingCheck.swift */,
 				4F6A0E0D26CE484A003B00A3 /* PrinterSharingCheck.swift */,
 				4F868DCE26A591E6005B876E /* Firewall.swift */,
@@ -815,6 +825,7 @@
 				4F57135C26F8C921004B4359 /* TeamsTest.swift */,
 				4F8450032F2B000100000001 /* UptimeCheckTests.swift */,
 				4F8450052F2B000100000001 /* ScreensaverCheckTests.swift */,
+				4F5C55212F70000100000001 /* SharingPortChecksTests.swift */,
 				4FCA00132F6D000100000001 /* CompromisedCATests.swift */,
 				4FABC0212F6E000100000001 /* EditorExtensionsSupplyChainTests.swift */,
 				4FABC0232F6E000100000001 /* PackageManagerSupplyChainTests.swift */,
@@ -1220,6 +1231,8 @@
 				4F37E70B2718122E00A2B254 /* ParetoCheck.swift in Sources */,
 				4F9153B52D4BD7B400FCD809 /* PasswordManager.swift in Sources */,
 				4F37E70C2718122E00A2B254 /* RemoteLogin.swift in Sources */,
+				4F5C55032F70000100000001 /* ScreenSharing.swift in Sources */,
+				4F5C55132F70000100000001 /* RemoteApplicationScripting.swift in Sources */,
 				4FA8E5ED2B44428400B7EA9C /* NoUnusedUsers.swift in Sources */,
 				4F3DCFCF274FD1AE00F1CB55 /* AppCheck.swift in Sources */,
 				4F37E70E2718122E00A2B254 /* PrinterSharingCheck.swift in Sources */,
@@ -1361,6 +1374,7 @@
 				4F57135D26F8C921004B4359 /* TeamsTest.swift in Sources */,
 				4F8450042F2B000100000001 /* UptimeCheckTests.swift in Sources */,
 				4F8450062F2B000100000001 /* ScreensaverCheckTests.swift in Sources */,
+				4F5C55222F70000100000001 /* SharingPortChecksTests.swift in Sources */,
 				4FCA00142F6D000100000001 /* CompromisedCATests.swift in Sources */,
 				4FABC0222F6E000100000001 /* EditorExtensionsSupplyChainTests.swift in Sources */,
 				4FABC0242F6E000100000001 /* PackageManagerSupplyChainTests.swift in Sources */,
@@ -1383,6 +1397,8 @@
 				4F5E888026A053A9005271FB /* ParetoCheck.swift in Sources */,
 				4F9153B42D4BD7B400FCD809 /* PasswordManager.swift in Sources */,
 				4F35395726E8AE02008F5DD3 /* RemoteLogin.swift in Sources */,
+				4F5C55022F70000100000001 /* ScreenSharing.swift in Sources */,
+				4F5C55122F70000100000001 /* RemoteApplicationScripting.swift in Sources */,
 				4FA8E5EC2B44428400B7EA9C /* NoUnusedUsers.swift in Sources */,
 				4F3DCFCE274FD1AE00F1CB55 /* AppCheck.swift in Sources */,
 				4F6A0E0E26CE484A003B00A3 /* PrinterSharingCheck.swift in Sources */,

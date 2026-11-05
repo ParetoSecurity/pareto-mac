@@ -414,6 +414,7 @@ extension ParetoCheck {
         let client = TCPClient(address: "localhost", port: Int32(port))
         switch client.connect(timeout: 10) {
         case .success:
+            client.close()
             return false
         case .failure:
             return true
