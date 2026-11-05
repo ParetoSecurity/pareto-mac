@@ -132,4 +132,108 @@ class ScreensaverCheckTests: XCTestCase {
         XCTAssertNotNil(prefs)
         XCTAssertFalse(ScreensaverCheck.displaySleepPasses(prefs))
     }
+
+    private func displaySleep(_ prefs: [String: Any]?, _ profile: String) -> NSNumber? {
+        (prefs?[profile] as? [String: Any])?["Display Sleep Timer"] as? NSNumber
+    }
+
+    /// Captured verbatim from a MacBook on macOS 26.7.
+    private let fullLaptopPmset = """
+    Battery Power:
+     Sleep On Power Button 1
+     lowpowermode         0
+     standby              1
+     ttyskeepawake        1
+     hibernatemode        3
+     powernap             1
+     hibernatefile        /var/vm/sleepimage
+     displaysleep         20
+     womp                 0
+     networkoversleep     0
+     sleep                1
+     lessbright           1
+     tcpkeepalive         1
+     disksleep            10
+    AC Power:
+     Sleep On Power Button 1
+     lowpowermode         0
+     standby              1
+     ttyskeepawake        1
+     hibernatemode        3
+     powernap             1
+     hibernatefile        /var/vm/sleepimage
+     displaysleep         20
+     womp                 1
+     networkoversleep     0
+     sleep                0
+     tcpkeepalive         1
+     disksleep            10
+    """
+
+    func testParsesFullPmsetOutputFromLaptop() {
+        let prefs = ScreensaverCheck.parsePmsetCustom(fullLaptopPmset)
+
+        XCTAssertEqual(displaySleep(prefs, "Battery Power"), 20)
+        XCTAssertEqual(displaySleep(prefs, "AC Power"), 20)
+        XCTAssertTrue(ScreensaverCheck.displaySleepPasses(prefs))
+    }
+
+    func testLaptopFailsWhenBatteryDisplaySleepIsTooLong() {
+        let output = fullLaptopPmset.replacingOccurrences(
+            of: " displaysleep         20\n womp                 0",
+            with: " displaysleep         45\n womp                 0"
+        )
+        let prefs = ScreensaverCheck.parsePmsetCustom(output)
+
+        XCTAssertEqual(displaySleep(prefs, "Battery Power"), 45)
+        XCTAssertFalse(ScreensaverCheck.displaySleepPasses(prefs))
+    }
+
+    func testParsesPmsetOutputWithUPS() {
+        let output = "AC Power:\n displaysleep         10\nUPS Power:\n displaysleep         0\n"
+        let prefs = ScreensaverCheck.parsePmsetCustom(output)
+
+        XCTAssertEqual(displaySleep(prefs, "AC Power"), 10)
+        XCTAssertEqual(displaySleep(prefs, "UPS Power"), 0)
+        XCTAssertTrue(ScreensaverCheck.displaySleepPasses(prefs))
+    }
+
+    func testParsePmsetIgnoresSimilarKeysAndBadValues() {
+        let output = "AC Power:\n displaysleepnow      1\n displaysleep         never\n"
+        let prefs = ScreensaverCheck.parsePmsetCustom(output)
+
+        XCTAssertNil(displaySleep(prefs, "AC Power"))
+        XCTAssertFalse(ScreensaverCheck.displaySleepPasses(prefs))
+    }
+
+    func testParsePmsetIgnoresSettingsBeforeAnyProfile() {
+        XCTAssertNil(ScreensaverCheck.parsePmsetCustom(" displaysleep         10\n"))
+    }
+
+    func testParsePmsetHandlesCRLF() {
+        let prefs = ScreensaverCheck.parsePmsetCustom("AC Power:\r\n displaysleep         5\r\n")
+
+        XCTAssertEqual(displaySleep(prefs, "AC Power"), 5)
+    }
+
+    // MARK: - Live pmset on this Mac
+
+    func testReadsPowerPreferencesFromPmset() throws {
+        let prefs = try XCTUnwrap(ScreensaverCheck.copyPowerPreferences())
+
+        XCTAssertNotNil(displaySleep(prefs, "AC Power"))
+    }
+
+    func testPmsetOutputIsNotLocalized() {
+        let english = ScreensaverCheck.parsePmsetCustom(runCMD(app: "/usr/bin/pmset", args: ["-g", "custom"]))
+        let french = ScreensaverCheck.parsePmsetCustom(runCMD(
+            app: "/usr/bin/pmset",
+            args: ["-g", "custom"],
+            environment: ["LANG": "fr_FR.UTF-8", "LC_ALL": "fr_FR.UTF-8", "AppleLanguages": "(fr)"]
+        ))
+
+        XCTAssertNotNil(french)
+        XCTAssertEqual(displaySleep(french, "AC Power"), displaySleep(english, "AC Power"))
+        XCTAssertEqual(displaySleep(french, "Battery Power"), displaySleep(english, "Battery Power"))
+    }
 }
