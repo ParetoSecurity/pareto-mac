@@ -318,6 +318,80 @@ class PackageManagerSupplyChainTests: XCTestCase {
         XCTAssertEqual(directories.count, Set(directories).count)
     }
 
+    func testPackageManagerSupplyChainPrefersUserShimsOverSystemBinaries() throws {
+        let temporaryDirectory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        try FileManager.default.createDirectory(at: temporaryDirectory, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: temporaryDirectory) }
+
+        // A pyenv-managed pip must win over Apple's /usr/bin/pip3 stub, which
+        // ships an old pip that cannot be upgraded.
+        let check = PackageManagerSupplyChainCheck(homeDirectory: temporaryDirectory, installedBinaries: [])
+        let directories = check.searchDirectories()
+        let pyenvShims = try XCTUnwrap(directories.firstIndex(of: temporaryDirectory.appendingPathComponent(".pyenv/shims").path))
+        let usrBin = try XCTUnwrap(directories.firstIndex(of: "/usr/bin"))
+        let homebrew = try XCTUnwrap(directories.firstIndex(of: "/opt/homebrew/bin"))
+
+        XCTAssertLessThan(pyenvShims, usrBin)
+        XCTAssertLessThan(pyenvShims, homebrew)
+    }
+
+    private func makePipHome(pipVersion: String) throws -> (home: URL, shims: URL) {
+        let home = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        let pipDirectory = home.appendingPathComponent(".config/pip")
+        let shims = home.appendingPathComponent("shell-shims")
+        try FileManager.default.createDirectory(at: pipDirectory, withIntermediateDirectories: true)
+        try FileManager.default.createDirectory(at: shims, withIntermediateDirectories: true)
+        try """
+        [install]
+        uploaded-prior-to = P7D
+        """.write(to: pipDirectory.appendingPathComponent("pip.conf"), atomically: true, encoding: .utf8)
+        for name in ["pip", "pip3"] {
+            let script = shims.appendingPathComponent(name)
+            try "#!/bin/sh\necho 'pip \(pipVersion) from \(shims.path) (python 3.13)'\n"
+                .write(to: script, atomically: true, encoding: .utf8)
+            try FileManager.default.setAttributes([.posixPermissions: 0o755], ofItemAtPath: script.path)
+        }
+        return (home, shims)
+    }
+
+    func testPackageManagerSupplyChainVersionChecksPipFromShellPath() throws {
+        let (home, shims) = try makePipHome(pipVersion: "26.2.2")
+        defer { try? FileManager.default.removeItem(at: home) }
+
+        let shellPath = ShellPath(resolver: { [shims.path, "/usr/bin", "/bin"] })
+        let check = PackageManagerSupplyChainCheck(homeDirectory: home, shellPath: shellPath)
+
+        let failures = onBackgroundThread { shellPath.withRun { check.validationFailures() } }
+        XCTAssertFalse(failures.contains { $0.contains("pip") }, failures.joined(separator: "\n"))
+    }
+
+    func testPackageManagerSupplyChainFailsWhenShellPathPipIsOld() throws {
+        let (home, shims) = try makePipHome(pipVersion: "21.2.4")
+        defer { try? FileManager.default.removeItem(at: home) }
+
+        let shellPath = ShellPath(resolver: { [shims.path] })
+        let check = PackageManagerSupplyChainCheck(homeDirectory: home, shellPath: shellPath)
+
+        let failures = onBackgroundThread { shellPath.withRun { check.validationFailures() } }
+        XCTAssertTrue(failures.contains("pip is older than 26.1.0 and does not enforce ~/.config/pip/pip.conf uploaded-prior-to"))
+    }
+
+    func testPackageManagerSupplyChainSearchesShellPathFirst() {
+        let home = URL(fileURLWithPath: "/nonexistent-home")
+        let shellPath = ShellPath(resolver: { ["/custom/shims", "/usr/bin"] })
+        let check = PackageManagerSupplyChainCheck(homeDirectory: home, installedBinaries: [], shellPath: shellPath)
+
+        XCTAssertFalse(check.searchDirectories().contains("/custom/shims"))
+        onBackgroundThread {
+            shellPath.withRun {
+                let directories = check.searchDirectories()
+                XCTAssertEqual(directories.first, "/custom/shims")
+                XCTAssertEqual(directories.count, Set(directories).count)
+                XCTAssertTrue(directories.contains("/opt/homebrew/bin"))
+            }
+        }
+    }
+
     func testPackageManagerSupplyChainUsesPnpmXDGConfigHome() throws {
         let temporaryDirectory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
         let xdgDirectory = temporaryDirectory.appendingPathComponent("xdg")

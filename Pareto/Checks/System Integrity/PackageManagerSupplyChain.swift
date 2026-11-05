@@ -47,16 +47,26 @@ class PackageManagerSupplyChainCheck: ParetoCheck {
         var usesSetting: ((String) -> Bool)?
     }
 
+    let shellPath: ShellPath
+
     init(
         homeDirectory: URL = FileManager.default.homeDirectoryForCurrentUser,
         installedBinaries: Set<String>? = nil,
         packageManagerVersions: [String: String] = [:],
-        environment: [String: String] = ProcessInfo.processInfo.environment
+        environment: [String: String] = ProcessInfo.processInfo.environment,
+        shellPath: ShellPath = .shared
     ) {
         self.homeDirectory = homeDirectory
         self.installedBinaries = installedBinaries
         self.packageManagerVersions = packageManagerVersions
         self.environment = environment
+        self.shellPath = shellPath
+    }
+
+    /// A single re-check from the UI is its own short run; inside a full scan
+    /// this joins the scan's cached shell PATH.
+    override func run() -> Bool {
+        shellPath.withRun { super.run() }
     }
 
     override var UUID: String {
@@ -181,10 +191,18 @@ class PackageManagerSupplyChainCheck: ParetoCheck {
         return nil
     }
 
+    /// During a check run the user's own shell PATH comes first, so the copy
+    /// that is version-checked is the one their terminal runs (a pyenv pip
+    /// rather than Apple's /usr/bin/pip3 stub). The well-known prefixes follow
+    /// so installed tools are still detected when the shell is unavailable or
+    /// does not list them. Without a shell PATH, user-level prefixes go first
+    /// because version managers prepend themselves to PATH.
     func searchDirectories() -> [String] {
-        Self.systemInstallPrefixes + Self.homeInstallPrefixes.map {
+        let fallback = Self.homeInstallPrefixes.map {
             homeDirectory.appendingPathComponent($0).path
-        }
+        } + Self.systemInstallPrefixes
+        var seen = Set<String>()
+        return ((shellPath.directories ?? []) + fallback).filter { seen.insert($0).inserted }
     }
 
     private static let systemInstallPrefixes = [
@@ -199,6 +217,7 @@ class PackageManagerSupplyChainCheck: ParetoCheck {
         ".bun/bin",
         ".local/bin",
         ".local/share/mise/shims",
+        ".pyenv/shims",
         ".cargo/bin",
         ".volta/bin",
         ".yarn/bin",
