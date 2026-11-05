@@ -47,16 +47,26 @@ class PackageManagerSupplyChainCheck: ParetoCheck {
         var usesSetting: ((String) -> Bool)?
     }
 
+    let shellPath: ShellPath
+
     init(
         homeDirectory: URL = FileManager.default.homeDirectoryForCurrentUser,
         installedBinaries: Set<String>? = nil,
         packageManagerVersions: [String: String] = [:],
-        environment: [String: String] = ProcessInfo.processInfo.environment
+        environment: [String: String] = ProcessInfo.processInfo.environment,
+        shellPath: ShellPath = .shared
     ) {
         self.homeDirectory = homeDirectory
         self.installedBinaries = installedBinaries
         self.packageManagerVersions = packageManagerVersions
         self.environment = environment
+        self.shellPath = shellPath
+    }
+
+    /// A single re-check from the UI is its own short run; inside a full scan
+    /// this joins the scan's cached shell PATH.
+    override func run() -> Bool {
+        shellPath.withRun { super.run() }
     }
 
     override var UUID: String {
@@ -181,10 +191,18 @@ class PackageManagerSupplyChainCheck: ParetoCheck {
         return nil
     }
 
+    /// During a check run the user's own shell PATH comes first, so the copy
+    /// that is version-checked is the one their terminal runs (a pyenv pip
+    /// rather than Apple's /usr/bin/pip3 stub). The well-known prefixes follow
+    /// so installed tools are still detected when the shell is unavailable or
+    /// does not list them. Without a shell PATH, user-level prefixes go first
+    /// because version managers prepend themselves to PATH.
     func searchDirectories() -> [String] {
-        Self.systemInstallPrefixes + Self.homeInstallPrefixes.map {
+        let fallback = Self.homeInstallPrefixes.map {
             homeDirectory.appendingPathComponent($0).path
-        }
+        } + Self.systemInstallPrefixes
+        var seen = Set<String>()
+        return ((shellPath.directories ?? []) + fallback).filter { seen.insert($0).inserted }
     }
 
     private static let systemInstallPrefixes = [
@@ -199,6 +217,7 @@ class PackageManagerSupplyChainCheck: ParetoCheck {
         ".bun/bin",
         ".local/bin",
         ".local/share/mise/shims",
+        ".pyenv/shims",
         ".cargo/bin",
         ".volta/bin",
         ".yarn/bin",
@@ -615,7 +634,12 @@ class PackageManagerSupplyChainCheck: ParetoCheck {
     static func versionToken(from output: String) -> String? {
         let trimmed = output.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty else { return nil }
-        return trimmed.components(separatedBy: .whitespacesAndNewlines).first { $0.first?.isNumber == true } ?? trimmed
+        // Only a dotted number counts, so an error such as
+        // "pip: line 8: pyenv: No such file or directory" from a stale shim
+        // reads as "unknown" rather than as version 8.
+        return trimmed.components(separatedBy: .whitespacesAndNewlines).first {
+            $0.range(of: #"^v?\d+\.\d+"#, options: .regularExpression) != nil
+        }
     }
 
     private static func keyValuePairs(_ contents: String) -> [String: String] {

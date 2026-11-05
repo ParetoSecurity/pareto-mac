@@ -251,8 +251,11 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
 
         // Run the checks
         let workItem = DispatchWorkItem {
-            for claim in Claims.global.all {
-                claim.run()
+            // Resolve the user's shell PATH at most once per scan.
+            ShellPath.shared.withRun {
+                for claim in Claims.global.all {
+                    claim.run()
+                }
             }
         }
 
