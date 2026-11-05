@@ -202,6 +202,7 @@
 		4F8450012F2B000100000001 /* Uptime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F8450002F2B000100000001 /* Uptime.swift */; };
 		4F8450022F2B000100000001 /* Uptime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F8450002F2B000100000001 /* Uptime.swift */; };
 		4F8450042F2B000100000001 /* UptimeCheckTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F8450032F2B000100000001 /* UptimeCheckTests.swift */; };
+		4F8450062F2B000100000001 /* ScreensaverCheckTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F8450052F2B000100000001 /* ScreensaverCheckTests.swift */; };
 		4F84531026D634E5007C3B04 /* NSWorkspace.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F84530F26D634E5007C3B04 /* NSWorkspace.swift */; };
 		4F84531226D638C0007C3B04 /* NSBackgroundActivityScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F84531126D638C0007C3B04 /* NSBackgroundActivityScheduler.swift */; };
 		4F84A94426CBBA6900A1579D /* SettingsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F84A94326CBBA6900A1579D /* SettingsTests.swift */; };
@@ -449,6 +450,7 @@
 		4F81C10726EB5D270065F548 /* URL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URL.swift; sourceTree = "<group>"; };
 		4F8450002F2B000100000001 /* Uptime.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Uptime.swift; sourceTree = "<group>"; };
 		4F8450032F2B000100000001 /* UptimeCheckTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UptimeCheckTests.swift; sourceTree = "<group>"; };
+		4F8450052F2B000100000001 /* ScreensaverCheckTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreensaverCheckTests.swift; sourceTree = "<group>"; };
 		4F84530F26D634E5007C3B04 /* NSWorkspace.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSWorkspace.swift; sourceTree = "<group>"; };
 		4F84531126D638C0007C3B04 /* NSBackgroundActivityScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSBackgroundActivityScheduler.swift; sourceTree = "<group>"; };
 		4F84A94326CBBA6900A1579D /* SettingsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTests.swift; sourceTree = "<group>"; };
@@ -812,6 +814,7 @@
 				4F57135626F8BF84004B4359 /* ParetoAppTest.swift */,
 				4F57135C26F8C921004B4359 /* TeamsTest.swift */,
 				4F8450032F2B000100000001 /* UptimeCheckTests.swift */,
+				4F8450052F2B000100000001 /* ScreensaverCheckTests.swift */,
 				4FCA00132F6D000100000001 /* CompromisedCATests.swift */,
 				4FABC0212F6E000100000001 /* EditorExtensionsSupplyChainTests.swift */,
 				4FABC0232F6E000100000001 /* PackageManagerSupplyChainTests.swift */,
@@ -1357,6 +1360,7 @@
 				4F57135726F8BF84004B4359 /* ParetoAppTest.swift in Sources */,
 				4F57135D26F8C921004B4359 /* TeamsTest.swift in Sources */,
 				4F8450042F2B000100000001 /* UptimeCheckTests.swift in Sources */,
+				4F8450062F2B000100000001 /* ScreensaverCheckTests.swift in Sources */,
 				4FCA00142F6D000100000001 /* CompromisedCATests.swift in Sources */,
 				4FABC0222F6E000100000001 /* EditorExtensionsSupplyChainTests.swift in Sources */,
 				4FABC0242F6E000100000001 /* PackageManagerSupplyChainTests.swift in Sources */,
