@@ -84,6 +84,12 @@ The app supports custom URL scheme `paretosecurity://` for:
 - Tests are organized by feature area (checks, settings, team, updater, welcome)
 - Use `make test` for full test suite with formatted output via xcbeautify
 
+## Project and Build Configuration
+- `Pareto/`, `ParetoSecurityTests/`, `ParetoSecurityUITests/` and `ParetoSecurityHelper/` are synchronized folder references. Adding a file on disk adds it to the target; do not edit `project.pbxproj` for new files.
+- Files that must not ship in a target are listed in an exception set on the folder (for example `setappPublicKey.pem` is excluded from the direct build).
+- All build settings live in `Config/*.xcconfig`. `Base` is shared, `Debug`/`Release` are project-level, and each target has its own file (`App-Direct`, `App-SetApp`, `Helper`, `Tests`, `UITests`). The `buildSettings` blocks in the project file are intentionally empty.
+- `Config/Version.xcconfig` holds `MARKETING_VERSION` and `CURRENT_PROJECT_VERSION`. `CFBundleVersion` in `Info.plist` resolves to `CURRENT_PROJECT_VERSION`. Archive targets in the Makefile compute the build number from the git commit count plus an offset, and CI passes the tag as `MARKETING_VERSION`. The build number must only ever go up.
+
 ## Development Notes
 - The app runs as a status bar utility (`LSUIElement: true`)
 - Requires Apple Events permission for system automation

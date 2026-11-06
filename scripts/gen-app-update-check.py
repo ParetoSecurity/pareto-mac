@@ -8,8 +8,9 @@ from uuid import uuid5, NAMESPACE_URL
 import re
 import requests
 
-current = Path(__file__).parent.resolve()
-template = Template(current.joinpath("AppUpdateCheck.tmpl").read_text())
+scripts_dir = Path(__file__).parent.resolve()
+current = scripts_dir.parent / "Pareto" / "Checks" / "Application Updates"
+template = Template(scripts_dir.joinpath("AppUpdateCheck.tmpl").read_text())
 
 apps = set([
     "1Password 7",

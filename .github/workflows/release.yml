@@ -28,6 +28,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
 
       - name: Get release tag
         id: release
@@ -49,14 +51,10 @@ jobs:
           release-passphrase: ${{ secrets.RELEASE_CERTIFICATE_PASSPHRASE }}
           keychain-password: ${{ secrets.KEYCHAIN_PASSWORD }}
 
-      - name: Patch version from tag
+      - name: Archive for distribution
         env:
           VERSION: ${{ steps.release.outputs.tag }}
-        run: |
-          sed -E -i '' "s/MARKETING_VERSION = .*;/MARKETING_VERSION = ${VERSION};/g" "Pareto Security.xcodeproj/project.pbxproj"
-
-      - name: Archive for distribution
-        run: make archive-release
+        run: make archive-release MARKETING_VERSION="$VERSION"
 
       - name: Compress app
         run: ditto -c -k --keepParent "Export/Pareto Security.app" ParetoSecurity.app.zip
@@ -152,6 +150,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
 
       - name: Get release tag
         id: release
@@ -176,14 +176,10 @@ jobs:
       - name: Install Sentry CLI
         run: brew install getsentry/tools/sentry-cli
 
-      - name: Patch version from tag
+      - name: Archive for distribution
         env:
           VERSION: ${{ steps.release.outputs.tag }}
-        run: |
-          sed -E -i '' "s/MARKETING_VERSION = .*;/MARKETING_VERSION = ${VERSION};/g" "Pareto Security.xcodeproj/project.pbxproj"
-
-      - name: Archive for distribution
-        run: make archive-release-setapp
+        run: make archive-release-setapp MARKETING_VERSION="$VERSION"
 
       - name: Upload debug symbols
         env:
