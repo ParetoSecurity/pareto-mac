@@ -134,10 +134,10 @@ class SudoRequiresPasswordCheck: ParetoCheck {
                         rest = String(rest[rest.index(after: end)...])
                     }
                 }
-                for part in rest.components(separatedBy: ",") {
-                    if commandRunsWithoutPassword(part, noPassword: &noPassword) {
-                        return false
-                    }
+                // In order, so NOPASSWD: carries over to the commands after it
+                let parts = rest.components(separatedBy: ",")
+                if parts.contains(where: { commandRunsWithoutPassword($0, noPassword: &noPassword) }) {
+                    return false
                 }
             }
         }
