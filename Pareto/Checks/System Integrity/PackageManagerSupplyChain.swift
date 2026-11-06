@@ -118,9 +118,9 @@ class PackageManagerSupplyChainCheck: ParetoCheck {
 
             var managerFailures = manager.validate(active.contents, active.displayPath)
             if let gate = manager.versionGate, managerFailures.isEmpty,
-               manager.usesSetting?(active.contents) == true,
-               let binary = manager.binaries.first(where: isBinaryInstalled)
+               manager.usesSetting?(active.contents) == true
             {
+                let binary = manager.binaries.first(where: isBinaryInstalled) ?? manager.binaries[0]
                 managerFailures = addingVersionGate(
                     managerFailures,
                     binary: binary,
@@ -168,19 +168,13 @@ class PackageManagerSupplyChainCheck: ParetoCheck {
         if let version = packageManagerVersions[name] {
             return Self.versionToken(from: version)
         }
-        guard let path = executablePath(for: name) else { return nil }
-        // Most of these binaries are `#!/usr/bin/env node` wrappers, so they
-        // need a PATH that also resolves their runtime.
-        var childEnvironment = environment
-        childEnvironment["PATH"] = searchDirectories().joined(separator: ":")
-        let output = runCMD(app: path, args: ["--version"], environment: childEnvironment)
+        guard installedBinaries?.contains(name) != false,
+              let path = executablePath(for: name),
+              let output = CheckCommand.run(app: path, args: ["--version"], homeDirectory: homeDirectory, path: searchDirectories())
+        else { return nil }
         return Self.versionToken(from: output)
     }
 
-    // Resolves a binary against a fixed list of well-known install prefixes. A
-    // LaunchServices-launched app inherits only the launchd default PATH
-    // (/usr/bin:/bin:/usr/sbin:/sbin), so relying on `which` alone made the
-    // check mark itself non-runnable for every Homebrew or ~/.bun install.
     private func executablePath(for name: String) -> String? {
         for directory in searchDirectories() {
             let candidate = (directory as NSString).appendingPathComponent(name)
@@ -191,12 +185,6 @@ class PackageManagerSupplyChainCheck: ParetoCheck {
         return nil
     }
 
-    /// During a check run the user's own shell PATH comes first, so the copy
-    /// that is version-checked is the one their terminal runs (a pyenv pip
-    /// rather than Apple's /usr/bin/pip3 stub). The well-known prefixes follow
-    /// so installed tools are still detected when the shell is unavailable or
-    /// does not list them. Without a shell PATH, user-level prefixes go first
-    /// because version managers prepend themselves to PATH.
     func searchDirectories() -> [String] {
         let fallback = Self.homeInstallPrefixes.map {
             homeDirectory.appendingPathComponent($0).path
@@ -429,10 +417,11 @@ class PackageManagerSupplyChainCheck: ParetoCheck {
         configDescription: String
     ) -> [String] {
         var failures = failures
-        guard failures.isEmpty, isBinaryInstalled(binary) else {
+        guard failures.isEmpty else {
             return failures
         }
         guard let version = packageManagerVersion(binary) else {
+            hasError = true
             failures.append("\(binary) version could not be determined, so \(configDescription) could not be verified")
             return failures
         }

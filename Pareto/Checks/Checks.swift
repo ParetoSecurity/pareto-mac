@@ -34,6 +34,8 @@ class Claims: ObservableObject {
                 ScreensaverCheck.sharedInstance,
                 SSHKeysCheck.sharedInstance,
                 SSHKeysStrengthCheck.sharedInstance,
+                SSHAgentForwardingCheck.sharedInstance,
+                SSHHostKeyVerificationCheck.sharedInstance,
                 PasswordAfterSleepCheck.sharedInstance,
                 NoUnusedUsers.sharedInstance,
                 NoAdminUser.sharedInstance,
