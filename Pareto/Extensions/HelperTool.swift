@@ -50,7 +50,7 @@ class HelperToolUtilities {
     }
 
     /// Manual version counter - increment this when helper needs updating
-    static let expectedHelperVersion = "1.0.3"
+    static let expectedHelperVersion = "1.0.4"
 
     /// Static method to get expected helper version (manual counter)
     static func getExpectedHelperVersion() -> String {
@@ -190,6 +190,38 @@ class HelperToolManager: ObservableObject {
         }
 
         proxy.isFirewallStealthEnabled(with: { output in
+            DispatchQueue.main.async {
+                completion(output)
+            }
+        })
+    }
+
+    /// Lists the sudo privileges of the current user (`sudo -l -U`), run as root by the helper
+    func sudoPrivileges(completion: @escaping (String) -> Void) async {
+        if !HelperToolUtilities.isHelperInstalled() {
+            os_log("XPC: Helper tool is not installed")
+            completion("XPC: Helper tool is not installed")
+            return
+        }
+
+        guard let connection = getConnection() else {
+            os_log("XPC: Connection not available")
+            completion("XPC: Connection not available")
+            return
+        }
+
+        guard let proxy = connection.remoteObjectProxyWithErrorHandler({ error in
+            DispatchQueue.main.async {
+                os_log("XPC: Connection error: \(error.localizedDescription)")
+                completion("XPC: Connection error: \(error.localizedDescription)")
+            }
+        }) as? ParetoSecurityHelperProtocol else {
+            os_log("XPC: Failed to get remote object")
+            completion("XPC: Failed to get remote object")
+            return
+        }
+
+        proxy.sudoPrivileges(with: { output in
             DispatchQueue.main.async {
                 completion(output)
             }

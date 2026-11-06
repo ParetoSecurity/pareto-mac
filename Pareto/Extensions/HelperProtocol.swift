@@ -11,5 +11,6 @@ import Foundation
 protocol ParetoSecurityHelperProtocol {
     func isFirewallEnabled(with reply: @escaping (String) -> Void)
     func isFirewallStealthEnabled(with reply: @escaping (String) -> Void)
+    func sudoPrivileges(with reply: @escaping (String) -> Void)
     func getVersion(with reply: @escaping (String) -> Void)
 }
