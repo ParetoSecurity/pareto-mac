@@ -41,6 +41,7 @@ class Claims: ObservableObject {
             Claim(withTitle: "Firewall & Sharing", withChecks: [
                 FirewallCheck.sharedInstance,
                 FirewallStealthCheck.sharedInstance,
+                FirewallExceptionsCheck.sharedInstance,
                 FileSharingCheck.sharedInstance,
                 PrinterSharingCheck.sharedInstance,
                 RemoteManagementCheck.sharedInstance,

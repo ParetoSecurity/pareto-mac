@@ -182,6 +182,9 @@
 		4F5C55122F70000100000001 /* RemoteApplicationScripting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F5C55112F70000100000001 /* RemoteApplicationScripting.swift */; };
 		4F5C55132F70000100000001 /* RemoteApplicationScripting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F5C55112F70000100000001 /* RemoteApplicationScripting.swift */; };
 		4F5C55222F70000100000001 /* SharingPortChecksTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F5C55212F70000100000001 /* SharingPortChecksTests.swift */; };
+		4F5C55322F70000100000001 /* FirewallExceptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F5C55312F70000100000001 /* FirewallExceptions.swift */; };
+		4F5C55332F70000100000001 /* FirewallExceptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F5C55312F70000100000001 /* FirewallExceptions.swift */; };
+		4F5C55422F70000100000001 /* FirewallExceptionsCheckTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F5C55412F70000100000001 /* FirewallExceptionsCheckTests.swift */; };
 		4F5E888026A053A9005271FB /* ParetoCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F5E887F26A053A9005271FB /* ParetoCheck.swift */; };
 		4F6A00BB2D6E5791001BDE61 /* ApplicationUpdatesTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F6A00BA2D6E5791001BDE61 /* ApplicationUpdatesTest.swift */; };
 		4F6A0E0E26CE484A003B00A3 /* PrinterSharingCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F6A0E0D26CE484A003B00A3 /* PrinterSharingCheck.swift */; };
@@ -443,6 +446,8 @@
 		4F5C55012F70000100000001 /* ScreenSharing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScreenSharing.swift; sourceTree = "<group>"; };
 		4F5C55112F70000100000001 /* RemoteApplicationScripting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RemoteApplicationScripting.swift; sourceTree = "<group>"; };
 		4F5C55212F70000100000001 /* SharingPortChecksTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SharingPortChecksTests.swift; sourceTree = "<group>"; };
+		4F5C55312F70000100000001 /* FirewallExceptions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FirewallExceptions.swift; sourceTree = "<group>"; };
+		4F5C55412F70000100000001 /* FirewallExceptionsCheckTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FirewallExceptionsCheckTests.swift; sourceTree = "<group>"; };
 		4F5E887F26A053A9005271FB /* ParetoCheck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParetoCheck.swift; sourceTree = "<group>"; };
 		4F6A00BA2D6E5791001BDE61 /* ApplicationUpdatesTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationUpdatesTest.swift; sourceTree = "<group>"; };
 		4F6A0E0D26CE484A003B00A3 /* PrinterSharingCheck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrinterSharingCheck.swift; sourceTree = "<group>"; };
@@ -673,6 +678,7 @@
 				4F6A0E0D26CE484A003B00A3 /* PrinterSharingCheck.swift */,
 				4F868DCE26A591E6005B876E /* Firewall.swift */,
 				4F8ECA362798262F00361728 /* FirewallStealth.swift */,
+				4F5C55312F70000100000001 /* FirewallExceptions.swift */,
 				4F1AE88F26F9FFA60084A381 /* MediaShare.swift */,
 				4F1E6C6328355B2100C8AFAB /* InternetSharing.swift */,
 				4F1AE89126FA026D0084A381 /* AirPlay.swift */,
@@ -831,6 +837,7 @@
 				4F8450032F2B000100000001 /* UptimeCheckTests.swift */,
 				4F8450052F2B000100000001 /* ScreensaverCheckTests.swift */,
 				4F5C55212F70000100000001 /* SharingPortChecksTests.swift */,
+				4F5C55412F70000100000001 /* FirewallExceptionsCheckTests.swift */,
 				4FCA00132F6D000100000001 /* CompromisedCATests.swift */,
 				4FABC0212F6E000100000001 /* EditorExtensionsSupplyChainTests.swift */,
 				4FABC0232F6E000100000001 /* PackageManagerSupplyChainTests.swift */,
@@ -1282,6 +1289,7 @@
 				4F38D8CF273AC62500671756 /* EndView.swift in Sources */,
 				4FA975702E4B31E4006C0D5A /* UpdateService.swift in Sources */,
 				4F8ECA382798262F00361728 /* FirewallStealth.swift in Sources */,
+				4F5C55332F70000100000001 /* FirewallExceptions.swift in Sources */,
 				3F17334B2D6D6487007C02B0 /* NordLayer.swift in Sources */,
 				3F17334C2D6D6487007C02B0 /* Bitwarden.swift in Sources */,
 				3F17334D2D6D6487007C02B0 /* Cyberduck.swift in Sources */,
@@ -1383,6 +1391,7 @@
 				4F8450042F2B000100000001 /* UptimeCheckTests.swift in Sources */,
 				4F8450062F2B000100000001 /* ScreensaverCheckTests.swift in Sources */,
 				4F5C55222F70000100000001 /* SharingPortChecksTests.swift in Sources */,
+				4F5C55422F70000100000001 /* FirewallExceptionsCheckTests.swift in Sources */,
 				4FCA00142F6D000100000001 /* CompromisedCATests.swift in Sources */,
 				4FABC0222F6E000100000001 /* EditorExtensionsSupplyChainTests.swift in Sources */,
 				4FABC0242F6E000100000001 /* PackageManagerSupplyChainTests.swift in Sources */,
@@ -1450,6 +1459,7 @@
 				4F38D8CE273AC62500671756 /* EndView.swift in Sources */,
 				4FA975712E4B31E4006C0D5A /* UpdateService.swift in Sources */,
 				4F8ECA372798262F00361728 /* FirewallStealth.swift in Sources */,
+				4F5C55322F70000100000001 /* FirewallExceptions.swift in Sources */,
 				3F17333B2D6D6487007C02B0 /* NordLayer.swift in Sources */,
 				3F17333C2D6D6487007C02B0 /* Bitwarden.swift in Sources */,
 				3F17333D2D6D6487007C02B0 /* Cyberduck.swift in Sources */,
