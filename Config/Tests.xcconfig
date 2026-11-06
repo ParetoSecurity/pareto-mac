@@ -1,0 +1,18 @@
+// Tests.xcconfig
+// "ParetoSecurityTests" target: unit tests hosted by the direct app.
+
+PRODUCT_BUNDLE_IDENTIFIER = niteo.co.ParetoSecurityTests
+PRODUCT_NAME = $(TARGET_NAME)
+TEST_HOST = $(BUILT_PRODUCTS_DIR)/Pareto Security.app/Contents/MacOS/Pareto Security
+BUNDLE_LOADER = $(TEST_HOST)
+CLANG_CXX_LANGUAGE_STANDARD = gnu++17
+CODE_SIGN_IDENTITY = Apple Development
+CODE_SIGN_STYLE = Automatic
+COMBINE_HIDPI_IMAGES = YES
+DEAD_CODE_STRIPPING = YES
+GENERATE_INFOPLIST_FILE = YES
+LD_RUNPATH_SEARCH_PATHS = $(inherited) @executable_path/../Frameworks @loader_path/../Frameworks
+PROVISIONING_PROFILE_SPECIFIER =
+SWIFT_COMPILATION_MODE[config=Debug] = singlefile
+SWIFT_COMPILATION_MODE[config=Release] = wholemodule
+SWIFT_EMIT_LOC_STRINGS = NO

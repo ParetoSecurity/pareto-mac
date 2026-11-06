@@ -5,6 +5,14 @@ SHELL := bash
 MAKEFLAGS += --warn-undefined-variables
 MAKEFLAGS += --no-builtin-rules
 
+# MARKETING_VERSION defaults to the value in Config/Version.xcconfig. CI passes the release tag.
+MARKETING_VERSION ?= $(shell sed -n 's/^MARKETING_VERSION = //p' Config/Version.xcconfig)
+# Version as an integer: major * 10000 + minor * 100 + patch. A leading "v" is ignored.
+VERSION_NUMBER := $(shell echo "$(MARKETING_VERSION)" | awk -F. '{ sub(/^v/, "", $$1); printf "%d", $$1 * 10000 + $$2 * 100 + $$3 }')
+# Build number: commit count + version number. Each part only goes up, so the sum does too.
+# A tag rebuilds the same number. Needs the full history (fetch-depth: 0 in CI).
+BUILD_NUMBER ?= $(shell echo $$(( $$(git rev-list --count HEAD) + $(VERSION_NUMBER) )))
+VERSION_FLAGS := CURRENT_PROJECT_VERSION=$(BUILD_NUMBER) MARKETING_VERSION=$(MARKETING_VERSION)
 # Extra xcodebuild settings, e.g. CODE_SIGNING_ALLOWED=NO when no certificates
 # are available (pull requests from forks do not receive repository secrets).
 XCODEBUILD_FLAGS ?=
@@ -31,22 +39,22 @@ build-adhoc:
 	ditto "build/Build/Products/Debug/Pareto Security.app" "Export/Pareto Security.app"
 
 archive-debug:
-	NSUnbufferedIO=YES xcodebuild -project "Pareto Security.xcodeproj" -clonedSourcePackagesDirPath SourcePackages -scheme "Pareto Security" -destination platform=macOS archive -archivePath app.xcarchive -configuration Debug -allowProvisioningUpdates
+	NSUnbufferedIO=YES xcodebuild -project "Pareto Security.xcodeproj" -clonedSourcePackagesDirPath SourcePackages -scheme "Pareto Security" -destination platform=macOS archive -archivePath app.xcarchive -configuration Debug -allowProvisioningUpdates $(VERSION_FLAGS)
 	NSUnbufferedIO=YES xcodebuild -exportArchive -archivePath app.xcarchive -exportPath Export -exportOptionsPlist exportOptionsDev.plist
 
 archive-debug-setapp:
-	NSUnbufferedIO=YES xcodebuild -project "Pareto Security.xcodeproj" -clonedSourcePackagesDirPath SourcePackages -scheme "Pareto Security SetApp" -destination platform=macOS archive -archivePath setapp.xcarchive -configuration Debug -allowProvisioningUpdates
+	NSUnbufferedIO=YES xcodebuild -project "Pareto Security.xcodeproj" -clonedSourcePackagesDirPath SourcePackages -scheme "Pareto Security SetApp" -destination platform=macOS archive -archivePath setapp.xcarchive -configuration Debug -allowProvisioningUpdates $(VERSION_FLAGS)
 	NSUnbufferedIO=YES xcodebuild -exportArchive -archivePath setapp.xcarchive -exportPath SetAppExport -exportOptionsPlist exportOptionsDev.plist
 	mv SetAppExport/Pareto\ Security\ SetApp.app SetAppExport/Pareto\ Security.app
 
 archive-release:
-	NSUnbufferedIO=YES xcodebuild -project "Pareto Security.xcodeproj" -clonedSourcePackagesDirPath SourcePackages -scheme "Pareto Security" -destination platform=macOS archive -archivePath app.xcarchive -configuration Release -allowProvisioningUpdates
+	NSUnbufferedIO=YES xcodebuild -project "Pareto Security.xcodeproj" -clonedSourcePackagesDirPath SourcePackages -scheme "Pareto Security" -destination platform=macOS archive -archivePath app.xcarchive -configuration Release -allowProvisioningUpdates $(VERSION_FLAGS)
 	NSUnbufferedIO=YES xcodebuild -exportArchive -archivePath app.xcarchive -exportPath Export -exportOptionsPlist exportOptions.plist
 
 
 archive-release-setapp:
 	rm -rf SetAppExport
-	NSUnbufferedIO=YES xcodebuild -project "Pareto Security.xcodeproj" -clonedSourcePackagesDirPath SourcePackages -scheme "Pareto Security SetApp" -destination platform=macOS archive -archivePath setapp.xcarchive -configuration Release -allowProvisioningUpdates
+	NSUnbufferedIO=YES xcodebuild -project "Pareto Security.xcodeproj" -clonedSourcePackagesDirPath SourcePackages -scheme "Pareto Security SetApp" -destination platform=macOS archive -archivePath setapp.xcarchive -configuration Release -allowProvisioningUpdates $(VERSION_FLAGS)
 	NSUnbufferedIO=YES xcodebuild -exportArchive -archivePath setapp.xcarchive -exportPath SetAppExport -exportOptionsPlist exportOptions.plist
 	mv SetAppExport/Pareto\ Security\ SetApp.app SetAppExport/Pareto\ Security.app
 

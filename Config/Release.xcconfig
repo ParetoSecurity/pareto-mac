@@ -1,0 +1,10 @@
+// Release.xcconfig
+// Project-level Release configuration.
+
+#include "Base.xcconfig"
+
+DEBUG_INFORMATION_FORMAT = dwarf-with-dsym
+ENABLE_NS_ASSERTIONS = NO
+MTL_ENABLE_DEBUG_INFO = NO
+SWIFT_COMPILATION_MODE = wholemodule
+SWIFT_OPTIMIZATION_LEVEL = -O

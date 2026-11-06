@@ -2,9 +2,11 @@
 
 ## Project Structure & Module Organization
 - `Pareto/`: Main app source (Swift/SwiftUI), checks, views, status bar, models.
-- `Pareto Security.xcodeproj/`: Xcode project and build settings.
+- `Pareto Security.xcodeproj/`: Xcode project. Source folders are synchronized folder references, so a file on disk is in the target; no project edit needed.
+- `Config/*.xcconfig`: All build settings. `Version.xcconfig` holds `MARKETING_VERSION` and `CURRENT_PROJECT_VERSION`; the Makefile overrides both for archives.
 - `ParetoSecurityTests/` and `ParetoSecurityUITests/`: Unit and UI tests (XCTest).
-- `assets/`: README icon and screenshot. `SourcePackages/`: SwiftPM cache.
+- `scripts/`: Helper scripts, such as the app update check generator.
+- `assets/`: App icons and screenshots. `SourcePackages/`: SwiftPM cache.
 - `.github/workflows/`: CI for lint, test, and release.
 
 ## Build, Test, and Development Commands

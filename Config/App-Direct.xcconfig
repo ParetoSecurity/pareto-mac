@@ -1,0 +1,8 @@
+// App-Direct.xcconfig
+// "Pareto Security" target: direct distribution with the built-in updater.
+
+#include "App.xcconfig"
+
+PRODUCT_BUNDLE_IDENTIFIER = niteo.co.Pareto
+ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO
+GCC_PREPROCESSOR_DEFINITIONS = SETAPP_ENABLED=0

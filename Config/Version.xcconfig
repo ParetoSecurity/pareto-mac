@@ -1,0 +1,8 @@
+// Version.xcconfig
+// Single source of truth for the app version. CI overrides both values on the
+// xcodebuild command line (see Makefile), so this file only matters for local
+// builds. CURRENT_PROJECT_VERSION must only ever go up; archives compute it
+// from the commit count plus the version number (see Makefile).
+
+MARKETING_VERSION = 1.46.0
+CURRENT_PROJECT_VERSION = 15481

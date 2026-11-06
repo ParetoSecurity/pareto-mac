@@ -1,0 +1,13 @@
+// App-SetApp.xcconfig
+// "Pareto Security SetApp" target: SetApp distribution, links libSetapp.
+
+#include "App.xcconfig"
+
+PRODUCT_BUNDLE_IDENTIFIER = niteo.co.Pareto-setapp
+ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES
+GCC_PREPROCESSOR_DEFINITIONS[config=Debug] = SETAPP_ENABLED=1 DEBUG=1
+GCC_PREPROCESSOR_DEFINITIONS[config=Release] = SETAPP_ENABLED=1
+SWIFT_ACTIVE_COMPILATION_CONDITIONS[config=Debug] = SETAPP_ENABLED DEBUG
+SWIFT_ACTIVE_COMPILATION_CONDITIONS[config=Release] = SETAPP_ENABLED
+SWIFT_COMPILATION_MODE[config=Debug] = singlefile
+OTHER_LDFLAGS = -force_load "$(BUILT_PRODUCTS_DIR)/libSetapp.a"
