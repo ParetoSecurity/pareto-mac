@@ -54,10 +54,10 @@ build-release-setapp:
 	# rm -f ParetoSecuritySetApp.app.zip
 	# rm -rf SetAppExport/Release
 	# mkdir -p SetAppExport/Release
-	# cp assets/Mac_512pt@2x.png SetAppExport/Release/AppIcon.png
+	# cp Pareto/Assets.xcassets/AppIcon.appiconset/icon_512x512@2x.png SetAppExport/Release/AppIcon.png
 	# cp -vr SetAppExport/Pareto\ Security.app SetAppExport/Release/Pareto\ Security.app
 	# cd SetAppExport; ditto -c -k --sequesterRsrc --keepParent Release ../ParetoSecuritySetApp.app.zip
-	cp -f assets/Mac_512pt@2x.png AppIcon.png
+	cp -f Pareto/Assets.xcassets/AppIcon.appiconset/icon_512x512@2x.png AppIcon.png
 	zip -u ParetoSecuritySetApp.app.zip AppIcon.png
 	rm -f AppIcon.png
 

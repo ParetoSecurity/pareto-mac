@@ -4,7 +4,7 @@
 - `Pareto/`: Main app source (Swift/SwiftUI), checks, views, status bar, models.
 - `Pareto Security.xcodeproj/`: Xcode project and build settings.
 - `ParetoSecurityTests/` and `ParetoSecurityUITests/`: Unit and UI tests (XCTest).
-- `assets/`: App icons and screenshots. `SourcePackages/`: SwiftPM cache.
+- `assets/`: README icon and screenshot. `SourcePackages/`: SwiftPM cache.
 - `.github/workflows/`: CI for lint, test, and release.
 
 ## Build, Test, and Development Commands
