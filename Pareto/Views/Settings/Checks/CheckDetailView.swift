@@ -136,6 +136,16 @@ struct CheckDetailView: View {
                     }
                 }
 
+                if check is FirewallExceptionsCheck {
+                    Section(header: Text("Ignored Firewall Apps")) {
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("Choose apps that may keep accepting incoming connections without failing this check.").font(.caption).foregroundColor(.secondary)
+                            Divider()
+                            IgnoredFirewallAppsSettingsView().padding(.vertical, 4)
+                        }
+                    }
+                }
+
                 if check.showSettingsWarnDiskAccess, !check.isRunnable {
                     Section(header: Text("Permissions Required")) {
                         VStack(alignment: .leading, spacing: 8) {
