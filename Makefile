@@ -5,12 +5,14 @@ SHELL := bash
 MAKEFLAGS += --warn-undefined-variables
 MAKEFLAGS += --no-builtin-rules
 
-# Build number: derived from the commit count, so it only goes up and a tag rebuilds the same number.
-# The offset keeps it above 7017, the last number the old auto-increment script phase wrote.
-# Needs the full history (fetch-depth: 0 in CI).
-BUILD_NUMBER ?= $(shell echo $$(( $$(git rev-list --count HEAD) + 7000 )))
-# MARKETING_VERSION is optional. When unset, Config/Version.xcconfig applies.
-VERSION_FLAGS := CURRENT_PROJECT_VERSION=$(BUILD_NUMBER) $(if $(MARKETING_VERSION),MARKETING_VERSION=$(MARKETING_VERSION),)
+# MARKETING_VERSION defaults to the value in Config/Version.xcconfig. CI passes the release tag.
+MARKETING_VERSION ?= $(shell sed -n 's/^MARKETING_VERSION = //p' Config/Version.xcconfig)
+# Version as an integer: major * 10000 + minor * 100 + patch. A leading "v" is ignored.
+VERSION_NUMBER := $(shell echo "$(MARKETING_VERSION)" | awk -F. '{ sub(/^v/, "", $$1); printf "%d", $$1 * 10000 + $$2 * 100 + $$3 }')
+# Build number: commit count + version number. Each part only goes up, so the sum does too.
+# A tag rebuilds the same number. Needs the full history (fetch-depth: 0 in CI).
+BUILD_NUMBER ?= $(shell echo $$(( $$(git rev-list --count HEAD) + $(VERSION_NUMBER) )))
+VERSION_FLAGS := CURRENT_PROJECT_VERSION=$(BUILD_NUMBER) MARKETING_VERSION=$(MARKETING_VERSION)
 
 test:
 	@rm -rf test.xcresult
