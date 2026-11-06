@@ -22,7 +22,7 @@ class IntegrationCheck: ParetoCheck {
     }
 
     override func checkPasses() -> Bool {
-        return true
+        true
     }
 }
 
@@ -40,6 +40,6 @@ class IntegrationCheckFails: ParetoCheck {
     }
 
     override func checkPasses() -> Bool {
-        return false
+        false
     }
 }

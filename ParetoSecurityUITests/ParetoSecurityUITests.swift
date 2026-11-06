@@ -45,7 +45,7 @@ class ParetoSecurityUITests: XCTestCase {
         add(screenshotAttachment)
     }
 
-    func testHoverMenus() throws {
+    func testHoverMenus() {
         // XCTExpectFailure("Fails with in xcode 13 env, working on a fix")
 
         let menuBarsQuery = app.menuBars
@@ -76,7 +76,7 @@ class ParetoSecurityUITests: XCTestCase {
         takeScreenshot(screenshot: app.screenshot(), name: "Snooze App")
     }
 
-    func testSnooze() throws {
+    func testSnooze() {
         // XCTExpectFailure("Fails with in xcode 13 env, working on a fix")
 
         let menuBarsQuery = app.menuBars
@@ -87,7 +87,7 @@ class ParetoSecurityUITests: XCTestCase {
         takeScreenshot(screenshot: app.screenshot(), name: "Snooze App")
     }
 
-    func testSettingsWindow() throws {
+    func testSettingsWindow() {
         // XCTExpectFailure("Fails with in xcode 13 env, working on a fix")
 
         let menuBarsQuery = app.menuBars
@@ -96,7 +96,7 @@ class ParetoSecurityUITests: XCTestCase {
         menuBarsQuery.menuItems["showPrefs"].click()
     }
 
-    func testAppRuns() throws {
+    func testAppRuns() {
         takeScreenshot(screenshot: app.screenshot(), name: "App")
     }
 }

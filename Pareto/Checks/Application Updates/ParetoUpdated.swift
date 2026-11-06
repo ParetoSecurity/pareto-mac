@@ -106,7 +106,7 @@ class ParetoUpdated: ParetoCheck {
         }
 
         let sortedReleases = releases.sorted { $0.version > $1.version }
-        os_log("Sorted releases: %{public}@", sortedReleases.map { $0.tag_name }.joined(separator: ", "))
+        os_log("Sorted releases: %{public}@", sortedReleases.map(\.tag_name).joined(separator: ", "))
 
         let filteredReleases = sortedReleases.filter { !$0.prerelease }
         os_log("Comparing installed app against latest stable release")
@@ -185,7 +185,9 @@ class ParetoUpdated: ParetoCheck {
 
     private func refreshUpdateStatusIfNeeded() {
         let shouldStart = updateCheckInFlight.withLock { inFlight in
-            if inFlight { return false }
+            if inFlight {
+                return false
+            }
             inFlight = true
             return true
         }
@@ -193,9 +195,9 @@ class ParetoUpdated: ParetoCheck {
 
         Task.detached(priority: .utility) { [weak self] in
             guard let self else { return }
-            let outcome = await self.fetchUpdateCheckOutcome()
-            self.applyUpdateCheckOutcome(outcome)
-            self.updateCheckInFlight.withLock { $0 = false }
+            let outcome = await fetchUpdateCheckOutcome()
+            applyUpdateCheckOutcome(outcome)
+            updateCheckInFlight.withLock { $0 = false }
         }
     }
 

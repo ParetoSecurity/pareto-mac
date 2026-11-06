@@ -17,7 +17,9 @@ final class IgnoredUsersViewModel: ObservableObject {
     @Published var showRerunNotice = false
 
     func loadAvailableUsers() async {
-        if isLoadingUsers { return }
+        if isLoadingUsers {
+            return
+        }
         isLoadingUsers = true
 
         // Run command off the main actor
@@ -124,7 +126,7 @@ struct IgnoredUsersSettingsView: View {
                     .disabled(model.selectedUser == nil)
                 }
 
-                if availableUsersNotIgnored.isEmpty && !model.isLoadingUsers {
+                if availableUsersNotIgnored.isEmpty, !model.isLoadingUsers {
                     Text("No additional users available to ignore")
                         .font(.footnote)
                         .foregroundColor(.secondary)

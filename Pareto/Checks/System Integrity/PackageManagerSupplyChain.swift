@@ -15,16 +15,58 @@ class PackageManagerSupplyChainCheck: ParetoCheck {
     let packageManagerVersions: [String: String]
     let environment: [String: String]
 
+    /// A release younger than this is considered "too new to trust". Every
+    /// per-manager threshold and message derives from this one policy value.
+    private static let minimumCooldownSeconds = 604_800
+    private static let minimumCooldownDays = minimumCooldownSeconds / 86400
+    private static let minimumCooldownMinutes = minimumCooldownSeconds / 60
+
+    /// One entry per package manager: where its user-level cooldown config
+    /// lives, which binaries imply it should exist, how to validate it, and
+    /// (optionally) the minimum tool version that enforces the setting.
+    /// All per-manager behavior flows from this table; the checks below just
+    /// iterate it.
+    private struct ManagerConfig {
+        /// Candidate config files, first match wins. Relative paths are
+        /// resolved against the home directory.
+        let candidates: [(displayPath: String, url: URL)]
+        /// Binaries whose presence means the config must exist.
+        let binaries: [String]
+        /// Validates the file contents; the second argument is the display
+        /// path for tools whose message mentions where the config was found.
+        let validate: (String, String) -> [String]
+        /// Detail used when no candidate config exists, given the first
+        /// candidate's display path.
+        let missingDetail: (String) -> String
+        /// Detail used when the config passes, given the matched display path.
+        let passingDetail: (String) -> String
+        /// Set when only newer tool versions actually enforce the setting;
+        /// `setting` is reported after the matched display path.
+        var versionGate: (minimumVersion: String, setting: String)?
+        /// The gate only makes sense once the cooldown key is present.
+        var usesSetting: ((String) -> Bool)?
+    }
+
+    let shellPath: ShellPath
+
     init(
         homeDirectory: URL = FileManager.default.homeDirectoryForCurrentUser,
         installedBinaries: Set<String>? = nil,
         packageManagerVersions: [String: String] = [:],
-        environment: [String: String] = ProcessInfo.processInfo.environment
+        environment: [String: String] = ProcessInfo.processInfo.environment,
+        shellPath: ShellPath = .shared
     ) {
         self.homeDirectory = homeDirectory
         self.installedBinaries = installedBinaries
         self.packageManagerVersions = packageManagerVersions
         self.environment = environment
+        self.shellPath = shellPath
+    }
+
+    /// A single re-check from the UI is its own short run; inside a full scan
+    /// this joins the scan's cached shell PATH.
+    override func run() -> Bool {
+        shellPath.withRun { super.run() }
     }
 
     override var UUID: String {
@@ -40,15 +82,15 @@ class PackageManagerSupplyChainCheck: ParetoCheck {
     }
 
     override var isRunnable: Bool {
-        return isActive && hasPackageManagerConfigOrBinary()
+        isActive && hasPackageManagerConfigOrBinary()
     }
 
     override var showInMenu: Bool {
-        return isActive && hasPackageManagerConfigOrBinary()
+        isActive && hasPackageManagerConfigOrBinary()
     }
 
     override var showDetailsWhenPassing: Bool {
-        return true
+        true
     }
 
     override var details: String {
@@ -60,38 +102,33 @@ class PackageManagerSupplyChainCheck: ParetoCheck {
     }
 
     override func checkPasses() -> Bool {
-        return validationFailures().isEmpty
+        validationFailures().isEmpty
     }
 
     func validationFailures() -> [String] {
-        let npmrc = homeDirectory.appendingPathComponent(".npmrc")
-        let bunfig = homeDirectory.appendingPathComponent(".bunfig.toml")
-        let uv = homeDirectory.appendingPathComponent(".config/uv/uv.toml")
-        let pypirc = homeDirectory.appendingPathComponent(".pypirc")
         var failures: [String] = []
 
-        if let contents = readFile(npmrc) {
-            failures.append(contentsOf: validateNpmConfig(contents))
-        } else if isBinaryInstalled("npm") || isBinaryInstalled("yarn") {
-            failures.append("~/.npmrc is missing")
-        }
-        if let pnpmConfig = activePnpmConfig() {
-            failures.append(contentsOf: Self.validatePnpmConfig(pnpmConfig.contents, displayPath: pnpmConfig.displayPath))
-        } else if isBinaryInstalled("pnpm") {
-            failures.append(pnpmConfigMissingDetail())
-        }
-        if let contents = readFile(bunfig) {
-            failures.append(contentsOf: Self.validateBunfig(contents))
-        } else if isBinaryInstalled("bun") {
-            failures.append("~/.bunfig.toml is missing")
-        }
-        if let contents = readFile(uv) {
-            failures.append(contentsOf: Self.validateUv(contents))
-        } else if isBinaryInstalled("uv") {
-            failures.append("~/.config/uv/uv.toml is missing")
-        }
-        if let contents = readFile(pypirc) {
-            failures.append(contentsOf: Self.validatePypirc(contents))
+        for manager in managers {
+            guard let active = activeConfig(in: manager) else {
+                if manager.binaries.contains(where: isBinaryInstalled) {
+                    failures.append(manager.missingDetail(manager.candidates[0].displayPath))
+                }
+                continue
+            }
+
+            var managerFailures = manager.validate(active.contents, active.displayPath)
+            if let gate = manager.versionGate, managerFailures.isEmpty,
+               manager.usesSetting?(active.contents) == true,
+               let binary = manager.binaries.first(where: isBinaryInstalled)
+            {
+                managerFailures = addingVersionGate(
+                    managerFailures,
+                    binary: binary,
+                    minimumVersion: gate.minimumVersion,
+                    configDescription: "\(active.displayPath) \(gate.setting)"
+                )
+            }
+            failures.append(contentsOf: managerFailures)
         }
 
         return failures
@@ -100,20 +137,10 @@ class PackageManagerSupplyChainCheck: ParetoCheck {
     private func passingDetails() -> String {
         var details: [String] = []
 
-        if let contents = readFile(homeDirectory.appendingPathComponent(".npmrc")), validateNpmConfig(contents).isEmpty {
-            details.append("~/.npmrc delays npm-compatible package releases and pins exact versions")
-        }
-        if let pnpmConfig = activePnpmConfig(), Self.validatePnpmConfig(pnpmConfig.contents, displayPath: pnpmConfig.displayPath).isEmpty {
-            details.append("\(pnpmConfig.displayPath) delays pnpm package releases")
-        }
-        if let contents = readFile(homeDirectory.appendingPathComponent(".bunfig.toml")), Self.validateBunfig(contents).isEmpty {
-            details.append("~/.bunfig.toml delays Bun package releases")
-        }
-        if let contents = readFile(homeDirectory.appendingPathComponent(".config/uv/uv.toml")), Self.validateUv(contents).isEmpty {
-            details.append("~/.config/uv/uv.toml excludes Python packages newer than 7 days")
-        }
-        if let contents = readFile(homeDirectory.appendingPathComponent(".pypirc")), Self.validatePypirc(contents).isEmpty {
-            details.append("~/.pypirc has no plaintext credentials")
+        for manager in managers {
+            if let active = activeConfig(in: manager), manager.validate(active.contents, active.displayPath).isEmpty {
+                details.append(manager.passingDetail(active.displayPath))
+            }
         }
 
         if details.isEmpty {
@@ -123,16 +150,11 @@ class PackageManagerSupplyChainCheck: ParetoCheck {
     }
 
     private func hasPackageManagerConfigOrBinary() -> Bool {
-        let configFiles = [
-            homeDirectory.appendingPathComponent(".npmrc"),
-            homeDirectory.appendingPathComponent(".bunfig.toml"),
-            homeDirectory.appendingPathComponent(".config/uv/uv.toml"),
-            homeDirectory.appendingPathComponent(".pypirc"),
-        ] + pnpmConfigPaths().map(\.url)
-        if configFiles.contains(where: { FileManager.default.fileExists(atPath: $0.path) }) {
+        let configPaths = managers.flatMap { $0.candidates.map(\.url) }
+        if configPaths.contains(where: { FileManager.default.fileExists(atPath: $0.path) }) {
             return true
         }
-        return ["yarn", "npm", "pnpm", "bun", "uv"].contains(where: isBinaryInstalled)
+        return managers.flatMap(\.binaries).contains(where: isBinaryInstalled)
     }
 
     private func isBinaryInstalled(_ name: String) -> Bool {
@@ -144,29 +166,222 @@ class PackageManagerSupplyChainCheck: ParetoCheck {
 
     private func packageManagerVersion(_ name: String) -> String? {
         if let version = packageManagerVersions[name] {
-            return version.isEmpty ? nil : version
+            return Self.versionToken(from: version)
         }
         guard let path = executablePath(for: name) else { return nil }
-        let output = runCMD(app: path, args: ["--version"]).trimmingCharacters(in: .whitespacesAndNewlines)
-        return output.isEmpty ? nil : output
+        // Most of these binaries are `#!/usr/bin/env node` wrappers, so they
+        // need a PATH that also resolves their runtime.
+        var childEnvironment = environment
+        childEnvironment["PATH"] = searchDirectories().joined(separator: ":")
+        let output = runCMD(app: path, args: ["--version"], environment: childEnvironment)
+        return Self.versionToken(from: output)
     }
 
+    // Resolves a binary against a fixed list of well-known install prefixes. A
+    // LaunchServices-launched app inherits only the launchd default PATH
+    // (/usr/bin:/bin:/usr/sbin:/sbin), so relying on `which` alone made the
+    // check mark itself non-runnable for every Homebrew or ~/.bun install.
     private func executablePath(for name: String) -> String? {
-        let path = runCMD(app: "/usr/bin/which", args: [name]).trimmingCharacters(in: .whitespacesAndNewlines)
-        return Self.executablePath(fromWhichOutput: path)
+        for directory in searchDirectories() {
+            let candidate = (directory as NSString).appendingPathComponent(name)
+            if let path = Self.executablePath(fromWhichOutput: candidate) {
+                return path
+            }
+        }
+        return nil
     }
+
+    /// During a check run the user's own shell PATH comes first, so the copy
+    /// that is version-checked is the one their terminal runs (a pyenv pip
+    /// rather than Apple's /usr/bin/pip3 stub). The well-known prefixes follow
+    /// so installed tools are still detected when the shell is unavailable or
+    /// does not list them. Without a shell PATH, user-level prefixes go first
+    /// because version managers prepend themselves to PATH.
+    func searchDirectories() -> [String] {
+        let fallback = Self.homeInstallPrefixes.map {
+            homeDirectory.appendingPathComponent($0).path
+        } + Self.systemInstallPrefixes
+        var seen = Set<String>()
+        return ((shellPath.directories ?? []) + fallback).filter { seen.insert($0).inserted }
+    }
+
+    private static let systemInstallPrefixes = [
+        "/opt/homebrew/bin",
+        "/usr/local/bin",
+        "/opt/local/bin",
+        "/usr/bin",
+        "/bin",
+    ]
+
+    private static let homeInstallPrefixes = [
+        ".bun/bin",
+        ".local/bin",
+        ".local/share/mise/shims",
+        ".pyenv/shims",
+        ".cargo/bin",
+        ".volta/bin",
+        ".yarn/bin",
+        ".npm-global/bin",
+        ".deno/bin",
+        ".asdf/shims",
+        "Library/pnpm",
+        "Library/Application Support/fnm/aliases/default/bin",
+    ]
 
     static func executablePath(fromWhichOutput output: String) -> String? {
         let path = output.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard (path as NSString).isAbsolutePath else { return nil }
-        guard FileManager.default.isExecutableFile(atPath: path) else { return nil }
+        guard (path as NSString).isAbsolutePath, FileManager.default.isExecutableFile(atPath: path) else { return nil }
         return path
     }
 
-    private func activePnpmConfig() -> (contents: String, displayPath: String)? {
-        for configPath in pnpmConfigPaths() {
-            if let contents = readFile(configPath.url) {
-                return (contents, configPath.displayPath)
+    // MARK: - Per-manager configuration
+
+    /// The single source of truth for every manager this check understands.
+    private var managers: [ManagerConfig] {
+        func homeCandidate(_ relativePath: String) -> (displayPath: String, url: URL) {
+            ("~/" + relativePath, homeDirectory.appendingPathComponent(relativePath))
+        }
+
+        return [
+            // JavaScript / Node.js
+            ManagerConfig(
+                candidates: [homeCandidate(".npmrc")],
+                binaries: ["npm"],
+                validate: { contents, _ in Self.validateNpmrc(contents) },
+                missingDetail: { display in "\(display) is missing" },
+                passingDetail: { _ in "~/.npmrc delays npm-compatible package releases" },
+                versionGate: (minimumVersion: "11.14.0", setting: "min-release-age"),
+                usesSetting: { Self.npmConfigUsesMinReleaseAge($0) }
+            ),
+            ManagerConfig(
+                // pnpm 10 keeps settings in the global rc file, pnpm 11 in
+                // config.yaml; .npmrc-style files are reserved for auth.
+                candidates: pnpmConfigPaths().map { candidate in (displayPath: candidate.displayPath, url: candidate.url) },
+                binaries: ["pnpm"],
+                validate: Self.validatePnpmConfig,
+                missingDetail: { _ in self.pnpmConfigMissingDetail() },
+                passingDetail: { display in "\(display) delays pnpm package releases" }
+            ),
+            ManagerConfig(
+                candidates: [homeCandidate(".bunfig.toml")],
+                binaries: ["bun"],
+                validate: { contents, _ in Self.validateBunfig(contents) },
+                missingDetail: { display in "\(display) is missing" },
+                passingDetail: { _ in "~/.bunfig.toml delays Bun package releases" }
+            ),
+            ManagerConfig(
+                candidates: [homeCandidate(".yarnrc.yml")],
+                binaries: ["yarn"],
+                validate: { contents, _ in Self.validateYarnrc(contents) },
+                missingDetail: { display in "\(display) is missing" },
+                passingDetail: { _ in "~/.yarnrc.yml delays Yarn package releases" },
+                versionGate: (minimumVersion: "4.11.0", setting: "npmMinimalAgeGate"),
+                usesSetting: { Self.yarnrcUsesAgeGate($0) }
+            ),
+
+            // Python
+            ManagerConfig(
+                candidates: [homeCandidate(".config/uv/uv.toml")],
+                binaries: ["uv"],
+                validate: { contents, _ in Self.validateUv(contents) },
+                missingDetail: { display in "\(display) is missing" },
+                passingDetail: { _ in "~/.config/uv/uv.toml excludes Python packages newer than 7 days" }
+            ),
+            ManagerConfig(
+                candidates: [homeCandidate(".pypirc")],
+                binaries: [],
+                validate: { contents, _ in Self.validatePypirc(contents) },
+                missingDetail: { display in "\(display) is missing" },
+                passingDetail: { _ in "~/.pypirc has no plaintext credentials" }
+            ),
+            ManagerConfig(
+                candidates: [homeCandidate(".config/pip/pip.conf")],
+                binaries: ["pip", "pip3"],
+                validate: { contents, _ in Self.validatePipConf(contents) },
+                missingDetail: { display in "\(display) is missing" },
+                passingDetail: { _ in "~/.config/pip/pip.conf delays pip package releases" },
+                versionGate: (minimumVersion: "26.1.0", setting: "uploaded-prior-to"),
+                usesSetting: { Self.pipConfUsesUploadedPriorTo($0) }
+            ),
+            ManagerConfig(
+                // Poetry and PDM read platformdirs' macOS config directory;
+                // ~/.config is kept for users who already configured it there.
+                // https://python-poetry.org/docs/configuration/
+                // https://pdm-project.org/latest/usage/config/
+                candidates: [
+                    homeCandidate("Library/Application Support/pypoetry/config.toml"),
+                    homeCandidate(".config/pypoetry/config.toml"),
+                ],
+                binaries: ["poetry"],
+                validate: Self.validatePoetryToml,
+                missingDetail: { display in "\(display) is missing" },
+                passingDetail: { display in "\(display) delays Poetry package releases" },
+                versionGate: (minimumVersion: "2.4.0", setting: "solver.min-release-age"),
+                usesSetting: { Self.tomlKeyValuePairs($0)["solver.min-release-age"] != nil }
+            ),
+            ManagerConfig(
+                candidates: [
+                    homeCandidate("Library/Application Support/pdm/config.toml"),
+                    homeCandidate(".config/pdm/config.toml"),
+                ],
+                binaries: ["pdm"],
+                validate: Self.validatePdmToml,
+                missingDetail: { display in "\(display) is missing" },
+                passingDetail: { display in "\(display) delays PDM package releases" },
+                versionGate: (minimumVersion: "2.27.0", setting: "strategy.exclude-newer"),
+                usesSetting: { values in
+                    let values = Self.tomlKeyValuePairs(values)
+                    return values["strategy.exclude-newer"] != nil || values["strategy.exclude_newer"] != nil
+                }
+            ),
+            ManagerConfig(
+                candidates: [homeCandidate(".condarc")],
+                binaries: ["conda"],
+                validate: { contents, _ in Self.validateCondarc(contents) },
+                missingDetail: { display in "\(display) is missing" },
+                passingDetail: { _ in "~/.condarc delays conda package releases" },
+                versionGate: (minimumVersion: "26.9.0", setting: "exclude_newer"),
+                usesSetting: { contents in
+                    let values = Self.keyValuePairs(contents)
+                    return values["exclude_newer"] != nil || values["exclude-newer"] != nil
+                }
+            ),
+
+            // Ruby
+            ManagerConfig(
+                candidates: [homeCandidate(".bundle/config")],
+                binaries: ["bundle", "bundler"],
+                validate: { contents, _ in Self.validateBundleConfig(contents) },
+                missingDetail: { display in "\(display) is missing" },
+                passingDetail: { _ in "~/.bundle/config delays Bundler package releases" },
+                versionGate: (minimumVersion: "4.0.13", setting: "BUNDLE_COOLDOWN"),
+                usesSetting: { Self.keyValuePairs($0)["bundle_cooldown"] != nil }
+            ),
+
+            // Elixir
+            ManagerConfig(
+                candidates: [homeCandidate(".hex/hex.config")],
+                binaries: ["mix"],
+                validate: { contents, _ in Self.validateHexConfig(contents) },
+                missingDetail: { display in "\(display) is missing" },
+                passingDetail: { _ in "~/.hex/hex.config delays Hex package releases" }
+            ),
+
+            // Tool version managers
+            ManagerConfig(
+                candidates: [homeCandidate(".config/mise/config.toml")],
+                binaries: ["mise"],
+                validate: { contents, _ in Self.validateMiseConfig(contents) },
+                missingDetail: { display in "\(display) is missing" },
+                passingDetail: { _ in "~/.config/mise/config.toml delays mise package releases" }
+            ),
+        ]
+    }
+
+    private func activeConfig(in manager: ManagerConfig) -> (displayPath: String, contents: String)? {
+        for candidate in manager.candidates {
+            if let contents = readFile(candidate.url) {
+                return (candidate.displayPath, contents)
             }
         }
         return nil
@@ -199,33 +414,35 @@ class PackageManagerSupplyChainCheck: ParetoCheck {
     }
 
     private func xdgConfigHome() -> String? {
-        guard let xdgConfigHome = environment["XDG_CONFIG_HOME"], !xdgConfigHome.isEmpty else {
-            return nil
-        }
-        guard (xdgConfigHome as NSString).isAbsolutePath else {
+        guard let xdgConfigHome = environment["XDG_CONFIG_HOME"], !xdgConfigHome.isEmpty, (xdgConfigHome as NSString).isAbsolutePath else {
             return nil
         }
         return (xdgConfigHome as NSString).standardizingPath
     }
 
-    private func validateNpmConfig(_ contents: String) -> [String] {
-        var failures = Self.validateNpmrc(contents)
-        guard failures.isEmpty, isBinaryInstalled("npm"), Self.npmConfigUsesMinReleaseAge(contents) else {
+    // MARK: - Version gates
+
+    private func addingVersionGate(
+        _ failures: [String],
+        binary: String,
+        minimumVersion: String,
+        configDescription: String
+    ) -> [String] {
+        var failures = failures
+        guard failures.isEmpty, isBinaryInstalled(binary) else {
             return failures
         }
-        guard let version = packageManagerVersion("npm") else {
-            failures.append("npm version could not be determined, so ~/.npmrc min-release-age could not be verified")
+        guard let version = packageManagerVersion(binary) else {
+            failures.append("\(binary) version could not be determined, so \(configDescription) could not be verified")
             return failures
         }
-        if !Self.isVersion(version, atLeast: "11.14.0") {
-            failures.append("npm is older than 11.14.0 and does not enforce ~/.npmrc min-release-age")
+        if !Self.isVersion(version, atLeast: minimumVersion) {
+            failures.append("\(binary) is older than \(minimumVersion) and does not enforce \(configDescription)")
         }
         return failures
     }
 
-    private static func npmConfigUsesMinReleaseAge(_ contents: String) -> Bool {
-        return keyValuePairs(contents)["min-release-age"] != nil
-    }
+    // MARK: - Static validators
 
     static func validateNpmrc(_ contents: String) -> [String] {
         let values = keyValuePairs(contents)
@@ -233,67 +450,120 @@ class PackageManagerSupplyChainCheck: ParetoCheck {
 
         let minReleaseAgeDays = integerValue(values["min-release-age"]) ?? 0
         let minimumReleaseAgeMinutes = integerValue(values["minimum-release-age"]) ?? 0
-        if minReleaseAgeDays < 7, minimumReleaseAgeMinutes < 10080 {
-            failures.append("~/.npmrc release age is below 7 days; set either min-release-age >= 7 or minimum-release-age >= 10080")
+        if minReleaseAgeDays < minimumCooldownDays, minimumReleaseAgeMinutes < minimumCooldownMinutes {
+            failures.append("~/.npmrc release age is below \(minimumCooldownDays) days; set either min-release-age >= \(minimumCooldownDays) or minimum-release-age >= \(minimumCooldownMinutes)")
         }
-        if values["save-exact"]?.lowercased() != "true" {
-            failures.append("~/.npmrc save-exact is not enabled")
+        // An explicit save-exact=false is an informed choice, so only an
+        // unset value fails. https://github.com/ParetoSecurity/pareto-mac/issues/303
+        if values["save-exact"] == nil {
+            failures.append("~/.npmrc save-exact is not set; set it to true or false")
         }
 
         return failures
     }
 
-    static func isVersion(_ version: String?, atLeast minimumVersion: String) -> Bool {
-        guard let version else { return false }
-        if version.contains("-") {
-            return false
-        }
-        let current = versionComponents(version)
-        let minimum = versionComponents(minimumVersion)
-        for index in 0..<max(current.count, minimum.count) {
-            let currentPart = index < current.count ? current[index] : 0
-            let minimumPart = index < minimum.count ? minimum[index] : 0
-            if currentPart != minimumPart {
-                return currentPart > minimumPart
-            }
-        }
-        return true
-    }
+    static func validateYarnrc(_ contents: String) -> [String] {
+        let values = keyValuePairs(contents)
+        let seconds = yarnAgeGateSeconds(values["npmminimalagegate"]) ?? 0
 
-    private static func versionComponents(_ version: String) -> [Int] {
-        return version.trimmingCharacters(in: CharacterSet(charactersIn: "vV")).split(separator: ".").map { part in
-            Int(part.prefix { $0.isNumber }) ?? 0
+        if seconds < minimumCooldownSeconds {
+            return ["~/.yarnrc.yml npmMinimalAgeGate is below \(minimumCooldownDays) days; set it to at least \(minimumCooldownDays)d or \(minimumCooldownMinutes)"]
         }
+        return []
     }
 
     static func validatePnpmConfig(_ contents: String, displayPath: String) -> [String] {
         let values = keyValuePairs(contents)
         let minimumReleaseAge = integerValue(values["minimumreleaseage"]) ?? integerValue(values["minimum-release-age"]) ?? 0
 
-        if minimumReleaseAge < 10080 {
-            return ["\(displayPath) minimumReleaseAge is below 10080 minutes"]
+        if minimumReleaseAge < minimumCooldownMinutes {
+            return ["\(displayPath) minimumReleaseAge is below \(minimumCooldownMinutes) minutes"]
         }
         return []
     }
 
     static func validateBunfig(_ contents: String) -> [String] {
         let values = tomlKeyValuePairs(contents)
-        let minimumReleaseAge = integerValue(values["install.minimumReleaseAge"]) ?? 0
+        let minimumReleaseAge = cooldownSeconds(values["install.minimumReleaseAge"]) ?? 0
 
-        if minimumReleaseAge < 604800 {
-            return ["~/.bunfig.toml minimumReleaseAge is below 604800 seconds"]
+        if minimumReleaseAge < minimumCooldownSeconds {
+            return ["~/.bunfig.toml minimumReleaseAge is below \(minimumCooldownSeconds) seconds"]
         }
         return []
     }
 
     static func validateUv(_ contents: String) -> [String] {
         let values = tomlKeyValuePairs(contents)
-        let seconds = durationSeconds(values["exclude-newer"]) ?? durationSeconds(values["pip.exclude-newer"]) ?? 0
+        let raw = values["exclude-newer"] ?? values["pip.exclude-newer"]
 
-        if seconds < 604800 {
-            return ["~/.config/uv/uv.toml exclude-newer is below 7 days"]
+        return durationCooldownFailure(raw, displayKey: "~/.config/uv/uv.toml exclude-newer", hint: "\(minimumCooldownDays) days")
+    }
+
+    static func validatePipConf(_ contents: String) -> [String] {
+        let values = keyValuePairs(contents)
+        guard let uploadedPriorTo = values["uploaded-prior-to"], !uploadedPriorTo.isEmpty else {
+            return ["~/.config/pip/pip.conf uploaded-prior-to is not set; set it to a duration like P\(minimumCooldownDays)D"]
+        }
+        if isAbsoluteTimestamp(uploadedPriorTo) {
+            return ["~/.config/pip/pip.conf uploaded-prior-to is an absolute timestamp that goes stale; set it to a duration like P\(minimumCooldownDays)D"]
+        }
+        if iso8601DurationSeconds(uploadedPriorTo) ?? 0 < minimumCooldownSeconds {
+            return ["~/.config/pip/pip.conf uploaded-prior-to is below \(minimumCooldownDays) days; set it to at least P\(minimumCooldownDays)D"]
         }
         return []
+    }
+
+    static func validatePoetryToml(_ contents: String, displayPath: String) -> [String] {
+        let values = tomlKeyValuePairs(contents)
+        let days = integerValue(values["solver.min-release-age"]) ?? 0
+
+        if days < minimumCooldownDays {
+            return ["\(displayPath) solver.min-release-age is below \(minimumCooldownDays) days; set it to at least \(minimumCooldownDays)"]
+        }
+        return []
+    }
+
+    static func validatePdmToml(_ contents: String, displayPath: String) -> [String] {
+        let values = tomlKeyValuePairs(contents)
+        let raw = values["strategy.exclude-newer"] ?? values["strategy.exclude_newer"]
+
+        return durationCooldownFailure(raw, displayKey: "\(displayPath) strategy.exclude-newer", hint: "\(minimumCooldownDays)d")
+    }
+
+    static func validateCondarc(_ contents: String) -> [String] {
+        let values = keyValuePairs(contents)
+        guard let excludeNewer = values["exclude_newer"] ?? values["exclude-newer"] else {
+            return ["~/.condarc exclude_newer is not set; set it to at least \(minimumCooldownDays)d"]
+        }
+        var failures = durationCooldownFailure(excludeNewer, displayKey: "~/.condarc exclude_newer", hint: "\(minimumCooldownDays)d")
+        if failures.isEmpty, values["solver"]?.lowercased() != "classic" {
+            failures.append("~/.condarc solver must be classic; the default solver does not support exclude_newer")
+        }
+        return failures
+    }
+
+    static func validateBundleConfig(_ contents: String) -> [String] {
+        let values = keyValuePairs(contents)
+        // Bundler rejects anything that is not a whole number of days.
+        guard let days = integerValue(values["bundle_cooldown"]), days >= minimumCooldownDays else {
+            return ["~/.bundle/config BUNDLE_COOLDOWN is below \(minimumCooldownDays) days; set it to at least \(minimumCooldownDays) with bundle config set --global cooldown \(minimumCooldownDays)"]
+        }
+        return []
+    }
+
+    static func validateHexConfig(_ contents: String) -> [String] {
+        let seconds = hexCooldownSeconds(contents) ?? 0
+
+        if seconds < minimumCooldownSeconds {
+            return ["~/.hex/hex.config cooldown is below \(minimumCooldownDays) days; set it to at least \(minimumCooldownDays)d with mix hex.config cooldown \(minimumCooldownDays)d"]
+        }
+        return []
+    }
+
+    static func validateMiseConfig(_ contents: String) -> [String] {
+        let values = tomlKeyValuePairs(contents)
+
+        return durationCooldownFailure(values["settings.minimum_release_age"], displayKey: "~/.config/mise/config.toml settings.minimum_release_age", hint: "\(minimumCooldownDays)d")
     }
 
     static func validatePypirc(_ contents: String) -> [String] {
@@ -304,6 +574,72 @@ class PackageManagerSupplyChainCheck: ParetoCheck {
             return ["~/.pypirc contains plaintext credentials"]
         }
         return []
+    }
+
+    /// Validates values such as uv's exclude-newer that accept relative
+    /// durations or absolute timestamps, where only durations keep working
+    /// as time passes.
+    private static func durationCooldownFailure(_ raw: String?, displayKey: String, hint: String) -> [String] {
+        guard let raw, !raw.isEmpty else {
+            return ["\(displayKey) is not set; set it to at least \(hint)"]
+        }
+        if isAbsoluteTimestamp(raw) {
+            return ["\(displayKey) is an absolute timestamp that goes stale; set it to a relative duration like \(hint)"]
+        }
+        if cooldownSeconds(raw) ?? 0 < minimumCooldownSeconds {
+            return ["\(displayKey) is below \(minimumCooldownDays) days; set it to at least \(hint)"]
+        }
+        return []
+    }
+
+    private static func npmConfigUsesMinReleaseAge(_ contents: String) -> Bool {
+        keyValuePairs(contents)["min-release-age"] != nil
+    }
+
+    private static func yarnrcUsesAgeGate(_ contents: String) -> Bool {
+        keyValuePairs(contents)["npmminimalagegate"] != nil
+    }
+
+    private static func pipConfUsesUploadedPriorTo(_ contents: String) -> Bool {
+        keyValuePairs(contents)["uploaded-prior-to"] != nil
+    }
+
+    // MARK: - Parsing helpers
+
+    static func isVersion(_ version: String?, atLeast minimumVersion: String) -> Bool {
+        guard let version else { return false }
+        if version.contains("-") {
+            return false
+        }
+        let current = versionComponents(version)
+        let minimum = versionComponents(minimumVersion)
+        for index in 0 ..< max(current.count, minimum.count) {
+            let currentPart = index < current.count ? current[index] : 0
+            let minimumPart = index < minimum.count ? minimum[index] : 0
+            if currentPart != minimumPart {
+                return currentPart > minimumPart
+            }
+        }
+        return true
+    }
+
+    private static func versionComponents(_ version: String) -> [Int] {
+        version.trimmingCharacters(in: CharacterSet(charactersIn: "vV")).split(separator: ".").map { part in
+            Int(part.prefix { $0.isNumber }) ?? 0
+        }
+    }
+
+    /// Extracts the version number from the various `--version` output
+    /// formats ("11.14.0", "pip 26.1.0 from ...", "Bundler version 2.6.7").
+    static func versionToken(from output: String) -> String? {
+        let trimmed = output.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return nil }
+        // Only a dotted number counts, so an error such as
+        // "pip: line 8: pyenv: No such file or directory" from a stale shim
+        // reads as "unknown" rather than as version 8.
+        return trimmed.components(separatedBy: .whitespacesAndNewlines).first {
+            $0.range(of: #"^v?\d+\.\d+"#, options: .regularExpression) != nil
+        }
     }
 
     private static func keyValuePairs(_ contents: String) -> [String: String] {
@@ -350,30 +686,108 @@ class PackageManagerSupplyChainCheck: ParetoCheck {
         return Int(unquote(value))
     }
 
+    /// Yarn parses a bare `npmMinimalAgeGate` number as minutes; only values
+    /// with a unit suffix are durations.
+    private static func yarnAgeGateSeconds(_ value: String?) -> Int? {
+        guard let value else { return nil }
+        let normalized = unquote(value).trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+        if let minutes = Int(normalized) {
+            return minutes * 60
+        }
+        return cooldownSeconds(normalized)
+    }
+
+    private static func cooldownSeconds(_ value: String?) -> Int? {
+        guard let value else { return nil }
+        return iso8601DurationSeconds(value) ?? durationSeconds(value)
+    }
+
     private static func durationSeconds(_ value: String?) -> Int? {
         guard let value else { return nil }
         let normalized = unquote(value).trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
         if let seconds = Int(normalized) {
             return seconds
         }
-        let number = String(normalized.prefix { $0.isNumber })
-        let suffix = String(normalized.dropFirst(number.count)).trimmingCharacters(in: .whitespacesAndNewlines)
-        guard let amount = Int(number) else { return nil }
+        guard !normalized.isEmpty else { return nil }
 
-        switch suffix {
-        case "s", "second", "seconds":
-            return amount
-        case "m", "minute", "minutes":
-            return amount * 60
-        case "h", "hour", "hours":
-            return amount * 3600
-        case "d", "day", "days":
-            return amount * 86400
-        case "w", "week", "weeks":
-            return amount * 604800
-        default:
-            return nil
+        // Compound relative durations such as "7 days", "3d12h", or "1h30m".
+        var total = 0
+        var index = normalized.startIndex
+        while index < normalized.endIndex {
+            let digits = normalized[index...].prefix { $0.isNumber }
+            guard let amount = Int(digits), !digits.isEmpty else { return nil }
+            index = normalized.index(index, offsetBy: digits.count)
+            while index < normalized.endIndex, normalized[index].isWhitespace {
+                index = normalized.index(after: index)
+            }
+            let unit = normalized[index...].prefix { $0.isLetter }
+            guard let seconds = unitSeconds(String(unit)), !unit.isEmpty else { return nil }
+            index = normalized.index(index, offsetBy: unit.count)
+            total += amount * seconds
         }
+        return total
+    }
+
+    private static func unitSeconds(_ unit: String) -> Int? {
+        switch unit {
+        case "ms", "millisecond", "milliseconds":
+            0
+        case "s", "second", "seconds":
+            1
+        case "m", "minute", "minutes":
+            60
+        case "h", "hour", "hours":
+            3600
+        case "d", "day", "days":
+            86400
+        case "w", "week", "weeks":
+            604_800
+        case "mo", "month", "months":
+            2_592_000
+        default:
+            nil
+        }
+    }
+
+    private static func iso8601DurationSeconds(_ value: String) -> Int? {
+        let normalized = unquote(value).trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+        guard normalized.hasPrefix("p"), normalized.count > 1, let regex = try? NSRegularExpression(pattern: #"^p(?:(\d+)w)?(?:(\d+)d)?(?:t(?:(\d+)h)?(?:(\d+)m)?(?:(\d+)s)?)?$"#) else { return nil }
+        let range = NSRange(normalized.startIndex..., in: normalized)
+        guard let match = regex.firstMatch(in: normalized, range: range) else { return nil }
+
+        let unitSeconds = [604_800, 86400, 3600, 60, 1]
+        var total = 0
+        for (group, seconds) in zip(1..., unitSeconds) where match.range(at: group).location != NSNotFound {
+            guard let groupRange = Range(match.range(at: group), in: normalized), let amount = Int(normalized[groupRange]) else { return nil }
+            total += amount * seconds
+        }
+        return total
+    }
+
+    private static func isAbsoluteTimestamp(_ value: String) -> Bool {
+        let normalized = unquote(value).trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+        guard normalized.first?.isNumber == true else { return false }
+        return normalized.contains("-")
+    }
+
+    /// Reads the cooldown value from hex.config, which stores Erlang terms
+    /// such as `{cooldown,<<"7d">>}.` or `{cooldown,7}.` (days).
+    private static func hexCooldownSeconds(_ contents: String) -> Int? {
+        if let quoted = firstRegexCapture(#"cooldown\s*,\s*<<"([^"]+)""#, in: contents) {
+            return durationSeconds(quoted)
+        }
+        if let bare = firstRegexCapture(#"cooldown\s*,\s*(\d+)"#, in: contents) {
+            return (Int(bare) ?? 0) * 86400
+        }
+        return nil
+    }
+
+    private static func firstRegexCapture(_ pattern: String, in contents: String) -> String? {
+        guard let regex = try? NSRegularExpression(pattern: pattern) else { return nil }
+        let range = NSRange(contents.startIndex..., in: contents)
+        guard let match = regex.firstMatch(in: contents, range: range), match.numberOfRanges > 1,
+              let captured = Range(match.range(at: 1), in: contents) else { return nil }
+        return String(contents[captured])
     }
 
     private static func stripComment(_ line: String) -> String {

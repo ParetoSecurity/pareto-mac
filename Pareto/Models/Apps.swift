@@ -53,10 +53,7 @@ struct PublicApp: Codable {
     }
 
     static func readPlistFile(fileURL: URL) -> [String: Any]? {
-        guard let data = try? Data(contentsOf: fileURL) else {
-            return nil
-        }
-        guard let result = try? PropertyListSerialization.propertyList(from: data, options: [], format: nil) as? [String: Any] else {
+        guard let data = try? Data(contentsOf: fileURL), let result = try? PropertyListSerialization.propertyList(from: data, options: [], format: nil) as? [String: Any] else {
             return nil
         }
         return result

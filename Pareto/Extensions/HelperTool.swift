@@ -14,16 +14,16 @@ enum HelperToolAction {
     case uninstall // Uninstall the helper tool
 }
 
-// Static helper utility functions (not actor-isolated)
+/// Static helper utility functions (not actor-isolated)
 class HelperToolUtilities {
-    // Static method to check helper tool status without actor isolation
+    /// Static method to check helper tool status without actor isolation
     static func isHelperInstalled() -> Bool {
         let plistName = "co.niteo.ParetoSecurityHelper.plist"
         let service = SMAppService.daemon(plistName: plistName)
         return service.status == .enabled
     }
 
-    // Static method to compare version strings (semantic versioning)
+    /// Static method to compare version strings (semantic versioning)
     static func compareVersions(_ version1: String, _ version2: String) -> ComparisonResult {
         let v1Components = version1.components(separatedBy: ".").compactMap { Int($0) }
         let v2Components = version2.components(separatedBy: ".").compactMap { Int($0) }
@@ -44,17 +44,17 @@ class HelperToolUtilities {
         return .orderedSame
     }
 
-    // Static method to check if helper needs updating
+    /// Static method to check if helper needs updating
     static func helperNeedsUpdate(currentVersion: String, expectedVersion: String) -> Bool {
-        return compareVersions(currentVersion, expectedVersion) == .orderedAscending
+        compareVersions(currentVersion, expectedVersion) == .orderedAscending
     }
 
-    // Manual version counter - increment this when helper needs updating
+    /// Manual version counter - increment this when helper needs updating
     static let expectedHelperVersion = "1.0.3"
 
-    // Static method to get expected helper version (manual counter)
+    /// Static method to get expected helper version (manual counter)
     static func getExpectedHelperVersion() -> String {
-        return expectedHelperVersion
+        expectedHelperVersion
     }
 }
 
@@ -65,7 +65,7 @@ class HelperToolManager: ObservableObject {
     @Published var isHelperToolInstalled: Bool = false
     @Published var message: String = "Checking..."
     var status: String {
-        return isHelperToolInstalled ? "Registered" : "Not Registered"
+        isHelperToolInstalled ? "Registered" : "Not Registered"
     }
 
     init() {
@@ -74,7 +74,7 @@ class HelperToolManager: ObservableObject {
         }
     }
 
-    // Function to manage the helper tool installation/uninstallation
+    /// Function to manage the helper tool installation/uninstallation
     func manageHelperTool(action: HelperToolAction = .none) async {
         let plistName = "\(helperToolIdentifier).plist"
         let service = SMAppService.daemon(plistName: plistName)
@@ -127,12 +127,12 @@ class HelperToolManager: ObservableObject {
         isHelperToolInstalled = (service.status == .enabled)
     }
 
-    // Function to open Settings > Login Items
+    /// Function to open Settings > Login Items
     func openSMSettings() {
         SMAppService.openSystemSettingsLoginItems()
     }
 
-    // Function to run privileged commands
+    /// Function to run privileged commands
     func isFirewallEnabled(completion: @escaping (String) -> Void) async {
         if !HelperToolUtilities.isHelperInstalled() {
             os_log("XPC: Helper tool is not installed")
@@ -164,7 +164,7 @@ class HelperToolManager: ObservableObject {
         })
     }
 
-    // Function to run privileged commands
+    /// Function to run privileged commands
     func isFirewallStealthEnabled(completion: @escaping (String) -> Void) async {
         if !HelperToolUtilities.isHelperInstalled() {
             os_log("XPC: Helper tool is not installed")
@@ -196,7 +196,7 @@ class HelperToolManager: ObservableObject {
         })
     }
 
-    // Function to get helper tool version
+    /// Function to get helper tool version
     func getHelperVersion(completion: @escaping (String) -> Void) async {
         if !HelperToolUtilities.isHelperInstalled() {
             os_log("XPC: Helper tool is not installed")
@@ -228,7 +228,7 @@ class HelperToolManager: ObservableObject {
         })
     }
 
-    // Function to check and update helper if needed
+    /// Function to check and update helper if needed
     func ensureHelperIsUpToDate() async -> Bool {
         let expectedVersion = HelperToolUtilities.getExpectedHelperVersion()
 
@@ -260,7 +260,7 @@ class HelperToolManager: ObservableObject {
         return true
     }
 
-    // Create/reuse XPC connection
+    /// Create/reuse XPC connection
     private func getConnection() -> NSXPCConnection? {
         if let connection = helperConnection {
             return connection
@@ -275,7 +275,7 @@ class HelperToolManager: ObservableObject {
         return connection
     }
 
-    // Helper to update helper status messages
+    /// Helper to update helper status messages
     func updateStatusMessages(with service: SMAppService, occurredError: NSError?) {
         if let nsError = occurredError {
             switch nsError.code {

@@ -5,11 +5,11 @@ extension Date {
     public static let HourInMs = (60 * 60 * 1000)
 
     func currentTimeMs() -> Int {
-        return Int(timeIntervalSince1970 * 1000)
+        Int(timeIntervalSince1970 * 1000)
     }
 
     static func fromTimeStamp(timeStamp: Int) -> Date {
-        return NSDate(timeIntervalSince1970: TimeInterval(timeStamp / 1000)) as Date
+        NSDate(timeIntervalSince1970: TimeInterval(timeStamp / 1000)) as Date
     }
 
     func timeAgoDisplay() -> String {

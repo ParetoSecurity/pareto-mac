@@ -7,9 +7,22 @@
 
 import Foundation
 import IOKit
+import os.log
 
 class BootCheck: ParetoCheck {
     static let sharedInstance = BootCheck()
+
+    let sipStatusProvider: () -> String
+    let bootArgsProvider: (() -> String)?
+
+    init(
+        sipStatusProvider: @escaping () -> String = { runCMD(app: "/usr/bin/csrutil", args: ["status"]) },
+        bootArgsProvider: (() -> String)? = nil
+    ) {
+        self.sipStatusProvider = sipStatusProvider
+        self.bootArgsProvider = bootArgsProvider
+    }
+
     override var UUID: String {
         "b96524e0-850b-4bb9-abc7-517051b6c14e"
     }
@@ -42,8 +55,15 @@ class BootCheck: ParetoCheck {
         }
     }
 
+    var isSIPEnabled: Bool {
+        let output = sipStatusProvider()
+        os_log("csrutil status: %{public}@", log: Log.check, output.trim())
+        return output.contains("System Integrity Protection status: enabled")
+    }
+
     override func checkPasses() -> Bool {
-        // only returns something if AMFI is disabled
-        return GetNVRAM("boot-args") == ""
+        // boot-args is only set when AMFI or similar protections are disabled
+        let bootArgs = bootArgsProvider?() ?? GetNVRAM("boot-args")
+        return bootArgs.isEmpty && isSIPEnabled
     }
 }

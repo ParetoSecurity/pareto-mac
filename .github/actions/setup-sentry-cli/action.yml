@@ -1,0 +1,15 @@
+name: "Setup Sentry CLI"
+description: "Install sentry-cli into the runner temp directory"
+
+runs:
+  using: "composite"
+  steps:
+    # The official installer is an order of magnitude faster than tapping
+    # getsentry/tools through Homebrew, and needs no sudo when INSTALL_DIR
+    # points somewhere writable.
+    - name: Install Sentry CLI
+      shell: bash
+      run: |
+        mkdir -p "$RUNNER_TEMP/bin"
+        curl -sSfL https://sentry.io/get-cli/ | INSTALL_DIR="$RUNNER_TEMP/bin" bash
+        echo "$RUNNER_TEMP/bin" >> "$GITHUB_PATH"

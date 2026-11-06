@@ -59,16 +59,14 @@ class FirewallCheck: ParetoCheck {
             return nil
         }
 
-        if #available(macOS 15, *) {
-            if requiresHelper, !HelperToolUtilities.isHelperInstalled() {
-                let helperPath = "/Library/PrivilegedHelperTools/co.niteo.ParetoSecurityHelper"
-                let helperExists = FileManager.default.fileExists(atPath: helperPath)
+        if #available(macOS 15, *), requiresHelper, !HelperToolUtilities.isHelperInstalled() {
+            let helperPath = "/Library/PrivilegedHelperTools/co.niteo.ParetoSecurityHelper"
+            let helperExists = FileManager.default.fileExists(atPath: helperPath)
 
-                if helperExists {
-                    return "Helper tool exists at \(helperPath) but is not properly authorized. Please approve in System Settings > General > Login Items > Allow in Background."
-                } else {
-                    return "Helper tool not installed at \(helperPath). The app will attempt to install it when you authorize."
-                }
+            if helperExists {
+                return "Helper tool exists at \(helperPath) but is not properly authorized. Please approve in System Settings > General > Login Items > Allow in Background."
+            } else {
+                return "Helper tool not installed at \(helperPath). The app will attempt to install it when you authorize."
             }
         }
 
@@ -94,7 +92,9 @@ class FirewallCheck: ParetoCheck {
 
     private func refreshHelperResultIfNeeded() {
         let shouldStart = helperCheckInFlight.withLock { inFlight in
-            if inFlight { return false }
+            if inFlight {
+                return false
+            }
             inFlight = true
             return true
         }
@@ -102,9 +102,9 @@ class FirewallCheck: ParetoCheck {
 
         Task.detached(priority: .utility) { [weak self] in
             guard let self else { return }
-            let enabled = await self.fetchFirewallEnabledViaHelper()
-            self.helperResultLock.withLock { $0 = enabled }
-            self.helperCheckInFlight.withLock { $0 = false }
+            let enabled = await fetchFirewallEnabledViaHelper()
+            helperResultLock.withLock { $0 = enabled }
+            helperCheckInFlight.withLock { $0 = false }
         }
     }
 

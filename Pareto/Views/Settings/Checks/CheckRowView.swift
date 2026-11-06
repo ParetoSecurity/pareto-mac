@@ -1,6 +1,6 @@
 import SwiftUI
 
-// Inline team badge component
+/// Inline team badge component
 private struct TeamRequiredBadge: View {
     var compact: Bool = false
 
@@ -78,7 +78,7 @@ struct CheckRowView: View {
                 .font(.caption)
                 .foregroundColor(.secondary)
                 .lineLimit(1)
-        } else if check is TimeMachineHasBackupCheck && (!TimeMachineCheck.sharedInstance.isActive || !TimeMachineCheck.sharedInstance.isRunnable) {
+        } else if check is TimeMachineHasBackupCheck, !TimeMachineCheck.sharedInstance.isActive || !TimeMachineCheck.sharedInstance.isRunnable {
             // Special case for Time Machine backup check when Time Machine is disabled
             Text(check.disabledReason)
                 .font(.caption)
@@ -103,7 +103,7 @@ struct CheckRowView: View {
                     .font(.caption)
                     .foregroundColor(.secondary)
                     .lineLimit(1)
-            } else if !appCheck.usedRecently && appCheck.supportsRecentlyUsed {
+            } else if !appCheck.usedRecently, appCheck.supportsRecentlyUsed {
                 Text("Not used in the last week")
                     .font(.caption)
                     .foregroundColor(.secondary)
@@ -116,16 +116,14 @@ struct CheckRowView: View {
             }
         } else {
             // Other failing checks
-            let message: String = {
-                if check.isRunnable,
-                   !check.cachedDetails.isEmpty,
-                   check.cachedDetails != "None"
-                {
-                    return check.cachedDetails
-                } else {
-                    return "Failing"
-                }
-            }()
+            let message: String = if check.isRunnable,
+                                     !check.cachedDetails.isEmpty,
+                                     check.cachedDetails != "None"
+            {
+                check.cachedDetails
+            } else {
+                "Failing"
+            }
             Text(message)
                 .font(.caption)
                 .foregroundColor(.secondary)
@@ -136,13 +134,13 @@ struct CheckRowView: View {
     private func statusColor(for check: ParetoCheck) -> Color {
         // Color based on cached check status - don't run the actual check
         if !check.isActive {
-            return Color.gray // Disabled
+            Color.gray // Disabled
         } else if !check.isRunnable {
-            return Color.gray.opacity(0.7) // Cannot run (missing permissions)
+            Color.gray.opacity(0.7) // Cannot run (missing permissions)
         } else if check.checkPassed {
-            return Color.green // Passing (cached)
+            Color.green // Passing (cached)
         } else {
-            return Color.orange // Failing (cached)
+            Color.orange // Failing (cached)
         }
     }
 
@@ -153,16 +151,36 @@ struct CheckRowView: View {
         case is NoUnusedUsers:
             return "person.2.slash"
         default:
-            if titleLower.contains("firewall") { return "flame" }
-            if titleLower.contains("password") { return "key" }
-            if titleLower.contains("update") { return "arrow.triangle.2.circlepath" }
-            if titleLower.contains("encryption") || titleLower.contains("filevault") { return "lock.shield" }
-            if titleLower.contains("screen") { return "rectangle.inset.filled" }
-            if titleLower.contains("ssh") { return "terminal" }
-            if titleLower.contains("sharing") { return "person.2" }
-            if titleLower.contains("gatekeeper") { return "checkmark.shield" }
-            if titleLower.contains("autologin") { return "person.badge.clock" }
-            if titleLower.contains("time machine") { return "clock.arrow.circlepath" }
+            if titleLower.contains("firewall") {
+                return "flame"
+            }
+            if titleLower.contains("password") {
+                return "key"
+            }
+            if titleLower.contains("update") {
+                return "arrow.triangle.2.circlepath"
+            }
+            if titleLower.contains("encryption") || titleLower.contains("filevault") {
+                return "lock.shield"
+            }
+            if titleLower.contains("screen") {
+                return "rectangle.inset.filled"
+            }
+            if titleLower.contains("ssh") {
+                return "terminal"
+            }
+            if titleLower.contains("sharing") {
+                return "person.2"
+            }
+            if titleLower.contains("gatekeeper") {
+                return "checkmark.shield"
+            }
+            if titleLower.contains("autologin") {
+                return "person.badge.clock"
+            }
+            if titleLower.contains("time machine") {
+                return "clock.arrow.circlepath"
+            }
             return "shield"
         }
     }

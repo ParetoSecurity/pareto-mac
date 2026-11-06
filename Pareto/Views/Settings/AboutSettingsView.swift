@@ -42,8 +42,7 @@ struct AboutSettingsView: View {
             // Header
             HStack(alignment: .center, spacing: 16) {
                 Image("Icon")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
+                    .resizable().scaledToFit()
                     .frame(minWidth: 64, idealWidth: 96, maxWidth: 96, minHeight: 64, idealHeight: 96, maxHeight: 96)
                     .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
                     .shadow(color: Color.black.opacity(0.08), radius: 8, x: 0, y: 4)
@@ -107,7 +106,7 @@ struct AboutSettingsView: View {
                                     .foregroundStyle(updateStatusColor)
                             }
 
-                            if self.isLoading {
+                            if isLoading {
                                 ProgressView()
                                     .controlSize(.small)
                             }
@@ -192,30 +191,30 @@ struct AboutSettingsView: View {
     private var updateStatusSymbol: String {
         switch status {
         case .Checking:
-            return "clock"
+            "clock"
         case .NewVersion:
-            return "arrow.down.circle.fill"
+            "arrow.down.circle.fill"
         case .Installing:
-            return "square.and.arrow.down"
+            "square.and.arrow.down"
         case .Updated:
-            return "checkmark.seal.fill"
+            "checkmark.seal.fill"
         case .Failed:
-            return "exclamationmark.triangle.fill"
+            "exclamationmark.triangle.fill"
         }
     }
 
     private var updateStatusColor: Color {
         switch status {
         case .Checking:
-            return .secondary
+            .secondary
         case .NewVersion:
-            return .blue
+            .blue
         case .Installing:
-            return .accentColor
+            .accentColor
         case .Updated:
-            return .green
+            .green
         case .Failed:
-            return .orange
+            .orange
         }
     }
 

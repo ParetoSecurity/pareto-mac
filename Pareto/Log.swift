@@ -43,7 +43,7 @@ final class NetworkEventLogger: EventMonitor {
         }
     }
 
-    func request<Value: Sendable>(_ request: DataRequest, didParseResponse response: DataResponse<Value, AFError>) {
+    func request(_ request: DataRequest, didParseResponse response: DataResponse<some Sendable, AFError>) {
         logResponse(
             request: request.request,
             statusCode: response.response?.statusCode,
@@ -53,7 +53,7 @@ final class NetworkEventLogger: EventMonitor {
         )
     }
 
-    func request<Value: Sendable>(_ request: DownloadRequest, didParseResponse response: DownloadResponse<Value, AFError>) {
+    func request(_ request: DownloadRequest, didParseResponse response: DownloadResponse<some Sendable, AFError>) {
         logResponse(
             request: request.request,
             statusCode: response.response?.statusCode,

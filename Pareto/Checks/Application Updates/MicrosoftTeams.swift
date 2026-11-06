@@ -48,9 +48,17 @@ struct MACOSClass: Codable {
 class AppMicrosoftTeamsCheck: AppCheck {
     static let sharedInstance = AppMicrosoftTeamsCheck()
 
-    override var appName: String { "Microsoft Teams" }
-    override var appMarketingName: String { "Microsoft Teams" }
-    override var appBundle: String { "com.microsoft.teams2" }
+    override var appName: String {
+        "Microsoft Teams"
+    }
+
+    override var appMarketingName: String {
+        "Microsoft Teams"
+    }
+
+    override var appBundle: String {
+        "com.microsoft.teams2"
+    }
 
     override var UUID: String {
         "a0fb7240-191e-4d27-84bd-175f2b61bec1"

@@ -24,7 +24,7 @@ class TeamsTest: XCTestCase {
         }
     }
 
-    func testReport() throws {
+    func testReport() {
         Defaults[.teamID] = "fd4e6814-440c-46d2-b240-4e0d2f786fbc"
         Defaults[.teamAPI] = "http://localhost"
 
@@ -33,7 +33,7 @@ class TeamsTest: XCTestCase {
         _ = Team.update(withReport: report)
     }
 
-    func testReportError() throws {
+    func testReportError() {
         guard let targetCheck = Claims.global.all
             .flatMap(\.checks)
             .first(where: { $0.isRunnable })
@@ -49,7 +49,7 @@ class TeamsTest: XCTestCase {
         XCTAssertTrue(report.state.values.contains("pass") || report.state.values.contains("fail"))
     }
 
-    func testSettings() throws {
+    func testSettings() {
         Defaults[.teamID] = "fd4e6814-440c-46d2-b240-4e0d2f786fbc"
         Defaults[.teamAPI] = "http://localhost"
         let exp = expectation(description: "settings callback")
@@ -73,10 +73,41 @@ class TeamsTest: XCTestCase {
         let request = DeviceEnrollmentRequest(inviteID: "test-invite-id", device: testDevice)
         let encoder = JSONEncoder()
         let data = try encoder.encode(request)
-        let json = try JSONSerialization.jsonObject(with: data) as! [String: Any]
+        let json = try XCTUnwrap(try JSONSerialization.jsonObject(with: data) as? [String: Any])
 
-        XCTAssertEqual(json["invite_id"] as! String, "test-invite-id")
+        XCTAssertEqual(json["invite_id"] as? String, "test-invite-id")
         XCTAssertNotNil(json["device"])
+    }
+
+    func testDeviceEnrollmentRequestOmitsUnknownHardware() throws {
+        let testDevice = ReportingDevice(
+            machineUUID: "test-uuid",
+            machineName: "Test Machine",
+            macOSVersion: "14.0",
+            modelName: nil,
+            modelSerial: nil
+        )
+        let data = try JSONEncoder().encode(testDevice)
+        let json = try XCTUnwrap(try JSONSerialization.jsonObject(with: data) as? [String: Any])
+
+        XCTAssertNil(json["modelName"])
+        XCTAssertNil(json["modelSerial"])
+    }
+
+    func testSerialFallsBackToIOKit() {
+        XCTAssertNotNil(AppInfo.hwSerial)
+    }
+
+    func testHardwareInfoResolvesAfterWarm() async throws {
+        AppInfo.warmHWInfo()
+
+        for _ in 0 ..< 60 where AppInfo.HWInfo == nil {
+            try await Task.sleep(nanoseconds: 500_000_000)
+            AppInfo.warmHWInfo()
+        }
+
+        XCTAssertNotNil(AppInfo.HWInfo)
+        XCTAssertNotNil(AppInfo.hwModelName)
     }
 
     func testDeviceEnrollmentResponse() throws {
@@ -85,36 +116,36 @@ class TeamsTest: XCTestCase {
             "auth": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0ZWFtX2lkIjoiMjQyOWM0OWUtMzdiYi00MWJiLTkwNzctNmJiNjIwMmUyNTViIn0.test"
         }
         """
-        let data = json.data(using: .utf8)!
+        let data = try XCTUnwrap(json.data(using: .utf8))
         let decoder = JSONDecoder()
         let response = try decoder.decode(DeviceEnrollmentResponse.self, from: data)
 
         XCTAssertEqual(response.auth, "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0ZWFtX2lkIjoiMjQyOWM0OWUtMzdiYi00MWJiLTkwNzctNmJiNjIwMmUyNTViIn0.test")
     }
 
-    func testUpdateStoredDeviceAuth() throws {
+    func testUpdateStoredDeviceAuth() {
         let auth = testJWT(teamID: "2429c49e-37bb-41bb-9077-6bb6202e255b")
-        let data = """
+        let data = Data("""
         {
             "auth": "\(auth)"
         }
-        """.data(using: .utf8)
+        """.utf8)
 
         XCTAssertTrue(Team.updateStoredDeviceAuth(from: data))
         XCTAssertEqual(Defaults[.teamAuth], auth)
         XCTAssertEqual(Defaults[.teamID], "2429c49e-37bb-41bb-9077-6bb6202e255b")
     }
 
-    func testUpdateStoredDeviceAuthRejectsBadData() throws {
+    func testUpdateStoredDeviceAuthRejectsBadData() {
         Defaults[.teamAuth] = "old-token"
         Defaults[.teamID] = "old-team"
 
-        XCTAssertFalse(Team.updateStoredDeviceAuth(from: "{}".data(using: .utf8)))
+        XCTAssertFalse(Team.updateStoredDeviceAuth(from: Data("{}".utf8)))
         XCTAssertEqual(Defaults[.teamAuth], "old-token")
         XCTAssertEqual(Defaults[.teamID], "old-team")
     }
 
-    func testShouldShowDeviceRemovedAlertFirstTime() throws {
+    func testShouldShowDeviceRemovedAlertFirstTime() {
         // Reset the last alert timestamp
         Defaults[.lastDeviceRemovedAlert] = 0
 
@@ -122,7 +153,7 @@ class TeamsTest: XCTestCase {
         XCTAssertTrue(Defaults.shouldShowDeviceRemovedAlert())
     }
 
-    func testShouldShowDeviceRemovedAlertAfterWeek() throws {
+    func testShouldShowDeviceRemovedAlertAfterWeek() {
         // Set last alert to more than a week ago
         let moreThanWeekAgo = Date().currentTimeMs() - (Date.HourInMs * 24 * 8)
         Defaults[.lastDeviceRemovedAlert] = moreThanWeekAgo
@@ -131,7 +162,7 @@ class TeamsTest: XCTestCase {
         XCTAssertTrue(Defaults.shouldShowDeviceRemovedAlert())
     }
 
-    func testShouldNotShowDeviceRemovedAlertWithinWeek() throws {
+    func testShouldNotShowDeviceRemovedAlertWithinWeek() {
         // Set last alert to less than a week ago (e.g., 3 days ago)
         let threeDaysAgo = Date().currentTimeMs() - (Date.HourInMs * 24 * 3)
         Defaults[.lastDeviceRemovedAlert] = threeDaysAgo
@@ -140,7 +171,7 @@ class TeamsTest: XCTestCase {
         XCTAssertFalse(Defaults.shouldShowDeviceRemovedAlert())
     }
 
-    func testShouldNotShowDeviceRemovedAlertJustShown() throws {
+    func testShouldNotShowDeviceRemovedAlertJustShown() {
         // Set last alert to now
         Defaults[.lastDeviceRemovedAlert] = Date().currentTimeMs()
 
@@ -148,7 +179,7 @@ class TeamsTest: XCTestCase {
         XCTAssertFalse(Defaults.shouldShowDeviceRemovedAlert())
     }
 
-    func testDeviceLinkInvalidStatusCodes() throws {
+    func testDeviceLinkInvalidStatusCodes() {
         XCTAssertTrue(Team.isDeviceLinkInvalidStatusCode(401))
         XCTAssertTrue(Team.isDeviceLinkInvalidStatusCode(404))
         XCTAssertFalse(Team.isDeviceLinkInvalidStatusCode(400))
@@ -163,7 +194,7 @@ class TeamsTest: XCTestCase {
     }
 
     private func base64UrlEncoded(_ value: String) -> String {
-        return value
+        value
             .data(using: .utf8)!
             .base64EncodedString()
             .replacingOccurrences(of: "+", with: "-")

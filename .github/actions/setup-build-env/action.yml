@@ -46,3 +46,25 @@ runs:
         key: ${{ runner.os }}-spm-${{ hashFiles('Pareto Security.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved') }}
         restore-keys: |
           ${{ runner.os }}-spm-
+
+    # Content-addressed, so stale entries are never wrong — key on the commit
+    # to save fresh results every run and fall back to the newest cache.
+    - name: Cache compilation cache
+      uses: actions/cache@v6
+      with:
+        path: CompilationCache
+        key: ${{ runner.os }}-xcode${{ inputs.xcode-version }}-ccache-${{ github.sha }}
+        restore-keys: |
+          ${{ runner.os }}-xcode${{ inputs.xcode-version }}-ccache-
+
+    # XCODE_XCCONFIG_FILE applies to every xcodebuild invocation, so all make
+    # targets get caching without Makefile changes.
+    - name: Enable Xcode compilation caching
+      shell: bash
+      run: |
+        {
+          echo "COMPILATION_CACHE_ENABLE_CACHING = YES"
+          echo "COMPILATION_CACHE_CAS_PATH = $GITHUB_WORKSPACE/CompilationCache"
+          echo "COMPILATION_CACHE_LIMIT_SIZE = 2G"
+        } > "$RUNNER_TEMP/compilation-cache.xcconfig"
+        echo "XCODE_XCCONFIG_FILE=$RUNNER_TEMP/compilation-cache.xcconfig" >> "$GITHUB_ENV"

@@ -30,9 +30,17 @@ struct ProtonMailRelease: Codable {
 class AppProtonMailCheck: AppCheck {
     static let sharedInstance = AppProtonMailCheck()
 
-    override var appName: String { "Proton Mail" }
-    override var appMarketingName: String { "Proton Mail" }
-    override var appBundle: String { "ch.protonmail.desktop" }
+    override var appName: String {
+        "Proton Mail"
+    }
+
+    override var appMarketingName: String {
+        "Proton Mail"
+    }
+
+    override var appBundle: String {
+        "ch.protonmail.desktop"
+    }
 
     override var UUID: String {
         "ad898b64-b6ae-5835-aa3c-261dd41d8583"

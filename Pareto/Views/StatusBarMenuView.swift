@@ -18,6 +18,8 @@ struct StatusBarMenuView: View {
 
     @Default(.snoozeTime) var snoozeTime
     @Default(.lastCheck) var lastCheck
+    /// Bumped each time the menu opens so relative times ("Last check", "Resumes") are recomputed
+    @State private var menuOpenTick = 0
 
     private var claimsPassed: Bool {
         Claims.global.all.allSatisfy { claim in
@@ -40,7 +42,8 @@ struct StatusBarMenuView: View {
                 .id(statusBarModel.refreshNonce)
             }
 
-            statusline().id(statusBarModel.refreshNonce ^ (statusBarModel.isRunning ? 1 : 0))
+            statusline()
+                .id("\(statusBarModel.refreshNonce)-\(statusBarModel.isRunning)-\(menuOpenTick)")
 
             Divider()
             // Action buttons
@@ -139,13 +142,19 @@ struct StatusBarMenuView: View {
             // Cancel auto-hide while menu is open
             appHandlers.cancelAutoHide()
         }
+        .onReceive(NotificationCenter.default.publisher(for: NSMenu.didBeginTrackingNotification)) { note in
+            // .menu style MenuBarExtra does not re-run onAppear on open, so recompute relative
+            // timestamps ("Last check", "Resumes") when the top-level menu starts tracking
+            guard let menu = note.object as? NSMenu, menu.supermenu == nil else { return }
+            menuOpenTick &+= 1
+        }
         .onDisappear {
             // Resume auto-hide timer when menu closes
             appHandlers.scheduleAutoHide()
         }
     }
 
-    // Extracted status line
+    /// Extracted status line
     @ViewBuilder
     private func statusline() -> some View {
         if !statusBarModel.isRunning {
@@ -169,7 +178,7 @@ struct StatusBarMenuView: View {
         }
     }
 
-    // Ensure the status bar icon reflects the latest state when the menu opens
+    /// Ensure the status bar icon reflects the latest state when the menu opens
     private func updateStateForCurrentStatus() {
         // Don’t override the “running” state
         guard !statusBarModel.isRunning else {
@@ -209,7 +218,7 @@ struct ClaimMenuView: View {
 
     var body: some View {
         Menu {
-            ForEach(claim.checksSorted.filter { $0.showInMenu }, id: \.id) { check in
+            ForEach(claim.checksSorted.filter(\.showInMenu), id: \.id) { check in
                 CheckMenuItemView(check: check)
             }
         } label: {
@@ -221,7 +230,8 @@ struct ClaimMenuView: View {
 }
 
 struct CheckMenuItemView: View {
-    // Observe individual check for live updates
+    @Environment(\.openWindow) private var openWindow
+    /// Observe individual check for live updates
     @ObservedObject var check: ParetoCheck
 
     @Default(.alternativeColor) private var alternativeColor
@@ -248,10 +258,10 @@ struct CheckMenuItemView: View {
     }
 
     var body: some View {
-        Button(action: {
-            // Open info URL
-            NSWorkspace.shared.open(check.infoURL)
-        }) {
+        Button {
+            openWindow(id: AppWindowID.checkDetails, value: check.UUID)
+            NSApp.activate(ignoringOtherApps: true)
+        } label: {
             title
         }
         .buttonStyle(PlainButtonStyle())

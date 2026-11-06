@@ -16,12 +16,12 @@ permissions:
   contents: read
 
 env:
-  XCODE_VERSION: "26"
+  XCODE_VERSION: "27"
 
 jobs:
   test:
     name: Test
-    runs-on: macos-latest
+    runs-on: xcode-27
     timeout-minutes: 20
     steps:
       - name: Checkout repository
@@ -34,17 +34,25 @@ jobs:
         with:
           xcode-version: ${{ env.XCODE_VERSION }}
 
+      - name: Check formatting and lint
+        run: make lint
+
       - name: Setup code signing
+        id: signing
         uses: ./.github/actions/setup-signing
         with:
           development-certificate: ${{ secrets.DEVELOPMENT_CERTIFICATE_DATA }}
           development-passphrase: ${{ secrets.DEVELOPMENT_CERTIFICATE_PASSPHRASE }}
           application-certificate: ${{ secrets.APPLICATION_CERTIFICATE_DATA }}
           application-passphrase: ${{ secrets.APPLICATION_CERTIFICATE_PASSPHRASE }}
-          keychain-password: ${{ secrets.KEYCHAIN_PASSWORD }}
 
       - name: Run tests
-        run: make test
+        run: make test XCODEBUILD_FLAGS="$XCODEBUILD_FLAGS"
+        env:
+          # Manual style keeps xcodebuild from querying Apple's provisioning
+          # service for an account ("No Accounts" error on headless runners),
+          # which CODE_SIGNING_ALLOWED=NO alone does not suppress.
+          XCODEBUILD_FLAGS: ${{ steps.signing.outputs.signing-available == 'true' && '' || 'CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY=- CODE_SIGN_STYLE=Manual' }}
 
       - name: Cleanup keychain
         if: always()
@@ -52,8 +60,9 @@ jobs:
 
   build:
     name: Build Native
-    runs-on: macos-latest
-    needs: test
+    runs-on: xcode-27
+    # Archiving and exporting require certificates, which forks never get.
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
     timeout-minutes: 20
     permissions:
       contents: read
@@ -69,38 +78,49 @@ jobs:
         with:
           xcode-version: ${{ env.XCODE_VERSION }}
 
+      # setup-signing reports whether certificates were imported. With certs the
+      # signed archive/export path runs; without them the app is built ad-hoc
+      # signed so forks still get an artifact — not for distribution, and the
+      # privileged helper will not install.
       - name: Setup code signing
+        id: signing
         uses: ./.github/actions/setup-signing
         with:
           development-certificate: ${{ secrets.DEVELOPMENT_CERTIFICATE_DATA }}
           development-passphrase: ${{ secrets.DEVELOPMENT_CERTIFICATE_PASSPHRASE }}
           application-certificate: ${{ secrets.APPLICATION_CERTIFICATE_DATA }}
           application-passphrase: ${{ secrets.APPLICATION_CERTIFICATE_PASSPHRASE }}
-          keychain-password: ${{ secrets.KEYCHAIN_PASSWORD }}
+
+      - name: Determine artifact suffix
+        run: |
+          if [ "${{ steps.signing.outputs.signing-available }}" != "true" ]; then
+            echo "::notice::No signing certificates available; building an ad-hoc signed app (not for distribution)."
+            echo "ARTIFACT_SUFFIX=.adhoc" >> "$GITHUB_ENV"
+          fi
 
       - name: Build debug archive
+        if: steps.signing.outputs.signing-available == 'true'
         run: set -o pipefail && make archive-debug 2>&1 | mint run xcbeautify
 
+      - name: Build ad-hoc debug app
+        if: steps.signing.outputs.signing-available != 'true'
+        run: set -o pipefail && make build-adhoc 2>&1 | mint run xcbeautify
+
       - name: Compress app
-        run: ditto -c -k --keepParent "Export/Pareto Security.app" ParetoSecurity.app.zip
+        run: ditto -c -k --keepParent "Export/Pareto Security.app" "ParetoSecurity${{ env.ARTIFACT_SUFFIX }}.app.zip"
 
       - name: Upload artifact
         uses: actions/upload-artifact@v7
         with:
-          name: ParetoSecurity.app
-          path: ParetoSecurity.app.zip
+          name: ParetoSecurity${{ env.ARTIFACT_SUFFIX }}.app
+          path: ParetoSecurity${{ env.ARTIFACT_SUFFIX }}.app.zip
           retention-days: 14
 
       - name: Publish build hashes
-        run: |
-          {
-            echo "## Debug Build"
-            echo '```'
-            openssl dgst -md5 "Export/Pareto Security.app/Contents/MacOS/Pareto Security"
-            openssl dgst -sha1 "Export/Pareto Security.app/Contents/MacOS/Pareto Security"
-            openssl dgst -sha256 "Export/Pareto Security.app/Contents/MacOS/Pareto Security"
-            echo '```'
-          } >> "$GITHUB_STEP_SUMMARY"
+        uses: ./.github/actions/publish-hashes
+        with:
+          title: Debug Build${{ env.ARTIFACT_SUFFIX && ' (ad-hoc, not for distribution)' || '' }}
+          binary: Export/Pareto Security.app/Contents/MacOS/Pareto Security
 
       - name: Cleanup keychain
         if: always()
@@ -108,8 +128,9 @@ jobs:
 
   build-setapp:
     name: Build SetApp
-    runs-on: macos-latest
-    needs: test
+    runs-on: xcode-27
+    # Archiving and exporting require certificates, which forks never get.
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
     timeout-minutes: 20
     permissions:
       contents: read
@@ -125,22 +146,32 @@ jobs:
         with:
           xcode-version: ${{ env.XCODE_VERSION }}
 
+      # setup-signing reports whether certificates were imported; when they
+      # were not, the build steps below are skipped instead of failing with
+      # "No Accounts" inside xcodebuild.
       - name: Setup code signing
+        id: signing
         uses: ./.github/actions/setup-signing
         with:
           development-certificate: ${{ secrets.DEVELOPMENT_CERTIFICATE_DATA }}
           development-passphrase: ${{ secrets.DEVELOPMENT_CERTIFICATE_PASSPHRASE }}
           application-certificate: ${{ secrets.APPLICATION_CERTIFICATE_DATA }}
           application-passphrase: ${{ secrets.APPLICATION_CERTIFICATE_PASSPHRASE }}
-          keychain-password: ${{ secrets.KEYCHAIN_PASSWORD }}
+
+      - name: Check signing availability
+        if: steps.signing.outputs.signing-available != 'true'
+        run: echo "::notice::No signing certificates available; skipping SetApp build. Tests still run unsigned."
 
       - name: Build debug archive
+        if: steps.signing.outputs.signing-available == 'true'
         run: set -o pipefail && make archive-debug-setapp 2>&1 | mint run xcbeautify
 
       - name: Compress app
+        if: steps.signing.outputs.signing-available == 'true'
         run: ditto -c -k --keepParent "SetAppExport/Pareto Security.app" ParetoSecuritySetApp.app.zip
 
       - name: Upload artifact
+        if: steps.signing.outputs.signing-available == 'true'
         uses: actions/upload-artifact@v7
         with:
           name: ParetoSecuritySetApp.app
@@ -148,15 +179,11 @@ jobs:
           retention-days: 14
 
       - name: Publish build hashes
-        run: |
-          {
-            echo "## SetApp Build"
-            echo '```'
-            openssl dgst -md5 "SetAppExport/Pareto Security.app/Contents/MacOS/Pareto Security SetApp"
-            openssl dgst -sha1 "SetAppExport/Pareto Security.app/Contents/MacOS/Pareto Security SetApp"
-            openssl dgst -sha256 "SetAppExport/Pareto Security.app/Contents/MacOS/Pareto Security SetApp"
-            echo '```'
-          } >> "$GITHUB_STEP_SUMMARY"
+        if: steps.signing.outputs.signing-available == 'true'
+        uses: ./.github/actions/publish-hashes
+        with:
+          title: SetApp Build
+          binary: SetAppExport/Pareto Security.app/Contents/MacOS/Pareto Security SetApp
 
       - name: Cleanup keychain
         if: always()

@@ -13,15 +13,30 @@ VERSION_NUMBER := $(shell echo "$(MARKETING_VERSION)" | awk -F. '{ sub(/^v/, "",
 # A tag rebuilds the same number. Needs the full history (fetch-depth: 0 in CI).
 BUILD_NUMBER ?= $(shell echo $$(( $$(git rev-list --count HEAD) + $(VERSION_NUMBER) )))
 VERSION_FLAGS := CURRENT_PROJECT_VERSION=$(BUILD_NUMBER) MARKETING_VERSION=$(MARKETING_VERSION)
+# Extra xcodebuild settings, e.g. CODE_SIGNING_ALLOWED=NO when no certificates
+# are available (pull requests from forks do not receive repository secrets).
+XCODEBUILD_FLAGS ?=
 
 test:
 	@rm -rf test.xcresult
-	NSUnbufferedIO=YES xcodebuild -project "Pareto Security.xcodeproj" -clonedSourcePackagesDirPath SourcePackages -scheme "Pareto Security" -configuration Debug -resultBundlePath test.xcresult -destination platform=macOS test 2>&1 | mint run xcbeautify --report junit
+	NSUnbufferedIO=YES xcodebuild -project "Pareto Security.xcodeproj" -clonedSourcePackagesDirPath SourcePackages -scheme "Pareto Security" -configuration Debug -resultBundlePath test.xcresult -destination platform=macOS test $(XCODEBUILD_FLAGS) 2>&1 | mint run xcbeautify --report junit
 	mv build/reports/junit.xml .
 
 .PHONY: build
 build:
 	NSUnbufferedIO=YES xcodebuild -project "Pareto Security.xcodeproj" -clonedSourcePackagesDirPath SourcePackages -scheme "Pareto Security" -configuration Debug -destination platform=macOS build 2>&1 | mint run xcbeautify
+
+# Ad-hoc signed Debug build for environments without signing certificates
+# (forks, CI without secrets). Runs locally after stripping the quarantine
+# attribute, but is not for distribution: the privileged helper will not
+# install and Gatekeeper will refuse it without Developer ID + notarization.
+build-adhoc:
+	# COMPILER_INDEX_STORE_ENABLE=NO: index-store writes fail fatally on
+	# network volumes (rename unsupported) and runners do not need them.
+	NSUnbufferedIO=YES xcodebuild -project "Pareto Security.xcodeproj" -clonedSourcePackagesDirPath SourcePackages -scheme "Pareto Security" -configuration Debug -destination platform=macOS -derivedDataPath build COMPILER_INDEX_STORE_ENABLE=NO CODE_SIGN_IDENTITY=- CODE_SIGN_STYLE=Manual build 2>&1 | mint run xcbeautify
+	mkdir -p Export
+	rm -rf "Export/Pareto Security.app"
+	ditto "build/Build/Products/Debug/Pareto Security.app" "Export/Pareto Security.app"
 
 archive-debug:
 	NSUnbufferedIO=YES xcodebuild -project "Pareto Security.xcodeproj" -clonedSourcePackagesDirPath SourcePackages -scheme "Pareto Security" -destination platform=macOS archive -archivePath app.xcarchive -configuration Debug -allowProvisioningUpdates $(VERSION_FLAGS)
@@ -62,7 +77,12 @@ pkg:
 	productsign --sign "Developer ID Installer: Niteo GmbH" ParetoSecurityPlain.pkg ParetoSecurity.pkg
 
 fmt:
-	mint run swiftformat --swiftversion 5 .
+	mint run swiftformat .
+	mint run swiftlint --fix --quiet
+
+lint:
+	mint run swiftformat --lint .
+	mint run swiftlint --strict --quiet
 
 notarize:
 	xcrun notarytool submit ParetoSecurity.dmg --team-id PM784W7B8X --progress --wait

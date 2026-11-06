@@ -9,15 +9,13 @@ import Foundation
 
 extension Bundle {
     var isCodeSigned: Bool {
-        return !runCMD(app: "/usr/bin/codesign", args: ["-dv", bundlePath]).contains("Error")
+        !runCMD(app: "/usr/bin/codesign", args: ["-dv", bundlePath]).contains("Error")
     }
 
     var codeSigningIdentity: String? {
         let lines = runCMD(app: "/usr/bin/codesign", args: ["-dvvv", bundlePath]).split(separator: "\n")
-        for line in lines {
-            if line.hasPrefix("Authority=") {
-                return String(line.dropFirst(10))
-            }
+        for line in lines where line.hasPrefix("Authority=") {
+            return String(line.dropFirst(10))
         }
         return nil
     }

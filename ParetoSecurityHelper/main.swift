@@ -7,12 +7,12 @@
 
 import Foundation
 
-// Static version constant for helper tool
+/// Static version constant for helper tool
 private let helperToolVersion = "1.0.3"
 
-// XPC Communication setup
+/// XPC Communication setup
 class HelperToolDelegate: NSObject, NSXPCListenerDelegate, ParetoSecurityHelperProtocol {
-    // Accept new XPC connections by setting up the exported interface and object.
+    /// Accept new XPC connections by setting up the exported interface and object.
     func listener(_: NSXPCListener, shouldAcceptNewConnection newConnection: NSXPCConnection) -> Bool {
         NSLog("Helper: New XPC connection request received")
         newConnection.exportedInterface = NSXPCInterface(with: ParetoSecurityHelperProtocol.self)

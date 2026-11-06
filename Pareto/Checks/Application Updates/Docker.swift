@@ -15,9 +15,17 @@ import Version
 class AppDockerCheck: AppCheck {
     static let sharedInstance = AppDockerCheck()
 
-    override var appName: String { "Docker" }
-    override var appMarketingName: String { "Docker" }
-    override var appBundle: String { "com.docker.docker" }
+    override var appName: String {
+        "Docker"
+    }
+
+    override var appMarketingName: String {
+        "Docker"
+    }
+
+    override var appBundle: String {
+        "com.docker.docker"
+    }
 
     override var UUID: String {
         "ee11fe36-a372-5cba-a1b4-151748fc2fa7"

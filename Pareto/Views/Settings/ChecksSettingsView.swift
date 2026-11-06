@@ -8,7 +8,7 @@
 import Defaults
 import SwiftUI
 
-// Wrapper to avoid state modification during view updates
+/// Wrapper to avoid state modification during view updates
 struct CheckWrapper: Identifiable {
     let id = UUID()
     let check: ParetoCheck
@@ -19,40 +19,34 @@ struct ChecksSettingsView: View {
     @Default(.teamID) var teamID
 
     var body: some View {
-        Group {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 20) {
-                    if !teamID.isEmpty {
-                        TeamEnforcementHeader()
-                    }
-
-                    // Security Check Sections
-                    ForEach(Claims.global.all, id: \.self) { claim in
-                        CheckSectionView(
-                            claimTitle: claim.title,
-                            installedChecks: claim.checksSorted.filter { $0.isInstalled },
-                            onSelect: { check in
-                                selectedCheckWrapper = CheckWrapper(check: check)
-                            }
-                        )
-                    }
-
-                    Link("Learn more about security checks →", destination: URL(string: "https://paretosecurity.com/mac/checks?utm_source=\(AppInfo.utmSource)")!)
-                        .font(.footnote)
-                        .foregroundColor(.accentColor)
-                        .padding(.horizontal)
-                        .padding(.bottom)
+        ScrollView {
+            VStack(alignment: .leading, spacing: 20) {
+                if !teamID.isEmpty {
+                    TeamEnforcementHeader()
                 }
+
+                // Security Check Sections
+                ForEach(Claims.global.all, id: \.self) { claim in
+                    CheckSectionView(
+                        claimTitle: claim.title,
+                        installedChecks: claim.checksSorted.filter(\.isInstalled),
+                        onSelect: { check in
+                            selectedCheckWrapper = CheckWrapper(check: check)
+                        }
+                    )
+                }
+
+                Link("Learn more about security checks →", destination: URL(string: "https://paretosecurity.com/mac/checks?utm_source=\(AppInfo.utmSource)")!)
+                    .font(.footnote)
+                    .foregroundColor(.accentColor)
+                    .padding(.horizontal)
+                    .padding(.bottom)
             }
         }
         .padding(10)
         .frame(minHeight: 450)
         .sheet(item: $selectedCheckWrapper) { wrapper in
-            if wrapper.check.UUID == NoUnusedUsers.sharedInstance.UUID {
-                NoUnusedUsersDetailView(check: wrapper.check)
-            } else {
-                CheckDetailView(check: wrapper.check)
-            }
+            CheckDetailsContent(check: wrapper.check)
         }
     }
 }
@@ -60,5 +54,19 @@ struct ChecksSettingsView: View {
 struct CheckSettingsView_Previews: PreviewProvider {
     static var previews: some View {
         ChecksSettingsView()
+    }
+}
+
+/// Shared by the Preferences sheet and the menu bar's check details window.
+struct CheckDetailsContent: View {
+    let check: ParetoCheck
+    var showsHeader: Bool = true
+
+    var body: some View {
+        if check.UUID == NoUnusedUsers.sharedInstance.UUID {
+            NoUnusedUsersDetailView(check: check, showsHeader: showsHeader)
+        } else {
+            CheckDetailView(check: check, showsHeader: showsHeader)
+        }
     }
 }

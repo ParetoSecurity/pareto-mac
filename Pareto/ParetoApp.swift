@@ -15,6 +15,7 @@ import SwiftUI
 
 public enum AppWindowID {
     static let welcome = "welcome"
+    static let checkDetails = "check-details"
 }
 
 class AppDelegate: AppHandlers, NSApplicationDelegate {
@@ -226,7 +227,7 @@ class AppDelegate: AppHandlers, NSApplicationDelegate {
     }
 }
 
-// A tiny helper view that triggers an action on appear, then closes its window.
+/// A tiny helper view that triggers an action on appear, then closes its window.
 private struct HiddenLauncherView: View {
     @Environment(\.openWindow) private var openWindow
     @Environment(\.dismiss) private var dismiss
@@ -254,7 +255,7 @@ private struct HiddenLauncherView: View {
     }
 }
 
-// Helper to configure NSWindow for a SwiftUI window.
+/// Helper to configure NSWindow for a SwiftUI window.
 private struct WindowConfigurator: NSViewRepresentable {
     let configure: (NSWindow) -> Void
 
@@ -271,7 +272,7 @@ private struct WindowConfigurator: NSViewRepresentable {
     func updateNSView(_: NSView, context _: Context) {}
 }
 
-// Wrapper to make MenuBarExtra reactive to AppHandlers changes
+/// Wrapper to make MenuBarExtra reactive to AppHandlers changes
 private struct ObservableMenuBarExtra: Scene {
     @ObservedObject var appHandlers: AppHandlers
     @State private var isInserted: Bool = true
@@ -324,6 +325,16 @@ struct Pareto: App {
         .defaultPosition(.center)
         .defaultSize(width: 380, height: 520)
         .windowStyle(.hiddenTitleBar)
+        .windowResizability(.contentSize)
+
+        WindowGroup("Check Details", id: AppWindowID.checkDetails, for: String.self) { $checkID in
+            if let check = Claims.global.all.flatMap(\.checks).first(where: { $0.UUID == checkID }) {
+                CheckDetailsContent(check: check, showsHeader: false)
+                    .frame(width: 550)
+                    .navigationTitle(check.TitleON)
+            }
+        }
+        .defaultPosition(.center)
         .windowResizability(.contentSize)
 
         // Settings window

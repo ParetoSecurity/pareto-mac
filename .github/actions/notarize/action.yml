@@ -1,0 +1,65 @@
+name: "Notarize"
+description: "Submit a build to Apple notarization and staple the ticket"
+
+inputs:
+  submit-path:
+    description: "File to submit to notarytool (.dmg, .zip or .pkg)"
+    required: true
+  staple-path:
+    description: "Path to staple the ticket onto (defaults to submit-path)"
+    required: false
+    default: ""
+  staple-only:
+    description: "Skip submission and only staple (for targets covered by an earlier submission)"
+    required: false
+    default: "false"
+  apple-id:
+    description: "Apple ID used for notarization"
+    required: false
+    default: ""
+  password:
+    description: "App-specific password for the Apple ID"
+    required: false
+    default: ""
+  team-id:
+    description: "Apple Developer team identifier"
+    required: false
+    default: "PM784W7B8X"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Submit for notarization
+      if: inputs.staple-only != 'true'
+      shell: bash
+      env:
+        SUBMIT_PATH: ${{ inputs.submit-path }}
+        NOTARIZATION_USERNAME: ${{ inputs.apple-id }}
+        NOTARIZATION_PASSWORD: ${{ inputs.password }}
+        TEAM_ID: ${{ inputs.team-id }}
+      run: |
+        xcrun notarytool submit "$SUBMIT_PATH" \
+          --apple-id "$NOTARIZATION_USERNAME" \
+          --password "$NOTARIZATION_PASSWORD" \
+          --team-id "$TEAM_ID" \
+          --progress \
+          --wait
+
+    # The ticket needs a moment to propagate to Apple's CDN after the
+    # submission is accepted, so retry a few times before giving up.
+    - name: Staple ticket
+      shell: bash
+      env:
+        SUBMIT_PATH: ${{ inputs.submit-path }}
+        STAPLE_PATH: ${{ inputs.staple-path }}
+      run: |
+        TARGET="${STAPLE_PATH:-$SUBMIT_PATH}"
+        for attempt in 1 2 3; do
+          if xcrun stapler staple "$TARGET"; then
+            exit 0
+          fi
+          echo "::warning::Stapling attempt $attempt failed, retrying in 15s"
+          sleep 15
+        done
+        echo "::error::Failed to staple notarization ticket onto $TARGET"
+        exit 1

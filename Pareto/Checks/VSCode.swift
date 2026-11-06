@@ -17,9 +17,17 @@ import Version
 class AppVSCodeCheck: AppCheck {
     static let sharedInstance = AppVSCodeCheck()
 
-    override var appName: String { "Visual Studio Code" }
-    override var appMarketingName: String { "Visual Studio Code" }
-    override var appBundle: String { "com.microsoft.VSCode" }
+    override var appName: String {
+        "Visual Studio Code"
+    }
+
+    override var appMarketingName: String {
+        "Visual Studio Code"
+    }
+
+    override var appBundle: String {
+        "com.microsoft.VSCode"
+    }
 
     override var UUID: String {
         "febd20fb-3dec-5834-a0ba-58f3342df58c"

@@ -36,7 +36,7 @@ struct KeyInfo: Equatable, ExpressibleByStringLiteral {
     // MARK: - Equatable Methods
 
     static func == (lhs: KeyInfo, rhs: KeyInfo) -> Bool {
-        return lhs.signature == rhs.signature
+        lhs.signature == rhs.signature
     }
 
     // MARK: - ExpressibleByStringLiteral Methods
@@ -83,16 +83,22 @@ class SSHKeysStrengthCheck: SSHCheck {
         let output = runCMD(app: getSSHKeygenPath(), args: ["-l", "-f", path])
         let info = KeyInfo(stringLiteral: output.strip())
         os_log("%{public}s has %d", log: Log.check, path, info.strength)
+        return Self.isKeyStrong(info)
+    }
+
+    static func isKeyStrong(_ info: KeyInfo) -> Bool {
         // https://nvlpubs.nist.gov/nistpubs/specialpublications/nist.sp.800-57pt3r1.pdf
         switch info.cipher {
         case .RSA:
-            return info.strength >= 2048 // for 2020 till 2030
+            info.strength >= 2048 // for 2020 till 2030
         case .DSA:
-            return info.strength >= 8192 // considered insecure, check requires much higher strength than attainable
-        case .ECDSA, .ECDSA_SK:
-            return info.strength >= 521 // for 2020 & beyond
+            info.strength >= 8192 // considered insecure, check requires much higher strength than attainable
+        case .ECDSA:
+            info.strength >= 521 // for 2020 & beyond
+        case .ECDSA_SK:
+            info.strength >= 256 // security keys only support P-256
         case .ED25519, .ED25519_SK:
-            return info.strength >= 256 // recommended
+            info.strength >= 256 // recommended
         }
     }
 

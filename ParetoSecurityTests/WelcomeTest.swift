@@ -13,23 +13,23 @@ import XCTest
 class WelcomeTest: XCTestCase {
     @State var step = Steps.Welcome
 
-    func testWelcomeViewShow() throws {
+    func testWelcomeViewShow() {
         _ = WelcomeView()
     }
 
-    func testIntroViewShow() throws {
+    func testIntroViewShow() {
         _ = IntroView(step: $step)
     }
 
-    func testPermissionsViewShow() throws {
+    func testPermissionsViewShow() {
         _ = PermissionsView(step: $step)
     }
 
-    func testChecksViewShow() throws {
+    func testChecksViewShow() {
         _ = ChecksView(step: $step)
     }
 
-    func testEndViewShow() throws {
+    func testEndViewShow() {
         _ = EndView()
     }
 }

@@ -1,6 +1,6 @@
 import SwiftUI
 
-// Inline team badge component
+/// Inline team badge component
 private struct TeamRequiredBadge: View {
     var compact: Bool = false
 
@@ -28,10 +28,13 @@ struct CheckDetailView: View {
     @Environment(\.dismiss) var dismiss
     @State private var isActive: Bool
     @State private var hasChanges: Bool = false
+    /// Sheets need their own Cancel/Done header; a standalone window has a title bar and close button instead.
+    private let showsHeader: Bool
     @State private var prerequisiteDetails: String?
 
-    init(check: ParetoCheck) {
+    init(check: ParetoCheck, showsHeader: Bool = true) {
         _check = ObservedObject(wrappedValue: check)
+        self.showsHeader = showsHeader
         _isActive = State(initialValue: check.isActive)
         _prerequisiteDetails = State(initialValue: nil)
     }
@@ -55,32 +58,34 @@ struct CheckDetailView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            // Header
-            HStack {
-                Button("Cancel") {
-                    // Revert changes if any
-                    if hasChanges {
-                        check.isActive = !isActive
+            if showsHeader {
+                // Header
+                HStack {
+                    Button("Cancel") {
+                        // Revert changes if any
+                        if hasChanges {
+                            check.isActive = !isActive
+                        }
+                        dismiss()
                     }
-                    dismiss()
+                    .keyboardShortcut(.escape)
+
+                    Spacer()
+
+                    Text(check.TitleON)
+                        .font(.headline)
+
+                    Spacer()
+
+                    Button("Done") {
+                        dismiss()
+                    }
+                    .keyboardShortcut(.defaultAction)
                 }
-                .keyboardShortcut(.escape)
+                .padding()
 
-                Spacer()
-
-                Text(check.TitleON)
-                    .font(.headline)
-
-                Spacer()
-
-                Button("Done") {
-                    dismiss()
-                }
-                .keyboardShortcut(.defaultAction)
+                Divider()
             }
-            .padding()
-
-            Divider()
 
             // Content
             Form {
@@ -111,10 +116,13 @@ struct CheckDetailView: View {
                             .foregroundColor(.secondary)
                     }
 
-                    Link("Learn more about this check →", destination: check.infoURL)
-                        .font(.footnote)
-                        .foregroundColor(.accentColor)
-                        .padding(.top, 4)
+                    // infoURL embeds live check details (can mean re-reading files), so build it on click only
+                    Button("Learn more about this check →") {
+                        NSWorkspace.shared.open(check.infoURL)
+                    }
+                    .buttonStyle(.link)
+                    .font(.footnote)
+                    .padding(.top, 4)
                 }
 
                 // SSH-specific: allow ignoring selected SSH keys
@@ -128,7 +136,7 @@ struct CheckDetailView: View {
                     }
                 }
 
-                if check.showSettingsWarnDiskAccess && !check.isRunnable {
+                if check.showSettingsWarnDiskAccess, !check.isRunnable {
                     Section(header: Text("Permissions Required")) {
                         VStack(alignment: .leading, spacing: 8) {
                             Text("This check requires full disk access permission.")
@@ -151,7 +159,7 @@ struct CheckDetailView: View {
                     }
                 }
 
-                if check.showSettingsWarnEvents && !check.isRunnable {
+                if check.showSettingsWarnEvents, !check.isRunnable {
                     Section(header: Text("Permissions Required")) {
                         VStack(alignment: .leading, spacing: 8) {
                             Text("This check requires System Events access permission.")
@@ -169,145 +177,17 @@ struct CheckDetailView: View {
                     }
                 }
 
-                Section(header: Text("Current Status")) {
-                    if !check.isActive {
-                        VStack(alignment: .leading, spacing: 8) {
-                            HStack {
-                                Image(systemName: "minus.circle.fill")
-                                    .foregroundColor(.gray)
-                                Text("Check is disabled")
-                                    .font(.headline)
-                                Spacer()
-                            }
-                            Text("This check has been manually disabled")
-                                .font(.body)
-                                .foregroundColor(.secondary)
-                        }
-                    } else if !check.isRunnable {
-                        VStack(alignment: .leading, spacing: 12) {
-                            HStack {
-                                Image(systemName: "exclamationmark.triangle.fill")
-                                    .foregroundColor(.orange)
-                                Text("Check cannot run")
-                                    .font(.headline)
-                                Spacer()
-                            }
-
-                            VStack(alignment: .leading, spacing: 8) {
-                                Text("Why:")
-                                    .font(.caption)
-                                    .foregroundColor(.secondary)
-                                    .fontWeight(.medium)
-
-                                Text(check.disabledReason)
-                                    .font(.body)
-                                    .foregroundColor(.primary)
-                            }
-
-                            if let details = prerequisiteDetails, !details.isEmpty {
-                                Divider()
-
-                                VStack(alignment: .leading, spacing: 8) {
-                                    Text("Technical Details:")
-                                        .font(.caption)
-                                        .foregroundColor(.secondary)
-                                        .fontWeight(.medium)
-
-                                    Text(details)
-                                        .font(.system(.body, design: .monospaced))
-                                        .foregroundColor(.secondary)
-                                        .textSelection(.enabled)
-                                }
-                            }
-
-                            if check.teamEnforced {
-                                Divider()
-
-                                VStack(alignment: .leading, spacing: 8) {
-                                    HStack(spacing: 6) {
-                                        Image(systemName: "shield.fill")
-                                            .font(.caption)
-                                            .foregroundColor(.orange)
-                                        Text("Team Requirement:")
-                                            .font(.caption)
-                                            .foregroundColor(.secondary)
-                                            .fontWeight(.medium)
-                                    }
-
-                                    Text("This check is required by your team security policy. Please resolve the prerequisite issues to meet compliance requirements.")
-                                        .font(.body)
-                                        .foregroundColor(.primary)
-                                }
-                            }
-                        }
-                    } else {
-                        HStack {
-                            Text("Status:")
-                            Spacer()
-                            if check.checkPassed {
-                                Label("Passing", systemImage: "checkmark.circle.fill")
-                                    .foregroundColor(.green)
-                            } else {
-                                // Show specific failure reason
-                                if check is TimeMachineCheck {
-                                    Label("Time Machine is disabled or not configured", systemImage: "xmark.circle.fill")
-                                        .foregroundColor(.orange)
-                                } else if check is TimeMachineHasBackupCheck {
-                                    // Check if it's actually failing or just can't run
-                                    if !TimeMachineCheck.sharedInstance.isActive || !TimeMachineCheck.sharedInstance.isRunnable {
-                                        Label(check.disabledReason, systemImage: "exclamationmark.triangle.fill")
-                                            .foregroundColor(.orange)
-                                    } else {
-                                        Label("No recent backup found", systemImage: "xmark.circle.fill")
-                                            .foregroundColor(.orange)
-                                    }
-                                } else if check is TimeMachineIsEncryptedCheck {
-                                    // Check if it's actually failing or just can't run
-                                    if !TimeMachineCheck.sharedInstance.isActive || !TimeMachineCheck.sharedInstance.isRunnable {
-                                        Label(check.disabledReason, systemImage: "exclamationmark.triangle.fill")
-                                            .foregroundColor(.orange)
-                                    } else {
-                                        Label("Backup disk is not encrypted", systemImage: "xmark.circle.fill")
-                                            .foregroundColor(.orange)
-                                    }
-                                } else if let appCheck = check as? AppCheck {
-                                    // For app update checks
-                                    if !appCheck.isInstalled {
-                                        Label("App not installed", systemImage: "xmark.circle.fill")
-                                            .foregroundColor(.gray)
-                                    } else if !appCheck.usedRecently {
-                                        Label("App not used in the last week", systemImage: "clock.badge.xmark.fill")
-                                            .foregroundColor(.gray)
-                                    } else {
-                                        Label("Update available", systemImage: "arrow.down.circle.fill")
-                                            .foregroundColor(.orange)
-                                    }
-                                } else {
-                                    Label("Failing", systemImage: "xmark.circle.fill")
-                                        .foregroundColor(.orange)
-                                }
-                            }
-                        }
-
-                        if shouldShowDetails {
-                            VStack(alignment: .leading, spacing: 4) {
-                                Text("Details:")
-                                    .font(.caption)
-                                    .foregroundColor(.secondary)
-
-                                // Safely attempt to parse markdown; fall back to plain text if it fails
-                                let attributed = (try? AttributedString(markdown: statusDetails)) ?? AttributedString(statusDetails)
-                                Text(attributed)
-                                    .font(.system(.body, design: .monospaced))
-                                    .textSelection(.enabled)
-                            }
-                        }
-                    }
-                }
+                CheckStatusSection(
+                    check: check,
+                    prerequisiteDetails: prerequisiteDetails,
+                    statusDetails: statusDetails,
+                    shouldShowDetails: shouldShowDetails
+                )
             }
             .formStyle(.grouped)
+            .detailWindowSizing(showsHeader: showsHeader)
         }
-        .frame(minHeight: 400)
+        .closesWindowOnEscape(!showsHeader)
         .task {
             // Populate prerequisite details after view renders, outside the view update cycle
             if !check.isRunnable {

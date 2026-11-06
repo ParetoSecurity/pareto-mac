@@ -29,9 +29,17 @@ private struct ChromeVersion: Codable {
 class AppGoogleChromeCheck: AppCheck {
     static let sharedInstance = AppGoogleChromeCheck()
 
-    override var appName: String { "Google Chrome" }
-    override var appMarketingName: String { "Google Chrome" }
-    override var appBundle: String { "com.google.Chrome" }
+    override var appName: String {
+        "Google Chrome"
+    }
+
+    override var appMarketingName: String {
+        "Google Chrome"
+    }
+
+    override var appBundle: String {
+        "com.google.Chrome"
+    }
 
     override var UUID: String {
         "d34ee340-67a7-5e3e-be8b-aef4e3133de0"

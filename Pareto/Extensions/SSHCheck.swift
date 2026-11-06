@@ -48,7 +48,7 @@ class SSHCheck: ParetoCheck {
     }
 
     override var isRunnable: Bool {
-        return isActive
+        isActive
     }
 
     override var prerequisiteFailureDetails: String? {

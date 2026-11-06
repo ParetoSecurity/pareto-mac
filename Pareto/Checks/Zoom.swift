@@ -17,9 +17,17 @@ import Version
 class AppZoomCheck: AppCheck {
     static let sharedInstance = AppZoomCheck()
 
-    override var appName: String { "Zoom.us" }
-    override var appMarketingName: String { "Zoom" }
-    override var appBundle: String { "us.zoom.xos" }
+    override var appName: String {
+        "Zoom.us"
+    }
+
+    override var appMarketingName: String {
+        "Zoom"
+    }
+
+    override var appBundle: String {
+        "us.zoom.xos"
+    }
 
     override var UUID: String {
         "c65cb89b-6c53-54af-995c-ec8ba358ecf6"

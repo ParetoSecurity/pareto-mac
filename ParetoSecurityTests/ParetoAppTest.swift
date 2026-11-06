@@ -12,25 +12,25 @@ import XCTest
 class ParetoAppTest: XCTestCase {
     func testActionLinkDevice() throws {
         let app = AppHandlers()
-        app.processAction(URL(string: "paretosecurity://linkDevice?invite_id=12345678-1234-5678-9012-123456789012")!)
+        try app.processAction(XCTUnwrap(URL(string: "paretosecurity://linkDevice?invite_id=12345678-1234-5678-9012-123456789012")))
     }
 
     func testActionLinkDeviceWithHost() throws {
         let app = AppHandlers()
-        app.processAction(URL(string: "paretosecurity://linkDevice?invite_id=12345678-1234-5678-9012-123456789012&host=staging")!)
+        try app.processAction(XCTUnwrap(URL(string: "paretosecurity://linkDevice?invite_id=12345678-1234-5678-9012-123456789012&host=staging")))
     }
 
     func testActionLinkDeviceWithCompleteURL() throws {
         let app = AppHandlers()
-        app.processAction(URL(string: "paretosecurity://linkDevice?invite_id=12345678-1234-5678-9012-123456789012&host=https://api.example.com")!)
+        try app.processAction(XCTUnwrap(URL(string: "paretosecurity://linkDevice?invite_id=12345678-1234-5678-9012-123456789012&host=https://api.example.com")))
     }
 
     func testActionLinkDeviceWithCompleteURLAndPath() throws {
         let app = AppHandlers()
-        app.processAction(URL(string: "paretosecurity://linkDevice?invite_id=12345678-1234-5678-9012-123456789012&host=https://api.example.com/api/v1/team/enroll")!)
+        try app.processAction(XCTUnwrap(URL(string: "paretosecurity://linkDevice?invite_id=12345678-1234-5678-9012-123456789012&host=https://api.example.com/api/v1/team/enroll")))
     }
 
-    func testActionApp() throws {
+    func testActionApp() {
         let app = AppHandlers()
         app.runApp()
     }
@@ -39,6 +39,6 @@ class ParetoAppTest: XCTestCase {
         let app = AppHandlers()
         // In tests, restartApp() should be disabled (it checks AppInfo.isRunningTests)
         // This test verifies the action is handled without throwing
-        app.processAction(URL(string: "paretosecurity://restart")!)
+        try app.processAction(XCTUnwrap(URL(string: "paretosecurity://restart")))
     }
 }

@@ -39,7 +39,7 @@ struct TimeMachineDestinations {
     }
 
     var isEncrypted: Bool {
-        return LastKnownEncryptionState == EncryptionState.Encrypted || !DiskImageKeychainUUID.isEmpty
+        LastKnownEncryptionState == EncryptionState.Encrypted || !DiskImageKeychainUUID.isEmpty
     }
 
     var isUpToDateBackup: Bool {
@@ -73,7 +73,7 @@ struct TimeMachineConfig {
     }
 
     var isEncryptedBackup: Bool {
-        return Destinations.allSatisfy { d in
+        Destinations.allSatisfy { d in
             d.isEncrypted
         }
     }

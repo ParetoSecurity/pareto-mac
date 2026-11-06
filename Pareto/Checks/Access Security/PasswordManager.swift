@@ -17,7 +17,7 @@ class PasswordManager: ParetoCheck {
         "Password manager is not installed"
     }
 
-    // Centralized password manager definitions
+    /// Centralized password manager definitions
     private enum PasswordManagerData {
         static let runningAppNames = [
             "1Password 7",
@@ -79,7 +79,7 @@ class PasswordManager: ParetoCheck {
         ]
     }
 
-    // Results structure for debug info
+    /// Results structure for debug info
     private struct ScanResults {
         var runningApps: [String] = []
         var installedApps: [(String, String)] = [] // (name, path)
@@ -216,10 +216,8 @@ class PasswordManager: ParetoCheck {
         let runningApps = NSWorkspace.shared.runningApplications
 
         for app in runningApps {
-            if let appName = app.localizedName {
-                if PasswordManagerData.runningAppNames.contains(appName) {
-                    found.append(appName)
-                }
+            if let appName = app.localizedName, PasswordManagerData.runningAppNames.contains(appName) {
+                found.append(appName)
             }
         }
 
@@ -261,16 +259,16 @@ class PasswordManager: ParetoCheck {
         return found
     }
 
-    // Legacy methods for backward compatibility
+    /// Legacy methods for backward compatibility
     func isPasswordManagerRunning() -> Bool {
-        return !getRunningPasswordManagers().isEmpty
+        !getRunningPasswordManagers().isEmpty
     }
 
     private func checkInstalledApplications() -> Bool {
-        return !getInstalledPasswordManagers().isEmpty
+        !getInstalledPasswordManagers().isEmpty
     }
 
     private func checkForBrowserExtensions() -> Bool {
-        return !getBrowserExtensions().isEmpty
+        !getBrowserExtensions().isEmpty
     }
 }

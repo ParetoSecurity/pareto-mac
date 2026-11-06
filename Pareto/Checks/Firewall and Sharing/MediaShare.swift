@@ -22,6 +22,6 @@ class MediaShareCheck: ParetoCheck {
     }
 
     override func checkPasses() -> Bool {
-        return isNotListening(withPort: 3689)
+        isNotListening(withPort: 3689)
     }
 }

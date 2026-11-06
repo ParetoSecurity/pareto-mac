@@ -18,7 +18,9 @@ final class IgnoredSSHKeysViewModel: ObservableObject {
     @Published var showRerunNotice = false
 
     func loadAvailableKeys() async {
-        if isLoading { return }
+        if isLoading {
+            return
+        }
         isLoading = true
 
         // Do file system work off the main actor
@@ -91,7 +93,9 @@ struct IgnoredSSHKeysSettingsView: View {
                             Text(key)
                                 .font(.system(.body, design: .monospaced))
                             Spacer()
-                            Button(action: { model.removeIgnoredKey(key) }) {
+                            Button {
+                                model.removeIgnoredKey(key)
+                            } label: {
                                 Image(systemName: "xmark.circle.fill").foregroundColor(.secondary)
                             }.buttonStyle(.plain)
                         }
@@ -122,7 +126,7 @@ struct IgnoredSSHKeysSettingsView: View {
                 .disabled(model.selectedKey == nil)
             }
 
-            if availableKeysNotIgnored.isEmpty && !model.isLoading {
+            if availableKeysNotIgnored.isEmpty, !model.isLoading {
                 Text("No additional SSH keys available to ignore")
                     .font(.footnote)
                     .foregroundColor(.secondary)

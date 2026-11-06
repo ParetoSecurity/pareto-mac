@@ -20,9 +20,17 @@ struct FirefoxVersions: Decodable {
 class AppFirefoxCheck: AppCheck {
     static let sharedInstance = AppFirefoxCheck()
 
-    override var appName: String { "Firefox" }
-    override var appMarketingName: String { "Firefox" }
-    override var appBundle: String { "org.mozilla.firefox" }
+    override var appName: String {
+        "Firefox"
+    }
+
+    override var appMarketingName: String {
+        "Firefox"
+    }
+
+    override var appBundle: String {
+        "org.mozilla.firefox"
+    }
 
     override var UUID: String {
         "768a574c-75a2-536d-8785-ef9512981184"

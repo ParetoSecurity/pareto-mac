@@ -112,7 +112,7 @@ func runCMDAsync(app: String, args: [String], timeout: TimeInterval = 15.0) asyn
     }
 }
 
-func runCMD(app: String, args: [String]) -> String {
+func runCMD(app: String, args: [String], environment: [String: String]? = nil) -> String {
     let task = Process()
     let pipe = Pipe()
 
@@ -120,11 +120,18 @@ func runCMD(app: String, args: [String]) -> String {
     task.standardError = pipe
     task.arguments = args
     task.launchPath = app
-    task.launch()
+    if let environment {
+        task.environment = environment
+    }
+    do {
+        try task.run()
+    } catch {
+        os_log("Failed to launch %{public}@: %{public}@", log: Log.app, app, error.localizedDescription)
+        return ""
+    }
     let data = pipe.fileHandleForReading.readDataToEndOfFile()
     task.waitUntilExit()
-    let output = String(data: data, encoding: .utf8)!
-    return output
+    return String(data: data, encoding: .utf8) ?? ""
 }
 
 func runShell(args: [String]) -> String {
@@ -139,8 +146,7 @@ func runShell(args: [String]) -> String {
         try task.run()
         let data = pipe.fileHandleForReading.readDataToEndOfFile()
         task.waitUntilExit()
-        let output = String(data: data, encoding: .utf8)!
-        return output
+        return String(data: data, encoding: .utf8) ?? ""
     } catch {
         return error.localizedDescription
     }
@@ -167,7 +173,7 @@ func runOSAAsync(appleScript: String, timeout: TimeInterval = 10.0) async -> Str
             }
             let result = script.executeAndReturnError(&error)
             timeoutWork.cancel()
-            if let error = error {
+            if let error {
                 os_log("NSAppleScript error: %{public}s", error.debugDescription)
                 resumeGate.run { continuation.resume(returning: nil) }
                 return
@@ -203,7 +209,7 @@ func runOSA(appleScript: String, timeout: TimeInterval = 10.0) -> String? {
             return
         }
         let result = script.executeAndReturnError(&error)
-        if let error = error {
+        if let error {
             os_log("NSAppleScript error: %{public}s", error.debugDescription)
             semaphore.signal()
             return
