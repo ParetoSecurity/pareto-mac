@@ -220,8 +220,13 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
         fatalError("checkPasses() is not implemented")
     }
 
+    var needsHelperAuthorization: Bool {
+        requiresHelper && isActive && !isRunnable
+    }
+
     func menu() -> NSMenuItem {
-        let item = NSMenuItem(title: Title, action: #selector(moreInfo), keyEquivalent: "")
+        let action = needsHelperAuthorization ? #selector(authorizeHelper) : #selector(moreInfo)
+        let item = NSMenuItem(title: Title, action: action, keyEquivalent: "")
         item.target = self
 
         if isRunnable {
@@ -312,7 +317,7 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
 
     var infoURL: URL {
         // For checks requiring helper that are not runnable, direct to helper authorization docs
-        if requiresHelper, !isRunnable, isActive {
+        if needsHelperAuthorization {
             var components = URLComponents()
             components.scheme = "https"
             components.host = "paretosecurity.com"
@@ -344,6 +349,10 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
 
     @objc func moreInfo() {
         NSWorkspace.shared.open(infoURL)
+    }
+
+    @objc func authorizeHelper() {
+        HelperToolUtilities.requestAuthorization()
     }
 }
 

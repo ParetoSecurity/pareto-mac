@@ -16,6 +16,13 @@ enum HelperToolAction {
 
 /// Static helper utility functions (not actor-isolated)
 class HelperToolUtilities {
+    /// Registers the helper if needed and opens System Settings > Login Items for approval
+    static func requestAuthorization() {
+        Task { @MainActor in
+            await HelperToolManager().manageHelperTool(action: .install)
+        }
+    }
+
     /// Static method to check helper tool status without actor isolation
     static func isHelperInstalled() -> Bool {
         let plistName = "co.niteo.ParetoSecurityHelper.plist"

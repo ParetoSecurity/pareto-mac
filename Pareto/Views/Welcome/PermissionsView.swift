@@ -80,10 +80,8 @@ struct PermissionsView: View {
         NSApp.activate(ignoringOtherApps: true)
     }
 
-    @MainActor
-    func authorizeFWClick() async {
-        let helperManager = HelperToolManager()
-        await helperManager.manageHelperTool(action: .install)
+    func authorizeFWClick() {
+        HelperToolUtilities.requestAuthorization()
     }
 
     var body: some View {
@@ -168,7 +166,7 @@ struct PermissionsView: View {
 
                         Spacer()
 
-                        Button(action: { Task { await authorizeFWClick() } }, label: {
+                        Button(action: authorizeFWClick, label: {
                             if checker.ran {
                                 if checker.firewallAuthorized {
                                     Text("Authorized").frame(width: 80)

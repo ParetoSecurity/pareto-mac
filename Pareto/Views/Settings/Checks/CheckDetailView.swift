@@ -159,6 +159,24 @@ struct CheckDetailView: View {
                     }
                 }
 
+                if check.needsHelperAuthorization {
+                    Section(header: Text("Permissions Required")) {
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("This check requires the privileged helper to be allowed in System Settings > Login Items.")
+                                .font(.body)
+
+                            HStack {
+                                Button("Authorize") {
+                                    HelperToolUtilities.requestAuthorization()
+                                }
+
+                                Link("Learn More", destination: URL(string: "https://paretosecurity.com/docs/mac/privileged-helper-authorization?utm_source=\(AppInfo.utmSource)")!)
+                                    .font(.footnote)
+                            }
+                        }
+                    }
+                }
+
                 if check.showSettingsWarnEvents, !check.isRunnable {
                     Section(header: Text("Permissions Required")) {
                         VStack(alignment: .leading, spacing: 8) {
