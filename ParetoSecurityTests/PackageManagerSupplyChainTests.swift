@@ -522,7 +522,46 @@ class PackageManagerSupplyChainTests: XCTestCase {
         let home = try temporaryHome()
         let output = try XCTUnwrap(CheckCommand.run(app: "/usr/bin/env", args: [], homeDirectory: home))
         let keys = Set(output.components(separatedBy: .newlines).compactMap { $0.split(separator: "=").first.map(String.init) })
-        XCTAssertEqual(keys, ["HOME", "LANG", "LOGNAME", "PATH", "USER"])
+        XCTAssertEqual(keys, ["HOME", "LANG", "LOGNAME", "PATH", "TMPDIR", "USER"])
+    }
+
+    func testSandboxedCommandsCanOnlyWriteToPrivateTemporaryDirectory() throws {
+        let home = try temporaryHome().resolvingSymlinksInPath()
+        let marker = home.appendingPathComponent("written")
+        let output = try XCTUnwrap(CheckCommand.run(
+            app: "/bin/sh",
+            args: ["-c", "echo written > \"$TMPDIR/file\" && cat \"$TMPDIR/file\" && echo \"$TMPDIR\"; "
+                + "echo x > '\(marker.path)' || echo home-blocked; echo x > \"$TMPDIR/../outside\" || echo parent-blocked"],
+            homeDirectory: home
+        ))
+        let lines = output.components(separatedBy: .newlines)
+        let temporaryDirectory = try XCTUnwrap(lines.dropFirst().first)
+
+        XCTAssertEqual(lines.first, "written")
+        XCTAssertTrue(output.contains("home-blocked"))
+        XCTAssertTrue(output.contains("parent-blocked"))
+        XCTAssertFalse(FileManager.default.fileExists(atPath: marker.path))
+        XCTAssertFalse(FileManager.default.fileExists(atPath: temporaryDirectory))
+    }
+
+    func testSandboxedCommandsReadOnlyCorepackCacheAndGitConfig() throws {
+        let home = try temporaryHome().resolvingSymlinksInPath()
+        let readable = [".cache/node/corepack/lastKnownGood.json", ".config/git/config", ".gitconfig"]
+        let blocked = [".cache/huggingface/token", ".config/git/credentials", ".gitconfig.local"]
+        for path in readable + blocked {
+            let file = home.appendingPathComponent(path)
+            try FileManager.default.createDirectory(at: file.deletingLastPathComponent(), withIntermediateDirectories: true)
+            try path.write(to: file, atomically: true, encoding: .utf8)
+        }
+
+        for path in readable {
+            let output = CheckCommand.run(app: "/bin/cat", args: [home.appendingPathComponent(path).path], homeDirectory: home)
+            XCTAssertEqual(output, path)
+        }
+        for path in blocked {
+            XCTAssertNil(CheckCommand.run(app: "/bin/cat", args: [home.appendingPathComponent(path).path], homeDirectory: home),
+                         path)
+        }
     }
 
     func testPackageManagerSupplyChainUsesPnpmXDGConfigHome() throws {

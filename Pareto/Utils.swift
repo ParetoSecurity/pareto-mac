@@ -140,8 +140,8 @@ enum CheckCommand {
     {
         let home = URL(fileURLWithPath: canonicalPath(homeDirectory.path))
         let systemDirectories = ["/Library/Apple", "/Library/Developer", "/Library/Frameworks", "/Library/Python", "/Library/Ruby", "/System", "/bin", "/nix/store", "/opt/homebrew", "/opt/local", "/sbin", "/usr"]
-        let toolDirectories = [".asdf", ".bun", ".cargo", ".config/conda", ".config/mise", ".config/pdm", ".config/pip", ".config/pypoetry", ".deno", ".local/bin", ".local/lib", ".local/pipx", ".local/share/mise", ".local/share/pipx", ".local/share/uv", ".npm-global", ".nvm", ".pyenv", ".rbenv", ".rvm", ".volta", ".yarn", "Library/Application Support/fnm", "Library/Application Support/pdm", "Library/Application Support/pypoetry", "Library/Python", "Library/pnpm", "anaconda3", "miniconda3", "miniforge3"]
-        let configFiles = [".bundle/config", ".condarc", ".npmrc", ".python-version", ".ruby-version", ".tool-versions", ".yarnrc.yml"]
+        let toolDirectories = [".asdf", ".bun", ".cache/node/corepack", ".cargo", ".config/conda", ".config/mise", ".config/pdm", ".config/pip", ".config/pypoetry", ".deno", ".local/bin", ".local/lib", ".local/pipx", ".local/share/mise", ".local/share/pipx", ".local/share/uv", ".npm-global", ".nvm", ".pyenv", ".rbenv", ".rvm", ".volta", ".yarn", "Library/Application Support/fnm", "Library/Application Support/pdm", "Library/Application Support/pypoetry", "Library/Python", "Library/pnpm", "anaconda3", "miniconda3", "miniforge3"]
+        let configFiles = [".bundle/config", ".condarc", ".config/git/config", ".gitconfig", ".npmrc", ".python-version", ".ruby-version", ".tool-versions", ".yarnrc.yml"]
         let directories = systemDirectories + toolDirectories.map { home.appendingPathComponent($0).path } + readDirectories
         let systemFiles = ["/etc/bashrc", "/etc/passwd", "/etc/paths", "/etc/profile", "/etc/zprofile", "/etc/zshenv", "/etc/zshrc"].map(canonicalPath)
         var files = ["/", "/dev/null", "/dev/random", "/dev/urandom", "/dev/zero", app, canonicalPath(app)]
@@ -156,14 +156,23 @@ enum CheckCommand {
             }
         }
         files += parents.sorted()
+        let temporaryDirectory = FileManager.default.temporaryDirectory.appendingPathComponent("pareto-check-\(UUID().uuidString)")
+        guard (try? FileManager.default.createDirectory(at: temporaryDirectory, withIntermediateDirectories: false,
+                                                        attributes: [.posixPermissions: 0o700])) != nil
+        else {
+            return nil
+        }
+        defer { try? FileManager.default.removeItem(at: temporaryDirectory) }
+        let temporaryPath = canonicalPath(temporaryDirectory.path)
         var profile = """
         (version 1)
         (deny default)
         (allow process-exec process-fork sysctl-read file-read-metadata)
         (allow file-write-data (literal "/dev/null"))
         (allow mach-lookup (global-name "com.apple.system.opendirectoryd.libinfo"))
+        (allow file-read* file-write* (subpath (param "TMPDIR")))
         """
-        var parameters: [String] = []
+        var parameters = ["-D", "TMPDIR=\(temporaryPath)"]
         for (index, directory) in directories.enumerated() {
             profile += "\n(allow file-read* file-map-executable (subpath (param \"DIR\(index)\")))"
             parameters += ["-D", "DIR\(index)=\(directory)"]
@@ -173,7 +182,7 @@ enum CheckCommand {
             parameters += ["-D", "FILE\(index)=\(file)"]
         }
 
-        let environment = ["HOME": home.path, "LANG": "C", "LOGNAME": NSUserName(), "PATH": (path + ["/usr/bin", "/bin", "/usr/sbin", "/sbin"]).joined(separator: ":"), "USER": NSUserName()]
+        let environment = ["HOME": home.path, "LANG": "C", "LOGNAME": NSUserName(), "PATH": (path + ["/usr/bin", "/bin", "/usr/sbin", "/sbin"]).joined(separator: ":"), "TMPDIR": temporaryPath + "/", "USER": NSUserName()]
         let output = OSAllocatedUnfairLock<String?>(initialState: nil)
         let done = DispatchSemaphore(value: 0)
         let sandboxArgs = parameters + ["-p", profile, app] + args
