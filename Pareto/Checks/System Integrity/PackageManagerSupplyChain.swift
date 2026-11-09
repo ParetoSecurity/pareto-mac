@@ -49,18 +49,34 @@ class PackageManagerSupplyChainCheck: ParetoCheck {
 
     let shellPath: ShellPath
 
+    /// SIP-protected directories only Apple can write to. A package manager
+    /// found only here (`/usr/bin/pip3`, `/usr/bin/bundle`) ships with macOS
+    /// or the Command Line Tools, cannot be upgraded or removed, and so is
+    /// not treated as installed.
+    /// https://github.com/ParetoSecurity/pareto-mac/issues/352
+    static let appleBundledDirectories: Set<String> = ["/usr/bin", "/bin", "/usr/sbin", "/sbin"]
+    let appleBundledDirectories: Set<String>
+    let systemInstallPrefixes: [String]
+
     init(
         homeDirectory: URL = FileManager.default.homeDirectoryForCurrentUser,
         installedBinaries: Set<String>? = nil,
         packageManagerVersions: [String: String] = [:],
         environment: [String: String] = ProcessInfo.processInfo.environment,
-        shellPath: ShellPath = .shared
+        shellPath: ShellPath = .shared,
+        appleBundledDirectories: Set<String>? = nil,
+        systemInstallPrefixes: [String] = PackageManagerSupplyChainCheck.systemInstallPrefixes
     ) {
         self.homeDirectory = homeDirectory
         self.installedBinaries = installedBinaries
         self.packageManagerVersions = packageManagerVersions
         self.environment = environment
         self.shellPath = shellPath
+        self.systemInstallPrefixes = systemInstallPrefixes
+        // Injected binaries describe a synthetic machine, so the host's own
+        // /usr/bin must not leak into it unless a test asks for that.
+        let bundled = appleBundledDirectories ?? (installedBinaries == nil ? Self.appleBundledDirectories : [])
+        self.appleBundledDirectories = Set(bundled.map { ($0 as NSString).standardizingPath })
     }
 
     /// A single re-check from the UI is its own short run; inside a full scan
@@ -120,7 +136,13 @@ class PackageManagerSupplyChainCheck: ParetoCheck {
             if let gate = manager.versionGate, managerFailures.isEmpty,
                manager.usesSetting?(active.contents) == true
             {
-                let binary = manager.binaries.first(where: isBinaryInstalled) ?? manager.binaries[0]
+                let installed = manager.binaries.first(where: isBinaryInstalled)
+                if installed == nil, appleBundledPath(in: manager) != nil {
+                    // Only Apple's copy exists: it is too old to enforce the
+                    // setting and cannot be upgraded, so the gate is waived.
+                    continue
+                }
+                let binary = installed ?? manager.binaries[0]
                 managerFailures = addingVersionGate(
                     managerFailures,
                     binary: binary,
@@ -141,6 +163,9 @@ class PackageManagerSupplyChainCheck: ParetoCheck {
             if let active = activeConfig(in: manager), manager.validate(active.contents, active.displayPath).isEmpty {
                 details.append(manager.passingDetail(active.displayPath))
             }
+            if let path = appleBundledPath(in: manager) {
+                details.append("\(path) ships with macOS and cannot be upgraded, so it is not checked")
+            }
         }
 
         if details.isEmpty {
@@ -159,9 +184,30 @@ class PackageManagerSupplyChainCheck: ParetoCheck {
 
     private func isBinaryInstalled(_ name: String) -> Bool {
         if let installedBinaries {
-            return installedBinaries.contains(name)
+            return installedBinaries.contains(name) && !isAppleBundledOnly(name)
         }
         return executablePath(for: name) != nil
+    }
+
+    /// True when the only copy of `name` is the one Apple ships.
+    private func isAppleBundledOnly(_ name: String) -> Bool {
+        executablePath(for: name) == nil && appleBundledPath(for: name) != nil
+    }
+
+    /// Apple's copy of one of the manager's binaries, when no user-installed
+    /// copy of any of them exists.
+    private func appleBundledPath(in manager: ManagerConfig) -> String? {
+        guard !manager.binaries.contains(where: isBinaryInstalled) else { return nil }
+        return manager.binaries.lazy.compactMap(appleBundledPath).first
+    }
+
+    private func appleBundledPath(for name: String) -> String? {
+        guard installedBinaries?.contains(name) != false else { return nil }
+        return executablePath(for: name, in: searchDirectories().filter(isAppleBundledDirectory))
+    }
+
+    private func isAppleBundledDirectory(_ directory: String) -> Bool {
+        appleBundledDirectories.contains((directory as NSString).standardizingPath)
     }
 
     private func packageManagerVersion(_ name: String) -> String? {
@@ -175,8 +221,13 @@ class PackageManagerSupplyChainCheck: ParetoCheck {
         return Self.versionToken(from: output)
     }
 
+    /// The user-installed copy of `name`; Apple's bundled copies are skipped.
     private func executablePath(for name: String) -> String? {
-        for directory in searchDirectories() {
+        executablePath(for: name, in: searchDirectories().filter { !isAppleBundledDirectory($0) })
+    }
+
+    private func executablePath(for name: String, in directories: [String]) -> String? {
+        for directory in directories {
             let candidate = (directory as NSString).appendingPathComponent(name)
             if let path = Self.executablePath(fromWhichOutput: candidate) {
                 return path
@@ -188,12 +239,12 @@ class PackageManagerSupplyChainCheck: ParetoCheck {
     func searchDirectories() -> [String] {
         let fallback = Self.homeInstallPrefixes.map {
             homeDirectory.appendingPathComponent($0).path
-        } + Self.systemInstallPrefixes
+        } + systemInstallPrefixes
         var seen = Set<String>()
         return ((shellPath.directories ?? []) + fallback).filter { seen.insert($0).inserted }
     }
 
-    private static let systemInstallPrefixes = [
+    static let systemInstallPrefixes = [
         "/opt/homebrew/bin",
         "/usr/local/bin",
         "/opt/local/bin",
