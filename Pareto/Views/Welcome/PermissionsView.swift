@@ -160,7 +160,7 @@ struct PermissionsView: View {
                     HStack(alignment: .top) {
                         VStack(alignment: .leading, spacing: 4) {
                             Text("System Checks Access").font(.title3).fontWeight(.medium)
-                            Text("App needs read-only access to system settings that require admin rights, such as firewall and sudo configuration. [Learn more](https://paretosecurity.com/docs/mac/privileged-helper-authorization)")
+                            Text("App needs read-only access to system settings that require admin rights, such as firewall and system configuration. [Learn more](https://paretosecurity.com/docs/mac/privileged-helper-authorization)")
                                 .font(.footnote)
                                 .foregroundColor(.secondary)
                                 .fixedSize(horizontal: false, vertical: true)

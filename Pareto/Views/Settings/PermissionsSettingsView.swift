@@ -95,7 +95,7 @@ struct PermissionsSettingsView: View {
                     icon: "shield.lefthalf.filled",
                     iconTint: .blue,
                     title: "System Checks Access",
-                    message: "App needs read-only access to system settings that require admin rights, such as firewall and sudo configuration.",
+                    message: "App needs read-only access to system settings that require admin rights, such as firewall and system configuration.",
                     learnMoreURL: URL(string: "https://paretosecurity.com/docs/mac/privileged-helper-authorization"),
                     status: status(for: checker.firewallAuthorized),
                     isVerifying: !checker.ran,
