@@ -155,12 +155,12 @@ struct PermissionsView: View {
                     .frame(minWidth: 80)
                 }
 
-                // Firewall Access (macOS 15+ only)
+                // System Checks Access: the privileged helper (macOS 15+ only)
                 if #available(macOS 15, *) {
                     HStack(alignment: .top) {
                         VStack(alignment: .leading, spacing: 4) {
-                            Text("Firewall Access").font(.title3).fontWeight(.medium)
-                            Text("App requires read-only access to firewall to perform checks on macOS 15+. [Learn more](https://paretosecurity.com/docs/mac/privileged-helper-authorization)")
+                            Text("System Checks Access").font(.title3).fontWeight(.medium)
+                            Text("App needs read-only access to system settings that require admin rights, such as firewall and sudo configuration. [Learn more](https://paretosecurity.com/docs/mac/privileged-helper-authorization)")
                                 .font(.footnote)
                                 .foregroundColor(.secondary)
                                 .fixedSize(horizontal: false, vertical: true)
