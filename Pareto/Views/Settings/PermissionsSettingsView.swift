@@ -89,13 +89,13 @@ struct PermissionsSettingsView: View {
             }
             .padding(.bottom, 4)
 
-            // Firewall (macOS 15+)
+            // System Checks Access: the privileged helper (macOS 15+)
             if #available(macOS 15, *) {
                 PermissionCard(
                     icon: "shield.lefthalf.filled",
                     iconTint: .blue,
-                    title: "Firewall Access",
-                    message: "App requires read-only access to firewall to perform checks.",
+                    title: "System Checks Access",
+                    message: "App needs read-only access to system settings that require admin rights, such as firewall and system configuration.",
                     learnMoreURL: URL(string: "https://paretosecurity.com/docs/mac/privileged-helper-authorization"),
                     status: status(for: checker.firewallAuthorized),
                     isVerifying: !checker.ran,

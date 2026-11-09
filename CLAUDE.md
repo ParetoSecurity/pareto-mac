@@ -120,14 +120,14 @@ Pareto Security is a macOS security monitoring app built with SwiftUI. It perfor
 ### Helper Tool System (macOS 15+ Firewall Checks)
 - **Helper Tool**: `/ParetoSecurityHelper/main.swift`
   - XPC service for privileged operations
-  - Static version: `helperToolVersion = "1.0.3"`
+  - Static version: `helperToolVersion = "1.0.4"`
   - Implements `ParetoSecurityHelperProtocol`
   - Functions: `isFirewallEnabled()`, `isFirewallStealthEnabled()`, `getVersion()`
 
 - **Helper Management**: `/Pareto/Extensions/HelperTool.swift`
   - `HelperToolUtilities`: Static utility methods (non-actor-isolated)
   - `HelperToolManager`: Main actor class for XPC communication
-  - Expected version: `expectedHelperVersion = "1.0.3"`
+  - Expected version: `expectedHelperVersion = "1.0.4"`
   - Auto-update logic: `ensureHelperIsUpToDate()`
 
 - **Helper Configuration**: `/ParetoSecurityHelper/co.niteo.ParetoSecurityHelper.plist`
