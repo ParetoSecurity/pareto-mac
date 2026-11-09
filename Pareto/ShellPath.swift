@@ -80,43 +80,17 @@ final class ShellPath {
 
     static func resolveFromLoginShell() -> [String]? {
         let shell = userShell()
-        let output = FileManager.default.temporaryDirectory
-            .appendingPathComponent("pareto-path-\(UUID().uuidString)")
-        defer { try? FileManager.default.removeItem(at: output) }
-
-        // The PATH goes to a file rather than stdout: rc files may print
-        // banners, and a background process they start could keep a pipe open
-        // forever. `printenv` prints a colon-joined PATH in sh, bash, zsh and
-        // fish alike.
-        let command = "/usr/bin/printenv PATH > '\(output.path)'"
-        let process = Process()
-        process.executableURL = URL(fileURLWithPath: shell)
-        process.arguments = ["-i", "-l", "-c", command]
-        process.standardInput = FileHandle.nullDevice
-        process.standardOutput = FileHandle.nullDevice
-        process.standardError = FileHandle.nullDevice
-
-        let finished = DispatchSemaphore(value: 0)
-        process.terminationHandler = { _ in finished.signal() }
-        do {
-            try process.run()
-        } catch {
-            os_log("ShellPath: failed to launch %{public}@: %{public}@", log: Log.app, shell, error.localizedDescription)
+        let home = FileManager.default.homeDirectoryForCurrentUser.resolvingSymlinksInPath()
+        let startupFiles = [".bash_profile", ".bashrc", ".profile", ".zlogin", ".zprofile", ".zshenv", ".zshrc"]
+        let startupDirectories = [".config/fish", ".config/zsh", ".oh-my-zsh"]
+        guard let output = CheckCommand.run(
+            app: shell, args: ["-i", "-l", "-c", "printf '\\nPARETO_PATH='; /usr/bin/printenv PATH"],
+            readFiles: startupFiles.map { home.appendingPathComponent($0).path },
+            readDirectories: startupDirectories.map { home.appendingPathComponent($0).path }, timeout: timeout
+        ), let line = output.components(separatedBy: .newlines).last(where: { $0.hasPrefix("PARETO_PATH=") }) else {
             return nil
         }
-
-        if finished.wait(timeout: .now() + timeout) == .timedOut {
-            // Interactive shells ignore SIGTERM.
-            kill(process.processIdentifier, SIGKILL)
-            os_log("ShellPath: %{public}@ timed out, using fallback search paths", log: Log.app, shell)
-            return nil
-        }
-
-        guard let contents = try? String(contentsOf: output, encoding: .utf8) else {
-            os_log("ShellPath: %{public}@ did not report a PATH", log: Log.app, shell)
-            return nil
-        }
-        let directories = parse(contents)
+        let directories = parse(String(line.dropFirst("PARETO_PATH=".count)))
         return directories.isEmpty ? nil : directories
     }
 

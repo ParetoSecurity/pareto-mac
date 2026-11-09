@@ -32,7 +32,10 @@ class SSHKeysCheck: SSHCheck {
     }
 
     func isPasswordEnabled(withKey path: String) -> Bool {
-        let output = runCMD(app: getSSHKeygenPath(), args: ["-P", "''", "-y", "-f", path])
+        guard let output = runKeygen(args: ["-P", "''", "-y", "-f", path], keyPath: path) else {
+            hasError = true
+            return false
+        }
         return Self.isProtected(keygenOutput: output)
     }
 

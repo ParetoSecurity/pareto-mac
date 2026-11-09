@@ -79,7 +79,7 @@ class PackageManagerSupplyChainTests: XCTestCase {
         exclude-newer = "7 days"
         """.write(to: uvDirectory.appendingPathComponent("uv.toml"), atomically: true, encoding: .utf8)
 
-        let check = PackageManagerSupplyChainCheck(homeDirectory: temporaryDirectory, installedBinaries: [])
+        let check = PackageManagerSupplyChainCheck(homeDirectory: temporaryDirectory, installedBinaries: [], packageManagerVersions: ["npm": "11.14.0"])
 
         XCTAssertTrue(check.checkPasses())
         XCTAssertEqual(check.details, """
@@ -134,7 +134,7 @@ class PackageManagerSupplyChainTests: XCTestCase {
         save-exact=false
         """.write(to: temporaryDirectory.appendingPathComponent(".npmrc"), atomically: true, encoding: .utf8)
 
-        let check = PackageManagerSupplyChainCheck(homeDirectory: temporaryDirectory, installedBinaries: [])
+        let check = PackageManagerSupplyChainCheck(homeDirectory: temporaryDirectory, installedBinaries: [], packageManagerVersions: ["npm": "11.14.0"])
 
         XCTAssertTrue(check.checkPasses())
         XCTAssertEqual(check.details, "- ~/.npmrc delays npm-compatible package releases")
@@ -335,61 +335,94 @@ class PackageManagerSupplyChainTests: XCTestCase {
         XCTAssertLessThan(pyenvShims, homebrew)
     }
 
-    private func makePipHome(pipVersion: String) throws -> (home: URL, shims: URL) {
+    private func temporaryHome() throws -> URL {
         let home = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
-        let pipDirectory = home.appendingPathComponent(".config/pip")
-        let shims = home.appendingPathComponent("shell-shims")
-        try FileManager.default.createDirectory(at: pipDirectory, withIntermediateDirectories: true)
-        try FileManager.default.createDirectory(at: shims, withIntermediateDirectories: true)
-        try """
-        [install]
-        uploaded-prior-to = P7D
-        """.write(to: pipDirectory.appendingPathComponent("pip.conf"), atomically: true, encoding: .utf8)
-        for name in ["pip", "pip3"] {
-            let script = shims.appendingPathComponent(name)
-            try "#!/bin/sh\necho 'pip \(pipVersion) from \(shims.path) (python 3.13)'\n"
-                .write(to: script, atomically: true, encoding: .utf8)
-            try FileManager.default.setAttributes([.posixPermissions: 0o755], ofItemAtPath: script.path)
-        }
-        return (home, shims)
+        try FileManager.default.createDirectory(at: home, withIntermediateDirectories: true)
+        addTeardownBlock { try? FileManager.default.removeItem(at: home) }
+        return home
     }
 
-    func testPackageManagerSupplyChainVersionChecksPipFromShellPath() throws {
-        let (home, shims) = try makePipHome(pipVersion: "26.2.2")
-        defer { try? FileManager.default.removeItem(at: home) }
-
-        let shellPath = ShellPath(resolver: { [shims.path, "/usr/bin", "/bin"] })
-        let check = PackageManagerSupplyChainCheck(homeDirectory: home, shellPath: shellPath)
-
-        let failures = onBackgroundThread { shellPath.withRun { check.validationFailures() } }
-        XCTAssertFalse(failures.contains { $0.contains("pip") }, failures.joined(separator: "\n"))
-    }
-
-    func testPackageManagerSupplyChainFailsWhenShellPathPipIsOld() throws {
-        let (home, shims) = try makePipHome(pipVersion: "21.2.4")
-        defer { try? FileManager.default.removeItem(at: home) }
-
-        let shellPath = ShellPath(resolver: { [shims.path] })
-        let check = PackageManagerSupplyChainCheck(homeDirectory: home, shellPath: shellPath)
-
-        let failures = onBackgroundThread { shellPath.withRun { check.validationFailures() } }
-        XCTAssertTrue(failures.contains("pip is older than 26.1.0 and does not enforce ~/.config/pip/pip.conf uploaded-prior-to"))
-    }
-
-    func testPackageManagerSupplyChainSearchesShellPathFirst() {
-        let home = URL(fileURLWithPath: "/nonexistent-home")
-        let shellPath = ShellPath(resolver: { ["/custom/shims", "/usr/bin"] })
-        let check = PackageManagerSupplyChainCheck(homeDirectory: home, installedBinaries: [], shellPath: shellPath)
-
-        XCTAssertFalse(check.searchDirectories().contains("/custom/shims"))
-        onBackgroundThread {
-            shellPath.withRun {
-                let directories = check.searchDirectories()
-                XCTAssertEqual(directories.first, "/custom/shims")
-                XCTAssertEqual(directories.count, Set(directories).count)
-                XCTAssertTrue(directories.contains("/opt/homebrew/bin"))
+    func testPackageManagerVersionsRejectFailedCommandsAndBlockWrites() throws {
+        for binary in ["npm", "pip", "pip3"] {
+            let home = try temporaryHome()
+            let bin = home.appendingPathComponent(".local/bin")
+            let pipConfig = home.appendingPathComponent(".config/pip")
+            let marker = home.appendingPathComponent("executed")
+            try FileManager.default.createDirectory(at: bin, withIntermediateDirectories: true)
+            try FileManager.default.createDirectory(at: pipConfig, withIntermediateDirectories: true)
+            if binary == "npm" {
+                try "min-release-age=7\nsave-exact=true\n".write(to: home.appendingPathComponent(".npmrc"), atomically: true, encoding: .utf8)
+            } else {
+                try "[install]\nuploaded-prior-to=P7D\n".write(to: pipConfig.appendingPathComponent("pip.conf"), atomically: true, encoding: .utf8)
             }
+            let executable = bin.appendingPathComponent(binary)
+            try "#!/bin/sh\n/usr/bin/touch '\(marker.path)'\necho '99.0.0' >&2\nexit 7\n"
+                .write(to: executable, atomically: true, encoding: .utf8)
+            try FileManager.default.setAttributes([.posixPermissions: 0o755], ofItemAtPath: executable.path)
+            let check = PackageManagerSupplyChainCheck(homeDirectory: home, installedBinaries: [binary])
+
+            XCTAssertFalse(check.checkPasses(), binary)
+            XCTAssertTrue(check.hasError, binary)
+            XCTAssertTrue(check.details.contains("version could not be determined"), binary)
+            XCTAssertFalse(FileManager.default.fileExists(atPath: marker.path), binary)
         }
+    }
+
+    func testVersionDependentConfigCannotPassWithUndiscoveredBinary() throws {
+        let home = try temporaryHome()
+        try "min-release-age=7\nsave-exact=true\n".write(to: home.appendingPathComponent(".npmrc"), atomically: true, encoding: .utf8)
+        let check = PackageManagerSupplyChainCheck(homeDirectory: home, installedBinaries: [])
+
+        XCTAssertFalse(check.checkPasses())
+        XCTAssertTrue(check.hasError)
+        XCTAssertTrue(check.details.contains("version could not be determined"))
+    }
+
+    func testAllVersionGatedManagersCanPassWithSandboxedCommands() throws {
+        let fixtures: [(String, String, String)] = [
+            ("npm", ".npmrc", "min-release-age=7\nsave-exact=true\n"),
+            ("yarn", ".yarnrc.yml", "npmMinimalAgeGate: 7d\n"),
+            ("pip", ".config/pip/pip.conf", "[install]\nuploaded-prior-to=P7D\n"),
+            ("pip3", ".config/pip/pip.conf", "[install]\nuploaded-prior-to=P7D\n"),
+            ("poetry", ".config/pypoetry/config.toml", "[solver]\nmin-release-age=7\n"),
+            ("pdm", ".config/pdm/config.toml", "[strategy]\nexclude-newer=\"7d\"\n"),
+            ("conda", ".condarc", "solver: classic\nexclude_newer: 7d\n"),
+            ("bundle", ".bundle/config", "BUNDLE_COOLDOWN: 7\n"),
+            ("bundler", ".bundle/config", "BUNDLE_COOLDOWN: 7\n"),
+        ]
+        for (binary, configPath, config) in fixtures {
+            let home = try temporaryHome()
+            let bin = home.appendingPathComponent(".local/bin")
+            let configFile = home.appendingPathComponent(configPath)
+            try FileManager.default.createDirectory(at: bin, withIntermediateDirectories: true)
+            try FileManager.default.createDirectory(at: configFile.deletingLastPathComponent(), withIntermediateDirectories: true)
+            try config.write(to: configFile, atomically: true, encoding: .utf8)
+            let executable = bin.appendingPathComponent(binary)
+            try "#!/bin/sh\necho 99.0.0\n".write(to: executable, atomically: true, encoding: .utf8)
+            try FileManager.default.setAttributes([.posixPermissions: 0o755], ofItemAtPath: executable.path)
+            let check = PackageManagerSupplyChainCheck(homeDirectory: home, installedBinaries: [binary])
+
+            XCTAssertTrue(check.checkPasses(), "\(binary): \(check.details)")
+            XCTAssertFalse(check.hasError, binary)
+        }
+    }
+
+    func testSandboxedCommandsCannotReadPrivateFilesOrFollowInstallationSymlinks() throws {
+        let home = try temporaryHome().resolvingSymlinksInPath()
+        let secret = home.appendingPathComponent("private-data")
+        try "private-marker".write(to: secret, atomically: true, encoding: .utf8)
+        try FileManager.default.createSymbolicLink(at: home.appendingPathComponent(".pyenv"), withDestinationURL: home)
+        for target in [secret.path, home.appendingPathComponent(".pyenv/private-data").path] {
+            let output = CheckCommand.run(app: "/bin/cat", args: [target], homeDirectory: home)
+            XCTAssertNil(output, target)
+        }
+    }
+
+    func testSandboxedCommandsDoNotInheritParentEnvironment() throws {
+        let home = try temporaryHome()
+        let output = try XCTUnwrap(CheckCommand.run(app: "/usr/bin/env", args: [], homeDirectory: home))
+        let keys = Set(output.components(separatedBy: .newlines).compactMap { $0.split(separator: "=").first.map(String.init) })
+        XCTAssertEqual(keys, ["HOME", "LANG", "LOGNAME", "PATH", "USER"])
     }
 
     func testPackageManagerSupplyChainUsesPnpmXDGConfigHome() throws {

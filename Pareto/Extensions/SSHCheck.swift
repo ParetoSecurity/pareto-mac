@@ -37,6 +37,13 @@ class SSHCheck: ParetoCheck {
         return sshKeygenPath
     }
 
+    func runKeygen(args: [String], keyPath: String) -> String? {
+        let key = URL(fileURLWithPath: keyPath).resolvingSymlinksInPath().path
+        let publicKey = URL(fileURLWithPath: keyPath + ".pub").resolvingSymlinksInPath().path
+        return CheckCommand.run(app: getSSHKeygenPath(), args: args, readFiles: [key, publicKey],
+                                includeStandardError: true, requireSuccessfulExit: false)
+    }
+
     func hasPrerequites() -> Bool {
         if !itExists(getSSHKeygenPath()) {
             os_log("Not found /opt/homebrew/bin/ssh-keygen or /usr/bin/ssh-keygen, check disabled", log: Log.check)
