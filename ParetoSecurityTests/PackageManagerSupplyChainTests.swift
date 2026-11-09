@@ -335,6 +335,106 @@ class PackageManagerSupplyChainTests: XCTestCase {
         XCTAssertLessThan(pyenvShims, homebrew)
     }
 
+    // MARK: - Apple-bundled binaries (issue #352)
+
+    /// Creates executables in a stand-in for /usr/bin and returns its path.
+    private func appleBundledDirectory(in home: URL, binaries: [String]) throws -> String {
+        let directory = home.appendingPathComponent(".local/bin")
+        try writeExecutables(binaries, in: directory)
+        return directory.path
+    }
+
+    private func writeExecutables(_ binaries: [String], in directory: URL) throws {
+        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        for binary in binaries {
+            let executable = directory.appendingPathComponent(binary)
+            try "#!/bin/sh\necho 1.0.0\n".write(to: executable, atomically: true, encoding: .utf8)
+            try FileManager.default.setAttributes([.posixPermissions: 0o755], ofItemAtPath: executable.path)
+        }
+    }
+
+    func testAppleBundledBinariesAloneDoNotRequireConfigs() throws {
+        let home = try temporaryHome()
+        let apple = try appleBundledDirectory(in: home, binaries: ["pip3", "bundle", "bundler"])
+        let check = PackageManagerSupplyChainCheck(
+            homeDirectory: home,
+            installedBinaries: ["pip3", "bundle", "bundler"],
+            appleBundledDirectories: [apple],
+            systemInstallPrefixes: []
+        )
+        check.configure()
+
+        XCTAssertTrue(check.checkPasses(), check.details)
+        XCTAssertFalse(check.hasError)
+        XCTAssertFalse(check.isRunnable)
+        XCTAssertEqual(check.details, """
+        - \(apple)/pip3 ships with macOS and cannot be upgraded, so it is not checked
+        - \(apple)/bundle ships with macOS and cannot be upgraded, so it is not checked
+        """)
+    }
+
+    func testAppleBundledPipDoesNotFailVersionGate() throws {
+        let home = try temporaryHome()
+        let apple = try appleBundledDirectory(in: home, binaries: ["pip3"])
+        let pipConfig = home.appendingPathComponent(".config/pip")
+        try FileManager.default.createDirectory(at: pipConfig, withIntermediateDirectories: true)
+        try "[install]\nuploaded-prior-to = P7D\n".write(to: pipConfig.appendingPathComponent("pip.conf"), atomically: true, encoding: .utf8)
+        let check = PackageManagerSupplyChainCheck(
+            homeDirectory: home,
+            installedBinaries: ["pip3"],
+            appleBundledDirectories: [apple],
+            systemInstallPrefixes: []
+        )
+
+        XCTAssertTrue(check.checkPasses(), check.details)
+        XCTAssertFalse(check.hasError)
+    }
+
+    func testAppleBundledPipStillFailsWeakConfig() throws {
+        let home = try temporaryHome()
+        let apple = try appleBundledDirectory(in: home, binaries: ["pip3"])
+        let pipConfig = home.appendingPathComponent(".config/pip")
+        try FileManager.default.createDirectory(at: pipConfig, withIntermediateDirectories: true)
+        try "[install]\nuploaded-prior-to = P6D\n".write(to: pipConfig.appendingPathComponent("pip.conf"), atomically: true, encoding: .utf8)
+        let check = PackageManagerSupplyChainCheck(
+            homeDirectory: home,
+            installedBinaries: ["pip3"],
+            appleBundledDirectories: [apple],
+            systemInstallPrefixes: []
+        )
+
+        XCTAssertFalse(check.checkPasses())
+        XCTAssertEqual(check.details, "- ~/.config/pip/pip.conf uploaded-prior-to is below 7 days; set it to at least P7D")
+    }
+
+    func testUserInstalledCopyNextToAppleBundledOneIsStillChecked() throws {
+        let home = try temporaryHome()
+        let apple = try appleBundledDirectory(in: home, binaries: ["pip3", "bundle"])
+        try writeExecutables(["pip3", "bundle"], in: home.appendingPathComponent(".pyenv/shims"))
+        let pipConfig = home.appendingPathComponent(".config/pip")
+        try FileManager.default.createDirectory(at: pipConfig, withIntermediateDirectories: true)
+        try "[install]\nuploaded-prior-to = P7D\n".write(to: pipConfig.appendingPathComponent("pip.conf"), atomically: true, encoding: .utf8)
+        let check = PackageManagerSupplyChainCheck(
+            homeDirectory: home,
+            installedBinaries: ["pip3", "bundle"],
+            packageManagerVersions: ["pip3": "pip 21.2.4 from /usr/lib/pip (python 3.9)"],
+            appleBundledDirectories: [apple],
+            systemInstallPrefixes: []
+        )
+        check.configure()
+
+        XCTAssertTrue(check.isRunnable)
+        XCTAssertFalse(check.checkPasses())
+        XCTAssertEqual(check.details, """
+        - pip3 is older than 26.1.0 and does not enforce ~/.config/pip/pip.conf uploaded-prior-to
+        - ~/.bundle/config is missing
+        """)
+    }
+
+    func testRealAppleDirectoriesAreTreatedAsBundledByDefault() {
+        XCTAssertEqual(PackageManagerSupplyChainCheck().appleBundledDirectories, ["/usr/bin", "/bin", "/usr/sbin", "/sbin"])
+    }
+
     private func temporaryHome() throws -> URL {
         let home = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
         try FileManager.default.createDirectory(at: home, withIntermediateDirectories: true)
