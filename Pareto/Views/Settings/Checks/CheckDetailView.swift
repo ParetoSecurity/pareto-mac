@@ -139,7 +139,7 @@ struct CheckDetailView: View {
                 if check is FirewallExceptionsCheck {
                     Section(header: Text("Apps Accepting Incoming Connections")) {
                         VStack(alignment: .leading, spacing: 8) {
-                            Text("Click Allow on apps that should keep accepting incoming connections.")
+                            Text("Allow apps that should keep accepting incoming connections, or remove the ones you don't need.")
                                 .font(.caption)
                                 .foregroundColor(.secondary)
                             Divider()

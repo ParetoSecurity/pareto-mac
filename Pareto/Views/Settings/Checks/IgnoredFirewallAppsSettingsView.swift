@@ -103,8 +103,9 @@ struct IgnoredFirewallAppsSettingsView: View {
                     section(title: "Allowed by you") {
                         ForEach(model.allowedByUser) { exception in
                             FirewallAppRow(exception: exception) {
-                                Button("Remove") { Task { await model.revoke(exception) } }
+                                Button("Revoke") { Task { await model.revoke(exception) } }
                                     .controlSize(.small)
+                                    .help("Make this app need your review again")
                             }
                         }
                     }
@@ -129,8 +130,8 @@ struct IgnoredFirewallAppsSettingsView: View {
 
             Text("Apple's own apps, App Store apps and entries for removed apps are trusted automatically. "
                 + "Script interpreters such as "
-                + "Python or Ruby always need your review. Manage the list in System Settings > Network > "
-                + "Firewall > Options.")
+                + "Python or Ruby always need your review. Remove… opens System Settings, where you can take "
+                + "the app off the list under Network > Firewall > Options.")
                 .font(.footnote)
                 .foregroundColor(.secondary)
                 .fixedSize(horizontal: false, vertical: true)
@@ -142,6 +143,18 @@ struct IgnoredFirewallAppsSettingsView: View {
         }
         .onReceive(NotificationCenter.default.publisher(for: .runChecksFinished)) { _ in
             Task { await model.load() }
+        }
+        // Pick up apps removed in System Settings as soon as the user comes back.
+        .onReceive(NotificationCenter.default.publisher(for: NSApplication.didBecomeActiveNotification)) { _ in
+            Task { await model.load() }
+        }
+    }
+
+    /// Pareto never changes firewall settings itself, so removing an app happens in System Settings.
+    /// macOS has no link straight to the Firewall pane, so this opens Network, which lists Firewall.
+    static func openFirewallSettings() {
+        if let url = URL(string: "x-apple.systempreferences:com.apple.Network-Settings.extension?Firewall") {
+            NSWorkspace.shared.open(url)
         }
     }
 
@@ -155,9 +168,14 @@ struct IgnoredFirewallAppsSettingsView: View {
             section(title: "Needs review (\(model.needsReview.count))") {
                 ForEach(model.needsReview) { exception in
                     FirewallAppRow(exception: exception) {
-                        Button("Allow") { Task { await model.allow(exception) } }
-                            .controlSize(.small)
-                            .help("Keep accepting incoming connections for this app without failing the check")
+                        HStack(spacing: 6) {
+                            Button("Remove…") { Self.openFirewallSettings() }
+                                .controlSize(.small)
+                                .help("Opens Network settings. Click Firewall, then Options…, and remove the app there.")
+                            Button("Allow") { Task { await model.allow(exception) } }
+                                .controlSize(.small)
+                                .help("Keep accepting incoming connections for this app without failing the check")
+                        }
                     }
                 }
             }
