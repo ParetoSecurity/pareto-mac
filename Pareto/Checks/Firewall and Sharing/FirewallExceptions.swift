@@ -74,26 +74,18 @@ class FirewallExceptionsCheck: ParetoCheck {
     }
 
     static func listApps(app: String = "/usr/libexec/ApplicationFirewall/socketfilterfw") -> String? {
-        let timeout: TimeInterval = 15
-        let output = OSAllocatedUnfairLock<String?>(initialState: nil)
-        let done = DispatchSemaphore(value: 0)
-        Task.detached {
-            do {
-                let result = try await runCMDAsync(
-                    app: app,
-                    args: ["--listapps"],
-                    timeout: timeout,
-                    includeStandardError: false,
-                    requireSuccessfulExit: true
-                )
-                output.withLock { $0 = result }
-            } catch {
-                os_log("socketfilterfw --listapps failed: %{public}@", log: Log.check, String(describing: error))
-            }
-            done.signal()
+        do {
+            return try runCMDWithTimeout(
+                app: app,
+                args: ["--listapps"],
+                timeout: 15,
+                includeStandardError: false,
+                requireSuccessfulExit: true
+            )
+        } catch {
+            os_log("socketfilterfw --listapps failed: %{public}@", log: Log.check, String(describing: error))
+            return nil
         }
-        _ = done.wait(timeout: .now() + timeout + 1)
-        return output.withLock { $0 }
     }
 
     /// Parses `socketfilterfw --listapps`. macOS 13 and 14 print "ALF: total number of apps = N", blank lines and

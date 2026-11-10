@@ -295,6 +295,31 @@ class SSHConfigCheckTests: XCTestCase {
         } catch CommandRunnerError.timedOut {}
     }
 
+    func testSyncCommandRunnerThrowsWhenCommandFails() throws {
+        do {
+            _ = try runCMDWithTimeout(app: "/nonexistent/tool", args: [], requireSuccessfulExit: true)
+            XCTFail("A missing binary must not return output")
+        } catch CommandRunnerError.launchFailed {}
+
+        do {
+            _ = try runCMDWithTimeout(app: "/bin/sh", args: ["-c", "echo out; exit 3"], requireSuccessfulExit: true)
+            XCTFail("Failed commands must not return output")
+        } catch let CommandRunnerError.unsuccessfulExit(status) {
+            XCTAssertEqual(status, 3)
+        }
+    }
+
+    func testSyncCommandRunnerTimesOutEvenIfOutputStaysOpen() throws {
+        for command in ["sleep 10", "sleep 10 &"] {
+            let start = Date()
+            do {
+                _ = try runCMDWithTimeout(app: "/bin/sh", args: ["-c", command], timeout: 0.1)
+                XCTFail("The command must time out: \(command)")
+            } catch CommandRunnerError.timedOut {}
+            XCTAssertLessThan(Date().timeIntervalSince(start), 5, command)
+        }
+    }
+
     func testReadsDefaultSSHConfig() {
         let output = SSHConfigCheck.readSSHConfig(configFile: "/dev/null")
 
