@@ -126,6 +126,31 @@ func runCMDAsync(app: String, args: [String], timeout: TimeInterval = 15.0,
     }
 }
 
+func runCMDWithTimeout(app: String, args: [String], timeout: TimeInterval = 15.0,
+                       includeStandardError: Bool = true, requireSuccessfulExit: Bool = false,
+                       environment: [String: String]? = nil, directory: URL? = nil) throws -> String
+{
+    let result = OSAllocatedUnfairLock<Result<String, Swift.Error>>(initialState: .failure(CommandRunnerError.timedOut))
+    let done = DispatchSemaphore(value: 0)
+    let task = Task.detached {
+        defer { done.signal() }
+        do {
+            let output = try await runCMDAsync(
+                app: app, args: args, timeout: timeout, includeStandardError: includeStandardError,
+                requireSuccessfulExit: requireSuccessfulExit, environment: environment, directory: directory
+            )
+            result.withLock { $0 = .success(output) }
+        } catch {
+            result.withLock { $0 = .failure(error) }
+        }
+    }
+    guard done.wait(timeout: .now() + timeout + 1) == .success else {
+        task.cancel()
+        throw CommandRunnerError.timedOut
+    }
+    return try result.withLock { $0 }.get()
+}
+
 enum CheckCommand {
     private static func canonicalPath(_ path: String) -> String {
         guard let resolved = realpath(path, nil) else { return path }
@@ -183,23 +208,11 @@ enum CheckCommand {
         }
 
         let environment = ["HOME": home.path, "LANG": "C", "LOGNAME": NSUserName(), "PATH": (path + ["/usr/bin", "/bin", "/usr/sbin", "/sbin"]).joined(separator: ":"), "TMPDIR": temporaryPath + "/", "USER": NSUserName()]
-        let output = OSAllocatedUnfairLock<String?>(initialState: nil)
-        let done = DispatchSemaphore(value: 0)
-        let sandboxArgs = parameters + ["-p", profile, app] + args
-        let task = Task.detached {
-            defer { done.signal() }
-            let result = try? await runCMDAsync(
-                app: "/usr/bin/sandbox-exec", args: sandboxArgs,
-                timeout: timeout, includeStandardError: includeStandardError,
-                requireSuccessfulExit: requireSuccessfulExit, environment: environment, directory: home
-            )
-            output.withLock { $0 = result }
-        }
-        guard done.wait(timeout: .now() + timeout + 1) == .success else {
-            task.cancel()
-            return nil
-        }
-        return output.withLock { $0 }
+        return try? runCMDWithTimeout(
+            app: "/usr/bin/sandbox-exec", args: parameters + ["-p", profile, app] + args,
+            timeout: timeout, includeStandardError: includeStandardError,
+            requireSuccessfulExit: requireSuccessfulExit, environment: environment, directory: home
+        )
     }
 }
 

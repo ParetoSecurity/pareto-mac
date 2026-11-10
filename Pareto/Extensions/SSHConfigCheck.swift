@@ -69,24 +69,17 @@ class SSHConfigCheck: ParetoCheck {
         let host = "pareto-probe-\(Foundation.UUID().uuidString.lowercased()).invalid"
         let args = (configFile.map { ["-F", $0] } ?? []) + ["-G", "-oCanonicalizeHostname=no", host]
 
-        let output = OSAllocatedUnfairLock(initialState: "")
-        let done = DispatchSemaphore(value: 0)
-        Task.detached {
-            do {
-                let result = try await runCMDAsync(
-                    app: "/usr/bin/sandbox-exec",
-                    args: ["-p", sandboxProfile, sshBinaryPath] + args,
-                    timeout: timeout,
-                    includeStandardError: false,
-                    requireSuccessfulExit: true
-                )
-                output.withLock { $0 = result }
-            } catch {
-                os_log("ssh -G failed: %{public}@", log: Log.check, error.localizedDescription)
-            }
-            done.signal()
+        do {
+            return try runCMDWithTimeout(
+                app: "/usr/bin/sandbox-exec",
+                args: ["-p", sandboxProfile, sshBinaryPath] + args,
+                timeout: timeout,
+                includeStandardError: false,
+                requireSuccessfulExit: true
+            )
+        } catch {
+            os_log("ssh -G failed: %{public}@", log: Log.check, error.localizedDescription)
+            return ""
         }
-        _ = done.wait(timeout: .now() + timeout + 1)
-        return output.withLock { $0 }
     }
 }
