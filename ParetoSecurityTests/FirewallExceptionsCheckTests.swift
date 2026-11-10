@@ -78,8 +78,26 @@ class FirewallExceptionsCheckTests: XCTestCase {
         "/System/Applications/Calculator.app",
     ]
 
-    private func makeCheck(_ output: String?, requiresHeader: Bool = true) -> FirewallExceptionsCheck {
-        FirewallExceptionsCheck(listAppsProvider: { output }, requiresHeader: requiresHeader)
+    private func makeCheck(
+        _ output: String?,
+        requiresHeader: Bool = true,
+        signers: [String: FirewallExceptionsCheck.Signer] = [:]
+    ) -> FirewallExceptionsCheck {
+        FirewallExceptionsCheck(
+            listAppsProvider: { output },
+            requiresHeader: requiresHeader,
+            signerProvider: { signers[$0] ?? .other }
+        )
+    }
+
+    private func listApps(_ entries: [(String, Bool)]) -> String {
+        var lines = ["Total number of apps = \(entries.count) "]
+        for (index, entry) in entries.enumerated() {
+            lines.append("\(index + 1) : \(entry.0) ")
+            let status = entry.1 ? "(Allow incoming connections)" : "(Block incoming connections)"
+            lines.append("             \(status)")
+        }
+        return lines.joined(separator: "\n") + "\n"
     }
 
     private func app(_ path: String, allows: Bool) -> FirewallExceptionsCheck.App {
@@ -264,6 +282,153 @@ class FirewallExceptionsCheckTests: XCTestCase {
         XCTAssertEqual(check.details, "- /System/Applications/Calculator.app")
     }
 
+    // MARK: - Trusted apps
+
+    func testAppleSignedAppsPass() {
+        let output = listApps([("/usr/libexec/sharingd", true), ("/System/Applications/Calculator.app", true)])
+        let check = makeCheck(output, signers: [
+            "/usr/libexec/sharingd": .apple,
+            "/System/Applications/Calculator.app": .apple,
+        ])
+
+        XCTAssertTrue(check.checkPasses())
+        XCTAssertEqual(check.evaluate()?.map(\.trust), [.apple, .apple])
+    }
+
+    func testAppStoreAppsPass() {
+        let output = listApps([("/Applications/WireGuard.app", true)])
+        let check = makeCheck(output, signers: ["/Applications/WireGuard.app": .appStore])
+
+        XCTAssertTrue(check.checkPasses())
+        XCTAssertEqual(check.evaluate()?.first?.trust, .appStore)
+    }
+
+    func testDeveloperIDAppsFail() {
+        let output = listApps([("/Applications/Transmission.app", true), ("/usr/libexec/sharingd", true)])
+        let check = makeCheck(output, signers: ["/usr/libexec/sharingd": .apple])
+
+        XCTAssertFalse(check.checkPasses())
+        XCTAssertEqual(check.details, "- /Applications/Transmission.app")
+    }
+
+    func testAppleSignedInterpretersStillFail() {
+        let python = "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/"
+            + "Resources/Python.app"
+        let output = listApps([("/usr/bin/python3", true), ("/usr/bin/ruby", true), (python, true)])
+        let check = makeCheck(output, signers: ["/usr/bin/python3": .apple, "/usr/bin/ruby": .apple, python: .apple])
+
+        XCTAssertFalse(check.checkPasses())
+        XCTAssertEqual(check.exceptions(), ["/usr/bin/python3", "/usr/bin/ruby", python])
+    }
+
+    func testInterpreterNames() {
+        for path in ["/usr/bin/python3", "/opt/homebrew/bin/python3.12", "/usr/bin/ruby", "/usr/bin/perl5.34",
+                     "/usr/local/bin/node", "/bin/zsh", "/usr/bin/osascript", "/a/Python.app"]
+        {
+            XCTAssertTrue(FirewallExceptionsCheck.isInterpreter(path), path)
+        }
+        for path in ["/usr/libexec/sharingd", "/Applications/Node Studio.app", "/usr/sbin/smbd", "/a/pythonista"] {
+            XCTAssertFalse(FirewallExceptionsCheck.isInterpreter(path), path)
+        }
+    }
+
+    // MARK: - Helpers inside app bundles
+
+    func testOwningBundle() {
+        XCTAssertEqual(
+            FirewallExceptionsCheck.owningBundle(
+                of: "/Applications/Arc.app/Contents/Frameworks/ArcCore.framework/Versions/A/Helpers/Browser Helper.app"
+            ),
+            "/Applications/Arc.app"
+        )
+        XCTAssertEqual(
+            FirewallExceptionsCheck.owningBundle(of: "/Applications/WiFiman.app/Wrapper/WiFiman.app/WiFiman"),
+            "/Applications/WiFiman.app"
+        )
+        XCTAssertEqual(FirewallExceptionsCheck.owningBundle(of: "/usr/sbin/smbd"), "/usr/sbin/smbd")
+        XCTAssertEqual(
+            FirewallExceptionsCheck.owningBundle(of: "/Applications/Spotify.app"),
+            "/Applications/Spotify.app"
+        )
+    }
+
+    func testHelpersGroupUnderTheirApp() {
+        let helper = "/Applications/Arc.app/Contents/Frameworks/ArcCore.framework/Versions/A/Helpers/Browser Helper.app"
+        let output = listApps([("/Applications/Arc.app/Contents/MacOS/Arc", true), (helper, true)])
+        let check = makeCheck(output)
+
+        let exceptions = check.evaluate()
+        XCTAssertEqual(exceptions?.count, 1)
+        XCTAssertEqual(exceptions?.first?.bundle, "/Applications/Arc.app")
+        XCTAssertEqual(exceptions?.first?.paths, ["/Applications/Arc.app/Contents/MacOS/Arc", helper])
+        XCTAssertEqual(check.details, "- /Applications/Arc.app")
+    }
+
+    func testAllowingAnAppCoversItsHelpers() {
+        Defaults[.ignoredFirewallApps] = ["/Applications/Arc.app"]
+        let helper = "/Applications/Arc.app/Contents/Frameworks/ArcCore.framework/Versions/A/Helpers/Browser Helper.app"
+        let output = listApps([("/Applications/Arc.app/Contents/MacOS/Arc", true), (helper, true)])
+        let check = makeCheck(output)
+
+        XCTAssertTrue(check.checkPasses())
+        XCTAssertEqual(check.evaluate()?.first?.trust, .user)
+    }
+
+    func testAllowingAnAppDoesNotCoverSimilarNames() {
+        Defaults[.ignoredFirewallApps] = ["/Applications/Arc.app"]
+        let check = makeCheck(listApps([("/Applications/Arc.app Beta.app", true)]))
+
+        XCTAssertFalse(check.checkPasses())
+    }
+
+    func testUnsignedHelperInsideTrustedAppFails() {
+        let main = "/Applications/Tool.app/Contents/MacOS/Tool"
+        let helper = "/Applications/Tool.app/Contents/Helpers/agent"
+        let check = makeCheck(listApps([(main, true), (helper, true)]), signers: [main: .appStore])
+
+        XCTAssertFalse(check.checkPasses())
+        XCTAssertNil(check.evaluate()?.first?.trust)
+    }
+
+    func testMissingAppsPass() {
+        let output = listApps([("/Applications/Gone.app", true), ("/usr/libexec/sharingd", true)])
+        let check = makeCheck(output, signers: ["/Applications/Gone.app": .missing, "/usr/libexec/sharingd": .apple])
+
+        XCTAssertTrue(check.checkPasses())
+        XCTAssertEqual(check.evaluate()?.map(\.trust), [.notInstalled, .apple])
+    }
+
+    func testAppsOnUnmountedVolumesStillFail() {
+        XCTAssertEqual(FirewallExceptionsCheck.signer(of: "/Volumes/NotMounted-\(UUID())/Tool.app"), .other)
+    }
+
+    func testSystemProtectedLocations() {
+        XCTAssertTrue(FirewallExceptionsCheck.isSystemProtected("/usr/sbin/cupsd"))
+        XCTAssertTrue(FirewallExceptionsCheck.isSystemProtected("/System/Applications/Calculator.app"))
+        XCTAssertFalse(FirewallExceptionsCheck.isSystemProtected("/usr/local/bin/tool"))
+        XCTAssertFalse(FirewallExceptionsCheck.isSystemProtected("/Applications/Tool.app"))
+        XCTAssertFalse(FirewallExceptionsCheck.isSystemProtected("/opt/homebrew/bin/tool"))
+    }
+
+    func testMainExecutableIsNotAHelper() {
+        let exception = FirewallExceptionsCheck.Exception(
+            bundle: "/Applications/Arc.app",
+            paths: [
+                "/Applications/Arc.app/Contents/MacOS/Arc",
+                "/Applications/Arc.app/Contents/Frameworks/ArcCore.framework/Helpers/Browser Helper.app",
+            ],
+            trust: nil
+        )
+        XCTAssertEqual(FirewallExceptionsCheck.helpers(of: exception).count, 1)
+    }
+
+    func testSignerOfRealBinaries() {
+        XCTAssertEqual(FirewallExceptionsCheck.signer(of: "/usr/libexec/sharingd"), .apple)
+        XCTAssertEqual(FirewallExceptionsCheck.signer(of: "/System/Applications/Calculator.app"), .apple)
+        XCTAssertEqual(FirewallExceptionsCheck.signer(of: "/nonexistent/app"), .missing)
+        XCTAssertEqual(FirewallExceptionsCheck.signer(of: "/bin/sh"), .apple)
+    }
+
     // MARK: - Dependency and registration
 
     func testIsRunnableFollowsFirewallCheck() {
@@ -301,6 +466,15 @@ class FirewallExceptionsCheckTests: XCTestCase {
     func testParsesLiveListApps() throws {
         let output = try XCTUnwrap(FirewallExceptionsCheck.listApps())
         XCTAssertNotNil(FirewallExceptionsCheck.parseListApps(output))
+    }
+
+    func testLiveEvaluationKeepsEveryAllowedEntry() throws {
+        let output = try XCTUnwrap(FirewallExceptionsCheck.listApps())
+        let allowed = try XCTUnwrap(FirewallExceptionsCheck.parseListApps(output)).filter(\.allowsIncoming).map(\.path)
+        let check = FirewallExceptionsCheck(listAppsProvider: { output })
+        let exceptions = try XCTUnwrap(check.evaluate())
+
+        XCTAssertEqual(exceptions.flatMap(\.paths).sorted(), allowed.sorted())
     }
 
     func testListAppsOutputIsNotLocalized() throws {

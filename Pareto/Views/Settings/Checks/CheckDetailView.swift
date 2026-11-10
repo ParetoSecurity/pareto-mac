@@ -137,9 +137,11 @@ struct CheckDetailView: View {
                 }
 
                 if check is FirewallExceptionsCheck {
-                    Section(header: Text("Ignored Firewall Apps")) {
+                    Section(header: Text("Apps Accepting Incoming Connections")) {
                         VStack(alignment: .leading, spacing: 8) {
-                            Text("Choose apps that may keep accepting incoming connections without failing this check.").font(.caption).foregroundColor(.secondary)
+                            Text("Allow apps that should keep accepting incoming connections, or remove the ones you don't need.")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
                             Divider()
                             IgnoredFirewallAppsSettingsView().padding(.vertical, 4)
                         }
