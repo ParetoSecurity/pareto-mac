@@ -33,4 +33,44 @@ class CheckIntegrationTest: XCTestCase {
         XCTAssertFalse(claim.checksPassed)
         XCTAssertNotEqual(claim.menu(), nil)
     }
+
+    func testDisplayStatusErrorTakesPrecedence() {
+        let check = IntegrationCheck()
+        check.configure()
+        defer { check.hasError = false }
+
+        // Resolved pass
+        check.checkPassed = true
+        check.hasError = false
+        XCTAssertEqual(check.displayStatus, .passing)
+
+        // Resolved fail
+        check.checkPassed = false
+        XCTAssertEqual(check.displayStatus, .failing)
+
+        // Error with a true (stale or provisional) result
+        check.checkPassed = true
+        check.hasError = true
+        XCTAssertEqual(check.displayStatus, .error)
+
+        // Error with a false result
+        check.checkPassed = false
+        XCTAssertEqual(check.displayStatus, .error)
+    }
+
+    func testClaimAggregateIncludesErrors() {
+        let check = IntegrationCheck()
+        let claim = Claim(withTitle: "Test", withChecks: [check])
+        claim.configure()
+        claim.run()
+        defer { check.hasError = false }
+
+        XCTAssertTrue(claim.checksPassed)
+        XCTAssertTrue(claim.checksPassedWithoutError)
+
+        check.hasError = true
+        XCTAssertTrue(claim.checksPassed)
+        XCTAssertFalse(claim.checksNoError)
+        XCTAssertFalse(claim.checksPassedWithoutError)
+    }
 }

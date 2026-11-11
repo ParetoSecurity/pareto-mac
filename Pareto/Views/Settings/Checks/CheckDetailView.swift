@@ -53,7 +53,7 @@ struct CheckDetailView: View {
         if statusDetails.isEmpty || statusDetails == "None" {
             return false
         }
-        return !check.checkPassed || check.showDetailsWhenPassing
+        return check.hasError || !check.checkPassed || check.showDetailsWhenPassing
     }
 
     var body: some View {

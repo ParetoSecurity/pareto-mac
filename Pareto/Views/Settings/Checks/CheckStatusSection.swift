@@ -61,7 +61,10 @@ struct CheckStatusSection: View {
 
     @ViewBuilder
     private var statusLabel: some View {
-        if check.checkPassed {
+        if check.hasError {
+            Label("Unable to check", systemImage: "questionmark.circle.fill")
+                .foregroundColor(.orange)
+        } else if check.checkPassed {
             Label("Passing", systemImage: "checkmark.circle.fill")
                 .foregroundColor(.green)
         } else if check is TimeMachineCheck {

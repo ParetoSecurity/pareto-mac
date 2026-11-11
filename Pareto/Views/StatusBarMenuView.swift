@@ -24,7 +24,7 @@ struct StatusBarMenuView: View {
     private var claimsPassed: Bool {
         Claims.global.all.allSatisfy { claim in
             claim.checksSorted.allSatisfy { check in
-                check.isRunnable ? check.isActive && check.checkPassed : true
+                check.isRunnable ? check.isActive && check.checkPassed && !check.hasError : true
             }
         }
     }
@@ -203,12 +203,12 @@ struct ClaimMenuView: View {
     @Default(.alternativeColor) private var alternativeColor
 
     private var statusSymbol: String {
-        claim.checksPassed ? "✓" : "✕"
+        claim.checksPassedWithoutError ? "✓" : "✕"
     }
 
     private var statusColor: Color {
         _ = alternativeColor
-        return Color(nsColor: claim.checksPassed ? Defaults.OKColor() : Defaults.FailColor())
+        return Color(nsColor: claim.checksPassedWithoutError ? Defaults.OKColor() : Defaults.FailColor())
     }
 
     private var title: Text {
@@ -237,19 +237,24 @@ struct CheckMenuItemView: View {
     @Default(.alternativeColor) private var alternativeColor
 
     private var statusSymbol: String {
-        if check.isRunnable {
-            check.checkPassed ? "✓" : "✕"
-        } else {
-            "–"
+        switch check.displayStatus {
+        case .passing: "✓"
+        case .failing: "✕"
+        case .error: "?"
+        case .disabled, .cannotRun: "–"
         }
     }
 
     private var statusColor: Color {
         _ = alternativeColor
-        if check.isRunnable {
-            return Color(nsColor: check.checkPassed ? Defaults.OKColor() : Defaults.FailColor())
+        switch check.displayStatus {
+        case .passing:
+            return Color(nsColor: Defaults.OKColor())
+        case .failing, .error:
+            return Color(nsColor: Defaults.FailColor())
+        case .disabled, .cannotRun:
+            return Color.secondary
         }
-        return Color.secondary
     }
 
     private var title: Text {

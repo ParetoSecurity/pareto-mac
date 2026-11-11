@@ -34,6 +34,27 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
     /// Indicate check has errored
     var hasError = false
 
+    // MARK: - Display status
+
+    enum DisplayStatus: Equatable {
+        case disabled, cannotRun, error, passing, failing
+    }
+
+    /// Status shown in the UI. An error takes precedence over the (possibly stale or
+    /// provisional) pass/fail result, matching `menu()` and the team report.
+    var displayStatus: DisplayStatus {
+        if !isActive {
+            return .disabled
+        }
+        if !isRunnable {
+            return .cannotRun
+        }
+        if hasError {
+            return .error
+        }
+        return checkPassed ? .passing : .failing
+    }
+
     var showInMenu: Bool {
         isActive
     }
