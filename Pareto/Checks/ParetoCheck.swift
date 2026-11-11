@@ -307,6 +307,14 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
         """
     }
 
+    /// Frames per-check JSON records as a JSON array, separating records without a trailing comma.
+    static func reportJSONArray(_ reports: [String]) -> String {
+        if reports.isEmpty {
+            return "[]"
+        }
+        return "[\n" + reports.joined(separator: ",\n") + "\n]"
+    }
+
     func run() -> Bool {
         if !isRunnable {
             os_log("Disabled check %{public}s - %{public}s", log: Log.app, UUID, Title)
