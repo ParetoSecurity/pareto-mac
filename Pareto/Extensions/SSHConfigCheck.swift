@@ -70,7 +70,7 @@ class SSHConfigCheck: ParetoCheck {
         let args = (configFile.map { ["-F", $0] } ?? []) + ["-G", "-oCanonicalizeHostname=no", host]
 
         do {
-            return try runCMDWithTimeout(
+            return try runCMD(
                 app: "/usr/bin/sandbox-exec",
                 args: ["-p", sandboxProfile, sshBinaryPath] + args,
                 timeout: timeout,

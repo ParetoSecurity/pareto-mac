@@ -297,12 +297,12 @@ class SSHConfigCheckTests: XCTestCase {
 
     func testSyncCommandRunnerThrowsWhenCommandFails() throws {
         do {
-            _ = try runCMDWithTimeout(app: "/nonexistent/tool", args: [], requireSuccessfulExit: true)
+            _ = try runCMD(app: "/nonexistent/tool", args: [], requireSuccessfulExit: true)
             XCTFail("A missing binary must not return output")
         } catch CommandRunnerError.launchFailed {}
 
         do {
-            _ = try runCMDWithTimeout(app: "/bin/sh", args: ["-c", "echo out; exit 3"], requireSuccessfulExit: true)
+            _ = try runCMD(app: "/bin/sh", args: ["-c", "echo out; exit 3"], requireSuccessfulExit: true)
             XCTFail("Failed commands must not return output")
         } catch let CommandRunnerError.unsuccessfulExit(status) {
             XCTAssertEqual(status, 3)
@@ -313,7 +313,7 @@ class SSHConfigCheckTests: XCTestCase {
         for command in ["sleep 10", "sleep 10 &"] {
             let start = Date()
             do {
-                _ = try runCMDWithTimeout(app: "/bin/sh", args: ["-c", command], timeout: 0.1)
+                _ = try runCMD(app: "/bin/sh", args: ["-c", command], timeout: 0.1)
                 XCTFail("The command must time out: \(command)")
             } catch CommandRunnerError.timedOut {}
             XCTAssertLessThan(Date().timeIntervalSince(start), 5, command)
@@ -327,11 +327,11 @@ class SSHConfigCheckTests: XCTestCase {
         XCTAssertEqual(SSHHostKeyVerificationCheck.evaluate(sshG: output), true)
     }
 
-    func testSSHOutputIsNotLocalized() {
+    func testSSHOutputIsNotLocalized() throws {
         let args = ["-p", SSHConfigCheck.sandboxProfile, SSHConfigCheck.sshBinaryPath,
                     "-F", "/dev/null", "-G", "-oCanonicalizeHostname=no", "pareto-probe.invalid"]
-        let english = SSHConfigCheck.settings(fromSSHG: runCMD(app: "/usr/bin/sandbox-exec", args: args))
-        let french = SSHConfigCheck.settings(fromSSHG: runCMD(
+        let english = try SSHConfigCheck.settings(fromSSHG: runCMD(app: "/usr/bin/sandbox-exec", args: args))
+        let french = try SSHConfigCheck.settings(fromSSHG: runCMD(
             app: "/usr/bin/sandbox-exec",
             args: args,
             environment: ProcessInfo.processInfo.environment.merging(

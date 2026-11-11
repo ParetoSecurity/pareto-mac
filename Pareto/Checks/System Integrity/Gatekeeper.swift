@@ -46,7 +46,7 @@ class GatekeeperCheck: ParetoCheck {
         }
 
         // falback if global file is not present (probably due to the upgrade)
-        let output = runCMD(app: "/usr/sbin/spctl", args: ["--status"])
+        let output = (try? runCMD(app: "/usr/sbin/spctl", args: ["--status"])) ?? ""
         os_log("spctl fallback, status %{public}@", log: Log.check, output)
         return output.contains("assessments enabled")
     }

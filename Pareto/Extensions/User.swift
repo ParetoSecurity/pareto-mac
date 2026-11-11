@@ -10,7 +10,7 @@ import Foundation
 struct SystemUser {
     static let current = SystemUser()
     var isAdmin: Bool {
-        let groups = runCMD(app: "/usr/bin/id", args: ["-Gn", NSUserName()]).components(separatedBy: " ")
+        let groups = ((try? runCMD(app: "/usr/bin/id", args: ["-Gn", NSUserName()])) ?? "").components(separatedBy: " ")
         return groups.contains("admin")
     }
 }

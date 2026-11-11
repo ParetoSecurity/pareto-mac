@@ -32,7 +32,7 @@ class OpenWiFiCheck: ParetoCheck {
     }
 
     var isRoutedViaVPN: Bool {
-        let data = runCMD(app: "/usr/sbin/netstat", args: ["-rnt"])
+        let data = (try? runCMD(app: "/usr/sbin/netstat", args: ["-rnt"])) ?? ""
 
         for line in data.split(separator: "\n") where line.split(separator: " ").count > 3 {
             let linedata = String(line)

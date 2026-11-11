@@ -157,7 +157,7 @@ private extension NoUnusedUsers {
 
     /// Short names of accounts recorded in the local directory node (includes mobile accounts)
     static func localNodeUserShortNames() -> Set<String> {
-        let output = runCMD(app: "/usr/bin/dscl", args: [".", "-list", "/Users"])
+        let output = (try? runCMD(app: "/usr/bin/dscl", args: [".", "-list", "/Users"])) ?? ""
 
         return Set(
             output
@@ -211,7 +211,7 @@ private extension NoUnusedUsers {
 
     /// Returns the last login date for a user, if any, using /usr/bin/last -1 <user>
     static func lastLoginDate(for user: String) -> Date? {
-        let output = runCMD(app: "/usr/bin/last", args: ["-1", user])
+        let output = (try? runCMD(app: "/usr/bin/last", args: ["-1", user])) ?? ""
 
         // The `last` command prints nothing useful if there is no entry for the user,
         // or it may include lines like "wtmp begins ..." but not a user line.

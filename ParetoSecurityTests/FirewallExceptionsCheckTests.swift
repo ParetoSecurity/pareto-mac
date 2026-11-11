@@ -479,7 +479,7 @@ class FirewallExceptionsCheckTests: XCTestCase {
 
     func testListAppsOutputIsNotLocalized() throws {
         let english = try FirewallExceptionsCheck.parseListApps(XCTUnwrap(FirewallExceptionsCheck.listApps()))
-        let french = FirewallExceptionsCheck.parseListApps(runCMD(
+        let french = try FirewallExceptionsCheck.parseListApps(runCMD(
             app: "/usr/libexec/ApplicationFirewall/socketfilterfw",
             args: ["--listapps"],
             environment: ["LANG": "fr_FR.UTF-8", "LC_ALL": "fr_FR.UTF-8", "AppleLanguages": "(fr)"]
