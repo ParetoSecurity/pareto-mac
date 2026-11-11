@@ -315,6 +315,12 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
         return "[\n" + reports.joined(separator: ",\n") + "\n]"
     }
 
+    /// Gets the asynchronous data that the check needs, then calls `completion`.
+    /// The report paths call this before `run()`.
+    func prefetch(completion: @escaping () -> Void) {
+        completion()
+    }
+
     func run() -> Bool {
         if !isRunnable {
             os_log("Disabled check %{public}s - %{public}s", log: Log.app, UUID, Title)

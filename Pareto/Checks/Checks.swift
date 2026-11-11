@@ -7,6 +7,7 @@
 
 import Defaults
 import Foundation
+import os.log
 
 class Claims: ObservableObject {
     var customChecks: [ParetoCheck] = []
@@ -73,6 +74,29 @@ class Claims: ObservableObject {
             ]),
             Claim(withTitle: "Application Updates", withChecks: Claims.updateChecks + [AutoUpdateAppCheck.sharedInstance, ParetoUpdated.sharedInstance]),
         ].sorted(by: { $0.title.lowercased() < $1.title.lowercased() })
+    }
+
+    /// Configures all claims and waits for the pending lookups of their checks.
+    /// The wait stops after `timeout` seconds.
+    func prepareForReport(timeout: TimeInterval = 65) -> [ParetoCheck] {
+        all.forEach { $0.configure() }
+        let checks = all.flatMap(\.checksSorted)
+        Self.prefetch(checks, timeout: timeout)
+        return checks
+    }
+
+    @discardableResult
+    static func prefetch(_ checks: [ParetoCheck], timeout: TimeInterval) -> Bool {
+        let group = DispatchGroup()
+        for check in checks {
+            group.enter()
+            check.prefetch { group.leave() }
+        }
+        if group.wait(timeout: .now() + timeout) == .timedOut {
+            os_log("Timed out waiting for checks to resolve before report", log: Log.app)
+            return false
+        }
+        return true
     }
 
     static let updateChecks = [

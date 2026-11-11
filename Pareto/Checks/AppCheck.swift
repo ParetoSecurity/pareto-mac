@@ -44,6 +44,7 @@ private struct AppStoreResult: Codable {
 private struct LatestVersionLookupState {
     var inFlight = false
     var lastFailure: Date?
+    var waiters: [() -> Void] = []
 }
 
 class AppCheck: ParetoCheck, AppCheckProtocol {
@@ -162,20 +163,33 @@ class AppCheck: ParetoCheck, AppCheckProtocol {
         latestVersionLookup.withLock { $0.lastFailure != nil }
     }
 
-    private func refreshLatestVersionIfNeeded() {
-        let shouldStart = latestVersionLookup.withLock { state in
+    /// Starts a latest-version lookup unless one is in flight or a recent one failed.
+    /// `completion` runs when the in-flight lookup finishes, or right away when no lookup runs.
+    private func refreshLatestVersionIfNeeded(completion: (() -> Void)? = nil) {
+        let (shouldStart, queued) = latestVersionLookup.withLock { state -> (Bool, Bool) in
             if state.inFlight {
-                return false
+                if let completion {
+                    state.waiters.append(completion)
+                }
+                return (false, completion != nil)
             }
             if let lastFailure = state.lastFailure,
                Date().timeIntervalSince(lastFailure) < AppCheck.failedLookupRetryInterval
             {
-                return false
+                return (false, false)
             }
             state.inFlight = true
-            return true
+            if let completion {
+                state.waiters.append(completion)
+            }
+            return (true, completion != nil)
         }
-        guard shouldStart else { return }
+        guard shouldStart else {
+            if !queued {
+                completion?()
+            }
+            return
+        }
 
         getLatestVersion { version in
             self.handleLatestVersionLookup(version)
@@ -188,20 +202,36 @@ class AppCheck: ParetoCheck, AppCheckProtocol {
     /// Records the result of a latest-version lookup. Unparseable or 0.0.0 results are
     /// lookup failures: they are not cached, so they can never certify an app as up to date.
     func handleLatestVersionLookup(_ version: String) {
+        let waiters: [() -> Void]
         if let latest = Version(version), latest > Version(0, 0, 0) {
             try? AppInfo.versionStorage.setObject(latest, forKey: appBundle)
-            latestVersionLookup.withLock { state in
+            waiters = latestVersionLookup.withLock { state in
                 state.inFlight = false
                 state.lastFailure = nil
+                defer { state.waiters.removeAll() }
+                return state.waiters
             }
         } else {
             os_log("%{public}s latest version lookup failed, keeping previous result", appBundle)
             try? AppInfo.versionStorage.removeObject(forKey: appBundle)
-            latestVersionLookup.withLock { state in
+            waiters = latestVersionLookup.withLock { state in
                 state.inFlight = false
                 state.lastFailure = Date()
+                defer { state.waiters.removeAll() }
+                return state.waiters
             }
         }
+        waiters.forEach { $0() }
+    }
+
+    /// Gets the latest version before a report runs.
+    /// The report then does not compare against a pending lookup.
+    override func prefetch(completion: @escaping () -> Void) {
+        guard isInstalled, isRunnable, cachedLatestVersion == nil else {
+            completion()
+            return
+        }
+        refreshLatestVersionIfNeeded(completion: completion)
     }
 
     var applicationSearchDirectories: [String] {

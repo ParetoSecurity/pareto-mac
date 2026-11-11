@@ -34,6 +34,8 @@ class AppLibreOfficeCheck: AppCheck {
     static let sharedInstance = AppLibreOfficeCheck()
     private let latestVersionsLock = OSAllocatedUnfairLock<[Version]>(initialState: [Version(0, 0, 0)])
     private let latestVersionsInFlight = OSAllocatedUnfairLock(initialState: false)
+    private let latestVersionsResolved = OSAllocatedUnfairLock(initialState: false)
+    private let latestVersionsWaiters = OSAllocatedUnfairLock<[() -> Void]>(initialState: [])
 
     override var appName: String {
         "LibreOffice"
@@ -93,7 +95,10 @@ class AppLibreOfficeCheck: AppCheck {
         return latestVersionsLock.withLock { $0 }
     }
 
-    private func refreshLatestVersionsIfNeeded() {
+    private func refreshLatestVersionsIfNeeded(completion: (() -> Void)? = nil) {
+        if let completion {
+            latestVersionsWaiters.withLock { $0.append(completion) }
+        }
         let shouldStart = latestVersionsInFlight.withLock { inFlight in
             if inFlight {
                 return false
@@ -106,11 +111,28 @@ class AppLibreOfficeCheck: AppCheck {
         getLatestVersions { versions in
             let parsed = versions.map { Version($0) ?? Version(0, 0, 0) }
             self.latestVersionsLock.withLock { $0 = parsed }
-            self.latestVersionsInFlight.withLock { $0 = false }
+            self.latestVersionsResolved.withLock { $0 = true }
+            let waiters = self.latestVersionsInFlight.withLock { inFlight in
+                inFlight = false
+                return self.latestVersionsWaiters.withLock { waiters in
+                    defer { waiters.removeAll() }
+                    return waiters
+                }
+            }
+            waiters.forEach { $0() }
             DispatchQueue.main.async {
                 self.objectWillChange.send()
             }
         }
+    }
+
+    /// Gets the maintained releases before a report runs.
+    override func prefetch(completion: @escaping () -> Void) {
+        guard isInstalled, isRunnable, !latestVersionsResolved.withLock({ $0 }) else {
+            completion()
+            return
+        }
+        refreshLatestVersionsIfNeeded(completion: completion)
     }
 
     override func checkPasses() -> Bool {

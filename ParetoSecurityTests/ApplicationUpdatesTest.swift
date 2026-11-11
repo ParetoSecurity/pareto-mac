@@ -92,6 +92,50 @@ private class LookupAppCheck: AppCheck {
     }
 }
 
+private class DelayedLookupAppCheck: AppCheck {
+    let directories: [String]
+    let onlineVersion: String
+    let bundle = "com.example.delayed.\(Foundation.UUID().uuidString)"
+    var lookups = 0
+
+    init(directories: [String], onlineVersion: String) {
+        self.directories = directories
+        self.onlineVersion = onlineVersion
+    }
+
+    override var UUID: String {
+        bundle
+    }
+
+    override var appName: String {
+        "TestApp"
+    }
+
+    override var appMarketingName: String {
+        "Test App"
+    }
+
+    override var appBundle: String {
+        bundle
+    }
+
+    override var applicationSearchDirectories: [String] {
+        directories
+    }
+
+    override var supportsRecentlyUsed: Bool {
+        false
+    }
+
+    override func getLatestVersion(completion: @escaping (String) -> Void) {
+        lookups += 1
+        let version = onlineVersion
+        AppCheck.queue.asyncAfter(deadline: .now() + 0.3) {
+            completion(version)
+        }
+    }
+}
+
 class ApplicationUpdatesTest: XCTestCase {
     private func installedAppDirectory(version: String = "1.0.0") throws -> URL {
         let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
@@ -168,6 +212,89 @@ class ApplicationUpdatesTest: XCTestCase {
         _ = app.evaluate()
         XCTAssertEqual(app.lookups, 1)
         XCTAssertFalse(app.evaluate())
+    }
+
+    private func installFixture(version: String) throws -> URL {
+        let temporaryDirectory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        let contentsDirectory = temporaryDirectory.appendingPathComponent("TestApp.app/Contents")
+        try FileManager.default.createDirectory(at: contentsDirectory, withIntermediateDirectories: true)
+        let plist = ["CFBundleShortVersionString": version] as NSDictionary
+        XCTAssertTrue(plist.write(toFile: contentsDirectory.appendingPathComponent("Info.plist").path, atomically: true))
+        return temporaryDirectory
+    }
+
+    private func reportAfterPrefetch(installed: String, online: String) throws -> (DelayedLookupAppCheck, Bool) {
+        let directory = try installFixture(version: installed)
+        let app = DelayedLookupAppCheck(directories: [directory.path], onlineVersion: online)
+        addTeardownBlock {
+            try? FileManager.default.removeItem(at: directory)
+            try? AppInfo.versionStorage.removeObject(forKey: app.appBundle)
+            UserDefaults.standard.removeObject(forKey: app.EnabledKey)
+            UserDefaults.standard.removeObject(forKey: app.PassesKey)
+            UserDefaults.standard.removeObject(forKey: app.TimestampKey)
+        }
+        app.configure()
+        XCTAssertTrue(app.isRunnable)
+
+        XCTAssertTrue(Claims.prefetch([app], timeout: 5))
+        return (app, app.run())
+    }
+
+    func testReportReflectsResolvedNewerVersionOnColdCache() throws {
+        guard NetworkHandler.sharedInstance().currentStatus == .satisfied else {
+            throw XCTSkip("Needs a satisfied network path")
+        }
+        let (app, result) = try reportAfterPrefetch(installed: "1.0.0", online: "2.0.0")
+
+        XCTAssertFalse(result)
+        XCTAssertEqual(app.report, "\(app.UUID):false")
+        XCTAssertEqual(app.lookups, 1)
+    }
+
+    func testReportPassesWhenResolvedVersionMatches() throws {
+        guard NetworkHandler.sharedInstance().currentStatus == .satisfied else {
+            throw XCTSkip("Needs a satisfied network path")
+        }
+        let (app, result) = try reportAfterPrefetch(installed: "1.0.0", online: "1.0.0")
+
+        XCTAssertTrue(result)
+        XCTAssertEqual(app.report, "\(app.UUID):true")
+    }
+
+    func testPrefetchCompletesWhenLookupFails() throws {
+        let (app, _) = try reportAfterPrefetch(installed: "1.0.0", online: "0.0.0")
+
+        XCTAssertTrue(app.latestVersionLookupFailed)
+        XCTAssertNil(try? AppInfo.versionStorage.object(forKey: app.appBundle))
+    }
+
+    func testPrefetchCompletesWhenRecentLookupFailed() throws {
+        let app = try makeLookupCheck(responses: ["0.0.0", "2.0.0"])
+        app.configure()
+        addTeardownBlock {
+            UserDefaults.standard.removeObject(forKey: app.EnabledKey)
+            UserDefaults.standard.removeObject(forKey: app.PassesKey)
+            UserDefaults.standard.removeObject(forKey: app.TimestampKey)
+        }
+        XCTAssertTrue(Claims.prefetch([app], timeout: 1))
+        XCTAssertTrue(app.latestVersionLookupFailed)
+
+        // A failed lookup is not retried right away, so the second prefetch must not wait for one
+        XCTAssertTrue(Claims.prefetch([app], timeout: 1))
+        XCTAssertEqual(app.lookups, 1)
+    }
+
+    func testPrefetchSkipsLookupWhenVersionIsCached() throws {
+        let directory = try installFixture(version: "1.0.0")
+        let app = DelayedLookupAppCheck(directories: [directory.path], onlineVersion: "2.0.0")
+        defer {
+            try? FileManager.default.removeItem(at: directory)
+            try? AppInfo.versionStorage.removeObject(forKey: app.appBundle)
+        }
+        try AppInfo.versionStorage.setObject(Version(1, 0, 0), forKey: app.appBundle)
+
+        XCTAssertTrue(Claims.prefetch([app], timeout: 1))
+        XCTAssertEqual(app.lookups, 0)
     }
 
     func testUninstalledAppDoesNotFailWithCachedLatestVersion() {
