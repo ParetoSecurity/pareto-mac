@@ -90,15 +90,15 @@ class AppDelegate: AppHandlers, NSApplicationDelegate {
         if CommandLine.arguments.contains("-report-json") {
             // invalidate possible expired cache
             try! AppInfo.versionStorage.removeAll()
-            print("[")
+            var reports: [String] = []
             for claim in Claims.global.all {
                 claim.configure()
                 for check in claim.checksSorted {
                     _ = check.run()
-                    print(check.reportJSON + ",\n")
+                    reports.append(check.reportJSON)
                 }
             }
-            print("]")
+            print(ParetoCheck.reportJSONArray(reports))
             exit(0)
         }
 

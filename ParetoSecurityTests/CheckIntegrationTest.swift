@@ -25,6 +25,32 @@ class CheckIntegrationTest: XCTestCase {
         XCTAssertTrue(check.checkPasses())
     }
 
+    func testReportJSONArrayIsValidJSON() throws {
+        let passing = IntegrationCheck()
+        let failing = IntegrationCheckFails()
+        _ = passing.run()
+        _ = failing.run()
+
+        for checks in [[], [passing], [passing, failing]] as [[ParetoCheck]] {
+            let output = ParetoCheck.reportJSONArray(checks.map(\.reportJSON))
+
+            // Foundation's parser tolerates trailing commas, so assert on separators explicitly
+            let compact = output.filter { !$0.isWhitespace }
+            XCTAssertFalse(compact.contains(",]"), "Trailing comma in: \(output)")
+            XCTAssertTrue(compact.hasPrefix("["))
+            XCTAssertTrue(compact.hasSuffix("]"))
+
+            let parsed = try XCTUnwrap(
+                JSONSerialization.jsonObject(with: Data(output.utf8)) as? [[String: String]]
+            )
+            XCTAssertEqual(parsed.count, checks.count)
+            for (record, check) in zip(parsed, checks) {
+                XCTAssertEqual(record["uuid"], check.UUID)
+                XCTAssertEqual(record["checkPassed"], "\(check.checkPassed)")
+            }
+        }
+    }
+
     func testClaimLogic() {
         let claim = Claim(withTitle: "Test", withChecks: [IntegrationCheck(), IntegrationCheckFails()])
         claim.configure()
