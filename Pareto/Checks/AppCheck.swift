@@ -119,17 +119,44 @@ class AppCheck: ParetoCheck, AppCheckProtocol {
             return
         }
         os_log("Requesting %{public}s", request.debugDescription)
-        Network.session.request(viaEdgeCache(request.description)).responseDecodable(of: AppStoreResponse.self, queue: AppCheck.queue, completionHandler: { response in
-            if let version = response.value?.results.first, response.error == nil {
-                completion(version.version)
-                return
-            } else {
-                os_log("%{public}s failed: %{public}s", self.appBundle, response.error.debugDescription)
-                self.hasError = true
-                completion("0.0.0")
+        let directURL = request.description
+        let edgeURL = viaEdgeCache(directURL)
+        requestAppStoreVersion(edgeURL) { version, statusCode in
+            // Apple intermittently answers the edge cache with 403; ask Apple directly instead.
+            if version == nil, AppCheck.shouldRetryDirect(statusCode: statusCode, requestedURL: edgeURL, directURL: directURL) {
+                os_log("%{public}s edge cache returned 403, retrying directly", self.appBundle)
+                self.requestAppStoreVersion(directURL) { version, _ in
+                    self.finishAppStoreLookup(version, completion: completion)
+                }
                 return
             }
-        })
+            self.finishAppStoreLookup(version, completion: completion)
+        }
+    }
+
+    /// True when an App Store lookup through the edge cache was refused and should go to Apple directly.
+    static func shouldRetryDirect(statusCode: Int?, requestedURL: String, directURL: String) -> Bool {
+        statusCode == 403 && requestedURL != directURL
+    }
+
+    private func requestAppStoreVersion(_ url: String, completion: @escaping (String?, Int?) -> Void) {
+        Network.session.request(url).responseDecodable(of: AppStoreResponse.self, queue: AppCheck.queue) { response in
+            if let version = response.value?.results.first, response.error == nil {
+                completion(version.version, response.response?.statusCode)
+            } else {
+                os_log("%{public}s failed: %{public}s", self.appBundle, response.error.debugDescription)
+                completion(nil, response.response?.statusCode)
+            }
+        }
+    }
+
+    private func finishAppStoreLookup(_ version: String?, completion: @escaping (String) -> Void) {
+        if let version {
+            completion(version)
+        } else {
+            hasError = true
+            completion("0.0.0")
+        }
     }
 
     override var help: String? {
