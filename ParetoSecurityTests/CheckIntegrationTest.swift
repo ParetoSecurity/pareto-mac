@@ -47,6 +47,7 @@ class CheckIntegrationTest: XCTestCase {
             for (record, check) in zip(parsed, checks) {
                 XCTAssertEqual(record["uuid"], check.UUID)
                 XCTAssertEqual(record["checkPassed"], "\(check.checkPassed)")
+                XCTAssertEqual(record["hasError"], "\(check.hasError)")
             }
         }
     }

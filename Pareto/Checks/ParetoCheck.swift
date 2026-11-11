@@ -287,8 +287,9 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
         "None"
     }
 
+    /// One `-report` line: `uuid:true`, `uuid:false`, or `uuid:error` when the last run could not get a result.
     var report: String {
-        "\(UUID):\(checkPassed)"
+        hasError ? "\(UUID):error" : "\(UUID):\(checkPassed)"
     }
 
     var help: String? {
@@ -302,7 +303,8 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
         "uuid": "\(UUID)",
         "isActive": "\(isActive)",
         "isRunnable": "\(isRunnable)",
-        "checkPassed": "\(checkPassed)"
+        "checkPassed": "\(checkPassed)",
+        "hasError": "\(hasError)"
         }
         """
     }
