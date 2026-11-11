@@ -287,8 +287,9 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
         "None"
     }
 
+    /// One `-report` line: `uuid:true`, `uuid:false`, or `uuid:error` when the last run could not get a result.
     var report: String {
-        "\(UUID):\(checkPassed)"
+        hasError ? "\(UUID):error" : "\(UUID):\(checkPassed)"
     }
 
     var help: String? {
@@ -302,7 +303,8 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
         "uuid": "\(UUID)",
         "isActive": "\(isActive)",
         "isRunnable": "\(isRunnable)",
-        "checkPassed": "\(checkPassed)"
+        "checkPassed": "\(checkPassed)",
+        "hasError": "\(hasError)"
         }
         """
     }
@@ -313,6 +315,12 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
             return "[]"
         }
         return "[\n" + reports.joined(separator: ",\n") + "\n]"
+    }
+
+    /// Gets the asynchronous data that the check needs, then calls `completion`.
+    /// The report paths call this before `run()`.
+    func prefetch(completion: @escaping () -> Void) {
+        completion()
     }
 
     func run() -> Bool {

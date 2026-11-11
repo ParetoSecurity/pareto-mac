@@ -92,6 +92,96 @@ private class LookupAppCheck: AppCheck {
     }
 }
 
+private class DelayedLookupAppCheck: AppCheck {
+    let directories: [String]
+    let onlineVersion: String
+    let bundle = "com.example.delayed.\(Foundation.UUID().uuidString)"
+    var lookups = 0
+
+    init(directories: [String], onlineVersion: String) {
+        self.directories = directories
+        self.onlineVersion = onlineVersion
+    }
+
+    override var UUID: String {
+        bundle
+    }
+
+    override var appName: String {
+        "TestApp"
+    }
+
+    override var appMarketingName: String {
+        "Test App"
+    }
+
+    override var appBundle: String {
+        bundle
+    }
+
+    override var applicationSearchDirectories: [String] {
+        directories
+    }
+
+    override var supportsRecentlyUsed: Bool {
+        false
+    }
+
+    override func getLatestVersion(completion: @escaping (String) -> Void) {
+        lookups += 1
+        let version = onlineVersion
+        AppCheck.queue.asyncAfter(deadline: .now() + 0.3) {
+            completion(version)
+        }
+    }
+}
+
+private class LookupLibreOfficeCheck: AppLibreOfficeCheck {
+    let directories: [String]
+    let installedVersion: Version
+    let identifier = "com.example.libreoffice.\(Foundation.UUID().uuidString)"
+    var responses: [[String]]
+    var lookups = 0
+
+    init(directories: [String], installedVersion: Version, responses: [[String]]) {
+        self.directories = directories
+        self.installedVersion = installedVersion
+        self.responses = responses
+    }
+
+    override var UUID: String {
+        identifier
+    }
+
+    override var appName: String {
+        "TestApp"
+    }
+
+    override var applicationSearchDirectories: [String] {
+        directories
+    }
+
+    override var supportsRecentlyUsed: Bool {
+        false
+    }
+
+    override var currentVersion: Version {
+        installedVersion
+    }
+
+    override func getLatestVersions(completion: @escaping ([String]) -> Void) {
+        lookups += 1
+        completion(responses.isEmpty ? ["0.0.0"] : responses.removeFirst())
+    }
+
+    /// Mirrors ParetoCheck.run(), which clears hasError before evaluating.
+    func evaluate() -> Bool {
+        hasError = false
+        checkPassed = checkPasses()
+        return checkPassed
+    }
+}
+
 class ApplicationUpdatesTest: XCTestCase {
     private func installedAppDirectory(version: String = "1.0.0") throws -> URL {
         let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
@@ -168,6 +258,89 @@ class ApplicationUpdatesTest: XCTestCase {
         _ = app.evaluate()
         XCTAssertEqual(app.lookups, 1)
         XCTAssertFalse(app.evaluate())
+    }
+
+    private func installFixture(version: String) throws -> URL {
+        let temporaryDirectory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        let contentsDirectory = temporaryDirectory.appendingPathComponent("TestApp.app/Contents")
+        try FileManager.default.createDirectory(at: contentsDirectory, withIntermediateDirectories: true)
+        let plist = ["CFBundleShortVersionString": version] as NSDictionary
+        XCTAssertTrue(plist.write(toFile: contentsDirectory.appendingPathComponent("Info.plist").path, atomically: true))
+        return temporaryDirectory
+    }
+
+    private func reportAfterPrefetch(installed: String, online: String) throws -> (DelayedLookupAppCheck, Bool) {
+        let directory = try installFixture(version: installed)
+        let app = DelayedLookupAppCheck(directories: [directory.path], onlineVersion: online)
+        addTeardownBlock {
+            try? FileManager.default.removeItem(at: directory)
+            try? AppInfo.versionStorage.removeObject(forKey: app.appBundle)
+            UserDefaults.standard.removeObject(forKey: app.EnabledKey)
+            UserDefaults.standard.removeObject(forKey: app.PassesKey)
+            UserDefaults.standard.removeObject(forKey: app.TimestampKey)
+        }
+        app.configure()
+        XCTAssertTrue(app.isRunnable)
+
+        XCTAssertTrue(Claims.prefetch([app], timeout: 5))
+        return (app, app.run())
+    }
+
+    func testReportReflectsResolvedNewerVersionOnColdCache() throws {
+        guard NetworkHandler.sharedInstance().currentStatus == .satisfied else {
+            throw XCTSkip("Needs a satisfied network path")
+        }
+        let (app, result) = try reportAfterPrefetch(installed: "1.0.0", online: "2.0.0")
+
+        XCTAssertFalse(result)
+        XCTAssertEqual(app.report, "\(app.UUID):false")
+        XCTAssertEqual(app.lookups, 1)
+    }
+
+    func testReportPassesWhenResolvedVersionMatches() throws {
+        guard NetworkHandler.sharedInstance().currentStatus == .satisfied else {
+            throw XCTSkip("Needs a satisfied network path")
+        }
+        let (app, result) = try reportAfterPrefetch(installed: "1.0.0", online: "1.0.0")
+
+        XCTAssertTrue(result)
+        XCTAssertEqual(app.report, "\(app.UUID):true")
+    }
+
+    func testPrefetchCompletesWhenLookupFails() throws {
+        let (app, _) = try reportAfterPrefetch(installed: "1.0.0", online: "0.0.0")
+
+        XCTAssertTrue(app.latestVersionLookupFailed)
+        XCTAssertNil(try? AppInfo.versionStorage.object(forKey: app.appBundle))
+    }
+
+    func testPrefetchCompletesWhenRecentLookupFailed() throws {
+        let app = try makeLookupCheck(responses: ["0.0.0", "2.0.0"])
+        app.configure()
+        addTeardownBlock {
+            UserDefaults.standard.removeObject(forKey: app.EnabledKey)
+            UserDefaults.standard.removeObject(forKey: app.PassesKey)
+            UserDefaults.standard.removeObject(forKey: app.TimestampKey)
+        }
+        XCTAssertTrue(Claims.prefetch([app], timeout: 1))
+        XCTAssertTrue(app.latestVersionLookupFailed)
+
+        // A failed lookup is not retried right away, so the second prefetch must not wait for one
+        XCTAssertTrue(Claims.prefetch([app], timeout: 1))
+        XCTAssertEqual(app.lookups, 1)
+    }
+
+    func testPrefetchSkipsLookupWhenVersionIsCached() throws {
+        let directory = try installFixture(version: "1.0.0")
+        let app = DelayedLookupAppCheck(directories: [directory.path], onlineVersion: "2.0.0")
+        defer {
+            try? FileManager.default.removeItem(at: directory)
+            try? AppInfo.versionStorage.removeObject(forKey: app.appBundle)
+        }
+        try AppInfo.versionStorage.setObject(Version(1, 0, 0), forKey: app.appBundle)
+
+        XCTAssertTrue(Claims.prefetch([app], timeout: 1))
+        XCTAssertEqual(app.lookups, 0)
     }
 
     func testUninstalledAppDoesNotFailWithCachedLatestVersion() {
@@ -413,5 +586,102 @@ class ApplicationUpdatesTest: XCTestCase {
         }
         print(redirects.joined(separator: "\n"))
         print(names.joined(separator: "\n"))
+    }
+
+    // MARK: - Lookup errors in reports
+
+    private func requireNetwork() throws {
+        guard NetworkHandler.sharedInstance().currentStatus == .satisfied else {
+            throw XCTSkip("Needs a satisfied network path")
+        }
+    }
+
+    func testReportShowsErrorWhenLookupFails() throws {
+        try requireNetwork()
+        let (app, _) = try reportAfterPrefetch(installed: "1.0.0", online: "0.0.0")
+
+        XCTAssertTrue(app.hasError)
+        XCTAssertEqual(app.report, "\(app.UUID):error")
+        let record = try XCTUnwrap(
+            JSONSerialization.jsonObject(with: Data(app.reportJSON.utf8)) as? [String: String]
+        )
+        XCTAssertEqual(record["hasError"], "true")
+    }
+
+    private func makeLibreOfficeCheck(installed: Version, responses: [[String]]) throws -> LookupLibreOfficeCheck {
+        let directory = try installFixture(version: installed.description)
+        let app = LookupLibreOfficeCheck(directories: [directory.path], installedVersion: installed, responses: responses)
+        addTeardownBlock {
+            try? FileManager.default.removeItem(at: directory)
+            UserDefaults.standard.removeObject(forKey: app.EnabledKey)
+            UserDefaults.standard.removeObject(forKey: app.PassesKey)
+            UserDefaults.standard.removeObject(forKey: app.TimestampKey)
+        }
+        return app
+    }
+
+    func testLibreOfficeFailedLookupReportsError() throws {
+        try requireNetwork()
+        for response in [["0.0.0"], [], ["not a version"]] {
+            let app = try makeLibreOfficeCheck(installed: Version(25, 8, 6), responses: [response])
+            app.checkPassed = false
+
+            XCTAssertFalse(app.evaluate(), "response: \(response)")
+            XCTAssertTrue(app.hasError)
+            XCTAssertTrue(app.latestReleasesLookupFailed)
+            XCTAssertNil(app.latestVersions)
+
+            // Re-running keeps the error instead of passing, and does not retry right away
+            XCTAssertFalse(app.evaluate())
+            XCTAssertTrue(app.hasError)
+            XCTAssertEqual(app.lookups, 1)
+        }
+    }
+
+    func testLibreOfficeFailedLookupPreservesPreviousPassingResult() throws {
+        try requireNetwork()
+        let app = try makeLibreOfficeCheck(installed: Version(25, 8, 6), responses: [["0.0.0"]])
+        app.checkPassed = true
+
+        XCTAssertTrue(app.evaluate())
+        XCTAssertTrue(app.hasError)
+    }
+
+    func testLibreOfficeComparesAgainstMaintainedReleases() throws {
+        try requireNetwork()
+        let current = try makeLibreOfficeCheck(installed: Version(25, 8, 6), responses: [["26.2.2", "25.8.6"]])
+        XCTAssertTrue(Claims.prefetch([current], timeout: 1))
+        XCTAssertTrue(current.evaluate())
+        XCTAssertFalse(current.hasError)
+
+        let outdated = try makeLibreOfficeCheck(installed: Version(25, 8, 5), responses: [["26.2.2", "25.8.6"]])
+        XCTAssertTrue(Claims.prefetch([outdated], timeout: 1))
+        XCTAssertFalse(outdated.evaluate())
+        XCTAssertFalse(outdated.hasError)
+        XCTAssertEqual(outdated.lookups, 1)
+    }
+
+    func testLibreOfficeSuccessfulLookupClearsPreviousFailure() throws {
+        try requireNetwork()
+        let app = try makeLibreOfficeCheck(installed: Version(25, 8, 6), responses: [["0.0.0"]])
+        _ = app.evaluate()
+        XCTAssertTrue(app.latestReleasesLookupFailed)
+
+        app.handleLatestVersionsLookup(["26.2.2", "25.8.6"])
+
+        XCTAssertFalse(app.latestReleasesLookupFailed)
+        XCTAssertTrue(app.evaluate())
+        XCTAssertFalse(app.hasError)
+    }
+
+    func testLibreOfficePrefetchCompletesAfterRecentFailure() throws {
+        let app = try makeLibreOfficeCheck(installed: Version(25, 8, 6), responses: [["0.0.0"], ["26.2.2"]])
+        app.configure()
+        XCTAssertTrue(app.isRunnable)
+
+        XCTAssertTrue(Claims.prefetch([app], timeout: 1))
+        XCTAssertTrue(app.latestReleasesLookupFailed)
+        XCTAssertTrue(Claims.prefetch([app], timeout: 1))
+        XCTAssertEqual(app.lookups, 1)
     }
 }

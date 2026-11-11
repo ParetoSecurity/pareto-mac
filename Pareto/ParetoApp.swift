@@ -78,12 +78,9 @@ class AppDelegate: AppHandlers, NSApplicationDelegate {
             // invalidate possible expired cache
             try! AppInfo.versionStorage.removeAll()
 
-            for claim in Claims.global.all {
-                claim.configure()
-                for check in claim.checksSorted {
-                    _ = check.run()
-                    print(check.report + "\n")
-                }
+            for check in Claims.global.prepareForReport() {
+                _ = check.run()
+                print(check.report + "\n")
             }
             exit(0)
         }
@@ -91,12 +88,9 @@ class AppDelegate: AppHandlers, NSApplicationDelegate {
             // invalidate possible expired cache
             try! AppInfo.versionStorage.removeAll()
             var reports: [String] = []
-            for claim in Claims.global.all {
-                claim.configure()
-                for check in claim.checksSorted {
-                    _ = check.run()
-                    reports.append(check.reportJSON)
-                }
+            for check in Claims.global.prepareForReport() {
+                _ = check.run()
+                reports.append(check.reportJSON)
             }
             print(ParetoCheck.reportJSONArray(reports))
             exit(0)
