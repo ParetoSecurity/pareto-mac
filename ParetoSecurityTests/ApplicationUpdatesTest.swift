@@ -48,7 +48,128 @@ private class TestAppCheck: AppCheck {
     }
 }
 
+private class LookupAppCheck: AppCheck {
+    let directories: [String]
+    let bundle = "com.example.lookup.\(Foundation.UUID().uuidString)"
+    var responses: [String]
+    var lookups = 0
+
+    init(directories: [String], responses: [String]) {
+        self.directories = directories
+        self.responses = responses
+    }
+
+    override var appName: String {
+        "TestApp"
+    }
+
+    override var appMarketingName: String {
+        "Test App"
+    }
+
+    override var appBundle: String {
+        bundle
+    }
+
+    override var applicationSearchDirectories: [String] {
+        directories
+    }
+
+    override var isOnline: Bool {
+        true
+    }
+
+    override func getLatestVersion(completion: @escaping (String) -> Void) {
+        lookups += 1
+        completion(responses.isEmpty ? "0.0.0" : responses.removeFirst())
+    }
+
+    /// Mirrors ParetoCheck.run(), which clears hasError before evaluating.
+    func evaluate() -> Bool {
+        hasError = false
+        checkPassed = checkPasses()
+        return checkPassed
+    }
+}
+
 class ApplicationUpdatesTest: XCTestCase {
+    private func installedAppDirectory(version: String = "1.0.0") throws -> URL {
+        let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        let contents = directory.appendingPathComponent("TestApp.app/Contents")
+        try FileManager.default.createDirectory(at: contents, withIntermediateDirectories: true)
+        let plist = ["CFBundleShortVersionString": version] as NSDictionary
+        XCTAssertTrue(plist.write(toFile: contents.appendingPathComponent("Info.plist").path, atomically: true))
+        addTeardownBlock { try? FileManager.default.removeItem(at: directory) }
+        return directory
+    }
+
+    private func makeLookupCheck(responses: [String]) throws -> LookupAppCheck {
+        let app = try LookupAppCheck(directories: [installedAppDirectory().path], responses: responses)
+        try? AppInfo.versionStorage.removeObject(forKey: app.appBundle)
+        addTeardownBlock { try? AppInfo.versionStorage.removeObject(forKey: app.appBundle) }
+        return app
+    }
+
+    func testSuccessfulLookupReportsAvailableUpdate() throws {
+        let app = try makeLookupCheck(responses: ["2.0.0"])
+
+        _ = app.evaluate()
+        XCTAssertFalse(app.evaluate())
+        XCTAssertFalse(app.hasError)
+        XCTAssertEqual(app.cachedLatestVersion, Version(2, 0, 0))
+        XCTAssertEqual(app.lookups, 1)
+    }
+
+    func testFailedLookupIsNotCachedAsPassingVersion() throws {
+        for response in ["0.0.0", "not an appcast", ""] {
+            let app = try makeLookupCheck(responses: [response])
+            app.checkPassed = false
+
+            XCTAssertFalse(app.evaluate(), "response: \(response)")
+            XCTAssertTrue(app.hasError)
+            XCTAssertTrue(app.latestVersionLookupFailed)
+            XCTAssertNil(app.cachedLatestVersion)
+            XCTAssertNil(try? AppInfo.versionStorage.object(forKey: app.appBundle))
+
+            // Re-running keeps the error and previous result instead of passing
+            XCTAssertFalse(app.evaluate())
+            XCTAssertTrue(app.hasError)
+            XCTAssertEqual(app.help, "Current: 1.0.0, Latest: unknown")
+            // Failed lookups are not retried immediately
+            XCTAssertEqual(app.lookups, 1)
+        }
+    }
+
+    func testFailedLookupPreservesPreviousPassingResult() throws {
+        let app = try makeLookupCheck(responses: ["0.0.0"])
+        app.checkPassed = true
+
+        XCTAssertTrue(app.evaluate())
+        XCTAssertTrue(app.hasError)
+    }
+
+    func testSuccessfulLookupClearsPreviousFailure() throws {
+        let app = try makeLookupCheck(responses: ["0.0.0"])
+        _ = app.evaluate()
+        XCTAssertTrue(app.latestVersionLookupFailed)
+
+        app.handleLatestVersionLookup("2.0.0")
+
+        XCTAssertFalse(app.latestVersionLookupFailed)
+        XCTAssertFalse(app.evaluate())
+        XCTAssertFalse(app.hasError)
+    }
+
+    func testCachedZeroVersionIsIgnored() throws {
+        let app = try makeLookupCheck(responses: ["2.0.0"])
+        try AppInfo.versionStorage.setObject(Version(0, 0, 0), forKey: app.appBundle)
+
+        XCTAssertNil(app.cachedLatestVersion)
+        _ = app.evaluate()
+        XCTAssertEqual(app.lookups, 1)
+        XCTAssertFalse(app.evaluate())
+    }
+
     func testUninstalledAppDoesNotFailWithCachedLatestVersion() {
         let app = TestAppCheck(directories: [])
         app.checkPassed = false

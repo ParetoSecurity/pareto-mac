@@ -41,8 +41,16 @@ private struct AppStoreResult: Codable {
     }
 }
 
+private struct LatestVersionLookupState {
+    var inFlight = false
+    var lastFailure: Date?
+}
+
 class AppCheck: ParetoCheck, AppCheckProtocol {
-    private let latestVersionRequestInFlight = OSAllocatedUnfairLock(initialState: false)
+    /// How long to wait before retrying a latest-version lookup that failed.
+    static let failedLookupRetryInterval: TimeInterval = 10 * 60
+
+    private let latestVersionLookup = OSAllocatedUnfairLock(initialState: LatestVersionLookupState())
     var appName: String {
         ""
     }
@@ -124,34 +132,74 @@ class AppCheck: ParetoCheck, AppCheckProtocol {
     }
 
     override var help: String? {
-        "Current: \(currentVersion.description), Latest: \(latestVersion)"
+        let latest = latestVersion
+        let latestDescription = latestVersionLookupFailed ? "unknown" : latest.description
+        return "Current: \(currentVersion.description), Latest: \(latestDescription)"
     }
 
     static let queue = DispatchQueue(label: "co.pareto.check_versions", qos: .userInteractive, attributes: .concurrent)
     var latestVersion: Version {
-        if let cached = try? AppInfo.versionStorage.object(forKey: appBundle) {
+        if let cached = cachedLatestVersion {
             return cached
         }
         refreshLatestVersionIfNeeded()
         return currentVersion
     }
 
+    /// Latest version from a successful lookup, or nil when it is not known.
+    /// A cached 0.0.0 (written by older builds for failed lookups) is not a real version.
+    var cachedLatestVersion: Version? {
+        guard let cached = try? AppInfo.versionStorage.object(forKey: appBundle),
+              cached > Version(0, 0, 0)
+        else {
+            return nil
+        }
+        return cached
+    }
+
+    /// True when the most recent latest-version lookup failed and no successful lookup followed.
+    var latestVersionLookupFailed: Bool {
+        latestVersionLookup.withLock { $0.lastFailure != nil }
+    }
+
     private func refreshLatestVersionIfNeeded() {
-        let shouldStart = latestVersionRequestInFlight.withLock { inFlight in
-            if inFlight {
+        let shouldStart = latestVersionLookup.withLock { state in
+            if state.inFlight {
                 return false
             }
-            inFlight = true
+            if let lastFailure = state.lastFailure,
+               Date().timeIntervalSince(lastFailure) < AppCheck.failedLookupRetryInterval
+            {
+                return false
+            }
+            state.inFlight = true
             return true
         }
         guard shouldStart else { return }
 
         getLatestVersion { version in
-            let latest = Version(version) ?? Version(0, 0, 0)
-            try? AppInfo.versionStorage.setObject(latest, forKey: self.appBundle)
-            self.latestVersionRequestInFlight.withLock { $0 = false }
+            self.handleLatestVersionLookup(version)
             DispatchQueue.main.async {
                 self.objectWillChange.send()
+            }
+        }
+    }
+
+    /// Records the result of a latest-version lookup. Unparseable or 0.0.0 results are
+    /// lookup failures: they are not cached, so they can never certify an app as up to date.
+    func handleLatestVersionLookup(_ version: String) {
+        if let latest = Version(version), latest > Version(0, 0, 0) {
+            try? AppInfo.versionStorage.setObject(latest, forKey: appBundle)
+            latestVersionLookup.withLock { state in
+                state.inFlight = false
+                state.lastFailure = nil
+            }
+        } else {
+            os_log("%{public}s latest version lookup failed, keeping previous result", appBundle)
+            try? AppInfo.versionStorage.removeObject(forKey: appBundle)
+            latestVersionLookup.withLock { state in
+                state.inFlight = false
+                state.lastFailure = Date()
             }
         }
     }
@@ -291,10 +339,20 @@ class AppCheck: ParetoCheck, AppCheckProtocol {
         if !isInstalled {
             return true
         }
-        if NetworkHandler.sharedInstance().currentStatus != .satisfied {
+        if !isOnline {
             return checkPassed
         }
-        return currentVersion >= latestVersion
+        let latest = latestVersion
+        if latestVersionLookupFailed {
+            // Latest version is unknown: report an error and keep the previous result
+            hasError = true
+            return checkPassed
+        }
+        return currentVersion >= latest
+    }
+
+    var isOnline: Bool {
+        NetworkHandler.sharedInstance().currentStatus == .satisfied
     }
 
     @objc override func moreInfo() {
