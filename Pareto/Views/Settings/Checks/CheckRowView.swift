@@ -90,6 +90,12 @@ struct CheckRowView: View {
                 .font(.caption)
                 .foregroundColor(.secondary)
                 .lineLimit(1)
+        } else if check.hasError {
+            // The last run could not determine a result
+            Text("Unable to check")
+                .font(.caption)
+                .foregroundColor(.secondary)
+                .lineLimit(1)
         } else if check.checkPassed {
             // For passing checks
             Text("Passing")
@@ -137,6 +143,8 @@ struct CheckRowView: View {
             Color.gray // Disabled
         } else if !check.isRunnable {
             Color.gray.opacity(0.7) // Cannot run (missing permissions)
+        } else if check.hasError {
+            Color.orange // Errored, result unknown
         } else if check.checkPassed {
             Color.green // Passing (cached)
         } else {

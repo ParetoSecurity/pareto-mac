@@ -98,7 +98,7 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
             await MainActor.run {
                 // Only hide if still temporarily visible, checks pass, and settings not open
                 if self.temporarilyVisible, !self.isSettingsWindowOpen {
-                    let claimsPassed = Claims.global.all.allSatisfy(\.checksPassed)
+                    let claimsPassed = Claims.global.all.allSatisfy(\.checksPassedWithoutError)
                     if claimsPassed {
                         os_log("Auto-hide timer expired - hiding icon", log: Log.app)
                         self.temporarilyVisible = false
@@ -121,7 +121,7 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
                 os_log("updateHiddenState - temporarilyVisible=true, keeping icon visible", log: Log.app)
             } else {
                 // Hide the menu bar icon only when all checks are passing
-                let claimsPassed = Claims.global.all.allSatisfy(\.checksPassed)
+                let claimsPassed = Claims.global.all.allSatisfy(\.checksPassedWithoutError)
                 newValue = !claimsPassed
                 os_log("updateHiddenState - claimsPassed: %{public}@, calculated newValue: %{public}@",
                        log: Log.app, claimsPassed ? "true" : "false", newValue ? "true" : "false")
@@ -279,7 +279,7 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
             NotificationCenter.default.post(name: .runChecksFinished, object: nil)
 
             // Determine overall state
-            let claimsPassed = Claims.global.all.allSatisfy(\.checksPassed)
+            let claimsPassed = Claims.global.all.allSatisfy(\.checksPassedWithoutError)
             Defaults[.checksPassed] = claimsPassed
 
             if Defaults[.snoozeTime] > 0 {
@@ -388,7 +388,7 @@ class AppHandlers: NSObject, ObservableObject, NetworkHandlerObserver {
         // Apply last saved state (if any) to the status icon immediately
         // so the app reflects the previous run before the next scheduled run.
         if Defaults[.lastCheck] > 0 {
-            let claimsPassed = Claims.global.all.allSatisfy(\.checksPassed)
+            let claimsPassed = Claims.global.all.allSatisfy(\.checksPassedWithoutError)
             Defaults[.checksPassed] = claimsPassed
             if Defaults[.snoozeTime] > 0 {
                 statusBarModel.state = .idle

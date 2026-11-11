@@ -42,6 +42,11 @@ class Claim: Hashable {
         checks.allSatisfy { $0.isRunnable ? !$0.hasError : true }
     }
 
+    /// All runnable checks passed and none of them errored.
+    var checksPassedWithoutError: Bool {
+        checksPassed && checksNoError
+    }
+
     func addSubmenu(withTitle: String, action: Selector?) -> NSMenuItem {
         let item = NSMenuItem(title: withTitle, action: action, keyEquivalent: "")
         item.target = self
