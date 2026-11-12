@@ -20,6 +20,11 @@ class AppTailscaleCheck: AppCheck {
         "io.tailscale.ipn.macos"
     }
 
+    /// The standalone build (io.tailscale.ipn.macsys) updates via Sparkle; the App Store build uses the lookup API.
+    override var sparkleURL: String {
+        "https://pkgs.tailscale.com/stable/appcast.xml"
+    }
+
     override var UUID: String {
         "3f70f103-2cd1-50f0-a053-5eb91c891ec8"
     }

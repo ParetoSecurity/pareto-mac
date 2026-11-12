@@ -200,6 +200,27 @@ class ApplicationUpdatesTest: XCTestCase {
         return app
     }
 
+    func testAppStoreLookupRetriesDirectOnlyWhenEdgeCacheRefuses() {
+        let direct = "https://itunes.apple.com/lookup?bundleId=com.tinyspeck.slackmacgap"
+        let edge = "https://pareto-cache.team-niteo.workers.dev/itunes.apple.com/lookup?bundleId=com.tinyspeck.slackmacgap"
+
+        XCTAssertTrue(AppCheck.shouldRetryDirect(statusCode: 403, requestedURL: edge, directURL: direct))
+        XCTAssertFalse(AppCheck.shouldRetryDirect(statusCode: 403, requestedURL: direct, directURL: direct))
+        XCTAssertFalse(AppCheck.shouldRetryDirect(statusCode: 404, requestedURL: edge, directURL: direct))
+        XCTAssertFalse(AppCheck.shouldRetryDirect(statusCode: nil, requestedURL: edge, directURL: direct))
+    }
+
+    func testTailscaleReadsStandaloneAppcast() {
+        XCTAssertEqual(AppTailscaleCheck.sharedInstance.sparkleURL, "https://pkgs.tailscale.com/stable/appcast.xml")
+        let appcast = """
+        <rss><channel><item>
+            <sparkle:version>101.104.6</sparkle:version>
+            <sparkle:shortVersionString>1.104.6</sparkle:shortVersionString>
+        </item></channel></rss>
+        """
+        XCTAssertEqual(AppCheck.latestSparkleVersion(from: appcast), "1.104.6")
+    }
+
     func testSuccessfulLookupReportsAvailableUpdate() throws {
         let app = try makeLookupCheck(responses: ["2.0.0"])
 
