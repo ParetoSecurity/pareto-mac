@@ -53,71 +53,82 @@ private final class ResumeGate: @unchecked Sendable {
     }
 }
 
+private func runProcess(app: String, args: [String], timeout: TimeInterval = 15.0,
+                        includeStandardError: Bool = true, requireSuccessfulExit: Bool = false,
+                        environment: [String: String]? = nil, directory: URL? = nil,
+                        completion: @escaping @Sendable (Result<String, Swift.Error>) -> Void) -> Process
+{
+    let task = Process()
+    let pipe = Pipe()
+    let outputBuffer = OutputBuffer()
+    let resumeGate = ResumeGate()
+    let finished = DispatchGroup()
+
+    @Sendable func resumeOnce(_ result: Result<String, Swift.Error>) {
+        resumeGate.run {
+            completion(result)
+        }
+    }
+
+    task.standardOutput = pipe
+    if includeStandardError {
+        task.standardError = pipe
+    } else {
+        task.standardError = FileHandle.nullDevice
+    }
+    task.arguments = args
+    task.launchPath = app
+    task.environment = environment
+    task.currentDirectoryURL = directory
+    task.standardInput = FileHandle.nullDevice
+
+    task.terminationHandler = { _ in finished.leave() }
+
+    finished.enter()
+    do {
+        try task.run()
+    } catch {
+        finished.leave()
+        resumeOnce(.failure(CommandRunnerError.launchFailed(error.localizedDescription)))
+        return task
+    }
+
+    // One reader for the whole output: a readability handler can still hold the last chunk when the process exits.
+    finished.enter()
+    DispatchQueue.global().async {
+        outputBuffer.append(pipe.fileHandleForReading.readDataToEndOfFile())
+        finished.leave()
+    }
+    finished.notify(queue: .global()) {
+        if requireSuccessfulExit, task.terminationReason != .exit || task.terminationStatus != 0 {
+            resumeOnce(.failure(CommandRunnerError.unsuccessfulExit(task.terminationStatus)))
+        } else {
+            resumeOnce(.success(outputBuffer.output()))
+        }
+    }
+
+    // Also fires after exit, when a background child still holds the pipe open.
+    DispatchQueue.global(qos: .utility).asyncAfter(deadline: .now() + timeout) { [weak task] in
+        resumeOnce(.failure(CommandRunnerError.timedOut))
+        if let task, task.isRunning {
+            task.terminate()
+        }
+    }
+    return task
+}
+
 func runCMDAsync(app: String, args: [String], timeout: TimeInterval = 15.0,
                  includeStandardError: Bool = true, requireSuccessfulExit: Bool = false,
                  environment: [String: String]? = nil, directory: URL? = nil) async throws -> String
 {
     let processBox = ProcessBox()
-    let outputBuffer = OutputBuffer()
-    let resumeGate = ResumeGate()
 
     return try await withTaskCancellationHandler {
         try await withCheckedThrowingContinuation { continuation in
-            let task = Process()
-            let pipe = Pipe()
-
-            @Sendable func resumeOnce(_ result: Result<String, Swift.Error>) {
-                resumeGate.run {
-                    continuation.resume(with: result)
-                }
-            }
-
-            task.standardOutput = pipe
-            if includeStandardError {
-                task.standardError = pipe
-            } else {
-                task.standardError = FileHandle.nullDevice
-            }
-            task.arguments = args
-            task.launchPath = app
-            task.environment = environment
-            task.currentDirectoryURL = directory
-            task.standardInput = FileHandle.nullDevice
-            processBox.process = task
-
-            pipe.fileHandleForReading.readabilityHandler = { handle in
-                let data = handle.availableData
-                guard !data.isEmpty else { return }
-                outputBuffer.append(data)
-            }
-
-            task.terminationHandler = { process in
-                pipe.fileHandleForReading.readabilityHandler = nil
-                let remaining = pipe.fileHandleForReading.readDataToEndOfFile()
-                if !remaining.isEmpty {
-                    outputBuffer.append(remaining)
-                }
-                if requireSuccessfulExit, process.terminationReason != .exit || process.terminationStatus != 0 {
-                    resumeOnce(.failure(CommandRunnerError.unsuccessfulExit(process.terminationStatus)))
-                } else {
-                    resumeOnce(.success(outputBuffer.output()))
-                }
-            }
-
-            do {
-                try task.run()
-            } catch {
-                pipe.fileHandleForReading.readabilityHandler = nil
-                resumeOnce(.failure(CommandRunnerError.launchFailed(error.localizedDescription)))
-                return
-            }
-
-            DispatchQueue.global(qos: .utility).asyncAfter(deadline: .now() + timeout) {
-                if task.isRunning {
-                    resumeOnce(.failure(CommandRunnerError.timedOut))
-                    task.terminate()
-                }
-            }
+            processBox.process = runProcess(
+                app: app, args: args, timeout: timeout, includeStandardError: includeStandardError,
+                requireSuccessfulExit: requireSuccessfulExit, environment: environment, directory: directory
+            ) { continuation.resume(with: $0) }
         }
     } onCancel: {
         if let process = processBox.process, process.isRunning {
@@ -126,29 +137,31 @@ func runCMDAsync(app: String, args: [String], timeout: TimeInterval = 15.0,
     }
 }
 
-func runCMDWithTimeout(app: String, args: [String], timeout: TimeInterval = 15.0,
-                       includeStandardError: Bool = true, requireSuccessfulExit: Bool = false,
-                       environment: [String: String]? = nil, directory: URL? = nil) throws -> String
+func runCMD(app: String, args: [String], timeout: TimeInterval = 15.0,
+            includeStandardError: Bool = true, requireSuccessfulExit: Bool = false,
+            environment: [String: String]? = nil, directory: URL? = nil) throws -> String
 {
     let result = OSAllocatedUnfairLock<Result<String, Swift.Error>>(initialState: .failure(CommandRunnerError.timedOut))
     let done = DispatchSemaphore(value: 0)
-    let task = Task.detached {
-        defer { done.signal() }
-        do {
-            let output = try await runCMDAsync(
-                app: app, args: args, timeout: timeout, includeStandardError: includeStandardError,
-                requireSuccessfulExit: requireSuccessfulExit, environment: environment, directory: directory
-            )
-            result.withLock { $0 = .success(output) }
-        } catch {
-            result.withLock { $0 = .failure(error) }
-        }
+    let task = runProcess(
+        app: app, args: args, timeout: timeout, includeStandardError: includeStandardError,
+        requireSuccessfulExit: requireSuccessfulExit, environment: environment, directory: directory
+    ) { output in
+        result.withLock { $0 = output }
+        done.signal()
     }
-    guard done.wait(timeout: .now() + timeout + 1) == .success else {
-        task.cancel()
+    if done.wait(timeout: .now() + timeout + 1) == .timedOut, task.isRunning {
+        task.terminate()
+    }
+    do {
+        return try result.withLock { $0 }.get()
+    } catch let CommandRunnerError.launchFailed(reason) {
+        os_log("Failed to launch %{public}@: %{public}@", log: Log.app, app, reason)
+        throw CommandRunnerError.launchFailed(reason)
+    } catch CommandRunnerError.timedOut {
+        os_log("%{public}@ timed out after %{public}.1f s", log: Log.app, app, timeout)
         throw CommandRunnerError.timedOut
     }
-    return try result.withLock { $0 }.get()
 }
 
 enum CheckCommand {
@@ -208,34 +221,12 @@ enum CheckCommand {
         }
 
         let environment = ["HOME": home.path, "LANG": "C", "LOGNAME": NSUserName(), "PATH": (path + ["/usr/bin", "/bin", "/usr/sbin", "/sbin"]).joined(separator: ":"), "TMPDIR": temporaryPath + "/", "USER": NSUserName()]
-        return try? runCMDWithTimeout(
+        return try? runCMD(
             app: "/usr/bin/sandbox-exec", args: parameters + ["-p", profile, app] + args,
             timeout: timeout, includeStandardError: includeStandardError,
             requireSuccessfulExit: requireSuccessfulExit, environment: environment, directory: home
         )
     }
-}
-
-func runCMD(app: String, args: [String], environment: [String: String]? = nil) -> String {
-    let task = Process()
-    let pipe = Pipe()
-
-    task.standardOutput = pipe
-    task.standardError = pipe
-    task.arguments = args
-    task.launchPath = app
-    if let environment {
-        task.environment = environment
-    }
-    do {
-        try task.run()
-    } catch {
-        os_log("Failed to launch %{public}@: %{public}@", log: Log.app, app, error.localizedDescription)
-        return ""
-    }
-    let data = pipe.fileHandleForReading.readDataToEndOfFile()
-    task.waitUntilExit()
-    return String(data: data, encoding: .utf8) ?? ""
 }
 
 func runShell(args: [String]) -> String {
@@ -341,7 +332,7 @@ func runOSA(appleScript: String, timeout: TimeInterval = 10.0) -> String? {
 }
 
 func lsof(withCommand cmd: String, withPort port: Int) -> Bool {
-    let out = runCMD(app: "/usr/sbin/lsof", args: ["-i", "TCP:\(port)", "-P", "+L", "-O", "-T", "+c", "0", "-nPM"])
+    let out = (try? runCMD(app: "/usr/sbin/lsof", args: ["-i", "TCP:\(port)", "-P", "+L", "-O", "-T", "+c", "0", "-nPM"])) ?? ""
     for line in out.components(separatedBy: "\n") {
         if line.hasPrefix(cmd), line.hasSuffix("*:\(port)") {
             return true

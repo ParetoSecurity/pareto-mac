@@ -20,7 +20,7 @@ class FileVaultCheck: ParetoCheck {
     }
 
     override func checkPasses() -> Bool {
-        let output = runCMD(app: "/usr/bin/fdesetup", args: ["status"])
+        let output = (try? runCMD(app: "/usr/bin/fdesetup", args: ["status"])) ?? ""
         return output.contains("FileVault is On")
     }
 }

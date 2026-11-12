@@ -107,7 +107,7 @@ class FirewallExceptionsCheck: ParetoCheck {
 
     static func listApps(app: String = "/usr/libexec/ApplicationFirewall/socketfilterfw") -> String? {
         do {
-            return try runCMDWithTimeout(
+            return try runCMD(
                 app: app,
                 args: ["--listapps"],
                 timeout: 15,

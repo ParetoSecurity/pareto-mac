@@ -9,11 +9,11 @@ import Foundation
 
 extension Bundle {
     var isCodeSigned: Bool {
-        !runCMD(app: "/usr/bin/codesign", args: ["-dv", bundlePath]).contains("Error")
+        !((try? runCMD(app: "/usr/bin/codesign", args: ["-dv", bundlePath])) ?? "").contains("Error")
     }
 
     var codeSigningIdentity: String? {
-        let lines = runCMD(app: "/usr/bin/codesign", args: ["-dvvv", bundlePath]).split(separator: "\n")
+        let lines = ((try? runCMD(app: "/usr/bin/codesign", args: ["-dvvv", bundlePath])) ?? "").split(separator: "\n")
         for line in lines where line.hasPrefix("Authority=") {
             return String(line.dropFirst(10))
         }

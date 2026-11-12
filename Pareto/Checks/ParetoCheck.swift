@@ -386,7 +386,7 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
 
 extension ParetoCheck {
     func readDefaults(app: String, key: String) -> String? {
-        let output = runCMD(app: "/usr/bin/defaults", args: ["-currentHost", "read", app, key])
+        let output = (try? runCMD(app: "/usr/bin/defaults", args: ["-currentHost", "read", app, key])) ?? ""
         return output.contains("does not exist") ? nil : output
     }
 
@@ -404,7 +404,7 @@ extension ParetoCheck {
             return readDefaultsViaCFPreferences(path: path, key: key)
         }
 
-        let output = runCMD(app: "/usr/bin/defaults", args: ["read", path, key])
+        let output = (try? runCMD(app: "/usr/bin/defaults", args: ["read", path, key])) ?? ""
         // `defaults` reports a missing key as "Could not find key 'X' in
         // domain 'Y'." and a missing domain as "Domain 'X' not found.", and
         // runCMD() folds stderr into stdout.
