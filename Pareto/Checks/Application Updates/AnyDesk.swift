@@ -36,7 +36,7 @@ class AppAnyDeskCheck: AppCheck {
     override func getLatestVersion(completion: @escaping (String) -> Void) {
         let url = "https://download.anydesk.com/changelog.txt"
         os_log("Requesting %{public}s", url)
-        Network.session.request(url).responseString(queue: AppCheck.queue, completionHandler: { response in
+        Network.session.request(url).validate().responseString(queue: AppCheck.queue, completionHandler: { response in
             if response.data != nil {
                 completion(Self.latestMacOSVersion(from: response.value ?? ""))
             } else {

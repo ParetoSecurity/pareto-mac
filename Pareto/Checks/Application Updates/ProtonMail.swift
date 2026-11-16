@@ -53,7 +53,7 @@ class AppProtonMailCheck: AppCheck {
     override func getLatestVersion(completion: @escaping (String) -> Void) {
         let url = "https://proton.me/download/mail/macos/version.json"
         os_log("Requesting %{public}s", url)
-        Network.session.request(url).responseDecodable(of: ProtonMailReleasesResponse.self, queue: AppCheck.queue, completionHandler: { response in
+        Network.session.request(url).validate().responseDecodable(of: ProtonMailReleasesResponse.self, queue: AppCheck.queue, completionHandler: { response in
             if let value = response.value, response.error == nil {
                 completion(Self.latestStableVersion(from: value))
             } else {

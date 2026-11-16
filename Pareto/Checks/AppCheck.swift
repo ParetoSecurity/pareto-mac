@@ -140,7 +140,7 @@ class AppCheck: ParetoCheck, AppCheckProtocol {
     }
 
     private func requestAppStoreVersion(_ url: String, completion: @escaping (String?, Int?) -> Void) {
-        Network.session.request(url).responseDecodable(of: AppStoreResponse.self, queue: AppCheck.queue) { response in
+        Network.session.request(url).validate().responseDecodable(of: AppStoreResponse.self, queue: AppCheck.queue) { response in
             if let version = response.value?.results.first, response.error == nil {
                 completion(version.version, response.response?.statusCode)
             } else {
@@ -226,11 +226,20 @@ class AppCheck: ParetoCheck, AppCheckProtocol {
         }
     }
 
+    /// Parses the version from an update source. It also accepts X.Y versions such as 160.0.
+    /// A failed lookup gives "0.0.0" or an invalid string. For these, this function returns nil.
+    static func resolvedLatestVersion(from version: String) -> Version? {
+        guard let parsed = Version(version) ?? Version(tolerant: version), parsed > Version(0, 0, 0) else {
+            return nil
+        }
+        return parsed
+    }
+
     /// Records the result of a latest-version lookup. Unparseable or 0.0.0 results are
     /// lookup failures: they are not cached, so they can never certify an app as up to date.
     func handleLatestVersionLookup(_ version: String) {
         let waiters: [() -> Void]
-        if let latest = Version(version), latest > Version(0, 0, 0) {
+        if let latest = Self.resolvedLatestVersion(from: version) {
             try? AppInfo.versionStorage.setObject(latest, forKey: appBundle)
             waiters = latestVersionLookup.withLock { state in
                 state.inFlight = false
@@ -334,16 +343,17 @@ class AppCheck: ParetoCheck, AppCheckProtocol {
 
         version = version.replacingOccurrences(of: ".-", with: "-")
 
-        return Version(version) ?? Version(0, 0, 0)
+        return Version(version) ?? Version(tolerant: version) ?? Version(0, 0, 0)
     }
 
     func getLatestVersion(completion: @escaping (String) -> Void) {
-        if fromAppStore {
+        // Use the App Store listing when the check has no update feed.
+        if fromAppStore || sparkleURL.isEmpty {
             getLatestVersionAppStore(completion: completion)
             return
         } else {
             os_log("Requesting %{public}s", sparkleURL)
-            Network.session.request(sparkleURL).responseString(queue: AppCheck.queue, completionHandler: { response in
+            Network.session.request(sparkleURL).validate().responseString(queue: AppCheck.queue, completionHandler: { response in
                 if response.error == nil {
                     let version = Self.latestSparkleVersion(
                         from: response.value ?? "",

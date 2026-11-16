@@ -114,7 +114,7 @@ struct AboutSettingsView: View {
                             Spacer(minLength: 0)
 
                             // Inline "Install Update" button when a new version is found
-                            if hasCheckedForUpdates && status == UpdateStates.NewVersion {
+                            if hasCheckedForUpdates, status == UpdateStates.NewVersion {
                                 Button {
                                     forceUpdate()
                                 } label: {

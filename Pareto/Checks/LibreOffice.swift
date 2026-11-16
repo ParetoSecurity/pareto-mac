@@ -84,7 +84,7 @@ class AppLibreOfficeCheck: AppCheck {
     func getLatestVersions(completion: @escaping ([String]) -> Void) {
         let url = viaEdgeCache("https://endoflife.date/api/v1/products/libreoffice/")
         os_log("Requesting %{public}s", url)
-        Network.session.request(url).responseDecodable(of: EndOfLifeProductResponse.self, queue: AppCheck.queue, completionHandler: { response in
+        Network.session.request(url).validate().responseDecodable(of: EndOfLifeProductResponse.self, queue: AppCheck.queue, completionHandler: { response in
             if let value = response.value, response.error == nil {
                 completion(Self.latestVersions(from: value))
             } else {
@@ -148,7 +148,7 @@ class AppLibreOfficeCheck: AppCheck {
     /// Records the result of a releases lookup. An empty list, or one with only unparseable
     /// or 0.0.0 entries, is a lookup failure: it can never certify LibreOffice as up to date.
     func handleLatestVersionsLookup(_ versions: [String]) {
-        let parsed = versions.compactMap { Version($0) }.filter { $0 > Version(0, 0, 0) }
+        let parsed = versions.compactMap { Self.resolvedLatestVersion(from: $0) }
         if parsed.isEmpty {
             os_log("%{public}s releases lookup failed, keeping previous result", appBundle)
         }
