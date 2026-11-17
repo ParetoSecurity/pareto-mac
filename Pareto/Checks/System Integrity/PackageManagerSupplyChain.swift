@@ -477,9 +477,17 @@ class PackageManagerSupplyChainCheck: ParetoCheck {
             return failures
         }
         if !Self.isVersion(version, atLeast: minimumVersion) {
-            failures.append("\(binary) is older than \(minimumVersion) and does not enforce \(configDescription)")
+            failures.append("\(checkedBinaryDescription(binary)) is older than \(minimumVersion) and does not enforce \(configDescription)")
         }
         return failures
+    }
+
+    /// The path of the copy whose version was read, because a Mac often has
+    /// several copies of a package manager and only one of them needs the
+    /// upgrade. Injected versions have no path.
+    private func checkedBinaryDescription(_ name: String) -> String {
+        guard packageManagerVersions[name] == nil, let path = executablePath(for: name) else { return name }
+        return (path as NSString).abbreviatingWithTildeInPath
     }
 
     // MARK: - Static validators
