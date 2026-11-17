@@ -27,21 +27,23 @@ class App1Password8Check: AppCheck {
         "0a076668-f8c6-4d53-b275-6806afcddca8"
     }
 
-    override func getLatestVersion(completion: @escaping (String) -> Void) {
-        let url = "https://releases.1password.com/mac/8.9/"
-        let versionRegex = Regex("([\\d\\.]+)</h6>")
-        os_log("Requesting %{public}s", url)
-        Network.session.request(url).responseString(queue: AppCheck.queue, completionHandler: { response in
-            if response.data != nil {
-                let result = versionRegex.allMatches(in: response.value ?? "8.9.1")
+    static func latestStableVersion(from html: String) -> String {
+        // The page shows the newest release first.
+        let versionRegex = Regex("1Password for Mac ([\\d\\.]+)</h6>")
+        return versionRegex.firstMatch(in: html)?.groups.first?.value ?? "0.0.0"
+    }
 
-                completion(result.last?.groups.first?.value ?? "0.0.0")
+    override func getLatestVersion(completion: @escaping (String) -> Void) {
+        let url = "https://releases.1password.com/mac/stable/"
+        os_log("Requesting %{public}s", url)
+        Network.session.request(url).validate().responseString(queue: AppCheck.queue, completionHandler: { response in
+            if let html = response.value, response.error == nil {
+                completion(Self.latestStableVersion(from: html))
             } else {
                 os_log("%{public}s failed: %{public}s", self.appBundle, response.error.debugDescription)
                 self.hasError = true
                 completion("0.0.0")
             }
-
         })
     }
 }

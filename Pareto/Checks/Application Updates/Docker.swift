@@ -27,24 +27,11 @@ class AppDockerCheck: AppCheck {
         "com.docker.docker"
     }
 
-    override var UUID: String {
-        "ee11fe36-a372-5cba-a1b4-151748fc2fa7"
+    override var sparkleURL: String {
+        "https://desktop.docker.com/mac/main/arm64/appcast.xml"
     }
 
-    override func getLatestVersion(completion: @escaping (String) -> Void) {
-        let url = viaEdgeCache("https://raw.githubusercontent.com/docker/docker.github.io/master/desktop/mac/release-notes/index.md")
-        let versionRegex = Regex("## Docker Desktop ([\\d.]+)")
-        os_log("Requesting %{public}s", url)
-        Network.session.request(url).responseString(queue: AppCheck.queue, completionHandler: { response in
-            if response.data != nil {
-                let result = versionRegex.firstMatch(in: response.value ?? "")
-                completion(result?.groups.first?.value ?? "0.0.0")
-            } else {
-                os_log("%{public}s failed: %{public}s", self.appBundle, response.error.debugDescription)
-                self.hasError = true
-                completion("0.0.0")
-            }
-
-        })
+    override var UUID: String {
+        "ee11fe36-a372-5cba-a1b4-151748fc2fa7"
     }
 }

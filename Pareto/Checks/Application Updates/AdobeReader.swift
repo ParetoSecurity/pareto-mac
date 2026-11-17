@@ -9,7 +9,6 @@ import Alamofire
 import Foundation
 import os.log
 import OSLog
-import Regex
 import Version
 
 class AdobeReaderCheck: AppCheck {
@@ -31,22 +30,24 @@ class AdobeReaderCheck: AppCheck {
         "5c6cdb30-2e84-55b0-9d8e-754067b5094e"
     }
 
+    static func latestVersion(fromManifest response: String) -> String {
+        let version = response.trimmingCharacters(in: .whitespacesAndNewlines)
+        let isVersion = !version.isEmpty && version.allSatisfy { $0.isNumber || $0 == "." }
+        return isVersion ? version : "0.0.0"
+    }
+
     override func getLatestVersion(completion: @escaping (String) -> Void) {
-        let url = viaEdgeCache("https://helpx.adobe.com/acrobat/release-note/release-notes-acrobat-reader.html")
-        let linksRegex = Regex("<a .+ReleaseNotesDC.+>(.+)</a>")
-        let versionRegex = Regex(".+\\((.+)\\)")
+        // The Adobe updater (ARM) uses this manifest.
+        let url = "https://armmf.adobe.com/arm-manifests/mac/AcrobatDC/reader/current_version.txt"
         os_log("Requesting %{public}s", url)
-        Network.session.request(url).responseString(queue: AppCheck.queue, completionHandler: { response in
-            if response.data != nil {
-                let links = linksRegex.firstMatch(in: response.value ?? "")
-                let result = versionRegex.firstMatch(in: links?.groups.first?.value ?? "DC Sep 2021 (21.007.2009x)")
-                completion(result?.groups.first?.value ?? "0.0.0")
+        Network.session.request(url).validate().responseString(queue: AppCheck.queue, completionHandler: { response in
+            if let value = response.value, response.error == nil {
+                completion(Self.latestVersion(fromManifest: value))
             } else {
                 os_log("%{public}s failed: %{public}s", self.appBundle, response.error.debugDescription)
                 self.hasError = true
                 completion("0.0.0")
             }
-
         })
     }
 }

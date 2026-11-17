@@ -200,6 +200,80 @@ class ApplicationUpdatesTest: XCTestCase {
         return app
     }
 
+    func testResolvedLatestVersionRejectsFailedLookups() {
+        XCTAssertNil(AppCheck.resolvedLatestVersion(from: "0.0.0"))
+        XCTAssertNil(AppCheck.resolvedLatestVersion(from: "not a version"))
+        XCTAssertNil(AppCheck.resolvedLatestVersion(from: "21.007.2009x"))
+        XCTAssertEqual(AppCheck.resolvedLatestVersion(from: "2.0.0"), Version(2, 0, 0))
+        XCTAssertEqual(AppCheck.resolvedLatestVersion(from: "160.0"), Version(160, 0, 0))
+    }
+
+    func testInstalledTwoPartVersionIsParsed() throws {
+        let app = try LookupAppCheck(directories: [installedAppDirectory(version: "2.4").path], responses: [])
+
+        XCTAssertEqual(app.currentVersion, Version(2, 4, 0))
+    }
+
+    func testBraveParserUsesBuildVersion() {
+        let response = """
+        <rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle">
+            <channel>
+                <item>
+                    <enclosure sparkle:version="199.57" sparkle:shortVersionString="1.99.57.0" />
+                </item>
+                <item>
+                    <enclosure sparkle:version="192.144" sparkle:shortVersionString="1.92.144.0" />
+                </item>
+            </channel>
+        </rss>
+        """
+
+        XCTAssertEqual(AppBraveBrowserCheck.latestBuildVersion(from: response), "199.57.0")
+    }
+
+    func testOnePasswordParserReadsNewestStableRelease() {
+        let response = """
+        <h6 class="c-heading c-updates__title">1Password for Mac 8.12.44</h6>
+        <path d="M12 5.762C5.681 5.762.542 8.999.542 13.619"/>
+        <h6 class="c-heading c-updates__title">1Password for Mac 8.12.42</h6>
+        """
+
+        XCTAssertEqual(App1Password8Check.latestStableVersion(from: response), "8.12.44")
+    }
+
+    func testAdobeReaderParserReadsManifest() {
+        XCTAssertEqual(AdobeReaderCheck.latestVersion(fromManifest: "26.003.22075\n"), "26.003.22075")
+        XCTAssertEqual(AdobeReaderCheck.latestVersion(fromManifest: "<html>Forbidden</html>"), "0.0.0")
+    }
+
+    func testBraveParserReadsRemoteAppcast() async throws {
+        let response = try await remoteString(from: AppBraveBrowserCheck.sharedInstance.sparkleURL)
+
+        XCTAssertNotNil(AppCheck.resolvedLatestVersion(from: AppBraveBrowserCheck.latestBuildVersion(from: response)))
+    }
+
+    func testRegisteredChecksResolveLatestVersionFromLiveSources() {
+        let checks = Claims.updateChecks.filter { !($0 is AppLibreOfficeCheck) }
+        var expectations = [XCTestExpectation]()
+        for check in checks {
+            let expectation = expectation(description: check.appMarketingName)
+            check.getLatestVersion { version in
+                XCTAssertNotNil(AppCheck.resolvedLatestVersion(from: version), "\(check.appMarketingName) returned \(version)")
+                expectation.fulfill()
+            }
+            expectations.append(expectation)
+        }
+
+        let libreOffice = expectation(description: "LibreOffice")
+        AppLibreOfficeCheck.sharedInstance.getLatestVersions { versions in
+            XCTAssertFalse(versions.compactMap { AppCheck.resolvedLatestVersion(from: $0) }.isEmpty, "LibreOffice returned \(versions)")
+            libreOffice.fulfill()
+        }
+        expectations.append(libreOffice)
+
+        wait(for: expectations, timeout: 60)
+    }
+
     func testAppStoreLookupRetriesDirectOnlyWhenEdgeCacheRefuses() {
         let direct = "https://itunes.apple.com/lookup?bundleId=com.tinyspeck.slackmacgap"
         let edge = "https://pareto-cache.team-niteo.workers.dev/itunes.apple.com/lookup?bundleId=com.tinyspeck.slackmacgap"

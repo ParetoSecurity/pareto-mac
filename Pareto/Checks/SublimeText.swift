@@ -46,10 +46,13 @@ class AppSublimeTextCheck: AppCheck {
         let versionRegex = Regex("Build (\\d+)")
         os_log("Requesting %{public}s", url)
 
-        Network.session.request(url).responseString(queue: AppCheck.queue, completionHandler: { response in
+        Network.session.request(url).validate().responseString(queue: AppCheck.queue, completionHandler: { response in
             if response.error == nil {
-                let yaml = response.value ?? "Build 3121"
-                let version = versionRegex.firstMatch(in: yaml)?.groups.first?.value ?? "3121"
+                guard let version = versionRegex.firstMatch(in: response.value ?? "")?.groups.first?.value else {
+                    os_log("%{public}s failed: no build number found", self.appBundle)
+                    completion("0.0.0")
+                    return
+                }
                 os_log("%{public}s version=%{public}s", self.appBundle, version)
                 completion("\(version.prefix(1)).\(version.suffix(3)).0")
             } else {

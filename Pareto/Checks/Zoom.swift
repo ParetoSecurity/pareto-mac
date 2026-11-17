@@ -50,7 +50,7 @@ class AppZoomCheck: AppCheck {
         let url = "https://support.zoom.com/hc/en/article?id=zm_kb&sysparm_article=KB0061900"
         os_log("Requesting %{public}s", url)
 
-        Network.session.request(url).responseString(queue: AppCheck.queue, completionHandler: { response in
+        Network.session.request(url).validate().responseString(queue: AppCheck.queue, completionHandler: { response in
             if response.error == nil {
                 let version = Self.latestMacOSSlowTrackVersion(from: response.value ?? "")
                 os_log("%{public}s version=%{public}s", self.appBundle, version)

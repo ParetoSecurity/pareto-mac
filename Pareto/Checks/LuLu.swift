@@ -38,10 +38,10 @@ class AppLuLuCheck: AppCheck {
         let versionRegex = Regex("VERSION ([\\.\\d]+) ")
         os_log("Requesting %{public}s", url)
 
-        Network.session.request(url).responseString(queue: AppCheck.queue, completionHandler: { response in
+        Network.session.request(url).validate().responseString(queue: AppCheck.queue, completionHandler: { response in
             if response.error == nil {
-                let txt = response.value ?? "VERSION 1.4.1 (11/01/2021)"
-                let version = versionRegex.firstMatch(in: txt)?.groups.first?.value ?? "1.4.1"
+                let txt = response.value ?? ""
+                let version = versionRegex.firstMatch(in: txt)?.groups.first?.value ?? "0.0.0"
                 os_log("%{public}s version=%{public}s", self.appBundle, version)
                 completion(version)
             } else {

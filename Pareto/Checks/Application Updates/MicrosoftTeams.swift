@@ -84,7 +84,7 @@ class AppMicrosoftTeamsCheck: AppCheck {
         let url = viaEdgeCache("https://config.teams.microsoft.com/config/v1/MicrosoftTeams/1415_1.0.0.0?environment=prod&audienceGroup=general&teamsRing=general&agent=TeamsBuilds")
 
         os_log("Requesting %{public}s", url)
-        Network.session.request(url).responseDecodable(of: TeamsResponse.self, queue: AppCheck.queue, completionHandler: { response in
+        Network.session.request(url).validate().responseDecodable(of: TeamsResponse.self, queue: AppCheck.queue, completionHandler: { response in
             if response.error == nil {
                 let v = response.value.flatMap(Self.latestMacOSVersion)
                 completion(Self.normalizedVersion(v ?? "0.0.0"))
