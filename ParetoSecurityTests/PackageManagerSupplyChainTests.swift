@@ -478,6 +478,18 @@ class PackageManagerSupplyChainTests: XCTestCase {
         XCTAssertTrue(check.details.contains("version could not be determined"))
     }
 
+    func testVersionGateFailureNamesTheCheckedBinary() throws {
+        let home = try temporaryHome()
+        let bin = home.appendingPathComponent(".local/bin")
+        try writeExecutables(["yarn"], in: bin)
+        try "npmMinimalAgeGate: 7d\n".write(to: home.appendingPathComponent(".yarnrc.yml"), atomically: true, encoding: .utf8)
+        let check = PackageManagerSupplyChainCheck(homeDirectory: home, installedBinaries: ["yarn"], systemInstallPrefixes: [])
+        let yarn = (bin.appendingPathComponent("yarn").path as NSString).abbreviatingWithTildeInPath
+
+        XCTAssertFalse(check.checkPasses())
+        XCTAssertEqual(check.details, "- \(yarn) is older than 4.11.0 and does not enforce ~/.yarnrc.yml npmMinimalAgeGate")
+    }
+
     func testAllVersionGatedManagersCanPassWithSandboxedCommands() throws {
         let fixtures: [(String, String, String)] = [
             ("npm", ".npmrc", "min-release-age=7\nsave-exact=true\n"),
