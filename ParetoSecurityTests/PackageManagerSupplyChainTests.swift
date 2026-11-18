@@ -576,6 +576,51 @@ class PackageManagerSupplyChainTests: XCTestCase {
         }
     }
 
+    func testSandboxedCommandsReadHomeRootMiseConfig() throws {
+        let home = try temporaryHome().resolvingSymlinksInPath()
+        for path in [".mise.toml", "mise.toml", ".config/mise.toml", "mise/config.toml"] {
+            let file = home.appendingPathComponent(path)
+            try FileManager.default.createDirectory(at: file.deletingLastPathComponent(), withIntermediateDirectories: true)
+            try path.write(to: file, atomically: true, encoding: .utf8)
+            XCTAssertEqual(CheckCommand.run(app: "/bin/cat", args: [file.path], homeDirectory: home), path)
+        }
+    }
+
+    /// Dotfiles managers symlink config out of a repository; mise, npm and
+    /// Bundler fail outright when they cannot read their config.
+    func testSandboxedCommandsFollowSymlinkedConfigFilesOnly() throws {
+        let home = try temporaryHome().resolvingSymlinksInPath()
+        let dotfiles = home.appendingPathComponent("dotfiles")
+        try FileManager.default.createDirectory(at: dotfiles.appendingPathComponent("mise"), withIntermediateDirectories: true)
+        try "npmrc".write(to: dotfiles.appendingPathComponent("npmrc"), atomically: true, encoding: .utf8)
+        try "sibling".write(to: dotfiles.appendingPathComponent("sibling"), atomically: true, encoding: .utf8)
+        try "mise".write(to: dotfiles.appendingPathComponent("mise/config.toml"), atomically: true, encoding: .utf8)
+        try "pip".write(to: dotfiles.appendingPathComponent("pip.conf"), atomically: true, encoding: .utf8)
+        try FileManager.default.createDirectory(at: home.appendingPathComponent(".config/pip"), withIntermediateDirectories: true)
+        try FileManager.default.createSymbolicLink(at: home.appendingPathComponent(".npmrc"), withDestinationURL: dotfiles.appendingPathComponent("npmrc"))
+        try FileManager.default.createSymbolicLink(at: home.appendingPathComponent(".config/mise"), withDestinationURL: dotfiles.appendingPathComponent("mise"))
+        try FileManager.default.createSymbolicLink(at: home.appendingPathComponent(".config/pip/pip.conf"), withDestinationURL: dotfiles.appendingPathComponent("pip.conf"))
+
+        func cat(_ path: String) -> String? {
+            CheckCommand.run(app: "/bin/cat", args: [home.appendingPathComponent(path).path], homeDirectory: home)
+        }
+        XCTAssertEqual(cat(".npmrc"), "npmrc")
+        XCTAssertEqual(cat(".config/mise/config.toml"), "mise")
+        XCTAssertEqual(cat(".config/pip/pip.conf"), "pip")
+        XCTAssertNil(cat("dotfiles/sibling"))
+    }
+
+    func testSandboxedCommandsIgnoreConfigDirectoriesLinkedToHome() throws {
+        let home = try temporaryHome().resolvingSymlinksInPath()
+        try "private-marker".write(to: home.appendingPathComponent("private-data"), atomically: true, encoding: .utf8)
+        try FileManager.default.createDirectory(at: home.appendingPathComponent(".config"), withIntermediateDirectories: true)
+        try FileManager.default.createSymbolicLink(at: home.appendingPathComponent(".config/mise"), withDestinationURL: home)
+
+        for path in ["private-data", ".config/mise/private-data"] {
+            XCTAssertNil(CheckCommand.run(app: "/bin/cat", args: [home.appendingPathComponent(path).path], homeDirectory: home), path)
+        }
+    }
+
     func testPackageManagerSupplyChainUsesPnpmXDGConfigHome() throws {
         let temporaryDirectory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
         let xdgDirectory = temporaryDirectory.appendingPathComponent("xdg")

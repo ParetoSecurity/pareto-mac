@@ -158,20 +158,72 @@ enum CheckCommand {
         return String(cString: resolved)
     }
 
+    private static func isRegularFile(_ path: String) -> Bool {
+        (try? FileManager.default.attributesOfItem(atPath: path)[.type] as? FileAttributeType) == .typeRegular
+    }
+
+    /// Dotfiles managers symlink config files (or whole config directories)
+    /// out of a repository, and the sandbox matches the resolved path, so a
+    /// tool cannot read its own symlinked config. The files those links point
+    /// at are allowed one by one; a link's target directory is never granted
+    /// as a whole, and a config directory that resolves to the home directory
+    /// or above it is ignored.
+    static func symlinkedConfigFiles(files: [String], directories: [String], home: String) -> [String] {
+        var targets: [String] = []
+        for file in files {
+            let resolved = canonicalPath(file)
+            if resolved != file, isRegularFile(resolved) {
+                targets.append(resolved)
+            }
+        }
+        for directory in directories {
+            let resolved = canonicalPath(directory)
+            let rootMoved = resolved != directory
+            if rootMoved, resolved == home || home.hasPrefix(resolved == "/" ? "/" : resolved + "/") {
+                continue
+            }
+            guard let enumerator = FileManager.default.enumerator(atPath: resolved) else { continue }
+            var visited = 0
+            while let relative = enumerator.nextObject() as? String {
+                visited += 1
+                guard visited <= 500 else { break }
+                if enumerator.level >= 4 {
+                    enumerator.skipDescendants()
+                }
+                let entry = (resolved as NSString).appendingPathComponent(relative)
+                let target = canonicalPath(entry)
+                if rootMoved || target != entry, isRegularFile(target) {
+                    targets.append(target)
+                }
+            }
+        }
+        return targets
+    }
+
     static func run(app: String, args: [String], homeDirectory: URL = FileManager.default.homeDirectoryForCurrentUser,
                     path: [String] = [], readFiles: [String] = [], readDirectories: [String] = [],
                     timeout: TimeInterval = 5, includeStandardError: Bool = false,
                     requireSuccessfulExit: Bool = true) -> String?
     {
         let home = URL(fileURLWithPath: canonicalPath(homeDirectory.path))
-        let systemDirectories = ["/Library/Apple", "/Library/Developer", "/Library/Frameworks", "/Library/Python", "/Library/Ruby", "/System", "/bin", "/nix/store", "/opt/homebrew", "/opt/local", "/sbin", "/usr"]
-        let toolDirectories = [".asdf", ".bun", ".cache/node/corepack", ".cargo", ".config/conda", ".config/mise", ".config/pdm", ".config/pip", ".config/pypoetry", ".deno", ".local/bin", ".local/lib", ".local/pipx", ".local/share/mise", ".local/share/pipx", ".local/share/uv", ".npm-global", ".nvm", ".pyenv", ".rbenv", ".rvm", ".volta", ".yarn", "Library/Application Support/fnm", "Library/Application Support/pdm", "Library/Application Support/pypoetry", "Library/Python", "Library/pnpm", "anaconda3", "miniconda3", "miniforge3"]
-        let configFiles = [".bundle/config", ".condarc", ".config/git/config", ".gitconfig", ".npmrc", ".python-version", ".ruby-version", ".tool-versions", ".yarnrc.yml"]
+        let systemDirectories = ["/Library/Apple", "/Library/Developer", "/Library/Frameworks", "/Library/Python", "/Library/Ruby", "/System", "/bin", "/etc/mise", "/nix/store", "/opt/homebrew", "/opt/local", "/sbin", "/usr"]
+        let configDirectories = [".config/conda", ".config/mise", ".config/pdm", ".config/pip", ".config/pypoetry", ".mise", "Library/Application Support/pdm", "Library/Application Support/pypoetry"]
+        let toolDirectories = configDirectories + [".asdf", ".bun", ".cache/node/corepack", ".cargo", ".deno", ".local/bin", ".local/lib", ".local/pipx", ".local/share/mise", ".local/share/pipx", ".local/share/uv", ".npm-global", ".nvm", ".pyenv", ".rbenv", ".rvm", ".volta", ".yarn", "Library/Application Support/fnm", "Library/Python", "Library/pnpm", "anaconda3", "miniconda3", "miniforge3"]
+        // mise also reads its config from the home directory itself; when that
+        // read is blocked every mise shim fails, and with it every version.
+        // https://mise.jdx.dev/configuration.html
+        let miseConfigFiles = [".config/mise.toml", ".config/mise.local.toml", ".mise.toml", ".mise.local.toml", ".rtx.toml", ".rtx.local.toml", "mise.toml", "mise.local.toml", "mise/config.toml", "mise/config.local.toml"]
+        let configFiles = [".bundle/config", ".condarc", ".config/git/config", ".gitconfig", ".npmrc", ".python-version", ".ruby-version", ".tool-versions", ".yarnrc.yml"] + miseConfigFiles
+        let homeConfigFiles = configFiles.map { home.appendingPathComponent($0).path }
         let directories = systemDirectories + toolDirectories.map { home.appendingPathComponent($0).path } + readDirectories
         let systemFiles = ["/etc/bashrc", "/etc/passwd", "/etc/paths", "/etc/profile", "/etc/zprofile", "/etc/zshenv", "/etc/zshrc"].map(canonicalPath)
         var files = ["/", "/dev/null", "/dev/random", "/dev/urandom", "/dev/zero", app, canonicalPath(app)]
-            + systemFiles + configFiles.map { home.appendingPathComponent($0).path }
-            + readFiles.map(canonicalPath)
+            + systemFiles + homeConfigFiles + readFiles.map(canonicalPath)
+            + symlinkedConfigFiles(
+                files: homeConfigFiles,
+                directories: configDirectories.map { home.appendingPathComponent($0).path } + readDirectories,
+                home: home.path
+            )
         // Runtimes need to traverse installation paths, without reading sibling files.
         var parents = Set<String>()
         for path in directories + files {

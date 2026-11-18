@@ -46,6 +46,11 @@ jobs:
           application-certificate: ${{ secrets.APPLICATION_CERTIFICATE_DATA }}
           application-passphrase: ${{ secrets.APPLICATION_CERTIFICATE_PASSPHRASE }}
 
+      # MiseIntegrationTests install Node.js with a real mise and skip
+      # without it.
+      - name: Install mise
+        run: brew install mise
+
       - name: Run tests
         run: make test XCODEBUILD_FLAGS="$XCODEBUILD_FLAGS"
         env:
