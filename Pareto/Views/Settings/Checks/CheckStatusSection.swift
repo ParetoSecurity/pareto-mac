@@ -217,17 +217,43 @@ private struct DetailsText: View {
 
 // MARK: - Window vs. sheet presentation
 
+/// Fits the standalone window to the form, up to a height that stays on screen; longer forms scroll.
+private struct DetailWindowHeight: ViewModifier {
+    @State private var isCapped: Bool = false
+
+    private var maxHeight: CGFloat {
+        let visible: CGFloat = NSScreen.main?.visibleFrame.height ?? 800
+        // Leave room for the title bar and a margin around the window
+        return min(700, visible - 80)
+    }
+
+    func body(content: Content) -> some View {
+        content
+            // While the form fits, its scroller (shown with "always show scroll bars") is just noise
+            .scrollIndicators(isCapped ? .automatic : .never)
+            .frame(maxHeight: maxHeight)
+            .fixedSize(horizontal: false, vertical: true)
+            .background(
+                GeometryReader { proxy in
+                    Color.clear
+                        .onAppear { isCapped = proxy.size.height >= maxHeight }
+                        .onChange(of: proxy.size.height) { height in
+                            isCapped = height >= maxHeight
+                        }
+                }
+            )
+    }
+}
+
 extension View {
-    /// In the standalone window the form takes its content height so the window fits it;
-    /// the Preferences sheet keeps a fixed minimum and scrolls.
+    /// In the standalone window the form takes its content height, capped to the screen, so the
+    /// window fits it; the Preferences sheet keeps a fixed minimum and scrolls.
     @ViewBuilder
     func detailWindowSizing(showsHeader: Bool) -> some View {
         if showsHeader {
             frame(minHeight: 400)
         } else {
-            // The window already fits the form, so its scroller (shown with "always show scroll bars") is just noise
-            fixedSize(horizontal: false, vertical: true)
-                .scrollIndicators(.never)
+            modifier(DetailWindowHeight())
         }
     }
 
