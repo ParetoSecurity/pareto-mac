@@ -23,7 +23,7 @@ class FirewallExceptionsCheck: ParetoCheck {
         case apple
         case appStore
         case other
-        /// The app is no longer on disk, so nothing can accept connections through its entry.
+        /// The path is no longer on disk, e.g. an uninstalled app or the helper of an older version.
         case missing
     }
 
@@ -31,7 +31,6 @@ class FirewallExceptionsCheck: ParetoCheck {
     enum Trust: Equatable {
         case apple
         case appStore
-        case notInstalled
         case user
     }
 
@@ -40,6 +39,8 @@ class FirewallExceptionsCheck: ParetoCheck {
         let bundle: String
         let paths: [String]
         let trust: Trust?
+        /// Entries that fail the check because their path no longer exists.
+        var stalePaths: [String] = []
 
         var id: String {
             bundle
@@ -245,9 +246,7 @@ class FirewallExceptionsCheck: ParetoCheck {
             return .apple
         case .appStore:
             return .appStore
-        case .missing:
-            return .notInstalled
-        case .other:
+        case .missing, .other:
             return nil
         }
     }
@@ -274,10 +273,12 @@ class FirewallExceptionsCheck: ParetoCheck {
             let trusts = paths.map { Self.isCovered($0, by: allowed) ? .user : autoTrust($0) }
             let trust: Trust? = trusts.contains(nil) ? nil
                 : trusts.contains(.user) ? .user
-                : trusts.allSatisfy { $0 == .notInstalled } ? .notInstalled
-                : trusts.allSatisfy { $0 == .apple || $0 == .notInstalled } ? .apple
+                : trusts.allSatisfy { $0 == .apple } ? .apple
                 : .appStore
-            return Exception(bundle: bundle, paths: paths, trust: trust)
+            let stalePaths = zip(paths, trusts)
+                .filter { $1 == nil && !Self.isInterpreter($0) && signerProvider($0) == .missing }
+                .map(\.0)
+            return Exception(bundle: bundle, paths: paths, trust: trust, stalePaths: stalePaths)
         }
     }
 
@@ -288,6 +289,15 @@ class FirewallExceptionsCheck: ParetoCheck {
                 && !path.hasPrefix(exception.bundle + "/Contents/MacOS/")
                 && !path.hasPrefix(exception.bundle + "/Wrapper/")
         }
+    }
+
+    /// A stale entry shows its own path, because the bundle it sits in can still be installed, e.g. the versioned
+    /// helper folder a browser leaves behind after an update.
+    static func displayPath(of exception: Exception) -> String {
+        guard let stale = exception.stalePaths.first, exception.stalePaths.count == exception.paths.count else {
+            return exception.bundle
+        }
+        return stale
     }
 
     func exceptions() -> [String]? {

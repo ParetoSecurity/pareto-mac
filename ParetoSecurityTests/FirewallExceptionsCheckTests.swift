@@ -390,12 +390,64 @@ class FirewallExceptionsCheckTests: XCTestCase {
         XCTAssertNil(check.evaluate()?.first?.trust)
     }
 
-    func testMissingAppsPass() {
+    func testMissingAppsFailAsStaleEntries() {
         let output = listApps([("/Applications/Gone.app", true), ("/usr/libexec/sharingd", true)])
         let check = makeCheck(output, signers: ["/Applications/Gone.app": .missing, "/usr/libexec/sharingd": .apple])
 
+        XCTAssertFalse(check.checkPasses())
+        XCTAssertEqual(check.exceptions(), ["/Applications/Gone.app"])
+        XCTAssertEqual(check.evaluate()?.map(\.trust), [nil, .apple])
+        XCTAssertEqual(check.evaluate()?.map(\.stalePaths), [["/Applications/Gone.app"], []])
+    }
+
+    func testMissingSystemBinariesAreStaleToo() {
+        // A daemon macOS dropped, such as /usr/libexec/audioclocksyncd, is flagged like any other missing path.
+        let path = "/usr/libexec/pareto-missing-\(UUID())"
+        XCTAssertEqual(FirewallExceptionsCheck.signer(of: path), .missing)
+
+        let check = FirewallExceptionsCheck(listAppsProvider: { self.listApps([(path, true)]) }, requiresHeader: true)
+        XCTAssertFalse(check.checkPasses())
+        XCTAssertEqual(check.evaluate()?.first?.stalePaths, [path])
+    }
+
+    func testAllowedStaleEntryPasses() {
+        Defaults[.ignoredFirewallApps] = ["/Applications/Gone.app"]
+        let check = makeCheck(listApps([("/Applications/Gone.app", true)]), signers: ["/Applications/Gone.app": .missing])
+
         XCTAssertTrue(check.checkPasses())
-        XCTAssertEqual(check.evaluate()?.map(\.trust), [.notInstalled, .apple])
+        XCTAssertEqual(check.evaluate()?.first?.trust, .user)
+        XCTAssertEqual(check.evaluate()?.first?.stalePaths, [])
+    }
+
+    func testStaleHelperFailsInsideAnAppleSignedApp() throws {
+        let app = "/Applications/Safari.app"
+        let stale = app + "/Contents/Frameworks/Old.framework/Versions/1/Helper.app"
+        let check = makeCheck(listApps([(app, true), (stale, true)]), signers: [app: .apple, stale: .missing])
+
+        let exception = try XCTUnwrap(check.evaluate()?.first)
+        XCTAssertNil(exception.trust)
+        XCTAssertEqual(exception.stalePaths, [stale])
+        XCTAssertEqual(FirewallExceptionsCheck.displayPath(of: exception), app)
+    }
+
+    func testStaleEntryShowsItsOwnPathNotTheInstalledBundle() throws {
+        let stale = "/Applications/Brave Browser Nightly.app/Contents/Frameworks/Brave Browser Nightly Framework"
+            + ".framework/Versions/1.80.1/Helpers/Brave Browser Nightly Helper.app"
+        let check = makeCheck(listApps([(stale, true)]), signers: [stale: .missing])
+
+        let exception = try XCTUnwrap(check.evaluate()?.first)
+        XCTAssertNil(exception.trust)
+        XCTAssertEqual(exception.stalePaths, [stale])
+        XCTAssertEqual(exception.bundle, "/Applications/Brave Browser Nightly.app")
+        XCTAssertEqual(FirewallExceptionsCheck.displayPath(of: exception), stale)
+    }
+
+    func testInstalledAppsShowTheirBundlePath() throws {
+        let helper = "/Applications/Arc.app/Contents/Frameworks/ArcCore.framework/Versions/A/Helpers/Browser Helper.app"
+        let check = makeCheck(listApps([(helper, true)]))
+
+        let exception = try XCTUnwrap(check.evaluate()?.first)
+        XCTAssertEqual(FirewallExceptionsCheck.displayPath(of: exception), "/Applications/Arc.app")
     }
 
     func testAppsOnUnmountedVolumesStillFail() {
