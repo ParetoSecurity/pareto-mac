@@ -400,6 +400,16 @@ class FirewallExceptionsCheckTests: XCTestCase {
         XCTAssertEqual(check.evaluate()?.map(\.stalePaths), [["/Applications/Gone.app"], []])
     }
 
+    func testMissingSystemBinariesAreStaleToo() {
+        // A daemon macOS dropped, such as /usr/libexec/audioclocksyncd, is flagged like any other missing path.
+        let path = "/usr/libexec/pareto-missing-\(UUID())"
+        XCTAssertEqual(FirewallExceptionsCheck.signer(of: path), .missing)
+
+        let check = FirewallExceptionsCheck(listAppsProvider: { self.listApps([(path, true)]) }, requiresHeader: true)
+        XCTAssertFalse(check.checkPasses())
+        XCTAssertEqual(check.evaluate()?.first?.stalePaths, [path])
+    }
+
     func testAllowedStaleEntryPasses() {
         Defaults[.ignoredFirewallApps] = ["/Applications/Gone.app"]
         let check = makeCheck(listApps([("/Applications/Gone.app", true)]), signers: ["/Applications/Gone.app": .missing])
