@@ -26,7 +26,7 @@ final class IgnoredFirewallAppsViewModel: ObservableObject {
     }
 
     var trustedAutomatically: [FirewallExceptionsCheck.Exception] {
-        exceptions.filter { $0.trust == .apple || $0.trust == .appStore || $0.trust == .notInstalled }
+        exceptions.filter { $0.trust == .apple || $0.trust == .appStore }
     }
 
     func load() async {
@@ -115,7 +115,7 @@ struct IgnoredFirewallAppsSettingsView: View {
                         VStack(alignment: .leading, spacing: 6) {
                             ForEach(model.trustedAutomatically) { exception in
                                 FirewallAppRow(exception: exception) {
-                                    TrustBadge(trust: exception.trust)
+                                    Badge(label: exception.trust == .apple ? "Apple" : "App Store")
                                 }
                             }
                         }
@@ -128,9 +128,9 @@ struct IgnoredFirewallAppsSettingsView: View {
                 }
             }
 
-            Text("Apple's own apps, App Store apps and entries for removed apps are trusted automatically. "
-                + "Script interpreters such as "
-                + "Python or Ruby always need your review. Remove… opens System Settings, where you can take "
+            Text("Apple's own apps and App Store apps are trusted automatically. Script interpreters such as "
+                + "Python or Ruby always need your review. A stale entry points at a path that no longer exists, "
+                + "such as an uninstalled app or the helper of an older version of an app. Remove… opens System Settings, where you can take "
                 + "the app off the list under Network > Firewall > Options.")
                 .font(.footnote)
                 .foregroundColor(.secondary)
@@ -169,6 +169,10 @@ struct IgnoredFirewallAppsSettingsView: View {
                 ForEach(model.needsReview) { exception in
                     FirewallAppRow(exception: exception) {
                         HStack(spacing: 6) {
+                            if !exception.stalePaths.isEmpty {
+                                Badge(label: "Stale entry")
+                                    .help("No longer on disk:\n" + exception.stalePaths.joined(separator: "\n"))
+                            }
                             Button("Remove…") { Self.openFirewallSettings() }
                                 .controlSize(.small)
                                 .help("Opens Network settings. Click Firewall, then Options…, and remove the app there.")
@@ -225,7 +229,7 @@ private struct FirewallAppRow<Accessory: View>: View {
                         Text(helperNote).font(.caption2).foregroundColor(.secondary)
                     }
                 }
-                Text(exception.bundle)
+                Text(FirewallExceptionsCheck.displayPath(of: exception))
                     .font(.system(size: 11, design: .monospaced))
                     .foregroundColor(.secondary)
                     .lineLimit(1)
@@ -247,17 +251,8 @@ private struct FirewallAppRow<Accessory: View>: View {
     }
 }
 
-private struct TrustBadge: View {
-    let trust: FirewallExceptionsCheck.Trust?
-
-    private var label: String {
-        switch trust {
-        case .apple: "Apple"
-        case .appStore: "App Store"
-        case .notInstalled: "Removed"
-        default: ""
-        }
-    }
+private struct Badge: View {
+    let label: String
 
     var body: some View {
         Text(label)
