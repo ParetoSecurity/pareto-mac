@@ -16,7 +16,7 @@ class BootCheck: ParetoCheck {
     let bootArgsProvider: (() -> String)?
 
     init(
-        sipStatusProvider: @escaping () -> String = { runCMD(app: "/usr/bin/csrutil", args: ["status"]) },
+        sipStatusProvider: @escaping () -> String = { (try? runCMD(app: "/usr/bin/csrutil", args: ["status"])) ?? "" },
         bootArgsProvider: (() -> String)? = nil
     ) {
         self.sipStatusProvider = sipStatusProvider

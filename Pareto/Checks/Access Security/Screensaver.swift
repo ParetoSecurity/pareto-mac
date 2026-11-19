@@ -71,7 +71,7 @@ class ScreensaverCheck: ParetoCheck {
 
     /// Reads the power profiles through `pmset -g custom`, which needs no privileges and only uses public tools.
     static func copyPowerPreferences() -> [String: Any]? {
-        parsePmsetCustom(runCMD(app: "/usr/bin/pmset", args: ["-g", "custom"]))
+        parsePmsetCustom((try? runCMD(app: "/usr/bin/pmset", args: ["-g", "custom"])) ?? "")
     }
 
     /// Turns `pmset -g custom` output into `["AC Power": ["Display Sleep Timer": 10], ...]`.
