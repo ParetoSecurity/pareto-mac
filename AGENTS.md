@@ -8,6 +8,7 @@
 - `scripts/`: Helper scripts, such as the app update check generator.
 - `assets/`: App icons and screenshots. `SourcePackages/`: SwiftPM cache.
 - `.github/workflows/`: CI for lint, test, and release.
+- `.github/workflows/actions.lock`: the commit each GitHub Action runs. `uses:` lines carry version tags, and local actions are referenced as `$/.github/actions/<name>`. Never edit the lockfile by hand: after any `uses:` change, in a workflow or in `.github/actions/`, run `gh actions-lock` and commit the result. Renovate moves versions and regenerates the lockfile in its own pull requests.
 
 ## Build, Test, and Development Commands
 - Install tooling once: `brew install mint && mint bootstrap` (installs SwiftFormat, SwiftLint, xcbeautify).

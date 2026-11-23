@@ -11,12 +11,12 @@ runs:
   using: "composite"
   steps:
     - name: Setup Xcode
-      uses: maxim-lobanov/setup-xcode@v1
+      uses: maxim-lobanov/setup-xcode@v1.7.0
       with:
         xcode-version: ${{ inputs.xcode-version }}
 
     - name: Cache Homebrew
-      uses: actions/cache@v6
+      uses: actions/cache@v6.1.0
       with:
         path: |
           ~/Library/Caches/Homebrew
@@ -26,7 +26,7 @@ runs:
           ${{ runner.os }}-homebrew-
 
     - name: Cache Mint packages
-      uses: actions/cache@v6
+      uses: actions/cache@v6.1.0
       with:
         path: ~/.mint
         key: ${{ runner.os }}-mint-${{ hashFiles('Mintfile') }}
@@ -40,7 +40,7 @@ runs:
         mint bootstrap --link
 
     - name: Cache SPM packages
-      uses: actions/cache@v6
+      uses: actions/cache@v6.1.0
       with:
         path: SourcePackages
         key: ${{ runner.os }}-spm-${{ hashFiles('Pareto Security.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved') }}
@@ -50,7 +50,7 @@ runs:
     # Content-addressed, so stale entries are never wrong — key on the commit
     # to save fresh results every run and fall back to the newest cache.
     - name: Cache compilation cache
-      uses: actions/cache@v6
+      uses: actions/cache@v6.1.0
       with:
         path: CompilationCache
         key: ${{ runner.os }}-xcode${{ inputs.xcode-version }}-ccache-${{ github.sha }}
