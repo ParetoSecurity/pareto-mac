@@ -26,17 +26,17 @@ jobs:
       contents: write
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v7
+        uses: actions/checkout@v7.0.1
         with:
           fetch-depth: 0
 
       - name: Setup build environment
-        uses: ./.github/actions/setup-build-env
+        uses: $/.github/actions/setup-build-env
         with:
           xcode-version: ${{ env.XCODE_VERSION }}
 
       - name: Setup code signing
-        uses: ./.github/actions/setup-signing
+        uses: $/.github/actions/setup-signing
         with:
           development-certificate: ${{ secrets.DEVELOPMENT_CERTIFICATE_DATA }}
           development-passphrase: ${{ secrets.DEVELOPMENT_CERTIFICATE_PASSPHRASE }}
@@ -58,14 +58,14 @@ jobs:
       # Notarizing the DMG covers the nested app, so the bundle can be
       # stapled afterwards too.
       - name: Notarize DMG
-        uses: ./.github/actions/notarize
+        uses: $/.github/actions/notarize
         with:
           submit-path: ParetoSecurity.dmg
           apple-id: ${{ secrets.NOTARIZATION_USERNAME }}
           password: ${{ secrets.NOTARIZATION_PASSWORD }}
 
       - name: Staple app
-        uses: ./.github/actions/notarize
+        uses: $/.github/actions/notarize
         with:
           submit-path: Export/Pareto Security.app
           staple-only: "true"
@@ -78,27 +78,27 @@ jobs:
           "Export/Pareto Security.app/Contents/MacOS/Pareto Security" -export > checks.json
 
       - name: Upload app artifact
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v7.0.2
         with:
           name: ParetoSecurity.app
           path: ParetoSecurity.app.zip
           retention-days: 90
 
       - name: Upload DMG artifact
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v7.0.2
         with:
           name: ParetoSecurity.dmg
           path: ParetoSecurity.dmg
           retention-days: 90
 
       - name: Publish build hashes
-        uses: ./.github/actions/publish-hashes
+        uses: $/.github/actions/publish-hashes
         with:
           title: Native Release
           binary: Export/Pareto Security.app/Contents/MacOS/Pareto Security
 
       - name: Setup Sentry CLI
-        uses: ./.github/actions/setup-sentry-cli
+        uses: $/.github/actions/setup-sentry-cli
 
       - name: Upload debug symbols
         env:
@@ -109,7 +109,7 @@ jobs:
       # now, so the release either gets the complete set or the job fails
       # before publishing anything.
       - name: Publish release
-        uses: softprops/action-gh-release@v3
+        uses: softprops/action-gh-release@v3.0.4
         with:
           fail_on_unmatched_files: true
           files: |
@@ -128,17 +128,17 @@ jobs:
     steps:
       # Full history so release notes can be built from the previous tag.
       - name: Checkout repository
-        uses: actions/checkout@v7
+        uses: actions/checkout@v7.0.1
         with:
           fetch-depth: 0
 
       - name: Setup build environment
-        uses: ./.github/actions/setup-build-env
+        uses: $/.github/actions/setup-build-env
         with:
           xcode-version: ${{ env.XCODE_VERSION }}
 
       - name: Setup code signing
-        uses: ./.github/actions/setup-signing
+        uses: $/.github/actions/setup-signing
         with:
           development-certificate: ${{ secrets.DEVELOPMENT_CERTIFICATE_DATA }}
           development-passphrase: ${{ secrets.DEVELOPMENT_CERTIFICATE_PASSPHRASE }}
@@ -153,7 +153,7 @@ jobs:
         run: make archive-release-setapp MARKETING_VERSION="$VERSION"
 
       - name: Setup Sentry CLI
-        uses: ./.github/actions/setup-sentry-cli
+        uses: $/.github/actions/setup-sentry-cli
 
       - name: Upload debug symbols
         env:
@@ -166,7 +166,7 @@ jobs:
       # notarytool takes the zip, but the ticket is stapled onto the bundle so
       # the archive uploaded below carries it.
       - name: Notarize app
-        uses: ./.github/actions/notarize
+        uses: $/.github/actions/notarize
         with:
           submit-path: ParetoSecurity.app.zip
           staple-path: SetAppExport/Pareto Security.app
@@ -179,14 +179,14 @@ jobs:
           make build-release-setapp
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v7.0.2
         with:
           name: ParetoSecuritySetApp.app
           path: ParetoSecuritySetApp.app.zip
           retention-days: 90
 
       - name: Publish build hashes
-        uses: ./.github/actions/publish-hashes
+        uses: $/.github/actions/publish-hashes
         with:
           title: SetApp Release
           binary: SetAppExport/Pareto Security.app/Contents/MacOS/Pareto Security SetApp

@@ -25,12 +25,12 @@ jobs:
     timeout-minutes: 20
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v7
+        uses: actions/checkout@v7.0.1
         with:
           fetch-depth: 0
 
       - name: Setup build environment
-        uses: ./.github/actions/setup-build-env
+        uses: $/.github/actions/setup-build-env
         with:
           xcode-version: ${{ env.XCODE_VERSION }}
 
@@ -39,7 +39,7 @@ jobs:
 
       - name: Setup code signing
         id: signing
-        uses: ./.github/actions/setup-signing
+        uses: $/.github/actions/setup-signing
         with:
           development-certificate: ${{ secrets.DEVELOPMENT_CERTIFICATE_DATA }}
           development-passphrase: ${{ secrets.DEVELOPMENT_CERTIFICATE_PASSPHRASE }}
@@ -74,12 +74,12 @@ jobs:
       pull-requests: write
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v7
+        uses: actions/checkout@v7.0.1
         with:
           fetch-depth: 0
 
       - name: Setup build environment
-        uses: ./.github/actions/setup-build-env
+        uses: $/.github/actions/setup-build-env
         with:
           xcode-version: ${{ env.XCODE_VERSION }}
 
@@ -89,7 +89,7 @@ jobs:
       # privileged helper will not install.
       - name: Setup code signing
         id: signing
-        uses: ./.github/actions/setup-signing
+        uses: $/.github/actions/setup-signing
         with:
           development-certificate: ${{ secrets.DEVELOPMENT_CERTIFICATE_DATA }}
           development-passphrase: ${{ secrets.DEVELOPMENT_CERTIFICATE_PASSPHRASE }}
@@ -115,14 +115,14 @@ jobs:
         run: ditto -c -k --keepParent "Export/Pareto Security.app" "ParetoSecurity${{ env.ARTIFACT_SUFFIX }}.app.zip"
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v7.0.2
         with:
           name: ParetoSecurity${{ env.ARTIFACT_SUFFIX }}.app
           path: ParetoSecurity${{ env.ARTIFACT_SUFFIX }}.app.zip
           retention-days: 14
 
       - name: Publish build hashes
-        uses: ./.github/actions/publish-hashes
+        uses: $/.github/actions/publish-hashes
         with:
           title: Debug Build${{ env.ARTIFACT_SUFFIX && ' (ad-hoc, not for distribution)' || '' }}
           binary: Export/Pareto Security.app/Contents/MacOS/Pareto Security
@@ -142,12 +142,12 @@ jobs:
       pull-requests: write
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v7
+        uses: actions/checkout@v7.0.1
         with:
           fetch-depth: 0
 
       - name: Setup build environment
-        uses: ./.github/actions/setup-build-env
+        uses: $/.github/actions/setup-build-env
         with:
           xcode-version: ${{ env.XCODE_VERSION }}
 
@@ -156,7 +156,7 @@ jobs:
       # "No Accounts" inside xcodebuild.
       - name: Setup code signing
         id: signing
-        uses: ./.github/actions/setup-signing
+        uses: $/.github/actions/setup-signing
         with:
           development-certificate: ${{ secrets.DEVELOPMENT_CERTIFICATE_DATA }}
           development-passphrase: ${{ secrets.DEVELOPMENT_CERTIFICATE_PASSPHRASE }}
@@ -177,7 +177,7 @@ jobs:
 
       - name: Upload artifact
         if: steps.signing.outputs.signing-available == 'true'
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v7.0.2
         with:
           name: ParetoSecuritySetApp.app
           path: ParetoSecuritySetApp.app.zip
@@ -185,7 +185,7 @@ jobs:
 
       - name: Publish build hashes
         if: steps.signing.outputs.signing-available == 'true'
-        uses: ./.github/actions/publish-hashes
+        uses: $/.github/actions/publish-hashes
         with:
           title: SetApp Build
           binary: SetAppExport/Pareto Security.app/Contents/MacOS/Pareto Security SetApp
