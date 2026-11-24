@@ -103,7 +103,7 @@ class FirewallStealthCheck: ParetoCheck {
             return helperAnswer.passes(for: self, fetch: helperPasses)
         }
 
-        let out = runCMD(app: "/usr/libexec/ApplicationFirewall/socketfilterfw", args: ["--getstealthmode"])
+        let out = (try? runCMD(app: "/usr/libexec/ApplicationFirewall/socketfilterfw", args: ["--getstealthmode"])) ?? ""
         os_log("FirewallStealthCheck: Command output: %{public}@", out)
         return Self.evaluate(helperOutput: out) ?? false
     }

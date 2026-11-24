@@ -117,7 +117,7 @@ class FirewallCheck: ParetoCheck {
             return helperAnswer.passes(for: self, fetch: helperPasses)
         }
 
-        let out = runCMD(app: "/usr/libexec/ApplicationFirewall/socketfilterfw", args: ["--getglobalstate"])
+        let out = (try? runCMD(app: "/usr/libexec/ApplicationFirewall/socketfilterfw", args: ["--getglobalstate"])) ?? ""
         os_log("FirewallCheck: Command output: %{public}@", out)
         return Self.evaluate(helperOutput: out) ?? false
     }

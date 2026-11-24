@@ -25,7 +25,7 @@ final class IgnoredUsersViewModel: ObservableObject {
         // Run command off the main actor
         let output = await withCheckedContinuation { (continuation: CheckedContinuation<String, Never>) in
             DispatchQueue.global(qos: .userInitiated).async {
-                let out = runCMD(app: "/usr/bin/dscl", args: [".", "-list", "/Users"])
+                let out = (try? runCMD(app: "/usr/bin/dscl", args: [".", "-list", "/Users"])) ?? ""
                 continuation.resume(returning: out)
             }
         }

@@ -224,9 +224,9 @@ class ScreensaverCheckTests: XCTestCase {
         XCTAssertNotNil(displaySleep(prefs, "AC Power"))
     }
 
-    func testPmsetOutputIsNotLocalized() {
-        let english = ScreensaverCheck.parsePmsetCustom(runCMD(app: "/usr/bin/pmset", args: ["-g", "custom"]))
-        let french = ScreensaverCheck.parsePmsetCustom(runCMD(
+    func testPmsetOutputIsNotLocalized() throws {
+        let english = try ScreensaverCheck.parsePmsetCustom(runCMD(app: "/usr/bin/pmset", args: ["-g", "custom"]))
+        let french = try ScreensaverCheck.parsePmsetCustom(runCMD(
             app: "/usr/bin/pmset",
             args: ["-g", "custom"],
             environment: ["LANG": "fr_FR.UTF-8", "LC_ALL": "fr_FR.UTF-8", "AppleLanguages": "(fr)"]
