@@ -93,11 +93,26 @@ class Claims: ObservableObject {
             group.enter()
             check.prefetch { group.leave() }
         }
-        if group.wait(timeout: .now() + timeout) == .timedOut {
-            os_log("Timed out waiting for checks to resolve before report", log: Log.app)
-            return false
+        guard Thread.isMainThread else {
+            if group.wait(timeout: .now() + timeout) == .timedOut {
+                os_log("Timed out waiting for checks to resolve before report", log: Log.app)
+                return false
+            }
+            return true
         }
-        return true
+
+        // The reports run on the main thread, and the helper backed checks need the main actor
+        // to get their answer, so the main run loop keeps running while this waits.
+        var resolved = false
+        group.notify(queue: .main) { resolved = true }
+        let deadline = Date().addingTimeInterval(timeout)
+        while !resolved, Date() < deadline {
+            RunLoop.main.run(mode: .default, before: min(deadline, Date().addingTimeInterval(0.05)))
+        }
+        if !resolved {
+            os_log("Timed out waiting for checks to resolve before report", log: Log.app)
+        }
+        return resolved
     }
 
     static let updateChecks = [

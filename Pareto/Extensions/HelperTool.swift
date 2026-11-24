@@ -50,7 +50,7 @@ class HelperToolUtilities {
     }
 
     /// Manual version counter - increment this when helper needs updating
-    static let expectedHelperVersion = "1.0.4"
+    static let expectedHelperVersion = "1.0.5"
 
     /// Static method to get expected helper version (manual counter)
     static func getExpectedHelperVersion() -> String {

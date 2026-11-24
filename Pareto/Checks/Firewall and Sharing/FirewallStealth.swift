@@ -10,8 +10,19 @@ import os.log
 
 class FirewallStealthCheck: ParetoCheck {
     static let sharedInstance = FirewallStealthCheck()
-    private let helperResultLock = OSAllocatedUnfairLock<Bool?>(initialState: nil)
-    private let helperCheckInFlight = OSAllocatedUnfairLock(initialState: false)
+
+    /// Returns the output of `socketfilterfw --getstealthmode`, run as root by the privileged helper.
+    let helperProvider: () async -> String
+    private let helperAnswer: HelperAnswer
+
+    init(
+        helperProvider: @escaping () async -> String = FirewallStealthCheck.fetchStealthModeViaHelper,
+        helperTimeout: TimeInterval = 10
+    ) {
+        self.helperProvider = helperProvider
+        helperAnswer = HelperAnswer(timeout: helperTimeout)
+    }
+
     override var UUID: String {
         "2e46c89a-5461-4865-a92e-3b799c12034b"
     }
@@ -59,52 +70,54 @@ class FirewallStealthCheck: ParetoCheck {
         return FirewallCheck.sharedInstance.isActive
     }
 
-    override func checkPasses() -> Bool {
-        if #available(macOS 26, *) {
-            let out = runCMD(app: "/usr/libexec/ApplicationFirewall/socketfilterfw", args: ["--getstealthmode"])
-            return out.contains("enabled") || out.contains("mode is on")
+    /// Takes the output of `socketfilterfw --getstealthmode`. Returns nil when it does not state
+    /// the stealth mode, e.g. an error from the helper.
+    static func evaluate(helperOutput output: String) -> Bool? {
+        if output.contains("enabled") || output.contains("mode is on") {
+            return true
         }
+        return output.contains("disabled") || output.contains("mode is off") ? false : nil
+    }
 
-        if #available(macOS 15, *) {
-            refreshHelperResultIfNeeded()
-            return helperResultLock.withLock { $0 } ?? checkPassed
+    private func helperPasses() async -> Bool? {
+        let output = await helperProvider()
+        guard let passes = Self.evaluate(helperOutput: output) else {
+            os_log("FirewallStealthCheck: helper output could not be evaluated: %{public}@", log: Log.check, output)
+            return nil
+        }
+        return passes
+    }
+
+    /// Asks the helper before a report runs, so the report does not print the stored result.
+    override func prefetch(completion: @escaping () -> Void) {
+        guard requiresHelper, isRunnable else {
+            completion()
+            return
+        }
+        helperAnswer.prefetch(for: self, fetch: helperPasses, completion: completion)
+    }
+
+    override func checkPasses() -> Bool {
+        // The helper is only needed on macOS 15 to 25
+        if requiresHelper {
+            return helperAnswer.passes(for: self, fetch: helperPasses)
         }
 
         let out = runCMD(app: "/usr/libexec/ApplicationFirewall/socketfilterfw", args: ["--getstealthmode"])
-        return out.contains("enabled") || out.contains("mode is on")
+        os_log("FirewallStealthCheck: Command output: %{public}@", out)
+        return Self.evaluate(helperOutput: out) ?? false
     }
 
-    private func refreshHelperResultIfNeeded() {
-        let shouldStart = helperCheckInFlight.withLock { inFlight in
-            if inFlight {
-                return false
-            }
-            inFlight = true
-            return true
-        }
-        guard shouldStart else { return }
-
-        Task.detached(priority: .utility) { [weak self] in
-            guard let self else { return }
-            let enabled = await fetchStealthEnabledViaHelper()
-            helperResultLock.withLock { $0 = enabled }
-            helperCheckInFlight.withLock { $0 = false }
-        }
-    }
-
-    private func fetchStealthEnabledViaHelper() async -> Bool {
+    static func fetchStealthModeViaHelper() async -> String {
         await withCheckedContinuation { continuation in
             Task { @MainActor in
                 let helperManager = HelperToolManager()
-                let helperReady = await helperManager.ensureHelperIsUpToDate()
-                guard helperReady else {
-                    continuation.resume(returning: false)
+                guard await helperManager.ensureHelperIsUpToDate() else {
+                    continuation.resume(returning: "XPC: Helper tool is not installed")
                     return
                 }
-
                 await helperManager.isFirewallStealthEnabled { output in
-                    let enabled = output.contains("enabled") || output.contains("mode is on")
-                    continuation.resume(returning: enabled)
+                    continuation.resume(returning: output)
                 }
             }
         }
