@@ -5,7 +5,7 @@ version: 'v0.0.3'
 workflows:
     '.github/workflows/claude.yml':
         - 'actions/checkout@v7.0.1'
-        - 'anthropics/claude-code-action@v1.0.286'
+        - 'anthropics/claude-code-action@v1.0.289'
     '.github/workflows/release.yml':
         - 'actions/cache@v6.1.0'
         - 'actions/checkout@v7.0.1'
@@ -35,9 +35,9 @@ dependencies:
         commit: 'sha1-cf430e030ddbb5b0abf93d22962f4752f3646cd9'
         owner_id: 44036562
         repo_id: 192625955
-    'anthropics/claude-code-action@v1.0.286':
-        ref: 'v1.0.286'
-        commit: 'sha1-acfe7992852970efb4fee683d63d628e3e52df67'
+    'anthropics/claude-code-action@v1.0.289':
+        ref: 'v1.0.289'
+        commit: 'sha1-eb56b6666facdbd501035f4a0269d8caee2e7a8b'
         owner_id: 76263028
         repo_id: 986421638
         uses:
