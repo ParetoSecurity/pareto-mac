@@ -75,7 +75,7 @@ class FirewallCheck: ParetoCheck {
 
     override func checkPasses() -> Bool {
         if #available(macOS 26, *) {
-            let out = runCMD(app: "/usr/libexec/ApplicationFirewall/socketfilterfw", args: ["--getglobalstate"])
+            let out = (try? runCMD(app: "/usr/libexec/ApplicationFirewall/socketfilterfw", args: ["--getglobalstate"])) ?? ""
             os_log("FirewallCheck: Command output: %{public}@", out)
             return out.contains("State = 1") || out.contains("State = 2")
         }
@@ -85,7 +85,7 @@ class FirewallCheck: ParetoCheck {
             return helperResultLock.withLock { $0 } ?? checkPassed
         }
 
-        let out = runCMD(app: "/usr/libexec/ApplicationFirewall/socketfilterfw", args: ["--getglobalstate"])
+        let out = (try? runCMD(app: "/usr/libexec/ApplicationFirewall/socketfilterfw", args: ["--getglobalstate"])) ?? ""
         os_log("FirewallCheck: Command output: %{public}@", out)
         return out.contains("State = 1") || out.contains("State = 2")
     }
