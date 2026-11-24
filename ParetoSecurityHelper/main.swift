@@ -9,7 +9,7 @@ import Foundation
 import Security
 
 /// Static version constant for helper tool
-private let helperToolVersion = "1.0.4"
+private let helperToolVersion = "1.0.5"
 
 /// Bundle identifiers of the apps allowed to talk to the helper (direct and SetApp builds).
 private let allowedClientIdentifiers = ["niteo.co.Pareto", "niteo.co.Pareto-setapp"]
@@ -65,12 +65,22 @@ class HelperToolDelegate: NSObject, NSXPCListenerDelegate, ParetoSecurityHelperP
         return true
     }
 
-    private func runCMD(app: String, args: [String], environment: [String: String]? = nil) -> String {
+    /// Output of a command, filled in by the thread that reads it.
+    private final class CommandOutput: @unchecked Sendable {
+        var data = Data()
+    }
+
+    /// Runs a command as root and returns its output. A command that does not finish within `timeout`
+    /// is terminated, then killed, so a hung tool cannot keep the client waiting or pile up.
+    private func runCMD(
+        app: String, args: [String], environment: [String: String]? = nil, timeout: TimeInterval = 8
+    ) -> String {
         NSLog("Helper: runCMD starting: %@ %@", app, args.joined(separator: " "))
         let pipe = Pipe()
         let task = Process()
         task.standardOutput = pipe
         task.standardError = pipe
+        task.standardInput = FileHandle.nullDevice
         task.arguments = args
         task.executableURL = URL(fileURLWithPath: app)
         if let environment {
@@ -80,18 +90,34 @@ class HelperToolDelegate: NSObject, NSXPCListenerDelegate, ParetoSecurityHelperP
         do {
             NSLog("Helper: runCMD attempting to run task")
             try task.run()
-            NSLog("Helper: runCMD task started, waiting for exit")
-            task.waitUntilExit()
-            NSLog("Helper: runCMD task exited with status: %d", task.terminationStatus)
         } catch {
             NSLog("Helper: runCMD failed with error: %@", error.localizedDescription)
             return "Failed to run command: \(error.localizedDescription)"
         }
 
-        NSLog("Helper: runCMD reading output data")
-        let data = pipe.fileHandleForReading.readDataToEndOfFile()
-        let output = String(data: data, encoding: .utf8)?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
-        let result = output.isEmpty ? "No output" : output
+        // Read before waiting for the exit: a command that fills the pipe would never exit otherwise
+        let output = CommandOutput()
+        let finished = DispatchSemaphore(value: 0)
+        Thread.detachNewThread {
+            output.data = pipe.fileHandleForReading.readDataToEndOfFile()
+            task.waitUntilExit()
+            finished.signal()
+        }
+
+        if finished.wait(timeout: .now() + timeout) == .timedOut {
+            NSLog("Helper: runCMD timed out after %.1f s, terminating: %@", timeout, app)
+            task.terminate()
+            // Still running only when it ignored the signal; an exited command's pid may be reused
+            if finished.wait(timeout: .now() + 2) == .timedOut, task.isRunning {
+                NSLog("Helper: runCMD killing: %@", app)
+                kill(task.processIdentifier, SIGKILL)
+            }
+            return "Command timed out"
+        }
+        NSLog("Helper: runCMD task exited with status: %d", task.terminationStatus)
+
+        let text = String(data: output.data, encoding: .utf8)?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        let result = text.isEmpty ? "No output" : text
         NSLog("Helper: runCMD completed with result: %@", result)
         return result
     }

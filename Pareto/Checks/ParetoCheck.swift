@@ -34,6 +34,9 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
     /// Indicate check has errored
     var hasError = false
 
+    /// Keeps a late result from being overwritten by the run that is still storing its own.
+    private let resultLock = NSRecursiveLock()
+
     // MARK: - Display status
 
     enum DisplayStatus: Equatable {
@@ -330,6 +333,8 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
         }
 
         os_log("Running check for %{public}s - %{public}s", log: Log.app, UUID, Title)
+        resultLock.lock()
+        defer { resultLock.unlock() }
         hasError = false
         let result = checkPasses()
 
@@ -345,6 +350,22 @@ class ParetoCheck: Hashable, ObservableObject, Identifiable {
         }
 
         return result
+    }
+
+    /// Stores a result that became known after the run that asked for it, and refreshes the UI.
+    /// nil: the result could not be determined.
+    func publishLateResult(_ passes: Bool?) {
+        resultLock.lock()
+        hasError = passes == nil
+        checkPassed = passes ?? false
+        checkTimestamp = Int(Date().currentTimeMs())
+        cachedDetails = details
+        resultLock.unlock()
+
+        DispatchQueue.main.async {
+            self.objectWillChange.send()
+            Claims.global.objectWillChange.send()
+        }
     }
 
     var infoURL: URL {

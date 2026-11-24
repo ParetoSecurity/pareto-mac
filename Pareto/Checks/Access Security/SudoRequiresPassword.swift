@@ -13,12 +13,14 @@ class SudoRequiresPasswordCheck: ParetoCheck {
 
     /// Returns the output of `sudo -l -U <current user>`, run as root by the privileged helper.
     let listingProvider: () async -> String
-    /// Outer nil: the helper has not answered yet. Inner nil: its answer could not be evaluated.
-    private let helperResultLock = OSAllocatedUnfairLock<Bool??>(initialState: nil)
-    private let helperCheckInFlight = OSAllocatedUnfairLock(initialState: false)
+    private let helperAnswer: HelperAnswer
 
-    init(listingProvider: @escaping () async -> String = SudoRequiresPasswordCheck.fetchListingViaHelper) {
+    init(
+        listingProvider: @escaping () async -> String = SudoRequiresPasswordCheck.fetchListingViaHelper,
+        helperTimeout: TimeInterval = 10
+    ) {
         self.listingProvider = listingProvider
+        helperAnswer = HelperAnswer(timeout: helperTimeout)
     }
 
     override var UUID: String {
@@ -176,17 +178,17 @@ class SudoRequiresPasswordCheck: ParetoCheck {
 
     // MARK: - Running
 
+    /// Asks the helper before a report runs, so the report does not print the stored result.
+    override func prefetch(completion: @escaping () -> Void) {
+        guard isRunnable else {
+            completion()
+            return
+        }
+        helperAnswer.prefetch(for: self, fetch: evaluateNow, completion: completion)
+    }
+
     override func checkPasses() -> Bool {
-        refreshHelperResultIfNeeded()
-        // run() clears hasError before calling this, so the error comes from the cached answer
-        guard let answer = helperResultLock.withLock({ $0 }) else {
-            return checkPassed
-        }
-        guard let passes = answer else {
-            hasError = true
-            return false
-        }
-        return passes
+        helperAnswer.passes(for: self, fetch: evaluateNow)
     }
 
     /// Runs the check and waits for the helper's answer; used by tests and anywhere a fresh result is needed.
@@ -197,24 +199,6 @@ class SudoRequiresPasswordCheck: ParetoCheck {
             return nil
         }
         return passes
-    }
-
-    private func refreshHelperResultIfNeeded() {
-        let shouldStart = helperCheckInFlight.withLock { inFlight in
-            if inFlight {
-                return false
-            }
-            inFlight = true
-            return true
-        }
-        guard shouldStart else { return }
-
-        Task.detached(priority: .utility) { [weak self] in
-            guard let self else { return }
-            let passes = await evaluateNow()
-            helperResultLock.withLock { $0 = .some(passes) }
-            helperCheckInFlight.withLock { $0 = false }
-        }
     }
 
     static func fetchListingViaHelper() async -> String {

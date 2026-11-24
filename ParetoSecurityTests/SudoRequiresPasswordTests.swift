@@ -5,8 +5,69 @@
 //  Created by ArchitektApx on 04/11/2026.
 //
 
+import Combine
+import os
 @testable import Pareto_Security
 import XCTest
+
+/// Runnable without the installed helper, and with its own stored result.
+private final class RunnableSudoCheck: SudoRequiresPasswordCheck {
+    override var UUID: String {
+        "test-sudo-requires-password"
+    }
+
+    override var isRunnable: Bool {
+        true
+    }
+}
+
+/// Takes a while to hand its result to run(), so a helper answer can land in between.
+private final class SlowToReportSudoCheck: SudoRequiresPasswordCheck {
+    override var UUID: String {
+        "test-sudo-requires-password"
+    }
+
+    override var isRunnable: Bool {
+        true
+    }
+
+    override func checkPasses() -> Bool {
+        let passes = super.checkPasses()
+        Thread.sleep(forTimeInterval: 0.3)
+        return passes
+    }
+}
+
+/// Stands in for the helper: answers after `delay` and counts how often it was asked.
+final class ListingStub: Sendable {
+    private let state: OSAllocatedUnfairLock<(output: String, calls: Int)>
+    let delay: TimeInterval
+
+    init(_ output: String, delay: TimeInterval = 0.05) {
+        state = OSAllocatedUnfairLock(initialState: (output, 0))
+        self.delay = delay
+    }
+
+    var calls: Int {
+        state.withLock { $0.calls }
+    }
+
+    func answer(with output: String) {
+        state.withLock { $0.output = output }
+    }
+
+    /// Like the real helper call, which reaches the helper from the main actor.
+    func listingViaMainActor() async -> String {
+        await MainActor.run {}
+        return await listing()
+    }
+
+    func listing() async -> String {
+        state.withLock { $0.calls += 1 }
+        try? await Task.sleep(nanoseconds: UInt64(delay * 1_000_000_000))
+        return state.withLock { $0.output }
+    }
+}
 
 /// No live test: listing another user's privileges needs root, which only the privileged helper has.
 class SudoRequiresPasswordTests: XCTestCase {
@@ -128,7 +189,7 @@ class SudoRequiresPasswordTests: XCTestCase {
         XCTAssertNil(brokenResult)
     }
 
-    /// checkPasses() answers from the helper's previous answer, so poll until the background fetch lands.
+    /// Polls until checkPasses() reports what the caller expects, with hasError cleared as run() does.
     private func settledCheckPasses(
         _ check: SudoRequiresPasswordCheck,
         until done: (_ passes: Bool, _ hasError: Bool) -> Bool
@@ -171,5 +232,135 @@ class SudoRequiresPasswordTests: XCTestCase {
             XCTAssertFalse(SudoRequiresPasswordCheck.sharedInstance.isRunnable)
             XCTAssertFalse(registered)
         }
+    }
+
+    // MARK: - Fresh helper answers
+
+    override func tearDown() {
+        let check = RunnableSudoCheck()
+        for key in [check.PassesKey, check.TimestampKey, check.CachedDetailsKey] {
+            UserDefaults.standard.removeObject(forKey: key)
+        }
+        super.tearDown()
+    }
+
+    /// Checks run on a background queue, never on the main thread.
+    private static func offMain<T: Sendable>(_ body: @escaping @Sendable () -> T) async -> T {
+        await withCheckedContinuation { continuation in
+            DispatchQueue.global().async {
+                continuation.resume(returning: body())
+            }
+        }
+    }
+
+    func testFirstRunReportsHelperAnswerNotStoredResult() async {
+        let stub = ListingStub(Self.stockAdmin)
+        let check = RunnableSudoCheck(listingProvider: stub.listing)
+        check.checkPassed = false
+
+        let passes = await Self.offMain { check.run() }
+
+        XCTAssertTrue(passes)
+        XCTAssertTrue(check.checkPassed)
+    }
+
+    func testChangedPrivilegesAreReportedOnTheSameRun() async {
+        let stub = ListingStub(Self.stockAdmin)
+        let check = RunnableSudoCheck(listingProvider: stub.listing)
+        let before = await Self.offMain { check.run() }
+        XCTAssertTrue(before)
+
+        stub.answer(with: Self.privileges("(ALL) NOPASSWD: ALL"))
+        let after = await Self.offMain { check.run() }
+
+        XCTAssertFalse(after)
+    }
+
+    func testReportWaitsForHelperAnswerAndAsksOnce() async {
+        let stub = ListingStub(Self.stockAdmin)
+        let check = RunnableSudoCheck(listingProvider: stub.listing)
+        check.checkPassed = false
+
+        let prefetched = await Self.offMain { Claims.prefetch([check], timeout: 2) }
+        // The report paths call run() on the main thread right after the prefetch
+        let passes = await MainActor.run { check.run() }
+
+        XCTAssertTrue(prefetched)
+        XCTAssertTrue(passes)
+        XCTAssertEqual(stub.calls, 1)
+    }
+
+    @MainActor
+    func testAnswerLandingAfterMainThreadRunIsPublished() async {
+        let stub = ListingStub(Self.stockAdmin)
+        let check = RunnableSudoCheck(listingProvider: stub.listing)
+        check.checkPassed = false
+        let notified = expectation(description: "observers are told about the helper answer")
+        notified.assertForOverFulfill = false
+        let observer = check.objectWillChange.sink { notified.fulfill() }
+        defer { observer.cancel() }
+
+        // The main thread must not block on the helper, so this answers from the stored result
+        XCTAssertFalse(check.checkPasses())
+
+        await fulfillment(of: [notified], timeout: 2)
+        XCTAssertTrue(check.checkPassed)
+        XCTAssertFalse(check.hasError)
+    }
+
+    func testUnansweredHelperIsAnErrorAndIsNotAskedAgain() async {
+        let stub = ListingStub(Self.stockAdmin, delay: 1)
+        let check = RunnableSudoCheck(listingProvider: stub.listing, helperTimeout: 0.1)
+        check.checkPassed = true
+        let start = Date()
+
+        let first = await Self.offMain { check.run() }
+        let firstHadError = check.hasError
+        let second = await Self.offMain { check.run() }
+        let prefetched = await Self.offMain { Claims.prefetch([check], timeout: 2) }
+
+        XCTAssertFalse(first)
+        XCTAssertTrue(firstHadError)
+        XCTAssertFalse(second)
+        XCTAssertTrue(check.hasError)
+        XCTAssertTrue(prefetched)
+        XCTAssertEqual(stub.calls, 1)
+        XCTAssertLessThan(Date().timeIntervalSince(start), 0.9)
+
+        // The late answer replaces the error once it lands
+        for _ in 0 ..< 300 where check.hasError {
+            try? await Task.sleep(nanoseconds: 10_000_000)
+        }
+        XCTAssertFalse(check.hasError)
+        XCTAssertTrue(check.checkPassed)
+    }
+
+    /// `-report` and `-report-json` prefetch and run on the main thread, which the helper call also needs.
+    func testReportOnMainThreadGetsAnswerThatNeedsTheMainActor() {
+        let stub = ListingStub(Self.stockAdmin)
+        let check = RunnableSudoCheck(listingProvider: stub.listingViaMainActor, helperTimeout: 1)
+        check.checkPassed = false
+        XCTAssertTrue(Thread.isMainThread)
+
+        XCTAssertTrue(Claims.prefetch([check], timeout: 3))
+        let passes = check.run()
+
+        XCTAssertTrue(passes)
+        XCTAssertFalse(check.hasError)
+        XCTAssertEqual(stub.calls, 1)
+    }
+
+    @MainActor
+    func testAnswerLandingWhileRunStoresItsResultIsKept() async {
+        let stub = ListingStub(Self.stockAdmin)
+        let check = SlowToReportSudoCheck(listingProvider: stub.listing)
+        check.checkPassed = false
+
+        // On the main thread run() answers from the stored result; the helper answers before run() stores it
+        XCTAssertFalse(check.run())
+        try? await Task.sleep(nanoseconds: 300_000_000)
+
+        XCTAssertTrue(check.checkPassed)
+        XCTAssertFalse(check.hasError)
     }
 }
